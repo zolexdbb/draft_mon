@@ -538,19 +538,118 @@ select option{
   .type-tag{ font-size:9px; padding:2px 6px; }
 }
 
+
+/* === NOUVEAUX STYLES === */
+@keyframes splashPulse{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-6deg) scale(1.12)}}
+@keyframes tickerMove{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.splash-text{
+  position:absolute;top:12px;left:12px;
+  transform:rotate(-8deg);
+  animation:splashPulse 2s ease-in-out infinite;
+  color:var(--accent);font-size:11px;cursor:pointer;
+  text-shadow:2px 2px 0 rgba(0,0,0,.8);
+  padding:2px 6px;z-index:10;
+  font-family:'Press Start 2P',monospace;
+  letter-spacing:0.5px;
+}
+.splash-text:hover{filter:brightness(1.3);}
+
+
+
+.money-hud{display:inline-flex;align-items:center;gap:5px;
+  background:rgba(232,200,74,.1);border:1px solid rgba(232,200,74,.3);
+  border-radius:4px;padding:4px 10px;font-size:11px;color:var(--accent);font-weight:700;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.modal-overlay.hidden{display:none;}
+.modal-box{background:var(--bg-panel);border:1px solid var(--line-bright);border-radius:6px;
+  width:min(540px,96vw);max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;
+  box-shadow:0 24px 64px rgba(0,0,0,.85);animation:fadeUp .2s ease;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:2px solid var(--line);
+  font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);
+  letter-spacing:1px;background:rgba(0,0,0,.2);flex-shrink:0;}
+.modal-close{background:rgba(255,255,255,.07);border:1px solid var(--line-bright);
+  border-radius:3px;color:var(--text-dim);cursor:pointer;padding:3px 9px;font-size:13px;}
+.modal-close:hover{color:var(--low);border-color:var(--low);}
+.modal-body{padding:14px 16px;}
+
+.item-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.item-card{background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
+  padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
+.item-card.usable{border-color:var(--line-bright);cursor:pointer;}
+.item-card.usable:hover{border-color:var(--accent);}
+.item-name{font-size:11px;font-weight:700;color:var(--text-main);}
+.item-desc{font-size:9px;color:var(--text-dim);line-height:1.5;}
+.item-qty{font-size:10px;color:var(--accent);font-weight:700;}
+.item-locked{font-size:9px;color:var(--low);}
+
+.target-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.target-btn{display:flex;align-items:center;gap:10px;padding:8px 12px;
+  background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
+  cursor:pointer;width:100%;text-align:left;}
+.target-btn:hover:not(:disabled){border-color:var(--accent);}
+.target-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+.hp-mini{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:3px;}
+.hp-mini-fill{height:100%;border-radius:3px;transition:width .3s;}
+
+.manage-card{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  background:var(--bg-card);border:1px solid var(--line);border-radius:4px;margin-bottom:6px;}
+.manage-card.lead-card{border-color:var(--accent);}
+.manage-card-info{flex:1;}
+.manage-card-name{font-size:12px;font-weight:700;color:var(--text-main);}
+
+.reward-card{background:rgba(232,200,74,.06);border:1px solid rgba(232,200,74,.3);
+  border-radius:4px;padding:12px;text-align:center;cursor:pointer;margin-bottom:8px;}
+.reward-card:hover{background:rgba(232,200,74,.14);}
+
+.village-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.village-tab{flex:1;padding:10px 8px;border:1px solid var(--line);border-radius:4px;
+  background:var(--bg-card);color:var(--text-dim);cursor:pointer;text-align:center;
+  font-size:10px;font-family:inherit;transition:.15s;}
+.village-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(232,200,74,.08);}
+.village-tab:hover:not(.active){border-color:var(--line-bright);}
+
+.shop-row{display:flex;align-items:center;gap:10px;padding:8px 12px;
+  background:var(--bg-card);border:1px solid var(--line);border-radius:4px;margin-bottom:6px;}
+.ranch-card{background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
+  padding:12px;text-align:center;cursor:pointer;transition:.15s;}
+.ranch-card:hover:not(:disabled){border-color:var(--accent);}
+.ranch-card:disabled{opacity:.5;cursor:not-allowed;}
+
+.pc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pc-slot{background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
+  padding:8px;text-align:center;cursor:pointer;transition:.15s;}
+.pc-slot:hover{border-color:var(--accent);}
+.pc-slot.empty{border-style:dashed;color:var(--text-dim);font-size:10px;cursor:default;}
+.pc-slot.empty:hover{border-color:var(--line);}
+
+.patch-entry{margin-bottom:10px;}
+.patch-version{font-size:11px;color:var(--accent);font-family:'Press Start 2P',monospace;margin-bottom:6px;}
+.patch-list{list-style:none;padding:0;margin:0;}
+.patch-list li{font-size:10px;color:var(--text-dim);padding:3px 0 3px 12px;
+  border-left:2px solid var(--line);margin-bottom:4px;line-height:1.6;}
+.patch-list li::before{content:'+ ';color:var(--good);}
+
 </style>
 </head>
 <body>
 <div class="app">
   <div class="site-header">
     <span class="site-logo">DRAFT MON</span>
-    <span class="site-subtitle">◆ TOUR DE COMBAT — GEN I ◆</span>
+    <span class="site-subtitle">◆ TOUR DE COMBAT ◆</span>
   </div>
 
-  <div class="panel" id="screenMenu">
+  <div class="panel" id="screenMenu" style="position:relative;">
+    <div class="splash-text" id="splashText">Village Update !</div>
     <div class="tower-floor" style="padding:40px 20px;">
       <div style="font-size:64px;margin:0 0 10px;">🗼</div>
       <div class="floor-label" style="letter-spacing:6px;font-size:14px;color:var(--accent);margin-bottom:6px;">TOUR DE COMBAT</div>
+
       <div class="floor-label" id="bestFloorLabel" style="font-size:13px;color:var(--text-dim);margin-bottom:24px;">Meilleur étage : 1</div>
       <div style="border:1px solid var(--line);border-radius:2px;padding:18px 24px;margin:0 auto 28px;max-width:360px;background:rgba(0,0,0,.3);">
         <div class="floor-label" style="font-size:12px;letter-spacing:3px;margin-bottom:12px;color:var(--text-dim);">▸ COMMENT JOUER ◂</div>
@@ -572,14 +671,14 @@ select option{
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--line);position:sticky;top:0;background:var(--bg-panel);z-index:10;">
       <button class="btn" id="dexBackBtn" style="padding:8px 16px;font-size:11px;flex-shrink:0;">← Menu</button>
       <div style="flex:1;">
-        <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;">POKÉDEX GEN I</div>
+        <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;">POKÉDEX</div>
         <div style="font-size:10px;color:var(--text-dim);margin-top:3px;" id="dexCount">151 Pokémon</div>
       </div>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px;padding:10px;background:var(--bg-card);border:1px solid var(--line);border-radius:4px;">
       <input id="dexSearch" type="text" placeholder="Rechercher un nom..." style="flex:1;min-width:150px;background:#0b0b10;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 10px;font-family:inherit;font-size:12px;">
-      <div id="dexTypeFilterWrap" style="flex:1;min-width:130px;"></div>
-      <div id="dexRarityFilterWrap" style="flex:1;min-width:130px;"></div>
+      <div id="dexTypeFilterWrap" style="flex:1;min-width:120px;"></div>
+      <div id="dexRarityFilterWrap" style="flex:1;min-width:120px;"></div>
       <button class="btn secondary" id="dexResetFilter" style="padding:6px 12px;font-size:11px;">✕ Reset</button>
     </div>
     <div class="draft-cards" id="dexGrid" style="grid-template-columns:repeat(3,1fr);"></div>
@@ -614,8 +713,11 @@ select option{
       <div class="floor-label">TOUR DE COMBAT</div>
       <div class="floor-num" id="floorNum">1</div>
       <div class="floor-label" id="floorDesc">Un dresseur t'attend...</div>
-      <div style="margin-top:18px;">
-        <button class="btn" id="fightBtn">Combattre</button>
+      <div style="display:flex;justify-content:center;margin:10px 0;"><div class="money-hud" id="towerMoneyHud">0 &#x20bd;</div></div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
+        <button class="btn" id="fightBtn">&#x2694; Combattre</button>
+        <button class="btn secondary" id="towerBagBtn">Sac</button>
+        <button class="btn secondary" id="towerTeamBtn">Equipe</button>
       </div>
     </div>
   </div>
@@ -645,6 +747,10 @@ select option{
       </div>
     </div>
     <div class="log" id="log">Le combat commence...</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div class="money-hud" id="battleMoneyHud">0 &#x20bd;</div>
+      <button class="btn secondary" id="battleBagBtn" style="padding:5px 12px;font-size:11px;">Sac</button>
+    </div>
     <div class="battle-controls">
       <div class="moves" id="movesGrid"></div>
       <div class="switch-grid hidden" id="switchGrid"></div>
@@ -665,6 +771,88 @@ select option{
       </div>
     </div>
   </div>
+
+<!-- PATCH NOTE MODAL -->
+<div id="patchModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">Notes de patch<button class="modal-close" id="patchCloseBtn">x</button></div>
+    <div class="modal-body" id="patchContent"></div>
+  </div>
+</div>
+
+<!-- BAG MODAL -->
+<div id="bagModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">Sac<button class="modal-close" id="bagCloseBtn">x</button></div>
+    <div class="modal-body" id="bagContent"></div>
+  </div>
+</div>
+
+<!-- TEAM MANAGE MODAL -->
+<div id="teamManageModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">Equipe &amp; PC<button class="modal-close" id="tmCloseBtn">x</button></div>
+    <div class="modal-body" id="teamManageContent"></div>
+  </div>
+</div>
+
+<!-- REWARD MODAL -->
+<div id="rewardModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header" id="rewardTitle">Recompense</div>
+    <div class="modal-body" id="rewardContent"></div>
+  </div>
+</div>
+
+<!-- RANCH BUILD MODAL -->
+<div id="ranchBuildModal" class="modal-overlay hidden">
+  <div class="modal-box" style="width:min(720px,98vw);">
+    <div class="modal-header">Ranch &#x2014; Configurer le Pokemon<button class="modal-close" id="ranchBuildCloseBtn">x</button></div>
+    <div class="modal-body" id="ranchBuildContent"></div>
+  </div>
+</div>
+
+<!-- VILLAGE SCREEN -->
+<div class="panel hidden" id="screenVillage">
+  <div style="text-align:center;padding:16px 0 10px;">
+    <div style="font-size:40px;margin-bottom:6px;">&#x1F3D8;</div>
+    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;">VILLAGE DE REPOS</div>
+    <div style="font-size:10px;color:var(--text-dim);margin-top:4px;" id="villageFloorLabel"></div>
+    <div style="display:flex;justify-content:center;margin-top:8px;"><div class="money-hud" id="shopMoneyHud">0 &#x20bd;</div></div>
+  </div>
+  <div class="village-tabs">
+    <button class="village-tab active" onclick="showVillageTab('centre')">&#x1F3E5; Pokecentre</button>
+    <button class="village-tab" onclick="showVillageTab('shop')">&#x1F6D2; Shop</button>
+    <button class="village-tab" onclick="showVillageTab('ranch')">&#x1F434; Ranch</button>
+    <button class="village-tab" onclick="showVillageTab('pc')">&#x1F4BB; PC</button>
+  </div>
+  <div id="villageCentre">
+    <div style="text-align:center;padding:20px 0;">
+      <div style="font-size:36px;margin-bottom:10px;">&#x1F3E5;</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text-main);margin-bottom:8px;">POKECENTRE</div>
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:16px;">Soigne gratuitement toute ton equipe (PV + statuts + KO).</div>
+      <button class="btn" id="pokeCentreBtn" style="min-width:200px;">Soigner l'equipe</button>
+    </div>
+  </div>
+  <div id="villageShop" class="hidden">
+    <div id="shopItemList"></div>
+  </div>
+  <div id="villageRanch" class="hidden">
+    <div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;" id="ranchDesc">3 Pokemon disponibles a l'achat. Un seul achat par visite.</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="ranchCards"></div>
+  </div>
+  <div id="villagePC" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:10px;color:var(--accent);font-weight:700;">Reserve PC</div>
+      <div style="font-size:9px;color:var(--text-dim);" id="pcCountLabel">0 Pokemon</div>
+    </div>
+    <div class="pc-grid" id="pcGrid"></div>
+  </div>
+  <div style="text-align:center;margin-top:18px;">
+    <button class="btn" id="villageLeaveBtn">Continuer la tour &#x2192;</button>
+  </div>
+</div>
+
 </div>
 
 <script>
@@ -674,21 +862,24 @@ const TYPE_EMOJI = {
   insecte:'🐛',combat:'🥊',glace:'🧊',psy:'🔮',fantome:'👻',roche:'🪨',dragon:'🐲'
 };
 const TYPE_CHART = {
-  normal:{roche:.5,fantome:0},
-  feu:{plante:2,glace:2,insecte:2,feu:.5,eau:.5,roche:.5,dragon:.5},
-  eau:{feu:2,sol:2,roche:2,eau:.5,plante:.5,dragon:.5},
-  electrik:{eau:2,vol:2,electrik:.5,plante:.5,dragon:.5,sol:0},
-  plante:{eau:2,sol:2,roche:2,feu:.5,plante:.5,vol:.5,poison:.5,insecte:.5,dragon:.5},
-  glace:{plante:2,sol:2,vol:2,dragon:2,feu:.5,eau:.5,glace:.5},
-  combat:{normal:2,glace:2,roche:2,poison:.5,vol:.5,psy:.5,insecte:.5,fantome:0},
-  poison:{plante:2,poison:.5,sol:.5,roche:.5,fantome:.5},
-  sol:{feu:2,electrik:2,poison:2,roche:2,plante:.5,insecte:.5,vol:0},
-  vol:{plante:2,insecte:2,combat:2,electrik:.5,roche:.5},
-  psy:{combat:2,poison:2,psy:.5},
-  insecte:{plante:2,psy:2,feu:.5,combat:.5,poison:.5,vol:.5,fantome:.5},
-  roche:{feu:2,glace:2,vol:2,insecte:2,combat:.5,sol:.5},
-  fantome:{psy:2,fantome:2,normal:0,combat:0},
-  dragon:{dragon:2}
+  // Lu depuis la table officielle (image fournie)
+  normal:   {roche:.5, fantome:0, acier:.5},
+  feu:      {feu:.5, eau:.5, plante:2, glace:2, insecte:2, roche:.5, dragon:.5, acier:2},
+  eau:      {feu:2, eau:.5, plante:.5, sol:2, roche:2, dragon:.5, acier:.5},
+  plante:   {feu:.5, eau:2, plante:.5, poison:.5, sol:2, vol:.5, insecte:.5, roche:2, dragon:.5, acier:.5},
+  electrik: {eau:2, plante:.5, electrik:.5, sol:0, vol:2, dragon:.5, acier:.5},
+  glace:    {feu:.5, eau:.5, plante:2, glace:.5, sol:2, vol:2, dragon:2, acier:.5},
+  combat:   {normal:2, glace:2, roche:2, tenebres:2, acier:2, poison:.5, vol:.5, psy:.5, insecte:.5, fantome:0},
+  poison:   {plante:2, poison:.5, sol:.5, roche:.5, fantome:.5, acier:0},
+  sol:      {feu:2, electrik:2, poison:2, roche:2, acier:2, plante:.5, insecte:.5, vol:0},
+  vol:      {plante:2, insecte:2, combat:2, electrik:.5, roche:.5, acier:.5},
+  psy:      {combat:2, poison:2, psy:.5, tenebres:0, acier:.5},
+  insecte:  {plante:2, psy:2, tenebres:2, feu:.5, combat:.5, vol:.5, fantome:.5, acier:.5},
+  roche:    {feu:2, glace:2, insecte:2, vol:2, combat:.5, sol:.5, acier:.5},
+  fantome:  {normal:0, combat:0, psy:2, fantome:2, tenebres:.5, acier:.5},
+  dragon:   {dragon:2, acier:.5},
+  tenebres: {psy:2, fantome:2, combat:.5, tenebres:.5},
+  acier:    {glace:2, roche:2, feu:.5, eau:.5, electrik:.5, acier:.5},
 };
 function getMult(atkType, defTypes){
   let m = 1;
@@ -820,6 +1011,75 @@ const MOVES = {
   dragonrage:{name:'Draco-Rage',type:'dragon',cat:'spec',power:0,fixedDamage:40,desc:"Une attaque mystérieuse qui infligera toujours 40 dégâts."}
 };
 
+
+/* =================== PATCH NOTES =================== */
+const PATCH_NOTES = [
+  {version:"v0.2 - Village Update",notes:[
+    "PV persistants entre les combats",
+    "Systeme d'argent - gains apres chaque combat",
+    "Mini-boss tous les 5 etages, Boss tous les 10",
+    "Village de repos debloque apres chaque Boss",
+    "Pokecentre, Pokeshop, Ranch et PC au Village",
+    "Sac utilisable en combat et entre les combats",
+    "Objets tenus (Baie Oran, Reste, Ceinture Force...)",
+    "Objets strategiques en recompense boss",
+    "Gestion d'equipe avec changement de lead",
+  ]},
+  {version:"v0.1 - Base",notes:[
+    "Draft de 6 Pokemon Gen 1",
+    "Builder complet EV/IV/Nature/Talent/Attaques",
+    "Tour de combat avec 17 archetypes de dresseurs",
+    "Systeme de combat au tour par tour",
+    "Pokedex avec filtres",
+  ]},
+];
+
+/* =================== ITEMS =================== */
+const ITEMS = {
+  potion:      {name:'Potion',        cat:'heal',   price:80,  unlock:1,  desc:'Restaure 30 PV.',               effect:{hp:30}},
+  superpotion: {name:'Super Potion',  cat:'heal',   price:150, unlock:1,  desc:'Restaure 60 PV.',               effect:{hp:60}},
+  hyperpotion: {name:'Hyper Potion',  cat:'heal',   price:300, unlock:10, desc:'Restaure 120 PV.',              effect:{hp:120}},
+  restoremax:  {name:'Restore Max',   cat:'heal',   price:700, unlock:30, desc:'Restaure tous les PV.',         effect:{hp:'full'}},
+  antidote:    {name:'Antidote',      cat:'status', price:50,  unlock:1,  desc:'Soigne le poison.',             effect:{cure:'poison'}},
+  antigel:     {name:'Antigel',       cat:'status', price:50,  unlock:1,  desc:'Soigne la brulure.',            effect:{cure:'brulure'}},
+  paralysoin:  {name:'Paraly-Soin',   cat:'status', price:60,  unlock:1,  desc:'Soigne la paralysie.',          effect:{cure:'paralysie'}},
+  reveil:      {name:'Reveil',        cat:'status', price:60,  unlock:1,  desc:'Soigne le sommeil.',            effect:{cure:'sommeil'}},
+  sointegral:  {name:'Soin Total',    cat:'status', price:180, unlock:10, desc:'Soigne tous les statuts.',      effect:{cure:'all'}},
+  rappel:      {name:'Rappel',        cat:'revive', price:400, unlock:1,  desc:'Releve un KO avec 50% PV.',     effect:{revive:0.5}},
+  superrappel: {name:'Super Rappel',  cat:'revive', price:900, unlock:20, desc:'Releve un KO avec 100% PV.',    effect:{revive:1.0}},
+  xattaque:    {name:'X-Attaque',     cat:'boost',  price:200, unlock:10, desc:'+1 Atq ce combat.', battleOnly:true, effect:{boost:{stat:'atk',stages:1}}},
+  xdefense:    {name:'X-Defense',     cat:'boost',  price:200, unlock:10, desc:'+1 Def ce combat.', battleOnly:true, effect:{boost:{stat:'def',stages:1}}},
+  xvitesse:    {name:'X-Vitesse',     cat:'boost',  price:200, unlock:10, desc:'+1 Vit ce combat.', battleOnly:true, effect:{boost:{stat:'spe',stages:1}}},
+  baieoran:    {name:'Baie Oran',     cat:'held',   price:100, unlock:1,  desc:'Rend 10 PV sous 50% PV. Usage unique.',       heldEffect:'oran',      consumed:true},
+  baiesitrus:  {name:'Baie Sitrus',   cat:'held',   price:250, unlock:10, desc:'Rend 25% PV max sous 50% PV. Usage unique.',  heldEffect:'sitrus',    consumed:true},
+  reste:       {name:'Reste',         cat:'held',   price:600, unlock:20, desc:'Rend 6% PV max par tour.',                     heldEffect:'reste',     consumed:false},
+  plaquevie:   {name:'Plaque Vie',    cat:'held',   price:400, unlock:10, desc:'+10% PV max.',                                 heldEffect:'plaquevie', consumed:false},
+  ceinturef:   {name:'Ceinture Force',cat:'held',   price:500, unlock:20, desc:'Survit une fois a un KO a PV pleins.',         heldEffect:'ceinturef', consumed:true},
+  bandeauchoix:{name:'Bandeau Choix', cat:'held',   price:600, unlock:20, desc:'+50% Atq, bloque sur une attaque.',            heldEffect:'choiceatk', consumed:false},
+  lunetteschoix:{name:'Lunettes Choix',cat:'held',  price:600, unlock:20, desc:'+50% AtqSp, bloque sur une attaque.',          heldEffect:'choicespa', consumed:false},
+  mouchoirchoix:{name:'Mouchoir Choix',cat:'held',  price:600, unlock:20, desc:'+50% Vit, bloque sur une attaque.',            heldEffect:'choicespe', consumed:false},
+  proteine:    {name:'Proteine',  cat:'strategic', desc:'+Atq permanent.',  effect:{permBoost:'atk'}},
+  fer:         {name:'Fer',       cat:'strategic', desc:'+Def permanent.',  effect:{permBoost:'def'}},
+  carbone:     {name:'Carbone',   cat:'strategic', desc:'+AtqSp permanent.',effect:{permBoost:'spa'}},
+  zinc:        {name:'Zinc',      cat:'strategic', desc:'+DefSp permanent.',effect:{permBoost:'spd'}},
+  calcium:     {name:'Calcium',   cat:'strategic', desc:'+Vit permanent.',  effect:{permBoost:'spe'}},
+  rarecandy:   {name:'Rarecandy', cat:'strategic', desc:'+10% toutes stats.',effect:{permBoost:'all'}},
+};
+const SHOP_ITEMS=['potion','superpotion','antidote','antigel','paralysoin','reveil','rappel','baieoran','hyperpotion','sointegral','xattaque','xdefense','xvitesse','baiesitrus','plaquevie','superrappel','reste','ceinturef','bandeauchoix','lunetteschoix','mouchoirchoix','restoremax'];
+const MINI_BOSS_POOL=['potion','superpotion','sointegral','rappel','baieoran','baiesitrus','plaquevie','ceinturef'];
+const BOSS_POOL=['proteine','fer','carbone','zinc','calcium','rarecandy'];
+
+let money=0, bag={}, reserve=[];
+function addToBag(id,n=1){bag[id]=(bag[id]||0)+n;}
+function removeFromBag(id,n=1){if(bag[id]){bag[id]=Math.max(0,bag[id]-n);if(!bag[id])delete bag[id];}}
+function moneyFmt(){return money+' ₽';}
+function updateMoneyHud(){
+  ['towerMoneyHud','battleMoneyHud','shopMoneyHud'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.textContent=moneyFmt();
+  });
+}
+function ranchPrice(){return Math.floor(500*Math.pow(1.005,towerFloor));}
+
 const NATURES = [
  {name:'Hardi', plus:null, minus:null},
  {name:'Solo', plus:'atk', minus:'def'},
@@ -849,385 +1109,380 @@ const NATURES = [
 ];
 const STAT_LABEL = {hp:'PV', atk:'Atq', def:'Déf', spa:'AtqSp', spd:'DéfSp', spe:'Vit'};
 
-/* ---- Dropdown custom universel (même style que les attaques) ---- */
-function buildCsel({options, value='', onChange, placeholder='— Choisir —'}){
+/* ---- buildCsel : dropdown universel style attaques ---- */
+function buildCsel({options, value='', onChange, placeholder='— Choisir —', noEmpty=false}){
   const wrap = document.createElement('div');
   wrap.className = 'csel';
-
   const trigger = document.createElement('div');
   trigger.className = 'csel-trigger';
-
   const dropdown = document.createElement('div');
   dropdown.className = 'csel-dropdown';
-
   const allOpts = [];
 
   function renderTrigger(opt){
     trigger.innerHTML = opt
-      ? `${opt.triggerHTML || opt.html || `<span class="csel-name">${opt.label}</span>`}<span class="csel-arrow">▾</span>`
-      : `<span class="csel-name csel-empty">${placeholder}</span><span class="csel-arrow">▾</span>`;
+      ? (opt.triggerHTML || `<span class="csel-name">${opt.label}</span>`) + '<span class="csel-arrow">&#x25be;</span>'
+      : `<span class="csel-name csel-empty">${placeholder}</span><span class="csel-arrow">&#x25be;</span>`;
   }
-
   function pick(opt){
     onChange(opt ? opt.value : '');
-    renderTrigger(opt || null);
-    allOpts.forEach(o => o.el.classList.toggle('selected', o.opt === opt));
+    renderTrigger(opt);
+    allOpts.forEach(o=>o.el.classList.toggle('selected', o.opt===opt));
     dropdown.classList.remove('open');
     trigger.classList.remove('open');
   }
 
-  if(placeholder){
+  if(!noEmpty){
     const emptyEl = document.createElement('div');
-    emptyEl.className = 'csel-opt' + (!value ? ' selected' : '');
+    emptyEl.className = 'csel-opt' + (!value?' selected':'');
     emptyEl.innerHTML = `<span class="csel-opt-empty">${placeholder}</span>`;
-    emptyEl.onclick = () => pick(null);
+    emptyEl.onclick = ()=>pick(null);
     dropdown.appendChild(emptyEl);
-    allOpts.push({el: emptyEl, opt: null});
+    allOpts.push({el:emptyEl, opt:null});
   }
 
   let current = null;
-  options.forEach(opt => {
+  options.forEach(opt=>{
     const el = document.createElement('div');
-    el.className = 'csel-opt' + (opt.value === value ? ' selected' : '');
+    el.className = 'csel-opt' + (opt.value===value?' selected':'');
     el.innerHTML = opt.html || `<span class="csel-name">${opt.label}</span>`;
-    el.onclick = () => pick(opt);
+    el.onclick = ()=>pick(opt);
     dropdown.appendChild(el);
     allOpts.push({el, opt});
-    if(opt.value === value) current = opt;
+    if(opt.value===value) current=opt;
   });
-
   renderTrigger(current);
 
-  trigger.onclick = (e) => {
+  trigger.onclick = (e)=>{
     e.stopPropagation();
     const wasOpen = dropdown.classList.contains('open');
-    document.querySelectorAll('.csel-dropdown.open').forEach(d => d.classList.remove('open'));
-    document.querySelectorAll('.csel-trigger.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.csel-dropdown.open').forEach(d=>d.classList.remove('open'));
+    document.querySelectorAll('.csel-trigger.open').forEach(d=>d.classList.remove('open'));
     if(!wasOpen){ dropdown.classList.add('open'); trigger.classList.add('open'); }
   };
-
-  wrap._setValue = (v) => {
-    const opt = options.find(o => o.value === v) || null;
+  // Setter externe
+  wrap._setValue = (v)=>{
+    const opt = options.find(o=>o.value===v)||null;
     renderTrigger(opt);
-    allOpts.forEach(o => o.el.classList.toggle('selected', o.opt === opt));
+    allOpts.forEach(o=>o.el.classList.toggle('selected',o.opt===opt));
   };
-
   wrap.appendChild(trigger);
   wrap.appendChild(dropdown);
   return wrap;
 }
 
+
 function st(hp,atk,def,spa,spd,spe){ return {hp,atk,def,spa,spd,spe}; }
 
 /* =================== POKÉDEX GÉNÉRATION 1 (151) =================== */
 const LINES = [
-{id:'bulbasaur',abilities:['Engrais','Chlorophylle'],moveIds:['tackle','vinewhip','absorb','megadrain','razorleaf','solarbeam','sleeppowder','swordsdance','toxic','bodyslam','doubleedge','psychic','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'bulbasaur',abilities:['Engrais','Chlorophylle'],moveIds:['absorb','vinewhip','razorleaf','megadrain','gigadrain','solarbeam','sludge','poisonjab','bodyslam','doubleedge','toxic','sleeppowder','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Bulbizarre',types:['plante','poison'],emoji:'🌱',base:st(45,49,49,65,65,45)},
   {name:'Herbizarre',types:['plante','poison'],emoji:'🪴',base:st(60,62,63,80,80,60)},
   {name:'Florizarre',types:['plante','poison'],emoji:'🌺',base:st(80,82,83,100,100,80)}]},
-{id:'charmander',abilities:['Brasier','Sève Solaire'],moveIds:['scratch','ember','slash','flamethrower','fireblast','firepunch','submission','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'charmander',abilities:['Brasier','Sève Solaire'],moveIds:['scratch','ember','flamethrower','fireblast','firepunch','slash','bite','bodyslam','doubleedge','dragonrage','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Salamèche',types:['feu'],emoji:'🦎',base:st(39,52,43,60,50,65)},
   {name:'Reptincel',types:['feu'],emoji:'🐉',base:st(58,64,58,80,65,80)},
   {name:'Dracaufeu',types:['feu','vol'],emoji:'🐲',base:st(78,84,78,109,85,100)}]},
-{id:'squirtle',abilities:['Torrent','Pluie Bienfaisante'],moveIds:['tackle','bubble','watergun','bubblebeam','surf','icebeam','blizzard','bite','harden','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','growl','recover'],
+{id:'squirtle',abilities:['Torrent','Pluie Bienfaisante'],moveIds:['tackle','bubble','watergun','surf','hydropump','bubblebeam','waterfall','icebeam','bite','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Carapuce',types:['eau'],emoji:'🐢',base:st(44,48,65,50,64,43)},
   {name:'Carabaffe',types:['eau'],emoji:'🐸',base:st(59,63,80,65,80,58)},
   {name:'Tortank',types:['eau'],emoji:'🐢',base:st(79,83,100,85,105,78)}]},
-{id:'caterpie',abilities:['Armurine','Œil Composé'],moveIds:['tackle','harden','confusion','psybeam','psychic','gust','megadrain','bubblebeam','sleeppowder','toxic','hyperbeam','swift','growl','recover'],
+{id:'caterpie',abilities:['Armurine','Œil Composé'],moveIds:['tackle','leechlife','bugbite','pinmissile','megahorn','gust','wingattack','quickattack','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Chenipan',types:['insecte'],emoji:'🐛',base:st(45,30,35,20,20,45)},
   {name:'Chrysacier',types:['insecte'],emoji:'🦋',base:st(50,20,55,25,25,30)},
   {name:'Papilusion',types:['insecte','vol'],emoji:'🦋',base:st(60,45,50,90,80,70)}]},
-{id:'weedle',abilities:['Armurine','Essaim'],moveIds:['poisonsting','furyattack','twineedle','pinmissile','bugbite','swordsdance','toxic','doubleedge','hyperbeam','swift','leer','recover'],
+{id:'weedle',abilities:['Armurine','Essaim'],moveIds:['poisonsting','twineedle','bugbite','pinmissile','sludge','acid','tackle','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Aspicot',types:['insecte','poison'],emoji:'🐛',base:st(40,35,30,20,20,50)},
   {name:'Coconfort',types:['insecte','poison'],emoji:'🛡️',base:st(45,25,50,25,25,35)},
   {name:'Dardargnan',types:['insecte','poison'],emoji:'🐝',base:st(65,90,40,45,80,75)}]},
-{id:'pidgey',abilities:['Œil Perçant','Pieds Fébriles'],moveIds:['peck','gust','quickattack','furyattack','wingattack','agility','swift','hyperbeam','growl','leer','recover'],
+{id:'pidgey',abilities:['Œil Perçant','Pieds Fébriles'],moveIds:['tackle','peck','gust','quickattack','wingattack','furyattack','drillpeck','bodyslam','doubleedge','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Roucool',types:['normal','vol'],emoji:'🐦',base:st(40,45,40,35,35,56)},
   {name:'Roucoups',types:['normal','vol'],emoji:'🐦',base:st(63,60,55,50,50,71)},
   {name:'Roucarnage',types:['normal','vol'],emoji:'🦅',base:st(83,80,75,70,70,101)}]},
-{id:'rattata',abilities:['Cuvette','Fébrile'],moveIds:['tackle','quickattack','hyperfang','bite','slash','submission','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','growl','recover'],
+{id:'rattata',abilities:['Cuvette','Fébrile'],moveIds:['tackle','quickattack','bite','hyperfang','slash','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Rattata',types:['normal'],emoji:'🐀',base:st(30,56,35,25,35,72)},
   {name:'Rattatac',types:['normal'],emoji:'🐭',base:st(55,81,60,50,70,97)}]},
-{id:'spearow',abilities:['Œil Perçant','Sniper'],moveIds:['peck','furyattack','drillpeck','agility','swift','hyperbeam','growl','leer','recover'],
+{id:'spearow',abilities:['Œil Perçant','Sniper'],moveIds:['tackle','peck','furyattack','quickattack','drillpeck','wingattack','agility','bodyslam','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Piafabec',types:['normal','vol'],emoji:'🐤',base:st(40,60,30,31,31,70)},
   {name:'Rapasdepic',types:['normal','vol'],emoji:'🦅',base:st(65,90,65,61,61,100)}]},
-{id:'ekans',abilities:['Intimidation','Mue'],moveIds:['poisonsting','acid','sludge','bite','leer','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','recover'],
+{id:'ekans',abilities:['Intimidation','Mue'],moveIds:['tackle','poisonsting','acid','sludge','sludgebomb','bite','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Abo',types:['poison'],emoji:'🐍',base:st(35,60,44,40,54,55)},
   {name:'Arbok',types:['poison'],emoji:'🐍',base:st(60,85,69,65,79,80)}]},
-{id:'pikachu',abilities:['Statik','Paratonnerre'],moveIds:['thundershock','quickattack','thunderbolt','thunder','thunderwave','thunderpunch','agility','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','growl','recover'],
+{id:'pikachu',abilities:['Statik','Paratonnerre'],moveIds:['tackle','quickattack','thundershock','thunderbolt','thunder','thunderpunch','bodyslam','doubleedge','agility','swordsdance','growl','leer','harden','amnesia','thunderwave','recover','strength'],
  stages:[
   {name:'Pichu',types:['electrik'],emoji:'🐹',base:st(20,40,15,35,35,60)},
   {name:'Pikachu',types:['electrik'],emoji:'🐭',base:st(35,55,40,50,50,90)},
   {name:'Raichu',types:['electrik'],emoji:'⚡',base:st(60,90,55,90,80,110)}]},
-{id:'sandshrew',abilities:['Voile Sable','Vivacité'],moveIds:['scratch','slash','dig','earthquake','rockslide','bonemerang','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','harden','growl','recover'],
+{id:'sandshrew',abilities:['Voile Sable','Vivacité'],moveIds:['scratch','slash','dig','earthquake','bonemerang','rockslide','mudshot','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Sabelette',types:['sol'],emoji:'🦔',base:st(50,75,85,20,30,40)},
   {name:'Sablaireau',types:['sol'],emoji:'🦫',base:st(65,100,110,45,55,65)}]},
-{id:'nidoranf',abilities:['Point Poison','Rivalité'],moveIds:['tackle','poisonsting','hornattack','bite','doublekick','bodyslam','doubleedge','earthquake','icebeam','blizzard','thunderbolt','fireblast','rockslide','dragonrage','swordsdance','toxic','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'nidoranf',abilities:['Point Poison','Rivalité'],moveIds:['tackle','poisonsting','hornattack','doublekick','bite','sludge','sludgebomb','bodyslam','doubleedge','earthquake','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Nidoran♀',types:['poison'],emoji:'🐰',base:st(55,47,52,40,40,41)},
   {name:'Nidorina',types:['poison'],emoji:'🐰',base:st(70,62,67,55,55,56)},
   {name:'Nidoqueen',types:['poison','sol'],emoji:'🦏',base:st(90,82,87,75,85,76)}]},
-{id:'nidoranm',abilities:['Point Poison','Rivalité'],moveIds:['tackle','hornattack','poisonsting','bite','doublekick','bodyslam','doubleedge','earthquake','icebeam','blizzard','thunderbolt','fireblast','rockslide','dragonrage','swordsdance','toxic','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'nidoranm',abilities:['Point Poison','Rivalité'],moveIds:['tackle','poisonsting','hornattack','doublekick','bite','sludge','sludgebomb','bodyslam','doubleedge','earthquake','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Nidoran♂',types:['poison'],emoji:'🐰',base:st(46,57,40,40,40,50)},
   {name:'Nidorino',types:['poison'],emoji:'🦏',base:st(61,72,57,55,55,65)},
   {name:'Nidoking',types:['poison','sol'],emoji:'🦏',base:st(81,92,77,85,75,85)}]},
-{id:'clefairy',abilities:['Charme','Magie Sereine'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','psychic','icebeam','blizzard','thunderbolt','fireblast','megadrain','bubblebeam','hyperbeam','swift','swordsdance','toxic','strength','growl','harden','recover'],
+{id:'clefairy',abilities:['Charme','Magie Sereine'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Mélofée',types:['normal'],emoji:'🌸',base:st(70,45,48,60,65,35)},
   {name:'Mélodelfe',types:['normal'],emoji:'🌷',base:st(95,70,73,95,90,60)}]},
-{id:'vulpix',abilities:['Don de Soi','Torche'],moveIds:['ember','quickattack','bite','flamethrower','fireblast','confuseray','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'vulpix',abilities:['Don de Soi','Torche'],moveIds:['tackle','ember','flamethrower','fireblast','quickattack','bite','bodyslam','confuseray','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Goupix',types:['feu'],emoji:'🦊',base:st(38,41,40,50,65,65)},
   {name:'Feunard',types:['feu'],emoji:'🦊',base:st(73,76,75,81,100,100)}]},
-{id:'jigglypuff',abilities:['Charme','Compétiteur'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','psychic','icebeam','blizzard','thunderbolt','fireblast','megadrain','bubblebeam','hyperbeam','swift','swordsdance','toxic','strength','growl','harden','recover'],
+{id:'jigglypuff',abilities:['Charme','Compétiteur'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Rondoudou',types:['normal'],emoji:'🎈',base:st(115,45,20,45,25,20)},
   {name:'Grodoudou',types:['normal'],emoji:'🎈',base:st(140,70,45,75,50,45)}]},
-{id:'zubat',abilities:['Télépathie','Infiltration'],moveIds:['leechlife','bite','wingattack','gust','confuseray','acid','sludge','megadrain','toxic','hyperbeam','swift','growl','recover'],
+{id:'zubat',abilities:['Télépathie','Infiltration'],moveIds:['tackle','leechlife','bite','gust','wingattack','poisonsting','acid','sludge','confuseray','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Nosferapti',types:['poison','vol'],emoji:'🦇',base:st(40,45,35,30,40,55)},
   {name:'Nosferalto',types:['poison','vol'],emoji:'🦇',base:st(75,80,70,65,75,90)}]},
-{id:'oddish',abilities:['Chlorophylle','Cuvette'],moveIds:['absorb','acid','megadrain','razorleaf','solarbeam','sleeppowder','swordsdance','toxic','hyperbeam','swift','strength','growl','recover'],
+{id:'oddish',abilities:['Chlorophylle','Cuvette'],moveIds:['absorb','vinewhip','megadrain','gigadrain','razorleaf','solarbeam','sludge','acid','poisonjab','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Mystherbe',types:['plante','poison'],emoji:'🌿',base:st(45,50,55,75,65,30)},
   {name:'Ortide',types:['plante','poison'],emoji:'🌱',base:st(60,65,70,85,75,40)},
   {name:'Rafflesia',types:['plante','poison'],emoji:'🌺',base:st(75,80,85,100,90,50)}]},
-{id:'paras',abilities:['Pollen Toxique','Peau Sèche'],moveIds:['scratch','leechlife','slash','bugbite','megadrain','absorb','sleeppowder','swordsdance','toxic','hyperbeam','swift','dig','strength','growl','recover'],
+{id:'paras',abilities:['Pollen Toxique','Peau Sèche'],moveIds:['scratch','leechlife','bugbite','pinmissile','megahorn','absorb','megadrain','gigadrain','razorleaf','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Paras',types:['insecte','plante'],emoji:'🍄',base:st(35,70,55,45,55,25)},
   {name:'Parasect',types:['insecte','plante'],emoji:'🍄',base:st(60,95,80,60,80,30)}]},
-{id:'venonat',abilities:['Œil Composé','Cuvette'],moveIds:['tackle','leechlife','bugbite','poisonsting','psybeam','psychic','megadrain','sleeppowder','swordsdance','toxic','hyperbeam','swift','strength','growl','recover'],
+{id:'venonat',abilities:['Œil Composé','Cuvette'],moveIds:['tackle','leechlife','bugbite','poisonsting','psybeam','confusion','psychic','sludge','acid','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Mimitoss',types:['insecte','poison'],emoji:'🦋',base:st(60,55,50,40,55,45)},
   {name:'Aéromite',types:['insecte','poison'],emoji:'🦋',base:st(70,65,60,90,75,90)}]},
-{id:'diglett',abilities:['Voile Sable','Piège de Sable'],moveIds:['scratch','dig','earthquake','slash','rockslide','bonemerang','mudshot','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','growl','recover'],
+{id:'diglett',abilities:['Voile Sable','Piège de Sable'],moveIds:['scratch','dig','earthquake','slash','bonemerang','mudshot','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Taupiqueur',types:['sol'],emoji:'🕳️',base:st(10,55,25,35,45,95)},
   {name:'Triopikeur',types:['sol'],emoji:'🕳️',base:st(50,100,50,50,70,120)}]},
-{id:'meowth',abilities:['Ramassage','Technicien'],moveIds:['scratch','bite','slash','furyattack','quickattack','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'meowth',abilities:['Ramassage','Technicien'],moveIds:['scratch','bite','slash','furyattack','quickattack','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Miaouss',types:['normal'],emoji:'🐱',base:st(40,45,35,40,40,90)},
   {name:'Persian',types:['normal'],emoji:'🐈',base:st(65,70,60,65,65,115)}]},
-{id:'psyduck',abilities:['Moiteur','Anti-Brume'],moveIds:['scratch','watergun','surf','bubblebeam','waterfall','icebeam','blizzard','confusion','psybeam','psychic','dig','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','growl','recover'],
+{id:'psyduck',abilities:['Moiteur','Anti-Brume'],moveIds:['scratch','tackle','bubble','watergun','surf','hydropump','bubblebeam','psybeam','confusion','psychic','bite','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Psykokwak',types:['eau'],emoji:'🦆',base:st(50,52,48,65,50,55)},
   {name:'Akwakwak',types:['eau'],emoji:'🦆',base:st(80,82,78,95,80,85)}]},
-{id:'mankey',abilities:['Vital Esprit','Tête Brûlée'],moveIds:['scratch','karatechop','furyattack','doublekick','submission','highjumpkick','crosschop','brickbreak','rockslide','firepunch','icepunch','thunderpunch','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','leer','recover'],
+{id:'mankey',abilities:['Vital Esprit','Tête Brûlée'],moveIds:['scratch','karatechop','submission','highjumpkick','doublekick','crosschop','bite','bodyslam','rockslide','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Férosinge',types:['combat'],emoji:'🐒',base:st(40,80,35,35,45,70)},
   {name:'Colossinge',types:['combat'],emoji:'🦍',base:st(65,105,60,60,70,95)}]},
-{id:'growlithe',abilities:['Intimidation','Torche'],moveIds:['bite','ember','agility','flamethrower','fireblast','firepunch','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'growlithe',abilities:['Intimidation','Torche'],moveIds:['tackle','bite','ember','flamethrower','firepunch','fireblast','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Caninos',types:['feu'],emoji:'🐕',base:st(55,70,45,70,50,60)},
   {name:'Arcanin',types:['feu'],emoji:'🐕',base:st(90,110,80,100,80,95)}]},
-{id:'poliwag',abilities:['Absorbe Eau','Moiteur'],moveIds:['bubble','watergun','surf','bubblebeam','icebeam','blizzard','bodyslam','doubleedge','submission','earthquake','rockslide','amnesia','swordsdance','toxic','hyperbeam','swift','strength','growl','recover'],
+{id:'poliwag',abilities:['Absorbe Eau','Moiteur'],moveIds:['tackle','bubble','watergun','surf','hydropump','bubblebeam','waterfall','bodyslam','doubleedge','submission','doublekick','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Ptitard',types:['eau'],emoji:'🐸',base:st(40,50,40,40,40,90)},
   {name:'Têtarte',types:['eau'],emoji:'🐸',base:st(65,65,65,50,50,90)},
   {name:'Tartard',types:['eau','combat'],emoji:'🐸',base:st(90,85,95,70,90,70)}]},
-{id:'abra',abilities:['Synchro','Télépathie'],moveIds:['confusion','psybeam','psychic','extrasensory','amnesia','barrier','swordsdance','toxic','thunderwave','hyperbeam','swift','dig','strength','recover'],
+{id:'abra',abilities:['Synchro','Télépathie'],moveIds:['confusion','psychic','psybeam','extrasensory','shadowball','swift','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'Abra',types:['psy'],emoji:'🧘',base:st(25,20,15,105,55,90)},
   {name:'Kadabra',types:['psy'],emoji:'🧙',base:st(40,35,30,120,70,105)},
   {name:'Alakazam',types:['psy'],emoji:'🧙',base:st(55,50,45,135,95,120)}]},
-{id:'machop',abilities:['Mental','Sans Garde'],moveIds:['karatechop','doublekick','submission','crosschop','highjumpkick','brickbreak','rockslide','earthquake','firepunch','icepunch','thunderpunch','swordsdance','toxic','bodyslam','hyperbeam','swift','dig','strength','leer','recover'],
+{id:'machop',abilities:['Mental','Sans Garde'],moveIds:['tackle','karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','bodyslam','rockslide','earthquake','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Machoc',types:['combat'],emoji:'🥋',base:st(70,80,50,35,35,35)},
   {name:'Machopeur',types:['combat'],emoji:'💪',base:st(80,100,70,50,60,45)},
   {name:'Mackogneur',types:['combat'],emoji:'💪',base:st(90,130,80,65,85,55)}]},
-{id:'bellsprout',abilities:['Chlorophylle','Gourmandise'],moveIds:['vinewhip','absorb','acid','megadrain','razorleaf','solarbeam','sleeppowder','swordsdance','toxic','bodyslam','hyperbeam','swift','strength','growl','recover'],
+{id:'bellsprout',abilities:['Chlorophylle','Gourmandise'],moveIds:['absorb','vinewhip','megadrain','gigadrain','razorleaf','solarbeam','sludge','acid','poisonjab','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Chétiflor',types:['plante','poison'],emoji:'🌱',base:st(50,75,35,70,30,40)},
   {name:'Boustiflor',types:['plante','poison'],emoji:'🌿',base:st(65,90,50,85,45,55)},
   {name:'Empiflor',types:['plante','poison'],emoji:'🌺',base:st(80,105,65,100,60,70)}]},
-{id:'tentacool',abilities:['Corps Sain','Suintement'],moveIds:['poisonsting','acid','sludge','watergun','surf','bubblebeam','waterfall','confuseray','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','leer','recover'],
+{id:'tentacool',abilities:['Corps Sain','Suintement'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','acid','sludge','sludgebomb','waterfall','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Tentacool',types:['eau','poison'],emoji:'🎐',base:st(40,40,35,50,100,70)},
   {name:'Tentacruel',types:['eau','poison'],emoji:'🎐',base:st(80,70,65,80,120,100)}]},
-{id:'geodude',abilities:['Tête de Roc','Solidroc'],moveIds:['tackle','rockthrow','rockslide','stoneedge','earthquake','dig','bodyslam','doubleedge','swordsdance','toxic','hyperbeam','swift','strength','harden','leer','recover'],
+{id:'geodude',abilities:['Tête de Roc','Solidroc'],moveIds:['tackle','rockthrow','rockslide','stoneedge','earthquake','dig','bonemerang','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Racaillou',types:['roche','sol'],emoji:'🪨',base:st(40,80,100,30,30,20)},
   {name:'Gravalanch',types:['roche','sol'],emoji:'🪨',base:st(55,95,115,45,45,35)},
   {name:'Grolem',types:['roche','sol'],emoji:'🪨',base:st(80,120,130,55,65,45)}]},
-{id:'ponyta',abilities:['Cuvette','Flamme Corps'],moveIds:['ember','stomp','agility','flamethrower','fireblast','firepunch','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','dig','strength','growl','recover'],
+{id:'ponyta',abilities:['Cuvette','Flamme Corps'],moveIds:['tackle','stomp','ember','flamethrower','firepunch','fireblast','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Ponyta',types:['feu'],emoji:'🐴',base:st(50,85,55,65,65,90)},
   {name:'Galopa',types:['feu'],emoji:'🐎',base:st(65,100,70,80,80,105)}]},
-{id:'slowpoke',abilities:['Insouciance','Régénération'],moveIds:['watergun','surf','bubblebeam','icebeam','blizzard','confusion','psybeam','psychic','amnesia','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','growl','recover'],
+{id:'slowpoke',abilities:['Insouciance','Régénération'],moveIds:['tackle','headbutt','watergun','surf','psybeam','confusion','psychic','amnesia','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','confuseray','recover','strength'],
  stages:[
   {name:'Ramoloss',types:['eau','psy'],emoji:'🐌',base:st(90,65,65,40,40,15)},
   {name:'Flagadoss',types:['eau','psy'],emoji:'🐌',base:st(95,75,80,100,80,30)}]},
-{id:'magnemite',abilities:['Magnépiège','Solidroc'],moveIds:['thundershock','thunderwave','thunderbolt','thunder','discharge','doubleedge','hyperbeam','swift','leer','harden','recover'],
+{id:'magnemite',abilities:['Magnépiège','Solidroc'],moveIds:['tackle','thundershock','thunderbolt','thunder','thunderpunch','swift','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','thunderwave','recover','strength'],
  stages:[
   {name:'Magnéti',types:['electrik'],emoji:'🧲',base:st(25,35,70,95,55,45)},
   {name:'Magnéton',types:['electrik'],emoji:'🧲',base:st(50,60,95,120,70,70)}]},
-{id:'farfetchd',abilities:['Œil Perçant','Télépathie'],moveIds:['peck','furyattack','slash','agility','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','growl','leer','recover'],
+{id:'farfetchd',abilities:['Œil Perçant','Télépathie'],moveIds:['tackle','peck','furyattack','slash','wingattack','quickattack','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Canarticho',types:['normal','vol'],emoji:'🦆',base:st(52,90,55,58,62,60)}]},
-{id:'doduo',abilities:['Cuvette','Lève-tôt'],moveIds:['peck','furyattack','drillpeck','agility','toxic','bodyslam','doubleedge','hyperbeam','swift','growl','leer','recover'],
+{id:'doduo',abilities:['Cuvette','Lève-tôt'],moveIds:['tackle','peck','furyattack','drillpeck','quickattack','bite','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Doduo',types:['normal','vol'],emoji:'🐦',base:st(35,85,45,35,35,75)},
   {name:'Dodrio',types:['normal','vol'],emoji:'🦤',base:st(60,110,70,60,60,110)}]},
-{id:'seel',abilities:['Isolat','Hydratation'],moveIds:['watergun','surf','bubblebeam','waterfall','icebeam','blizzard','icywind','headbutt','bodyslam','doubleedge','swordsdance','toxic','hyperbeam','swift','strength','growl','recover'],
+{id:'seel',abilities:['Isolat','Hydratation'],moveIds:['tackle','bubble','watergun','surf','hydropump','bubblebeam','icebeam','icepunch','blizzard','bodyslam','headbutt','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Otaria',types:['eau'],emoji:'🦭',base:st(65,45,55,45,70,45)},
   {name:'Lamantine',types:['eau'],emoji:'🦭',base:st(90,70,80,70,95,70)}]},
-{id:'grimer',abilities:['Fétidité','Glu'],moveIds:['tackle','poisonsting','sludge','sludgebomb','acid','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','leer','harden','recover'],
+{id:'grimer',abilities:['Fétidité','Glu'],moveIds:['tackle','poisonsting','sludge','sludgebomb','acid','bite','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Tadmorv',types:['poison'],emoji:'🟣',base:st(80,80,50,40,50,25)},
   {name:'Grotadmorv',types:['poison'],emoji:'🟣',base:st(105,105,75,65,100,50)}]},
-{id:'shellder',abilities:['Coque Armure','Enchaînement'],moveIds:['tackle','watergun','surf','bubblebeam','icebeam','blizzard','icywind','toxic','hyperbeam','swift','strength','harden','recover'],
+{id:'shellder',abilities:['Coque Armure','Enchaînement'],moveIds:['tackle','watergun','surf','bubblebeam','icebeam','icepunch','blizzard','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Kokiyas',types:['eau'],emoji:'🐚',base:st(30,65,100,45,25,40)},
   {name:'Crustabri',types:['eau','glace'],emoji:'🐚',base:st(50,95,180,85,45,70)}]},
-{id:'gastly',abilities:['Lévitation','Corps Maudit'],moveIds:['lick','shadowball','nightshade','confuseray','sludgebomb','psychic','thunderbolt','fireblast','megadrain','swordsdance','toxic','sleeppowder','hyperbeam','swift','dig','recover'],
+{id:'gastly',abilities:['Lévitation','Corps Maudit'],moveIds:['tackle','lick','shadowball','shadowclaw','nightshade','sludge','sludgebomb','confusion','bite','confuseray','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Fantominus',types:['fantome','poison'],emoji:'👻',base:st(30,35,30,100,35,80)},
   {name:'Spectrum',types:['fantome','poison'],emoji:'👻',base:st(45,50,45,115,55,95)},
   {name:'Ectoplasma',types:['fantome','poison'],emoji:'👻',base:st(60,65,60,130,75,110)}]},
-{id:'onix',abilities:['Tête de Roc','Solidroc'],moveIds:['tackle','rockthrow','rockslide','earthquake','dig','bodyslam','swordsdance','toxic','hyperbeam','swift','strength','harden','leer','recover'],
+{id:'onix',abilities:['Tête de Roc','Solidroc'],moveIds:['tackle','rockthrow','rockslide','stoneedge','earthquake','dig','bonemerang','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Onix',types:['roche','sol'],emoji:'🪨',base:st(35,45,160,30,45,70)}]},
-{id:'drowzee',abilities:['Insomnia','Télépathie'],moveIds:['tackle','confusion','psybeam','psychic','zenheadbutt','meditate','amnesia','firepunch','icepunch','thunderpunch','swordsdance','toxic','sleeppowder','thunderwave','bodyslam','doubleedge','hyperbeam','swift','strength','recover'],
+{id:'drowzee',abilities:['Insomnia','Télépathie'],moveIds:['tackle','headbutt','confusion','psychic','psybeam','zenheadbutt','bodyslam','meditate','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'Soporifik',types:['psy'],emoji:'🐘',base:st(60,48,45,43,90,42)},
   {name:'Hypnomade',types:['psy'],emoji:'🐘',base:st(85,73,70,73,115,67)}]},
-{id:'krabby',abilities:['Lame Affilée','Coque Armure'],moveIds:['bubble','watergun','surf','bubblebeam','waterfall','crabhammer','slash','stomp','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','leer','harden','recover'],
+{id:'krabby',abilities:['Lame Affilée','Coque Armure'],moveIds:['tackle','watergun','surf','bubblebeam','crabhammer','waterfall','bite','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Krabby',types:['eau'],emoji:'🦀',base:st(30,105,90,25,25,50)},
   {name:'Krabboss',types:['eau'],emoji:'🦀',base:st(50,130,115,50,50,75)}]},
-{id:'voltorb',abilities:['Anti-Bruit','Statik'],moveIds:['tackle','thundershock','thunderwave','thunderbolt','thunder','discharge','doubleedge','hyperbeam','swift','leer','recover'],
+{id:'voltorb',abilities:['Anti-Bruit','Statik'],moveIds:['tackle','thundershock','thunderbolt','thunder','thunderpunch','swift','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','thunderwave','recover','strength'],
  stages:[
   {name:'Voltorbe',types:['electrik'],emoji:'⚫',base:st(40,30,50,55,55,100)},
   {name:'Electrode',types:['electrik'],emoji:'⚫',base:st(60,50,70,80,80,150)}]},
-{id:'exeggcute',abilities:['Chlorophylle','Récolte'],moveIds:['absorb','megadrain','solarbeam','confusion','psybeam','psychic','barrier','sleeppowder','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','leer','recover'],
+{id:'exeggcute',abilities:['Chlorophylle','Récolte'],moveIds:['absorb','megadrain','gigadrain','razorleaf','solarbeam','psybeam','confusion','psychic','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','confuseray','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Noeunoeuf',types:['plante','psy'],emoji:'🥚',base:st(60,40,80,60,45,40)},
   {name:'Noadkoko',types:['plante','psy'],emoji:'🥥',base:st(95,95,85,125,75,55)}]},
-{id:'cubone',abilities:['Tête de Roc','Paratonnerre'],moveIds:['bonemerang','headbutt','earthquake','rockslide','dig','bodyslam','doubleedge','swordsdance','toxic','hyperbeam','swift','strength','growl','leer','recover'],
+{id:'cubone',abilities:['Tête de Roc','Paratonnerre'],moveIds:['tackle','bonemerang','earthquake','dig','rockslide','stoneedge','headbutt','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Osselait',types:['sol'],emoji:'🦴',base:st(50,50,95,40,50,35)},
   {name:'Ossatueur',types:['sol'],emoji:'🦴',base:st(60,80,110,50,80,45)}]},
-{id:'hitmonlee',abilities:['Échauffement','Casse-Cou'],moveIds:['doublekick','meditate','highjumpkick','submission','brickbreak','rockslide','swordsdance','toxic','bodyslam','hyperbeam','swift','dig','strength','leer','recover'],
+{id:'hitmonlee',abilities:['Échauffement','Casse-Cou'],moveIds:['tackle','karatechop','highjumpkick','submission','doublekick','brickbreak','bodyslam','rockslide','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Kicklee',types:['combat'],emoji:'🥋',base:st(50,120,53,35,110,87)}]},
-{id:'hitmonchan',abilities:['Œil Perçant','Poing de Fer'],moveIds:['karatechop','agility','firepunch','icepunch','thunderpunch','submission','brickbreak','swordsdance','toxic','bodyslam','hyperbeam','swift','dig','strength','leer','recover'],
+{id:'hitmonchan',abilities:['Œil Perçant','Poing de Fer'],moveIds:['tackle','karatechop','highjumpkick','submission','doublekick','firepunch','icepunch','thunderpunch','brickbreak','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Tygnon',types:['combat'],emoji:'🥊',base:st(50,105,79,35,110,76)}]},
-{id:'lickitung',abilities:['Tempo Perso','Insouciance'],moveIds:['tackle','stomp','lick','bodyslam','doubleedge','icebeam','blizzard','thunderbolt','fireblast','earthquake','psychic','megadrain','swordsdance','toxic','hyperbeam','swift','dig','strength','leer','harden','recover'],
+{id:'lickitung',abilities:['Tempo Perso','Insouciance'],moveIds:['tackle','lick','bodyslam','doubleedge','hyperbeam','stomp','headbutt','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Excelangue',types:['normal'],emoji:'👅',base:st(90,55,75,60,75,30)}]},
-{id:'koffing',abilities:['Lévitation','Gaz Neutralisant'],moveIds:['tackle','sludge','sludgebomb','acid','poisonjab','swordsdance','toxic','hyperbeam','swift','leer','harden','recover'],
+{id:'koffing',abilities:['Lévitation','Gaz Neutralisant'],moveIds:['tackle','poisonsting','sludge','sludgebomb','acid','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Smogo',types:['poison'],emoji:'☁️',base:st(40,65,95,60,45,35)},
   {name:'Smogogo',types:['poison'],emoji:'☁️',base:st(65,90,120,85,70,60)}]},
-{id:'rhyhorn',abilities:['Paratonnerre','Tête de Roc'],moveIds:['tackle','hornattack','stomp','furyattack','rockthrow','rockslide','earthquake','dig','bodyslam','doubleedge','swordsdance','toxic','hyperbeam','swift','strength','growl','leer','recover'],
+{id:'rhyhorn',abilities:['Paratonnerre','Tête de Roc'],moveIds:['tackle','hornattack','stomp','rockthrow','rockslide','stoneedge','earthquake','dig','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Rhinocorne',types:['sol','roche'],emoji:'🦏',base:st(80,85,95,30,30,25)},
   {name:'Rhinoféros',types:['sol','roche'],emoji:'🦏',base:st(105,130,120,45,45,40)}]},
-{id:'chansey',abilities:['Soin Naturel','Grâce Sereine'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','icebeam','blizzard','thunderbolt','fireblast','psychic','megadrain','earthquake','swordsdance','toxic','hyperbeam','swift','dig','strength','growl','leer','harden','recover'],
+{id:'chansey',abilities:['Soin Naturel','Grâce Sereine'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','swift','psybeam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Leveinard',types:['normal'],emoji:'🥚',base:st(250,5,5,35,105,50)}]},
-{id:'tangela',abilities:['Chlorophylle','Garde Feuille'],moveIds:['tackle','absorb','megadrain','razorleaf','solarbeam','sleeppowder','bodyslam','swordsdance','toxic','hyperbeam','swift','strength','growl','recover'],
+{id:'tangela',abilities:['Chlorophylle','Garde Feuille'],moveIds:['absorb','vinewhip','megadrain','gigadrain','razorleaf','solarbeam','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
   {name:'Saquedeneu',types:['plante'],emoji:'🌿',base:st(65,55,115,100,40,60)}]},
-{id:'kangaskhan',abilities:['Lève-tôt','Audacieux'],moveIds:['tackle','bite','stomp','headbutt','bodyslam','doubleedge','earthquake','rockslide','icebeam','thunderbolt','swordsdance','toxic','hyperbeam','swift','dig','strength','growl','leer','recover'],
+{id:'kangaskhan',abilities:['Lève-tôt','Audacieux'],moveIds:['tackle','bite','stomp','bodyslam','doubleedge','hyperbeam','slash','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Kangourex',types:['normal'],emoji:'🦘',base:st(105,95,80,40,80,90)}]},
-{id:'horsea',abilities:['Nage Rapide','Sniper'],moveIds:['bubble','watergun','surf','bubblebeam','waterfall','icebeam','blizzard','agility','swordsdance','toxic','hyperbeam','swift','leer','recover'],
+{id:'horsea',abilities:['Nage Rapide','Sniper'],moveIds:['bubble','watergun','surf','hydropump','bubblebeam','waterfall','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Hypotrempe',types:['eau'],emoji:'🐉',base:st(30,40,70,70,25,60)},
   {name:'Hypocéan',types:['eau'],emoji:'🐉',base:st(55,65,95,95,45,85)}]},
-{id:'goldeen',abilities:['Nage Rapide',"Voile d'Eau"],moveIds:['peck','hornattack','furyattack','watergun','surf','bubblebeam','waterfall','icebeam','blizzard','agility','swordsdance','toxic','hyperbeam','swift','strength','leer','recover'],
+{id:'goldeen',abilities:['Nage Rapide',"Voile d'Eau"],moveIds:['tackle','peck','hornattack','furyattack','watergun','surf','bubblebeam','icebeam','waterfall','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Poissirène',types:['eau'],emoji:'🐠',base:st(45,67,60,35,50,63)},
   {name:'Poissoroy',types:['eau'],emoji:'🐠',base:st(80,92,65,65,80,68)}]},
-{id:'staryu',abilities:['Luminescence','Soin Naturel'],moveIds:['tackle','watergun','surf','bubblebeam','waterfall','icebeam','blizzard','psychic','psybeam','confuseray','megadrain','thunderbolt','fireblast','swordsdance','toxic','hyperbeam','swift','strength','harden','recover'],
+{id:'staryu',abilities:['Luminescence','Soin Naturel'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','psybeam','confusion','swift','waterfall','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'Stari',types:['eau'],emoji:'⭐',base:st(30,45,55,70,55,85)},
   {name:'Staross',types:['eau','psy'],emoji:'⭐',base:st(60,75,85,100,85,115)}]},
-{id:'mrmime',abilities:['Anti-Bruit','Filtre'],moveIds:['tackle','confusion','psybeam','psychic','extrasensory','barrier','meditate','amnesia','thunderbolt','fireblast','thunderwave','swordsdance','toxic','bodyslam','hyperbeam','swift','strength','recover'],
+{id:'mrmime',abilities:['Anti-Bruit','Filtre'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','barrier','meditate','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'M. Mime',types:['psy'],emoji:'🤡',base:st(40,45,65,100,120,90)}]},
-{id:'scyther',abilities:['Essaim','Technicien'],moveIds:['quickattack','slash','leechlife','bugbite','wingattack','agility','swordsdance','toxic','hyperbeam','swift','leer','recover'],
+{id:'scyther',abilities:['Essaim','Technicien'],moveIds:['tackle','leechlife','bugbite','pinmissile','megahorn','slash','quickattack','wingattack','agility','swordsdance','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Insécateur',types:['insecte','vol'],emoji:'🦗',base:st(70,110,80,55,80,105)}]},
-{id:'jynx',abilities:['Insouciance','Avant-Garde'],moveIds:['tackle','lick','sing','icepunch','icebeam','blizzard','psybeam','psychic','meditate','amnesia','swordsdance','toxic','bodyslam','hyperbeam','swift','strength','recover'],
+{id:'jynx',abilities:['Insouciance','Avant-Garde'],moveIds:['tackle','doubleslap','sing','icebeam','icepunch','blizzard','psychic','psybeam','confusion','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'Lippoutou',types:['glace','psy'],emoji:'💋',base:st(65,50,35,115,95,95)}]},
-{id:'electabuzz',abilities:['Statik','Vital Esprit'],moveIds:['quickattack','thundershock','thunderpunch','thunderbolt','thunder','thunderwave','firepunch','icepunch','agility','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','leer','recover'],
+{id:'electabuzz',abilities:['Statik','Vital Esprit'],moveIds:['tackle','quickattack','thundershock','thunderbolt','thunder','thunderpunch','bodyslam','firepunch','icepunch','swordsdance','agility','harden','growl','leer','amnesia','thunderwave','recover','strength'],
  stages:[
   {name:'Élektek',types:['electrik'],emoji:'⚡',base:st(65,83,57,95,85,105)}]},
-{id:'magmar',abilities:['Flamme Corps','Vital Esprit'],moveIds:['ember','firepunch','flamethrower','fireblast','agility','swordsdance','toxic','bodyslam','doubleedge','hyperbeam','swift','strength','leer','recover'],
+{id:'magmar',abilities:['Flamme Corps','Vital Esprit'],moveIds:['tackle','ember','flamethrower','fireblast','firepunch','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Magmar',types:['feu'],emoji:'🔥',base:st(65,95,57,100,85,93)}]},
-{id:'pinsir',abilities:['Lame Affilée','Brise-Moule'],moveIds:['slash','leechlife','bugbite','megahorn','submission','rockslide','swordsdance','toxic','hyperbeam','swift','dig','strength','leer','recover'],
+{id:'pinsir',abilities:['Lame Affilée','Brise-Moule'],moveIds:['tackle','slash','leechlife','bugbite','pinmissile','megahorn','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
   {name:'Scarabrute',types:['insecte'],emoji:'🦗',base:st(65,125,100,55,70,85)}]},
-{id:'tauros',abilities:['Intimidation','Tête Brûlée'],moveIds:['tackle','hornattack','stomp','bodyslam','doubleedge','earthquake','rockslide','thunderbolt','blizzard','fireblast','swordsdance','toxic','hyperbeam','swift','strength','growl','leer','recover'],
+{id:'tauros',abilities:['Intimidation','Tête Brûlée'],moveIds:['tackle','stomp','bite','hornattack','bodyslam','doubleedge','hyperbeam','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Tauros',types:['normal'],emoji:'🐂',base:st(75,100,95,40,70,110)}]},
-{id:'magikarp',abilities:['Nage Rapide','Tournis'],moveIds:['tackle','bite','dragonrage','surf','bubblebeam','icebeam','blizzard','thunderbolt','bodyslam','doubleedge','swordsdance','toxic','hyperbeam','swift','strength','leer','recover'],
+{id:'magikarp',abilities:['Nage Rapide','Tournis'],moveIds:['tackle','watergun','bubble','surf','hydropump','waterfall','bodyslam','doubleedge','bite','hyperbeam','agility','swordsdance','harden','growl','leer','amnesia','dragonrage','recover','strength'],
  stages:[
   {name:'Magicarpe',types:['eau'],emoji:'🐟',base:st(20,10,55,15,20,80)},
   {name:'Léviator',types:['eau','vol'],emoji:'🐉',base:st(95,125,79,60,100,81)}]},
-{id:'lapras',abilities:['Absorbe Eau','Coque Armure'],moveIds:['watergun','surf','bubblebeam','icebeam','blizzard','sing','bodyslam','doubleedge','psychic','thunderbolt','swordsdance','toxic','hyperbeam','swift','strength','growl','recover'],
+{id:'lapras',abilities:['Absorbe Eau','Coque Armure'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','icebeam','icepunch','blizzard','bodyslam','sing','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'Lokhlass',types:['eau','glace'],emoji:'🐳',base:st(130,85,80,85,95,60)}]},
-{id:'eevee',abilities:['Cuvette','Adaptabilité'],moveIds:['tackle','quickattack','bite','bodyslam','doubleedge','swift','swordsdance','toxic','hyperbeam','dig','strength','growl','leer','recover'],
+{id:'eevee',abilities:['Cuvette','Adaptabilité'],moveIds:['tackle','quickattack','bite','bodyslam','doubleedge','swift','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Évoli',types:['normal'],emoji:'🦊',base:st(55,55,50,45,65,55)}],
  branches:[
-  {name:'Aquali',types:['eau'],emoji:'💧',base:st(130,65,60,110,95,65),abilities:['Absorbe Eau','Hydratation'],extraMoveIds:['bubble','watergun','surf','bubblebeam','waterfall','icebeam','blizzard']},
-  {name:'Voltali',types:['electrik'],emoji:'⚡',base:st(65,65,60,110,95,130),abilities:['Absorbe Volt','Pied Véloce'],extraMoveIds:['thundershock','thunderwave','thunderbolt','thunder','thunderpunch','pinmissile','agility']},
-  {name:'Pyroli',types:['feu'],emoji:'🔥',base:st(65,130,60,95,110,65),abilities:['Torche','Mental'],extraMoveIds:['ember','firepunch','flamethrower','fireblast']}
+  {name:'Aquali',types:['eau'],emoji:'💧',base:st(130,65,60,110,95,65),abilities:['Absorbe Eau','Hydratation'],extraMoveIds:['watergun','surf','hydropump','bubblebeam','waterfall','icebeam','aurora','blizzard']},
+  {name:'Voltali',types:['electrik'],emoji:'⚡',base:st(65,65,60,110,95,130),abilities:['Absorbe Volt','Pied Véloce'],extraMoveIds:['thundershock','thunderbolt','thunder','thunderpunch','thunderwave','discharge']},
+  {name:'Pyroli',types:['feu'],emoji:'🔥',base:st(65,130,60,95,110,65),abilities:['Torche','Mental'],extraMoveIds:['ember','flamethrower','fireblast','firepunch']}
  ]},
-{id:'porygon',abilities:['Calque','Téléchargement'],moveIds:['tackle','psybeam','icebeam','blizzard','thunderbolt','thunder','fireblast','agility','swordsdance','toxic','doubleedge','hyperbeam','swift','recover'],
+{id:'porygon',abilities:['Calque','Téléchargement'],moveIds:['tackle','bodyslam','hyperbeam','swift','psybeam','confusion','psychic','thunderbolt','thunderwave','icebeam','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Porygon',types:['normal'],emoji:'🤖',base:st(65,60,70,85,75,40)}]},
-{id:'omanyte',abilities:['Nage Rapide','Coque Armure'],moveIds:['watergun','surf','bubblebeam','waterfall','icebeam','blizzard','hornattack','rockslide','swordsdance','toxic','hyperbeam','swift','strength','harden','leer','recover'],
+{id:'omanyte',abilities:['Nage Rapide','Coque Armure'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','waterfall','icebeam','rockthrow','rockslide','bite','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Amonita',types:['roche','eau'],emoji:'🐚',base:st(35,40,100,90,55,35)},
   {name:'Amonistar',types:['roche','eau'],emoji:'🐚',base:st(70,60,125,115,70,55)}]},
-{id:'kabuto',abilities:['Nage Rapide','Armure Carapace'],moveIds:['scratch','slash','absorb','megadrain','watergun','surf','bubblebeam','waterfall','rockslide','dig','swordsdance','toxic','hyperbeam','swift','strength','harden','leer','recover'],
+{id:'kabuto',abilities:['Nage Rapide','Armure Carapace'],moveIds:['scratch','tackle','rockthrow','rockslide','stoneedge','watergun','surf','waterfall','slash','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Kabuto',types:['roche','eau'],emoji:'🦂',base:st(30,80,90,55,45,55)},
   {name:'Kabutops',types:['roche','eau'],emoji:'🦂',base:st(60,115,105,65,70,80)}]},
-{id:'aerodactyl',abilities:['Tête de Roc','Pression'],moveIds:['bite','wingattack','agility','rockthrow','rockslide','bodyslam','doubleedge','fireblast','swordsdance','toxic','hyperbeam','swift','strength','growl','leer','recover'],
+{id:'aerodactyl',abilities:['Tête de Roc','Pression'],moveIds:['tackle','bite','peck','wingattack','rockthrow','rockslide','stoneedge','hyperbeam','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Ptéra',types:['roche','vol'],emoji:'🦖',base:st(80,105,65,60,75,130)}]},
-{id:'snorlax',abilities:['Immunité','Isolat'],moveIds:['tackle','bodyslam','doubleedge','icebeam','blizzard','thunderbolt','fireblast','earthquake','rockslide','psychic','megadrain','surf','amnesia','swordsdance','toxic','hyperbeam','swift','strength','leer','harden','recover'],
+{id:'snorlax',abilities:['Immunité','Isolat'],moveIds:['tackle','bodyslam','doubleedge','hyperbeam','headbutt','bite','surf','icebeam','blizzard','swordsdance','amnesia','harden','growl','leer','recover','strength'],
  stages:[
   {name:'Ronflex',types:['normal'],emoji:'🐻',base:st(160,110,65,65,110,30)}]},
-{id:'articuno',abilities:['Pression','Camouflage Neige'],moveIds:['peck','icebeam','blizzard','icefang','icywind','gust','wingattack','agility','psychic','swordsdance','toxic','hyperbeam','swift','surf','strength','recover'],
+{id:'articuno',abilities:['Pression','Camouflage Neige'],moveIds:['tackle','peck','gust','icebeam','icepunch','blizzard','icefang','wingattack','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Artikodin',types:['glace','vol'],emoji:'🦅',base:st(90,85,100,95,125,85)}]},
-{id:'zapdos',abilities:['Pression','Statik'],moveIds:['thundershock','thunderbolt','thunder','thunderwave','thunderpunch','drillpeck','agility','swordsdance','toxic','hyperbeam','swift','strength','recover'],
+{id:'zapdos',abilities:['Pression','Statik'],moveIds:['tackle','thundershock','thunderbolt','thunder','thunderpunch','drillpeck','agility','thunderwave','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Électhor',types:['electrik','vol'],emoji:'🦅',base:st(90,90,85,125,90,100)}]},
-{id:'moltres',abilities:['Pression','Flamme Corps'],moveIds:['ember','flamethrower','fireblast','firepunch','gust','wingattack','agility','swordsdance','toxic','hyperbeam','swift','strength','recover'],
+{id:'moltres',abilities:['Pression','Flamme Corps'],moveIds:['tackle','ember','flamethrower','fireblast','firepunch','wingattack','drillpeck','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Sulfura',types:['feu','vol'],emoji:'🦅',base:st(90,100,90,125,85,90)}]},
-{id:'dratini',abilities:['Mue','Écaille Spéciale'],moveIds:['bodyslam','doubleedge','surf','watergun','icebeam','blizzard','thunderbolt','fireblast','earthquake','dragonrage','dragonbreath','dragonclaw','barrier','agility','swordsdance','toxic','hyperbeam','swift','dig','strength','leer','recover'],
+{id:'dratini',abilities:['Mue','Écaille Spéciale'],moveIds:['tackle','bodyslam','surf','agility','bite','swordsdance','harden','growl','leer','amnesia','recover','strength','dragonrage','dragonbreath','dragonclaw'],
  stages:[
   {name:'Minidraco',types:['dragon'],emoji:'🐍',base:st(41,64,45,50,50,50)},
   {name:'Draco',types:['dragon'],emoji:'🐉',base:st(61,84,65,70,70,70)},
   {name:'Dracolosse',types:['dragon','vol'],emoji:'🐲',base:st(91,134,95,100,100,80)}]},
-{id:'mewtwo',abilities:['Pression','Trouble-Fête'],moveIds:['confusion','psybeam','psychic','extrasensory','shadowball','barrier','amnesia','icebeam','blizzard','thunderbolt','thunder','fireblast','earthquake','rockslide','dragonrage','submission','swordsdance','toxic','thunderwave','hyperbeam','swift','dig','surf','strength','recover'],
+{id:'mewtwo',abilities:['Pression','Trouble-Fête'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','hyperbeam','thunderbolt','icebeam','blizzard','thunder','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'Mewtwo',types:['psy'],emoji:'🧬',base:st(106,110,90,154,90,130)}]},
-{id:'mew',abilities:['Synchro'],moveIds:['tackle','confusion','psybeam','psychic','extrasensory','shadowball','icebeam','blizzard','thunderbolt','thunder','fireblast','flamethrower','surf','watergun','bubblebeam','earthquake','rockslide','dragonrage','bodyslam','doubleedge','swordsdance','amnesia','toxic','thunderwave','hyperbeam','swift','dig','strength','recover'],
+{id:'mew',abilities:['Synchro'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','hyperbeam','thunderbolt','icebeam','blizzard','thunder','flamethrower','surf','earthquake','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
   {name:'Mew',types:['psy'],emoji:'✨',base:st(100,100,100,100,100,100)}]}
 ];
@@ -1561,7 +1816,7 @@ function updateBestFloor(floor){
 }
 function saveGame(){
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ team, towerFloor }));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ team, towerFloor, money, bag, reserve }));
   } catch(e){ console.error('Sauvegarde impossible', e); }
 }
 function loadGame(){
@@ -1574,7 +1829,10 @@ function loadGame(){
       const sp = speciesOf(m);
       m.computedStats = calcStats(sp.base, m.ivs, m.evs, m.nature);
     });
-    towerFloor = data.towerFloor || 1;
+    towerFloor=data.towerFloor||1;
+    money=data.money||0; bag=data.bag||{}; reserve=data.reserve||[];
+    team.forEach(m=>{if(m.currentHp==null)m.currentHp=m.computedStats?m.computedStats.hp:0;if(m.heldItem===undefined)m.heldItem=null;});
+    updateMoneyHud();
     return true;
   } catch(e){ console.error('Chargement impossible', e); return false; }
 }
@@ -2047,31 +2305,28 @@ function openEditor(idx){
     document.querySelectorAll('.csel-trigger.open').forEach(d=>d.classList.remove('open'));
   }, {once:false});
 
-  // Nature dropdown custom
-  const natOptions = NATURES.map(n => ({
-    value: n.name,
-    label: n.name,
+  // Nature csel
+  const natOpts = NATURES.map(n=>({
+    value: n.name, label: n.name,
     html: n.plus
-      ? `<span class="csel-name">${n.name}</span><span style="font-size:9px;color:var(--good);margin-left:auto;">+${STAT_LABEL[n.plus]}</span><span style="font-size:9px;color:var(--low);margin-left:6px;">-${STAT_LABEL[n.minus]}</span>`
+      ? `<span class="csel-name">${n.name}</span><span style="font-size:9px;color:var(--good);margin-left:auto;">+${STAT_LABEL[n.plus]}</span><span style="font-size:9px;color:var(--low);margin-left:5px;">-${STAT_LABEL[n.minus]}</span>`
       : `<span class="csel-name">${n.name}</span><span style="font-size:9px;color:var(--text-dim);margin-left:auto;">neutre</span>`,
     triggerHTML: n.plus
-      ? `<span class="csel-name">${n.name}&nbsp;<span style="font-size:9px;color:var(--good);">+${STAT_LABEL[n.plus]}</span><span style="font-size:9px;color:var(--low);"> -${STAT_LABEL[n.minus]}</span></span>`
+      ? `<span class="csel-name">${n.name} <span style="font-size:9px;color:var(--good);">+${STAT_LABEL[n.plus]}</span><span style="font-size:9px;color:var(--low);">-${STAT_LABEL[n.minus]}</span></span>`
       : `<span class="csel-name">${n.name} <span style="font-size:9px;color:var(--text-dim);">neutre</span></span>`
   }));
-  const natCsel = buildCsel({
-    options: natOptions, value: m.nature.name, placeholder: null,
-    onChange: (v) => { m.nature = NATURES.find(n=>n.name===v) || m.nature; openEditor(idx); }
+  const natCsel = buildCsel({options:natOpts, value:m.nature.name, noEmpty:true,
+    onChange:(v)=>{ m.nature=NATURES.find(n=>n.name===v)||m.nature; openEditor(idx); }
   });
   document.getElementById('natureSelectWrap').appendChild(natCsel);
 
-  // Ability dropdown custom
-  const abOptions = abilities.map(a => ({
-    value: a, label: a,
-    html: `<span class="csel-name">${a}</span><span style="font-size:9px;color:var(--text-dim);margin-left:auto;text-align:right;max-width:180px;">${ABILITY_DESC[a]||''}</span>`
+  // Ability csel
+  const abOpts = abilities.map(a=>({
+    value:a, label:a,
+    html:`<span class="csel-name">${a}</span><span style="font-size:9px;color:var(--text-dim);margin-left:auto;max-width:180px;text-align:right;">${ABILITY_DESC[a]||''}</span>`
   }));
-  const abCsel = buildCsel({
-    options: abOptions, value: m.ability || abilities[0], placeholder: null,
-    onChange: (v) => { m.ability = v; document.getElementById('abilityDesc').textContent = ABILITY_DESC[v]||''; }
+  const abCsel = buildCsel({options:abOpts, value:m.ability||abilities[0], noEmpty:true,
+    onChange:(v)=>{ m.ability=v; document.getElementById('abilityDesc').textContent=ABILITY_DESC[v]||''; }
   });
   document.getElementById('abilitySelectWrap').appendChild(abCsel);
   if(!m.ability) m.ability = abilities[0];
@@ -2099,22 +2354,34 @@ function openEditor(idx){
 
 document.getElementById('validateTeamBtn').onclick = ()=>{
   team.forEach(m=>{
-    const sp = speciesOf(m);
-    m.computedStats = calcStats(sp.base, m.ivs, m.evs, m.nature);
+    const sp=speciesOf(m);
+    m.computedStats=calcStats(sp.base,m.ivs,m.evs,m.nature);
+    m.currentHp=m.computedStats.hp;
+    m.currentStatus=null;
+    if(m.heldItem===undefined)m.heldItem=null;
   });
+  money=0;bag={};reserve=[];
+  updateMoneyHud();
   document.getElementById('screenBuilder').classList.add('hidden');
   document.getElementById('screenTower').classList.remove('hidden');
-  towerFloor = 1;
+  towerFloor=1;
   renderTower();
 };
 
 /* =================== TOWER =================== */
+function isMiniBosFlorr(f){return f%5===0&&f%10!==0;}
+function isBossFloor(f){return f%10===0;}
+function syncTeamHp(){
+  if(!battleState)return;
+  battleState.player.forEach((c,i)=>{if(team[i]){team[i].currentHp=c.hp;team[i].currentStatus=c.status||null;}});
+}
 function renderTower(){
-  document.getElementById('floorNum').textContent = towerFloor;
+  document.getElementById('floorNum').textContent=towerFloor;
   updateBestFloor(towerFloor);
-  const sizes = [3,3,4,4,5,6];
-  const size = sizes[Math.min(towerFloor-1, sizes.length-1)];
-  document.getElementById('floorDesc').textContent = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor} · Meilleur étage : ${bestFloor}`;
+  const sizes=[3,3,4,4,5,6],size=sizes[Math.min(towerFloor-1,sizes.length-1)];
+  const tag=isBossFloor(towerFloor)?'BOSS - ':isMiniBosFlorr(towerFloor)?'MINI-BOSS - ':'';
+  document.getElementById('floorDesc').textContent=tag+'Equipe : '+size+' Pokemon - Menace '+towerFloor+(bestFloor>1?' - Record '+bestFloor:'');
+  updateMoneyHud();
   saveGame();
 }
 document.getElementById('fightBtn').onclick = ()=>{ startBattle(); };
@@ -2306,21 +2573,34 @@ function chooseFoeMove(foe, player){
 
 /* =================== BATTLE =================== */
 function startBattle(){
-  const trainer = generateTrainer(towerFloor);
-  const enemyTeam = generateEnemyTeam(towerFloor, trainer.theme);
-  const playerRoster = team.map(m=>{
-    const sp = speciesOf(m);
+  const trainer=generateTrainer(towerFloor);
+  const enemyTeam=generateEnemyTeam(towerFloor,trainer.theme);
+  const playerRoster=team.map((m,i)=>{
+    const sp=speciesOf(m),heldId=m.heldItem||null,hi=heldId?ITEMS[heldId]:null;
+    let maxHp=m.computedStats.hp;
+    if(hi&&hi.heldEffect==='plaquevie')maxHp=Math.floor(maxHp*1.1);
+    const startHp=Math.min(Math.max(0,m.currentHp!=null?m.currentHp:maxHp),maxHp);
+    let stats={...m.computedStats};
+    if(hi&&hi.heldEffect==='choiceatk')stats={...stats,atk:Math.floor(stats.atk*1.5)};
+    if(hi&&hi.heldEffect==='choicespa')stats={...stats,spa:Math.floor(stats.spa*1.5)};
+    if(hi&&hi.heldEffect==='choicespe')stats={...stats,spe:Math.floor(stats.spe*1.5)};
     return {
-      lineId:m.lineId, name:sp.name, types:sp.types, emoji:sp.emoji,
-      moves:m.moves.map(mid=>MOVES[mid]), stats:m.computedStats, maxHp:m.computedStats.hp, hp:m.computedStats.hp, ...freshBattleFields()
+      lineId:m.lineId,name:sp.name,types:sp.types,emoji:sp.emoji,
+      moves:m.moves.filter(Boolean).map(mid=>MOVES[mid]),
+      stats,maxHp,hp:startHp,
+      heldItem:heldId,heldConsumed:false,teamIdx:i,
+      ...freshBattleFields(),status:m.currentStatus||null
     };
   });
 
-  battleState = { player: playerRoster, foe: enemyTeam, pActive: 0, fActive: 0, locked:false, trainer };
+  const firstAlive = playerRoster.findIndex(c=>c.hp>0);
+  if(firstAlive<0){ gameOver(); return; }
+  battleState = { player: playerRoster, foe: enemyTeam, pActive: firstAlive, fActive: 0, locked:false, trainer };
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenBattle').classList.remove('hidden');
   document.getElementById('trainerBanner').innerHTML = `${trainer.emoji} <b>${trainer.name}</b> veut se battre ! <span style="color:var(--text-dim);font-size:10px;">"${trainer.dialogue}"</span>`;
-  setLog(`<b>Étage ${towerFloor}</b> — l'adversaire envoie ${enemyTeam[0].name} !`);
+  setLog('<b>Etage '+towerFloor+'</b> - l\'adversaire envoie '+enemyTeam[0].name+' !');
+  updateMoneyHud();
   renderBattle();
 }
 
@@ -2546,17 +2826,21 @@ function checkStatusBeforeMove(battler, logs){
   }
   return true;
 }
-function endOfTurnStatus(battler, logs){
-  if(battler.hp<=0) return;
-  if(battler.status==='poison'){
-    const dmg = Math.max(1, Math.round(battler.maxHp/8));
-    battler.hp = Math.max(0, battler.hp-dmg);
-    logs.push(`${battler.name} souffre du poison (${dmg} dégâts).`);
-  } else if(battler.status==='brulure'){
-    const dmg = Math.max(1, Math.round(battler.maxHp/16));
-    battler.hp = Math.max(0, battler.hp-dmg);
-    logs.push(`${battler.name} souffre de sa brûlure (${dmg} dégâts).`);
+function endOfTurnStatus(battler,logs){
+  if(battler.hp<=0)return;
+  if(battler.status==='poison'){const d=Math.max(1,Math.round(battler.maxHp/8));battler.hp=Math.max(0,battler.hp-d);logs.push(battler.name+' souffre du poison ('+d+' degats).');}
+  else if(battler.status==='brulure'){const d=Math.max(1,Math.round(battler.maxHp/16));battler.hp=Math.max(0,battler.hp-d);logs.push(battler.name+' souffre de sa brulure ('+d+' degats).');}
+  if(battler.hp>0&&battler.heldItem&&!battler.heldConsumed){
+    const eff=(ITEMS[battler.heldItem]||{}).heldEffect;
+    if(eff==='reste'&&battler.hp<battler.maxHp){const h=Math.max(1,Math.floor(battler.maxHp*0.0625));battler.hp=Math.min(battler.maxHp,battler.hp+h);logs.push(battler.name+' recupere '+h+' PV (Restes).');}
   }
+}
+function checkHeldOnDamage(b){
+  if(!b.heldItem||b.heldConsumed||b.hp<=0)return null;
+  const eff=(ITEMS[b.heldItem]||{}).heldEffect;
+  if(eff==='oran'&&b.hp<=b.maxHp*0.5){b.hp=Math.min(b.maxHp,b.hp+10);b.heldConsumed=true;return b.name+' utilise sa Baie Oran (+10 PV) !';}
+  if(eff==='sitrus'&&b.hp<=b.maxHp*0.5){const h=Math.max(1,Math.floor(b.maxHp*0.25));b.hp=Math.min(b.maxHp,b.hp+h);b.heldConsumed=true;return b.name+' utilise sa Baie Sitrus (+'+h+' PV) !';}
+  return null;
 }
 
 function effectiveSpeed(c){
@@ -2604,11 +2888,16 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
-  const { dmg, eff } = computeDamage(actor, move, defender);
-  defender.hp = Math.max(0, defender.hp-dmg);
-  let msg = `<b>${actor.name}</b> ${actorIsPlayer?'utilise':'riposte avec'} ${move.name} !${effLabel(eff)} (${dmg} dégâts)`;
-  if(move.drain){ const h=Math.max(1,Math.round(dmg*move.drain)); actor.hp=Math.min(actor.maxHp,actor.hp+h); msg+=` ${actor.name} récupère ${h} PV !`; }
-  if(move.recoil){ const r=Math.max(1,Math.round(dmg*move.recoil)); actor.hp=Math.max(0,actor.hp-r); msg+=` Le contrecoup blesse ${actor.name} (${r} dégâts) !`; }
+  const {dmg,eff}=computeDamage(actor,move,defender);
+  const defFull=defender.hp>=defender.maxHp;
+  defender.hp=Math.max(0,defender.hp-dmg);
+  if(defender.hp<=0&&defFull&&defender.heldItem&&!defender.heldConsumed){
+    if((ITEMS[defender.heldItem]||{}).heldEffect==='ceinturef'){defender.hp=1;defender.heldConsumed=true;}
+  }
+  let msg='<b>'+actor.name+'</b> '+(actorIsPlayer?'utilise':'riposte avec')+' '+move.name+' !'+effLabel(eff)+' ('+dmg+' degats)';
+  if(defender.hp>0){const bm=checkHeldOnDamage(defender);if(bm)msg+=' '+bm;}
+  if(move.drain){const h=Math.max(1,Math.round(dmg*move.drain));actor.hp=Math.min(actor.maxHp,actor.hp+h);msg+=' '+actor.name+' recupere '+h+' PV !';}
+  if(move.recoil){const r=Math.max(1,Math.round(dmg*move.recoil));actor.hp=Math.max(0,actor.hp-r);msg+=' Le contrecoup blesse '+actor.name+' ('+r+' degats) !';}
   if(move.secondaryStatus && defender.hp>0 && Math.random()<move.secondaryStatus.chance){
     let slogs = [];
     inflictStatus(defender, move.secondaryStatus.status, slogs);
@@ -2715,11 +3004,31 @@ function showSwitchPrompt(aliveIdx){
 }
 
 function floorCleared(){
-  battleState.player.forEach(c=>{ c.hp = c.maxHp; resetBattleFields(c); c.status=null; c.sleepCounter=0; c.confuseCounter=0; });
-  towerFloor++;
+  syncTeamHp();
+  battleState.player.forEach(c=>{resetBattleFields(c);c.sleepCounter=0;c.confuseCounter=0;});
+  const cf=towerFloor; towerFloor++;
+  let earned=0;
+  if(isBossFloor(cf))earned=Math.floor(400+cf*20+Math.random()*200);
+  else if(isMiniBosFlorr(cf))earned=Math.floor(150+cf*10+Math.random()*100);
+  else earned=Math.floor(40+cf*4+Math.random()*40);
+  money+=earned; updateMoneyHud();
   document.getElementById('screenBattle').classList.add('hidden');
-  document.getElementById('screenTower').classList.remove('hidden');
-  renderTower();
+  if(isBossFloor(cf)){
+    const rid=BOSS_POOL[Math.floor(Math.random()*BOSS_POOL.length)];
+    addToBag(rid);
+    document.getElementById('villageFloorLabel').textContent='Etage '+cf+' - Boss vaincu ! +'+earned+' ₽';
+    document.getElementById('pokeCentreBtn').disabled=false;
+    document.getElementById('pokeCentreBtn').textContent="Soigner l'equipe";
+    prepareVillage();
+    showScreen('screenVillage');showVillageTab('centre');
+    setTimeout(()=>showRewardModal([rid],'Recompense Boss - Etage '+cf,false),400);
+  } else if(isMiniBosFlorr(cf)){
+    showScreen('screenTower'); renderTower();
+    const pool=shuffle(MINI_BOSS_POOL).slice(0,3);
+    setTimeout(()=>showRewardModal(pool,'Mini-Boss - Etage '+cf,true),400);
+  } else {
+    showScreen('screenTower'); renderTower();
+  }
 }
 
 function gameOver(){
@@ -2735,9 +3044,469 @@ document.getElementById('restartBtn').onclick = ()=>{
   initDraft();
 };
 
+/* =================== ALL NEW FUNCTIONS =================== */
+
+/* --- Patch Note --- */
+document.getElementById('splashText').onclick = function(){
+  document.getElementById('patchModal').classList.remove('hidden');
+  renderPatchNotes();
+};
+document.getElementById('patchCloseBtn').onclick = function(){document.getElementById('patchModal').classList.add('hidden');};
+function renderPatchNotes(){
+  var div=document.getElementById('patchContent'),html='';
+  PATCH_NOTES.forEach(function(p){
+    html+='<div class="patch-entry"><div class="patch-version">'+p.version+'</div><ul class="patch-list">';
+    p.notes.forEach(function(n){html+='<li>'+n+'</li>';});
+    html+='</ul></div>';
+  });
+  div.innerHTML=html;
+}
+
+/* --- Bag --- */
+var bagInBattle=false, pendingItemId=null;
+function openBag(inBattle){
+  bagInBattle=!!inBattle; pendingItemId=null;
+  document.getElementById('bagModal').classList.remove('hidden');
+  renderBagContent();
+}
+document.getElementById('bagCloseBtn').onclick=function(){document.getElementById('bagModal').classList.add('hidden');};
+function renderBagContent(){
+  var div=document.getElementById('bagContent');
+  if(pendingItemId){renderTargetPicker(div,pendingItemId);return;}
+  var cats=bagInBattle
+    ?[['heal','Soins PV'],['status','Statuts'],['revive','Rappels'],['boost','Boosts']]
+    :[['heal','Soins PV'],['status','Statuts'],['revive','Rappels'],['held','Objets tenus'],['strategic','Strategiques']];
+  var html='<div style="margin-bottom:10px;font-size:10px;color:var(--text-dim);">Argent : <b style="color:var(--accent)">'+moneyFmt()+'</b></div>';
+  var hasAny=false;
+  cats.forEach(function(c){
+    var cat=c[0],label=c[1];
+    var ids=Object.keys(bag).filter(function(id){return ITEMS[id]&&ITEMS[id].cat===cat&&bag[id]>0;});
+    if(!ids.length)return;
+    html+='<div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;">'+label+'</div><div class="item-grid">';
+    ids.forEach(function(id){
+      var item=ITEMS[id],bo=item.battleOnly&&!bagInBattle;
+      html+='<div class="item-card'+(bo?'':' usable')+'" data-item="'+id+'" style="'+(bo?'opacity:.5':'')+'">'+
+        '<div class="item-name">'+item.name+'</div>'+
+        '<div class="item-desc">'+item.desc+'</div>'+
+        '<div class="item-qty" style="margin-top:4px;">x'+bag[id]+(bo?' <span style="font-size:8px;">(combat)</span>':'')+'</div>'+
+        '</div>';
+      hasAny=true;
+    });
+    html+='</div>';
+  });
+  if(!hasAny)html+='<div style="text-align:center;color:var(--text-dim);font-size:11px;padding:20px;">Sac vide...</div>';
+  div.innerHTML=html;
+  div.querySelectorAll('.item-card.usable').forEach(function(el){
+    el.onclick=function(){pendingItemId=el.dataset.item;renderBagContent();};
+  });
+}
+function renderTargetPicker(div,itemId){
+  var item=ITEMS[itemId];
+  var roster=bagInBattle?battleState.player:team;
+  var html='<button onclick="pendingItemId=null;renderBagContent();" class="btn secondary" style="margin-bottom:12px;font-size:10px;">Retour</button>'+
+    '<div style="font-size:12px;font-weight:700;color:var(--text-main);margin-bottom:4px;">'+item.name+'</div>'+
+    '<div style="font-size:10px;color:var(--text-dim);margin-bottom:14px;">'+item.desc+'</div>'+
+    '<div class="target-list">';
+  roster.forEach(function(c,i){
+    var sp=bagInBattle?c:speciesOf(c);
+    var name=bagInBattle?c.name:sp.name,emoji=bagInBattle?c.emoji:sp.emoji;
+    var maxHp=bagInBattle?c.maxHp:(c.computedStats?c.computedStats.hp:0);
+    var curHp=bagInBattle?c.hp:(c.currentHp!=null?c.currentHp:maxHp);
+    var status=bagInBattle?c.status:c.currentStatus;
+    var isKo=curHp<=0,pct=Math.max(0,Math.min(100,maxHp?curHp/maxHp*100:0));
+    var col=pct>50?'var(--good)':pct>25?'#f0b030':'var(--low)';
+    var ok=canUseItemOn(itemId,c,bagInBattle);
+    html+='<button class="target-btn" data-idx="'+i+'" '+(ok?'':'disabled')+'>'+
+      '<div style="font-size:24px;">'+emoji+'</div>'+
+      '<div style="flex:1;">'+
+        '<div style="font-size:12px;font-weight:700;color:var(--text-main);">'+name+(isKo?' <span style="color:var(--low);">[KO]</span>':'')+'</div>'+
+        '<div style="font-size:10px;color:var(--text-dim);">'+(isKo?'KO':curHp+'/'+maxHp+' PV')+(status?' - '+status:'')+'</div>'+
+        (!isKo?'<div class="hp-mini" style="width:130px;"><div class="hp-mini-fill" style="width:'+pct+'%;background:'+col+';"></div></div>':'')+
+      '</div></button>';
+  });
+  html+='</div>';
+  div.innerHTML=html;
+  div.querySelectorAll('.target-btn:not(:disabled)').forEach(function(btn){
+    btn.onclick=function(){useItem(itemId,parseInt(btn.dataset.idx),bagInBattle);};
+  });
+}
+function canUseItemOn(itemId,target,inBattle){
+  var item=ITEMS[itemId];
+  var hp=inBattle?target.hp:(target.currentHp!=null?target.currentHp:(target.computedStats?target.computedStats.hp:0));
+  var maxHp=inBattle?target.maxHp:(target.computedStats?target.computedStats.hp:0);
+  var status=inBattle?target.status:target.currentStatus;
+  var isKo=hp<=0;
+  if(item.battleOnly&&!inBattle)return false;
+  if(item.cat==='revive')return isKo;
+  if(isKo)return false;
+  if(item.cat==='heal')return hp<maxHp;
+  if(item.cat==='status')return!!status;
+  if(item.cat==='boost')return!!inBattle;
+  return true;
+}
+function useItem(itemId,idx,inBattle){
+  var item=ITEMS[itemId];
+  if(!bag[itemId]||bag[itemId]<=0)return;
+  if(inBattle){
+    var c=battleState.player[idx];
+    applyItemToBattler(item,c);
+    removeFromBag(itemId);
+    renderBattle();
+    setLog('Tu utilises '+item.name+' sur '+c.name+' !');
+    document.getElementById('bagModal').classList.add('hidden');
+    if(battleState)battleState.locked=false;
+  } else {
+    var m=team[idx];
+    applyItemToMember(item,m,itemId);
+    if(item.cat!=='held'&&item.cat!=='strategic')removeFromBag(itemId);
+    document.getElementById('bagModal').classList.add('hidden');
+    var tm=document.getElementById('teamManageModal');
+    if(tm&&!tm.classList.contains('hidden'))renderTeamManage();
+  }
+}
+function applyItemToBattler(item,c){
+  var eff=item.effect||{};
+  if(eff.hp==='full')c.hp=c.maxHp;else if(eff.hp)c.hp=Math.min(c.maxHp,c.hp+eff.hp);
+  if(eff.cure){if(eff.cure==='all')c.status=null;else if(c.status===eff.cure)c.status=null;}
+  if(eff.revive)c.hp=eff.revive>=1?c.maxHp:Math.floor(c.maxHp*eff.revive);
+  if(eff.boost)applyStatBoost(c,[{stat:eff.boost.stat,stages:eff.boost.stages}],[]);
+}
+function applyItemToMember(item,m,itemId){
+  var eff=item.effect||{},maxHp=m.computedStats?m.computedStats.hp:0;
+  if(eff.hp==='full')m.currentHp=maxHp;else if(eff.hp)m.currentHp=Math.min(maxHp,(m.currentHp||0)+eff.hp);
+  if(eff.cure){if(eff.cure==='all')m.currentStatus=null;else if(m.currentStatus===eff.cure)m.currentStatus=null;}
+  if(eff.revive){m.currentHp=eff.revive>=1?maxHp:Math.floor(maxHp*eff.revive);m.currentStatus=null;}
+  if(item.cat==='held')m.heldItem=itemId;
+  if(eff.permBoost){
+    var STATS=['atk','def','spa','spd','spe'];
+    function boost(s){if(m.computedStats[s])m.computedStats[s]=Math.floor(m.computedStats[s]*1.1);}
+    if(eff.permBoost==='all')STATS.forEach(boost);else boost(eff.permBoost);
+    m.currentHp=Math.min(m.currentHp||maxHp,m.computedStats.hp);
+  }
+}
+
+/* --- Reward Modal --- */
+function showRewardModal(ids,title,pick){
+  var modal=document.getElementById('rewardModal');
+  document.getElementById('rewardTitle').textContent=title;
+  var div=document.getElementById('rewardContent');
+  if(pick){
+    var html='<div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">Choisis une recompense :</div><div id="rewardChoices"></div>';
+    div.innerHTML=html;
+    ids.forEach(function(id){
+      var item=ITEMS[id],card=document.createElement('div');
+      card.className='reward-card';
+      card.innerHTML='<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px;">'+item.name+'</div><div style="font-size:9px;color:var(--text-dim);">'+item.desc+'</div>';
+      card.onclick=function(){addToBag(id);modal.classList.add('hidden');};
+      document.getElementById('rewardChoices').appendChild(card);
+    });
+  } else {
+    var item=ITEMS[ids[0]];
+    div.innerHTML='<div style="text-align:center;padding:16px 0;">'+
+      '<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px;">'+item.name+'</div>'+
+      '<div style="font-size:10px;color:var(--text-dim);margin-bottom:14px;">'+item.desc+'</div>'+
+      '<button class="btn" onclick="document.getElementById(\'rewardModal\').classList.add(\'hidden\');">Super !</button>'+
+      '</div>';
+  }
+  modal.classList.remove('hidden');
+}
+
+/* --- Team Manage --- */
+function openTeamManage(){document.getElementById('teamManageModal').classList.remove('hidden');renderTeamManage();}
+document.getElementById('tmCloseBtn').onclick=function(){document.getElementById('teamManageModal').classList.add('hidden');};
+function makeTeamLead(idx){var tmp=team[0];team[0]=team[idx];team[idx]=tmp;renderTeamManage();}
+function unequipHeld(idx){team[idx].heldItem=null;renderTeamManage();}
+function sendToReserve(idx){
+  if(team.length<=1){alert('Equipe trop petite !');return;}
+  reserve.push(team.splice(idx,1)[0]);
+  renderTeamManage();
+}
+function callFromReserve(rIdx){
+  if(team.length>=6){alert('Equipe pleine ! Envoie d\'abord un Pokemon en reserve.');return;}
+  team.push(reserve.splice(rIdx,1)[0]);
+  renderTeamManage();
+}
+function swapWithReserve(teamIdx,rIdx){
+  var tmp=team[teamIdx];team[teamIdx]=reserve[rIdx];reserve[rIdx]=tmp;
+  renderTeamManage();
+}
+function renderTeamManage(){
+  var div=document.getElementById('teamManageContent');
+  var html='<div style="font-size:10px;font-weight:700;color:var(--accent);margin-bottom:8px;">Equipe active ('+team.length+'/6)</div>';
+  team.forEach(function(m,i){
+    var sp=speciesOf(m),maxHp=m.computedStats?m.computedStats.hp:0;
+    var curHp=m.currentHp!=null?m.currentHp:maxHp,isKo=curHp<=0;
+    var pct=Math.max(0,Math.min(100,maxHp?curHp/maxHp*100:0));
+    var col=pct>50?'var(--good)':pct>25?'#f0b030':'var(--low)';
+    var heldName=m.heldItem&&ITEMS[m.heldItem]?ITEMS[m.heldItem].name:'Aucun';
+    html+='<div class="manage-card'+(i===0?' lead-card':'')+'">'+
+      '<div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:28px;">'+getSpriteHTML(sp.name,sp.emoji)+'</div>'+
+      '<div class="manage-card-info">'+
+        '<div class="manage-card-name">'+sp.name+(i===0?' <span style="font-size:7px;color:var(--accent);">[LEAD]</span>':'')+'</div>'+
+        '<div style="font-size:9px;color:var(--text-dim);">'+(isKo?'<span style="color:var(--low);">KO</span>':curHp+'/'+maxHp+' PV')+(m.currentStatus?' - '+m.currentStatus:'')+'</div>'+
+        (!isKo?'<div class="hp-mini" style="width:100px;"><div class="hp-mini-fill" style="width:'+pct+'%;background:'+col+';"></div></div>':'')+
+        '<div style="font-size:8px;color:var(--text-dim);margin-top:2px;">Objet : '+heldName+(m.heldItem?' <button onclick="unequipHeld('+i+')" style="font-size:7px;color:var(--low);background:none;border:1px solid var(--low);border-radius:2px;cursor:pointer;padding:0 3px;">x</button>':'')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;gap:4px;">'+
+        (i>0?'<button class="btn secondary" style="padding:3px 8px;font-size:8px;" onclick="makeTeamLead('+i+')">Lead</button>':'')+
+        (team.length>1?'<button class="btn secondary" style="padding:3px 8px;font-size:8px;" onclick="sendToReserve('+i+')">PC</button>':'')+
+      '</div>'+
+    '</div>';
+  });
+  if(reserve.length>0){
+    html+='<div style="font-size:10px;font-weight:700;color:var(--accent);margin:14px 0 8px;">Reserve PC ('+reserve.length+')</div>';
+    html+='<div class="pc-grid">';
+    reserve.forEach(function(m,ri){
+      var sp=speciesOf(m),maxHp=m.computedStats?m.computedStats.hp:0;
+      var curHp=m.currentHp!=null?m.currentHp:maxHp,isKo=curHp<=0;
+      html+='<div class="pc-slot" onclick="callFromReserve('+ri+')">'+
+        '<div style="font-size:26px;">'+sp.emoji+'</div>'+
+        '<div style="font-size:9px;font-weight:700;color:var(--text-main);">'+sp.name+'</div>'+
+        '<div style="font-size:8px;color:var(--text-dim);">'+(isKo?'KO':curHp+'/'+maxHp)+'</div>'+
+        '<div style="font-size:7px;color:var(--accent);margin-top:2px;">Clic pour rappeler</div>'+
+      '</div>';
+    });
+    html+='</div>';
+  }
+  html+='<div style="margin-top:14px;text-align:center;display:flex;gap:8px;justify-content:center;">'+
+    '<button class="btn secondary" onclick="document.getElementById(\'teamManageModal\').classList.add(\'hidden\');openBag(false);">Ouvrir le Sac</button>'+
+  '</div>';
+  div.innerHTML=html;
+}
+
+/* --- Village --- */
+var ranchPokes=[], ranchBought=false;
+function prepareVillage(){
+  ranchBought=false;
+  ranchPokes=[];
+  var pool=[...LINES];shuffle(pool);
+  var selected=pool.slice(0,3);
+  ranchPokes=selected.map(function(line){
+    var stageIdx=Math.floor(Math.random()*(line.stages.length));
+    var nature=NATURES[Math.floor(Math.random()*NATURES.length)];
+    var ivs={hp:31,atk:31,def:31,spa:31,spd:31,spe:31};
+    var evs={hp:0,atk:0,def:0,spa:0,spd:0,spe:0};
+    var pool2=movepoolFor({lineId:line.id,stage:stageIdx});
+    var moves=shuffle([...pool2]).slice(0,4);
+    var m={lineId:line.id,stage:stageIdx,nature:nature,ivs:ivs,evs:evs,
+      moves:moves,ability:speciesOf({lineId:line.id,stage:stageIdx}).abilities[0]||'',
+      heldItem:null,currentHp:null,currentStatus:null};
+    m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);
+    m.currentHp=m.computedStats.hp;
+    return m;
+  });
+  renderVillagePC();
+}
+function showVillageTab(tab){
+  ['centre','shop','ranch','pc'].forEach(function(t){
+    document.getElementById('village'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('hidden',t!==tab);
+  });
+  document.querySelectorAll('.village-tab').forEach(function(btn,i){
+    btn.classList.toggle('active',['centre','shop','ranch','pc'][i]===tab);
+  });
+  if(tab==='shop')renderShop();
+  if(tab==='ranch')renderRanch();
+  if(tab==='pc')renderVillagePC();
+  updateMoneyHud();
+}
+document.getElementById('pokeCentreBtn').onclick=function(){
+  team.forEach(function(m){m.currentHp=m.computedStats?m.computedStats.hp:0;m.currentStatus=null;});
+  document.getElementById('pokeCentreBtn').textContent='Equipe soignee !';
+  document.getElementById('pokeCentreBtn').disabled=true;
+};
+function renderShop(){
+  var div=document.getElementById('shopItemList'),html='';
+  SHOP_ITEMS.forEach(function(id){
+    var item=ITEMS[id];if(!item)return;
+    var locked=towerFloor<item.unlock,qty=bag[id]||0;
+    html+='<div class="shop-row">'+
+      '<div style="flex:1;">'+
+        '<div class="item-name">'+item.name+(qty?' <span style="color:var(--text-dim);">x'+qty+'</span>':'')+'</div>'+
+        '<div class="item-desc">'+item.desc+'</div>'+
+        (locked?'<div class="item-locked">Debloque etage '+item.unlock+'</div>':'')+
+      '</div>'+
+      '<div style="text-align:right;flex-shrink:0;">'+
+        '<div style="font-size:10px;color:var(--good);">'+item.price+' \u20bd</div>'+
+        '<button class="btn secondary" style="padding:4px 10px;font-size:10px;margin-top:4px;" '+(locked||money<item.price?'disabled':'')+' onclick="buyItem(\''+id+'\')">Acheter</button>'+
+      '</div>'+
+    '</div>';
+  });
+  div.innerHTML=html||'<div style="color:var(--text-dim);text-align:center;padding:20px;">Aucun objet.</div>';
+}
+function buyItem(id){
+  var item=ITEMS[id];if(!item||money<item.price)return;
+  money-=item.price;addToBag(id);updateMoneyHud();renderShop();
+}
+function renderRanch(){
+  var div=document.getElementById('ranchCards');
+  var price=ranchPrice();
+  document.getElementById('ranchDesc').textContent='3 Pokemon disponibles. Prix : '+price+' \u20bd.'+(ranchBought?' Deja achete cette visite.':'');
+  var html='';
+  ranchPokes.forEach(function(m,i){
+    var sp=speciesOf(m);
+    var types=sp.types.map(function(t){return '<span class="type-tag t-'+t+'" style="font-size:7px;padding:1px 6px;">'+t+'</span>';}).join(' ');
+    html+='<div class="ranch-card" '+(ranchBought?'style="opacity:.5;cursor:not-allowed;"':'')+' onclick="'+(ranchBought?'':'buyRanchPoke('+i+')')+'" >'+
+      '<div style="font-size:32px;">'+sp.emoji+'</div>'+
+      '<div style="font-size:11px;font-weight:700;color:var(--text-main);margin:4px 0 2px;">'+sp.name+'</div>'+
+      '<div style="margin-bottom:4px;">'+types+'</div>'+
+      '<div style="font-size:8px;color:var(--text-dim);">Nature : '+m.nature.name+'</div>'+
+      '<div style="font-size:8px;color:var(--text-dim);">Attaques : '+m.moves.map(function(mid){return MOVES[mid]?MOVES[mid].name:mid;}).join(', ')+'</div>'+
+      '<div style="font-size:9px;color:var(--accent);margin-top:6px;">'+price+' \u20bd</div>'+
+    '</div>';
+  });
+  div.innerHTML=html;
+}
+function buyRanchPoke(idx){
+  var price=ranchPrice();
+  if(money<price){alert('Pas assez d\'argent !');return;}
+  money-=price; updateMoneyHud();
+  ranchBought=true;
+  var m=ranchPokes[idx];
+  openRanchBuilder(m);
+}
+function openRanchBuilder(m){
+  document.getElementById('ranchBuildModal').classList.remove('hidden');
+  var div=document.getElementById('ranchBuildContent');
+  div.innerHTML='<div style="text-align:center;font-size:11px;color:var(--text-dim);padding:20px;">Chargement du builder...</div>';
+  setTimeout(function(){buildRanchEditor(m,div);},100);
+}
+document.getElementById('ranchBuildCloseBtn').onclick=function(){document.getElementById('ranchBuildModal').classList.add('hidden');};
+
+function buildRanchEditor(m,container){
+  var sp=speciesOf(m);
+  var line=LINES.find(function(l){return l.id===m.lineId;})||{stages:[]};
+  var abilities=sp.abilities&&sp.abilities.length?sp.abilities:['Aucun'];
+  if(!m.ability)m.ability=abilities[0];
+  var natOpts=NATURES.map(function(n){return '<option value="'+n.name+'"'+(n.name===m.nature.name?' selected':'')+'>'+n.name+(n.plus?' (+'+STAT_LABEL[n.plus]+'/-'+STAT_LABEL[n.minus]+')':'')+'</option>';}).join('');
+  var abilOpts=abilities.map(function(a){return '<option value="'+a+'"'+(a===m.ability?' selected':'')+'>'+a+'</option>';}).join('');
+  var stageOpts=line.stages.map(function(s,i){return '<option value="'+i+'"'+(i===m.stage?' selected':'')+'>'+s.name+'</option>';}).join('');
+
+  var html='<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;">'+
+    '<div style="text-align:center;min-width:100px;">'+
+      '<div style="font-size:52px;margin-bottom:4px;">'+sp.emoji+'</div>'+
+      '<div style="font-size:11px;font-weight:700;color:var(--text-main);">'+sp.name+'</div>'+
+      '<div style="font-size:9px;color:var(--text-dim);margin-bottom:8px;">'+sp.types.map(function(t){return '<span class="type-tag t-'+t+'" style="font-size:7px;padding:1px 5px;">'+t+'</span>';}).join(' ')+'</div>'+
+      (line.stages.length>1?'<div style="margin-bottom:6px;"><select id="rb_stage" style="background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;width:100%;">'+stageOpts+'</select></div>':'')+
+    '</div>'+
+    '<div style="flex:1;min-width:200px;">'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">'+
+        '<div><label style="font-size:9px;color:var(--text-dim);">Nature</label><br><select id="rb_nature" style="background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;width:100%;">'+natOpts+'</select></div>'+
+        '<div><label style="font-size:9px;color:var(--text-dim);">Talent</label><br><select id="rb_ability" style="background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;width:100%;">'+abilOpts+'</select></div>'+
+      '</div>'+
+      '<div style="font-size:9px;color:var(--text-dim);margin-bottom:6px;">EVs (max 252/stat, 510 total)</div>'+
+      '<div id="rb_evs" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"></div>'+
+      '<div style="font-size:9px;color:var(--text-dim);margin-bottom:6px;">IVs</div>'+
+      '<div id="rb_ivs" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"></div>'+
+    '</div>'+
+  '</div>'+
+  '<div style="font-size:9px;color:var(--text-dim);margin-bottom:6px;">Attaques (4 max)</div>'+
+  '<div id="rb_moves" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;"></div>'+
+  '<div style="text-align:center;display:flex;gap:8px;justify-content:center;">'+
+    '<button class="btn" id="rb_confirm">Confirmer et placer</button>'+
+    '<button class="btn secondary" id="rb_cancel">Annuler</button>'+
+  '</div>';
+  container.innerHTML=html;
+
+  ['hp','atk','def','spa','spd','spe'].forEach(function(stat){
+    var evDiv=document.getElementById('rb_evs'),ivDiv=document.getElementById('rb_ivs');
+    var eEl=document.createElement('div');
+    eEl.innerHTML='<label style="font-size:8px;color:var(--text-dim);">'+STAT_LABEL[stat]+'</label><input type="number" min="0" max="252" step="4" value="'+m.evs[stat]+'" data-stat="'+stat+'" class="rb-ev" style="width:100%;background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;">';
+    evDiv.appendChild(eEl);
+    var iEl=document.createElement('div');
+    iEl.innerHTML='<label style="font-size:8px;color:var(--text-dim);">'+STAT_LABEL[stat]+'</label><input type="number" min="0" max="31" value="'+m.ivs[stat]+'" data-stat="'+stat+'" class="rb-iv" style="width:100%;background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;">';
+    ivDiv.appendChild(iEl);
+  });
+
+  function rebuildMoves(){
+    var pool2=movepoolFor(m),mvDiv=document.getElementById('rb_moves');mvDiv.innerHTML='';
+    [0,1,2,3].forEach(function(slot){
+      var sel=document.createElement('select');
+      sel.style.cssText='width:100%;background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;';
+      sel.innerHTML='<option value="">-</option>'+pool2.map(function(mid){var mv=MOVES[mid];return mv?'<option value="'+mid+'"'+(m.moves[slot]===mid?' selected':'')+'>'+mv.name+'</option>':'';}).join('');
+      sel.onchange=function(){m.moves[slot]=sel.value||null;};
+      mvDiv.appendChild(sel);
+    });
+  }
+  rebuildMoves();
+
+  if(document.getElementById('rb_stage')){
+    document.getElementById('rb_stage').onchange=function(e){m.stage=parseInt(e.target.value);m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);m.currentHp=m.computedStats.hp;buildRanchEditor(m,container);};
+  }
+  document.getElementById('rb_nature').onchange=function(e){m.nature=NATURES.find(function(n){return n.name===e.target.value;})||m.nature;};
+  document.getElementById('rb_ability').onchange=function(e){m.ability=e.target.value;};
+  container.querySelectorAll('.rb-ev').forEach(function(inp){inp.onchange=function(){m.evs[inp.dataset.stat]=Math.max(0,Math.min(252,parseInt(inp.value)||0));m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);m.currentHp=m.computedStats.hp;};});
+  container.querySelectorAll('.rb-iv').forEach(function(inp){inp.onchange=function(){m.ivs[inp.dataset.stat]=Math.max(0,Math.min(31,parseInt(inp.value)||0));m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);m.currentHp=m.computedStats.hp;};});
+
+  document.getElementById('rb_confirm').onclick=function(){
+    m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);
+    m.currentHp=m.computedStats.hp;
+    document.getElementById('ranchBuildModal').classList.add('hidden');
+    showPlacementChoice(m);
+  };
+  document.getElementById('rb_cancel').onclick=function(){document.getElementById('ranchBuildModal').classList.add('hidden');};
+}
+
+function showPlacementChoice(m){
+  var sp=speciesOf(m);
+  var modal=document.getElementById('rewardModal');
+  document.getElementById('rewardTitle').textContent='Ou placer '+sp.name+' ?';
+  var div=document.getElementById('rewardContent');
+  var teamFull=team.length>=6;
+  div.innerHTML='<div style="text-align:center;margin-bottom:14px;"><div style="font-size:36px;">'+sp.emoji+'</div><div style="font-size:12px;font-weight:700;color:var(--text-main);">'+sp.name+'</div></div>'+
+    '<div class="reward-card" '+(teamFull?'style="opacity:.5;cursor:not-allowed;"':'')+' onclick="'+(teamFull?'':'placeInTeam(ranchLastBuilt)')+'">'+(teamFull?'Equipe pleine':'Ajouter a l\'equipe active')+'</div>'+
+    '<div class="reward-card" onclick="placeInReserve(ranchLastBuilt)">Envoyer au PC (reserve)</div>';
+  ranchLastBuilt=m;
+  modal.classList.remove('hidden');
+}
+var ranchLastBuilt=null;
+function placeInTeam(m){
+  if(team.length<6)team.push(m);
+  else reserve.push(m);
+  document.getElementById('rewardModal').classList.add('hidden');
+  renderRanch();
+}
+function placeInReserve(m){
+  reserve.push(m);
+  document.getElementById('rewardModal').classList.add('hidden');
+  renderRanch();
+}
+
+function renderVillagePC(){
+  var div=document.getElementById('pcGrid');
+  document.getElementById('pcCountLabel').textContent=reserve.length+' Pokemon';
+  if(!reserve.length){div.innerHTML='<div class="pc-slot empty" style="grid-column:1/-1;padding:20px;">Reserve vide</div>';return;}
+  var html='';
+  reserve.forEach(function(m,i){
+    var sp=speciesOf(m),maxHp=m.computedStats?m.computedStats.hp:0;
+    var curHp=m.currentHp!=null?m.currentHp:maxHp;
+    html+='<div class="pc-slot" title="Clic pour rappeler" onclick="callFromVillagePC('+i+')">'+
+      '<div style="font-size:28px;">'+sp.emoji+'</div>'+
+      '<div style="font-size:9px;font-weight:700;color:var(--text-main);">'+sp.name+'</div>'+
+      '<div style="font-size:8px;color:var(--text-dim);">'+curHp+'/'+maxHp+' PV</div>'+
+    '</div>';
+  });
+  div.innerHTML=html;
+}
+function callFromVillagePC(rIdx){
+  if(team.length>=6){alert('Equipe pleine !');return;}
+  team.push(reserve.splice(rIdx,1)[0]);
+  renderVillagePC();
+}
+
+document.getElementById('villageLeaveBtn').onclick=function(){
+  document.getElementById('pokeCentreBtn').disabled=false;
+  document.getElementById('pokeCentreBtn').textContent="Soigner l'equipe";
+  showScreen('screenTower');renderTower();
+};
+
+/* --- Buttons --- */
+document.getElementById('towerBagBtn').onclick=function(){openBag(false);};
+document.getElementById('towerTeamBtn').onclick=function(){openTeamManage();};
+document.getElementById('battleBagBtn').onclick=function(){openBag(true);};
+
 /* =================== MENU & POKÉDEX =================== */
 function showScreen(id){
-  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenBattle','screenEnd'].forEach(s=>{
+  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenBattle','screenEnd','screenVillage'].forEach(s=>{
     document.getElementById(s).classList.toggle('hidden', s!==id);
   });
   if(id==='screenMenu') refreshMenuUI();
@@ -2827,33 +3596,33 @@ function renderDex(){
 }
 
 document.getElementById('dexSearch').oninput = (e)=>{ dexFilters.search = e.target.value; renderDex(); };
-
-const TYPE_LIST = ['normal','feu','eau','plante','electrik','vol','poison','sol','insecte','combat','glace','psy','fantome','roche','dragon'];
+// Dex type csel
+const TYPE_LIST = ['normal','feu','eau','plante','electrik','glace','combat','poison','sol','vol','psy','insecte','roche','fantome','dragon'];
 const dexTypeCsel = buildCsel({
   options: TYPE_LIST.map(t=>({value:t, label:t, html:`<span class="type-tag t-${t}" style="font-size:8px;padding:2px 8px;">${t}</span>`})),
-  value: '', placeholder: 'Tous les types',
-  onChange: (v) => { dexFilters.type = v; renderDex(); }
+  value:'', placeholder:'Tous les types',
+  onChange:(v)=>{ dexFilters.type=v; renderDex(); }
 });
 document.getElementById('dexTypeFilterWrap').appendChild(dexTypeCsel);
 
-const RARITY_OPTS = [
-  {value:'commun',    label:'Commun',           html:`<span class="rarity-badge rarity-commun">Commun</span>`},
-  {value:'evo',       label:'Évolution',         html:`<span class="rarity-badge rarity-evo">Évolution</span>`},
-  {value:'rare',      label:'Rare',              html:`<span class="rarity-badge rarity-rare">Rare</span>`},
-  {value:'pseudo',    label:'Pseudo-légendaire', html:`<span class="rarity-badge rarity-pseudo">Pseudo-légendaire</span>`},
-  {value:'legendaire',label:'Légendaire',        html:`<span class="rarity-badge rarity-legendaire">Légendaire</span>`},
+// Dex rarity csel
+const RARITY_OPTS=[
+  {value:'commun',    label:'Commun',           html:'<span class="rarity-badge rarity-commun">Commun</span>'},
+  {value:'evo',       label:'Evolution',         html:'<span class="rarity-badge rarity-evo">Evolution</span>'},
+  {value:'rare',      label:'Rare',              html:'<span class="rarity-badge rarity-rare">Rare</span>'},
+  {value:'pseudo',    label:'Pseudo-leg.',       html:'<span class="rarity-badge rarity-pseudo">Pseudo-leg.</span>'},
+  {value:'legendaire',label:'Legendaire',        html:'<span class="rarity-badge rarity-legendaire">Legendaire</span>'},
 ];
 const dexRarityCsel = buildCsel({
-  options: RARITY_OPTS, value: '', placeholder: 'Toutes raretés',
-  onChange: (v) => { dexFilters.rarity = v; renderDex(); }
+  options:RARITY_OPTS, value:'', placeholder:'Toutes raretés',
+  onChange:(v)=>{ dexFilters.rarity=v; renderDex(); }
 });
 document.getElementById('dexRarityFilterWrap').appendChild(dexRarityCsel);
-
 document.getElementById('dexResetFilter').onclick = ()=>{
   dexFilters = {search:'', type:'', rarity:''};
   document.getElementById('dexSearch').value = '';
-  dexTypeCsel._setValue('');
-  dexRarityCsel._setValue('');
+  if(typeof dexTypeCsel!=='undefined')dexTypeCsel._setValue('');
+  if(typeof dexRarityCsel!=='undefined')dexRarityCsel._setValue('');
   renderDex();
 };
 
