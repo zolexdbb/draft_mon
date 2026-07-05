@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Draft Mon — Tour de Combat</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -25,7 +24,6 @@
 *{box-sizing:border-box;}
 body{
   margin:0; min-height:100vh; color:var(--text-main);
-  font-size:15px;
   font-family:'Courier New',monospace;
   background:
     repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(60,60,100,.12) 39px, rgba(60,60,100,.12) 40px),
@@ -49,7 +47,7 @@ body{
 }
 .site-subtitle{
   font-family:'Press Start 2P', monospace;
-  font-size:clamp(10px, 1.5vw, 14px); color:var(--text-dim); letter-spacing:4px;
+  font-size:clamp(6px, 1.2vw, 10px); color:var(--text-dim); letter-spacing:4px;
   margin-top:6px; display:block;
 }
 .site-header::before, .site-header::after{
@@ -73,7 +71,7 @@ body{
     0 0 0 5px var(--line),
     0 24px 60px rgba(0,0,0,.7),
     inset 0 1px 0 rgba(255,255,255,.05);
-  padding:30px;
+  padding:26px;
   position:relative;
 }
 .panel::before{
@@ -89,12 +87,12 @@ body{
   background:var(--bg-deep); padding:0 10px;
 }
 .hidden{display:none !important;}
-.sub{ color:var(--text-dim); font-size:15px; text-align:center; margin-bottom:20px; letter-spacing:.3px; line-height:1.5; }
+.sub{ color:var(--text-dim); font-size:11px; text-align:center; margin-bottom:20px; letter-spacing:.5px; }
 /* ---- BOUTONS ---- */
 .btn{
   background:linear-gradient(180deg, #f0d060 0%, #c8960e 100%);
   color:#1a1000; border:none; padding:10px 22px; border-radius:3px;
-  font-weight:bold; font-family:'Courier New',monospace; cursor:pointer; letter-spacing:.5px; font-size:14px;
+  font-weight:bold; font-family:'Courier New',monospace; cursor:pointer; letter-spacing:.5px; font-size:12px;
   box-shadow:0 3px 0 #7a5800, 0 4px 8px rgba(0,0,0,.4);
   transition:transform .1s, box-shadow .1s;
   text-transform:uppercase;
@@ -126,18 +124,18 @@ body{
 }
 .draft-team-slot.filled{ border-style:solid; border-color:var(--good); box-shadow:0 0 10px rgba(76,206,106,.25); }
 .draft-team-slot .emoji{ font-size:30px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; }
-.draft-team-slot .pname{ font-size:11px; margin-top:2px; text-align:center; padding:0 2px; }
+.draft-team-slot .pname{ font-size:9px; margin-top:2px; text-align:center; padding:0 2px; }
 .poke-card{
   background:linear-gradient(160deg,#232335 0%,var(--bg-card) 100%); border:1px solid var(--line); border-radius:4px; padding:22px 16px;
   text-align:center; cursor:pointer; transition:transform .12s, border-color .12s;
   box-shadow:0 4px 0 #0a0a14, 0 6px 18px rgba(0,0,0,.5);
   position:relative;
 }
-.poke-card .pname{ font-size:22px; }
-.poke-card .stat-line{ font-size:14px; }
-.poke-card .evoline{ font-size:15px; }
+.poke-card .pname{ font-size:18px; }
+.poke-card .stat-line{ font-size:12px; }
+.poke-card .evoline{ font-size:11px; }
 .poke-card:hover{ transform:translateY(-3px); border-color:var(--accent); }
-.poke-card .emoji{ font-size:68px; width:112px; height:112px; margin:0 auto; display:flex; align-items:center; justify-content:center; }
+.poke-card .emoji{ font-size:64px; width:104px; height:104px; margin:0 auto; display:flex; align-items:center; justify-content:center; }
 .team-card .emoji{ font-size:48px; width:76px; height:76px; margin:0 auto; display:flex; align-items:center; justify-content:center; }
 .dex-card .emoji{ font-size:50px; width:80px; height:80px; margin:0 auto; display:flex; align-items:center; justify-content:center; }
 .poke-card .pname{ font-weight:bold; margin:6px 0 4px; font-size:14px;}
@@ -145,7 +143,7 @@ body{
 .types-row{ display:flex; justify-content:center; gap:4px; flex-wrap:wrap; margin-bottom:6px;}
 .type-tag{
   display:inline-flex; align-items:center; padding:3px 10px; border-radius:20px;
-  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px;
+  font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.9px;
   color:#fff; border:none; line-height:1.4;
 }
 /* Couleurs officielles Pokémon par type */
@@ -164,7 +162,63 @@ body{
 .t-fantome { background:#735797; color:#fff; }
 .t-roche   { background:#B6A136; color:#fff; }
 .t-dragon  { background:#6F35FC; color:#fff; }
-.stat-line{ font-size:13px; color:var(--text-dim); }
+.t-acier   { background:#B7B7CE; color:#1a1000; }
+.t-tenebres{ background:#5A5465; color:#fff; }
+.stat-line{ font-size:10px; color:var(--text-dim); }
+.sprite-fallback{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; font-weight:bold; color:var(--text-dim); }
+
+/* ---- SPLASH TEXT (style Minecraft) ---- */
+.menu-splash{
+  position:absolute; top:0; left:0;
+  transform:translate(-50%,-50%) rotate(-14deg);
+  transform-origin:center;
+  font-family:'Press Start 2P', monospace;
+  font-size:10px; color:var(--accent);
+  text-shadow:0 0 6px rgba(232,200,74,.6), 2px 2px 0 rgba(0,0,0,.6);
+  white-space:nowrap; cursor:pointer; z-index:5;
+  animation:splashBounce 0.9s ease-in-out infinite alternate;
+  background:none; border:none; padding:0;
+}
+.menu-splash:hover{ color:#fff; }
+@keyframes splashBounce{
+  from{ transform:translate(-50%,-50%) rotate(-14deg) scale(1); }
+  to{ transform:translate(-50%,-50%) rotate(-14deg) scale(1.12); }
+}
+@media (max-width:600px){
+  .menu-splash{ font-size:8px; }
+  @keyframes splashBounce{
+    from{ transform:translate(-50%,-50%) rotate(-14deg) scale(1); }
+    to{ transform:translate(-50%,-50%) rotate(-14deg) scale(1.08); }
+  }
+}
+
+/* ---- PATCH NOTES MODAL ---- */
+.patchnotes-overlay{
+  position:fixed; inset:0; background:rgba(5,5,10,.75);
+  display:flex; align-items:center; justify-content:center;
+  z-index:1000; padding:20px;
+}
+.patchnotes-modal{
+  background:var(--bg-panel); border:2px solid var(--line-bright); border-radius:4px;
+  box-shadow:0 0 0 4px var(--bg-deep), 0 0 0 5px var(--line), 0 24px 60px rgba(0,0,0,.7);
+  max-width:480px; width:100%; max-height:80vh; overflow-y:auto; padding:22px 24px; position:relative;
+}
+.patchnotes-modal h2{
+  font-family:'Press Start 2P', monospace; font-size:13px; color:var(--accent);
+  margin:0 0 16px; text-align:center; letter-spacing:1px;
+}
+.patchnotes-version{ margin-bottom:18px; }
+.patchnotes-version-title{
+  font-family:'Press Start 2P', monospace; font-size:10px; color:var(--good);
+  margin-bottom:8px; letter-spacing:.5px;
+}
+.patchnotes-version ul{ margin:0; padding-left:18px; }
+.patchnotes-version li{ font-size:11px; color:var(--text-main); line-height:1.7; }
+.patchnotes-close{
+  position:absolute; top:10px; right:10px; background:none; border:none;
+  color:var(--text-dim); font-size:18px; cursor:pointer; line-height:1;
+}
+.patchnotes-close:hover{ color:var(--accent); }
 
 /* ---- TEAM BUILDER ---- */
 .team-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
@@ -184,26 +238,26 @@ body{
 }
 .team-card-sprite{ width:52px; height:52px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:36px; }
 .team-card-info{ flex:1; min-width:0; }
-.team-card-info .pname{ font-weight:700; font-size:16px; margin:0 0 3px; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.team-card-info .pname{ font-weight:700; font-size:13px; margin:0 0 3px; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .team-card-footer{
-  padding:8px 12px; display:flex; align-items:center; justify-content:space-between;
-  font-size:14px; color:var(--text-dim);
+  padding:6px 12px; display:flex; align-items:center; justify-content:space-between;
+  font-size:10px; color:var(--text-dim);
 }
 .team-card .status-chip{
-  font-size:11px; padding:3px 8px; border-radius:10px; font-weight:600; text-transform:uppercase;
+  font-size:9px; padding:2px 7px; border-radius:10px; font-weight:600; text-transform:uppercase;
   background:rgba(76,206,106,.15); color:var(--good); border:1px solid rgba(76,206,106,.4);
 }
 .team-card .status-chip.unconfigured{
   background:rgba(136,136,176,.1); color:var(--text-dim); border-color:var(--line);
 }
 .team-card .lead-badge{
-  font-size:11px; padding:3px 8px; border-radius:3px; background:rgba(232,200,74,.15);
+  font-size:9px; padding:2px 6px; border-radius:3px; background:rgba(232,200,74,.15);
   color:var(--accent); border:1px solid rgba(232,200,74,.3); font-weight:700; letter-spacing:.5px;
 }
 .order-btns{ display:flex; gap:3px; }
 .order-btn{
   background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:3px;
-  color:var(--text-dim); font-size:14px; padding:3px 8px; cursor:pointer; line-height:1;
+  color:var(--text-dim); font-size:10px; padding:2px 6px; cursor:pointer; line-height:1;
 }
 .order-btn:hover:not(:disabled){ border-color:var(--accent); color:var(--accent); }
 .order-btn:disabled{ opacity:.3; cursor:not-allowed; }
@@ -211,7 +265,7 @@ body{
 /* ---- EDITOR REDESIGN ---- */
 .editor{
   background:var(--bg-card); border:1px solid var(--line-bright); border-radius:6px;
-  margin-top:10px; box-shadow:0 4px 20px rgba(0,0,0,.5); overflow:visible;
+  margin-top:10px; box-shadow:0 4px 20px rgba(0,0,0,.5); overflow:hidden;
 }
 .editor-topbar{
   display:flex; align-items:center; gap:12px; padding:12px 16px;
@@ -220,16 +274,16 @@ body{
 }
 .editor-sprite{ width:72px; height:72px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:52px; }
 .editor-ident{ flex:1; }
-.editor-ident h3{ margin:0 0 5px; color:var(--text-main); font-family:"Press Start 2P",monospace; font-size:13px; letter-spacing:1px; }
-.editor-body{ padding:14px 16px; overflow:visible;}
-.editor-section{ margin-bottom:14px; overflow:visible; }
+.editor-ident h3{ margin:0 0 5px; color:var(--text-main); font-family:"Press Start 2P",monospace; font-size:11px; letter-spacing:1px; }
+.editor-body{ padding:14px 16px; }
+.editor-section{ margin-bottom:14px; }
 .editor-section-title{
-  font-size:11px; color:var(--accent); text-transform:uppercase; letter-spacing:1.5px;
+  font-size:9px; color:var(--accent); text-transform:uppercase; letter-spacing:1.5px;
   font-weight:700; margin-bottom:8px; border-bottom:1px solid var(--line); padding-bottom:4px;
 }
 .editor-row{ display:flex; gap:12px; flex-wrap:wrap; }
 .editor-block{ flex:1; min-width:180px; }
-.editor-block label{ font-size:13px; color:var(--text-dim); display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px; }
+.editor-block label{ font-size:10px; color:var(--text-dim); display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px; }
 select, input[type=number]{
   background:#0d0d18;
   border:1px solid var(--line-bright);
@@ -237,7 +291,7 @@ select, input[type=number]{
   border-radius:5px;
   padding:7px 32px 7px 10px;
   font-family:inherit;
-  font-size:14px;
+  font-size:12px;
   width:100%;
   appearance:none;
   -webkit-appearance:none;
@@ -264,49 +318,49 @@ select option{
   padding:6px;
 }
 .stat-bars{ display:flex; flex-direction:column; gap:5px; }
-.stat-bar-row{ display:flex; align-items:center; gap:8px; font-size:13px; }
-.stat-bar-label{ width:40px; color:var(--text-dim); flex-shrink:0; text-align:right; }
-.stat-bar-val{ width:32px; color:var(--text-main); font-weight:700; text-align:right; flex-shrink:0; }
-.stat-bar-track{ flex:1; height:8px; background:#0b0b10; border-radius:3px; overflow:hidden; border:1px solid var(--line); }
+.stat-bar-row{ display:flex; align-items:center; gap:8px; font-size:10px; }
+.stat-bar-label{ width:34px; color:var(--text-dim); flex-shrink:0; text-align:right; }
+.stat-bar-val{ width:26px; color:var(--text-main); font-weight:700; text-align:right; flex-shrink:0; }
+.stat-bar-track{ flex:1; height:6px; background:#0b0b10; border-radius:3px; overflow:hidden; border:1px solid var(--line); }
 .stat-bar-fill{ height:100%; border-radius:3px; }
 .stat-bar-row.nature-plus .stat-bar-label,.stat-bar-row.nature-plus .stat-bar-val{ color:var(--good); }
 .stat-bar-row.nature-minus .stat-bar-label,.stat-bar-row.nature-minus .stat-bar-val{ color:var(--low); }
 .ev-grid, .iv-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
-.ev-row, .iv-row{ display:flex; align-items:center; gap:4px; font-size:13px; background:#0b0b10; border:1px solid var(--line); border-radius:3px; padding:4px 6px; }
+.ev-row, .iv-row{ display:flex; align-items:center; gap:4px; font-size:10px; background:#0b0b10; border:1px solid var(--line); border-radius:3px; padding:4px 6px; }
 .ev-row label, .iv-row label{ width:28px; color:var(--text-dim); flex-shrink:0; }
-.ev-row input, .iv-row input{ padding:4px 4px; font-size:13px; border:none; background:transparent; color:var(--text-main); width:40px; }
-.ev-total{ font-size:13px; color:var(--text-dim); margin-top:5px; text-align:right; }
+.ev-row input, .iv-row input{ padding:2px 4px; font-size:11px; border:none; background:transparent; color:var(--text-main); width:40px; }
+.ev-total{ font-size:10px; color:var(--text-dim); margin-top:5px; text-align:right; }
 .ev-total.over{ color:var(--low); }
-.move-select-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; overflow:visible;}
+.move-select-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
 .move-select-row .slot-label{
-  padding:4px 9px; display:flex; align-items:center; justify-content:center;
+  padding:2px 7px; display:flex; align-items:center; justify-content:center;
   background:var(--line); border-radius:3px; font-size:9px; font-weight:700;
   color:var(--accent); flex-shrink:0; letter-spacing:.5px; white-space:nowrap;
   border:1px solid var(--line-bright);
 }
-.move-select-row select{ font-size:13px; padding:6px 8px; }
+.move-select-row select{ font-size:11px; padding:4px 6px; }
 
 /* ---- CUSTOM MOVE DROPDOWN ---- */
-.csel{ position:relative; flex:1; user-select:none; overflow:visible;}
+.csel{ position:relative; flex:1; user-select:none; }
 .csel-trigger{
-  display:flex; align-items:center; gap:7px; min-height:40px;
+  display:flex; align-items:center; gap:7px; min-height:34px;
   background:#0d0d18; border:1px solid var(--line-bright); border-radius:5px;
-  padding:6px 12px; cursor:pointer; font-size:13px; color:var(--text-main);
+  padding:5px 10px; cursor:pointer; font-size:11px; color:var(--text-main);
   transition:border-color .15s, box-shadow .15s;
 }
 .csel-trigger:hover{ border-color:var(--line-bright); filter:brightness(1.15); }
 .csel-trigger.open{ border-color:var(--accent); box-shadow:0 0 0 2px rgba(232,200,74,.12); }
-.csel-arrow{ margin-left:auto; color:var(--text-dim); font-size:11px; flex-shrink:0; transition:transform .15s; }
+.csel-arrow{ margin-left:auto; color:var(--text-dim); font-size:9px; flex-shrink:0; transition:transform .15s; }
 .csel-trigger.open .csel-arrow{ transform:rotate(180deg); }
 .csel-name{ flex:1; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .csel-empty{ color:var(--text-dim); font-style:italic; }
-.csel-power{ font-size:14px; color:var(--text-dim); flex-shrink:0; }
+.csel-power{ font-size:10px; color:var(--text-dim); flex-shrink:0; }
 
 .csel-dropdown{
   display:none; position:absolute; top:calc(100% + 3px); left:0; right:0;
   background:#0e0e1a; border:1px solid var(--accent);
   border-radius:5px; z-index:200; max-height:240px; overflow-y:auto;
-  box-shadow:0 10px 30px rgba(0,0,0,.7); z-index:9999;
+  box-shadow:0 10px 30px rgba(0,0,0,.7);
 }
 .csel-dropdown.open{ display:block; }
 .csel-dropdown::-webkit-scrollbar{ width:4px; }
@@ -314,19 +368,19 @@ select option{
 .csel-dropdown::-webkit-scrollbar-thumb{ background:var(--line-bright); border-radius:2px; }
 
 .csel-opt{
-  display:flex; align-items:center; gap:7px; padding:9px 12px;
-  cursor:pointer; font-size:13px; border-bottom:1px solid rgba(255,255,255,.04);
+  display:flex; align-items:center; gap:7px; padding:7px 10px;
+  cursor:pointer; font-size:11px; border-bottom:1px solid rgba(255,255,255,.04);
   transition:background .1s;
 }
 .csel-opt:last-child{ border-bottom:none; }
 .csel-opt:hover{ background:rgba(255,255,255,.06); }
 .csel-opt.selected{ background:rgba(232,200,74,.08); }
 .csel-opt-name{ flex:1; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.csel-opt-power{ font-size:12px; color:var(--text-dim); min-width:32px; text-align:right; flex-shrink:0; }
+.csel-opt-power{ font-size:10px; color:var(--text-dim); min-width:32px; text-align:right; flex-shrink:0; }
 .csel-opt-empty{ color:var(--text-dim); font-style:italic; }
 
 /* Catégorie chips dans dropdown */
-.cat-chip{ font-size:10px; padding:3px 7px; border-radius:2px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; flex-shrink:0; }
+.cat-chip{ font-size:8px; padding:2px 5px; border-radius:2px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; flex-shrink:0; }
 .cat-phys  { background:#3a1400; color:#ff8c50; border:1px solid #7a3010; }
 .cat-spec  { background:#001040; color:#80a8ff; border:1px solid #103080; }
 .cat-status{ background:#1a1a2a; color:#9090b8; border:1px solid #3a3a5c; }
@@ -339,7 +393,7 @@ select option{
 
 .tower-floor{ text-align:center; padding:30px 10px; }
 .tower-floor .floor-num{ font-size:52px; color:var(--accent); font-weight:bold; font-family:'Press Start 2P', 'Courier New', monospace; text-shadow:0 0 20px rgba(232,200,74,.5); }
-.tower-floor .floor-label{ color:var(--text-dim); font-size:13px; letter-spacing:3px; text-transform:uppercase; }
+.tower-floor .floor-label{ color:var(--text-dim); font-size:10px; letter-spacing:3px; text-transform:uppercase; }
 
 .side-row{ display:flex; justify-content:space-between; margin-bottom:8px; }
 .bench{ display:flex; gap:4px; }
@@ -356,15 +410,15 @@ select option{
 .pokeball-icon.fainted{ filter:grayscale(1); opacity:.3; }
 .pokeball-icon.active{ box-shadow:0 0 0 2px var(--accent), 0 0 8px rgba(232,200,74,.6); }
 
-.combatant{ width:100%; max-width:340px; background:linear-gradient(160deg,rgba(255,255,255,.04) 0%,transparent 60%),var(--bg-card); border:1px solid var(--line-bright); border-radius:4px; padding:14px 16px; position:relative;
+.combatant{ width:100%; max-width:320px; background:linear-gradient(160deg,rgba(255,255,255,.04) 0%,transparent 60%),var(--bg-card); border:1px solid var(--line-bright); border-radius:4px; padding:12px 14px; position:relative;
   box-shadow:0 4px 12px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);}
 .combatant.foe{ align-self:flex-end; }
 .combatant.you{ align-self:flex-start; }
-.name-row{ display:flex; justify-content:space-between; font-size:16px; margin-bottom:8px;}
+.name-row{ display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;}
 .hpbar-track{ height:12px; background:#0b0b10; border:1px solid var(--line); border-radius:2px; overflow:hidden;}
 .hpbar-fill{ height:100%; width:100%; background:var(--good); transition:width .5s ease;}
-.hp-text{ font-size:13px; color:var(--text-dim); margin-top:4px; text-align:right;}
-.sprite{ width:128px; height:128px; margin:8px auto 0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:64px; box-shadow:0 6px 14px rgba(0,0,0,.4) inset;}
+.hp-text{ font-size:10px; color:var(--text-dim); margin-top:3px; text-align:right;}
+.sprite{ width:120px; height:120px; margin:8px auto 0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:64px; box-shadow:0 6px 14px rgba(0,0,0,.4) inset;}
 .shake{ animation:shake .35s; }
 @keyframes shake{ 10%,90%{transform:translateX(-2px);} 20%,80%{transform:translateX(4px);} 30%,50%,70%{transform:translateX(-8px);} 40%,60%{transform:translateX(8px);} }
 .lunge{ animation:lunge .4s ease; }
@@ -372,7 +426,7 @@ select option{
 .faint-fade{ transition:opacity .6s ease, transform .6s ease; opacity:.15; transform:translateY(12px) scale(.85); }
 
 .stat-badges{ display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
-.stat-badge{ font-size:11px; padding:3px 8px; border-radius:3px; font-weight:bold; letter-spacing:.3px; }
+.stat-badge{ font-size:9px; padding:1px 6px; border-radius:3px; font-weight:bold; letter-spacing:.3px; }
 .stat-badge.boost{ background:rgba(76,206,106,.18); color:var(--good); border:1px solid var(--good); text-shadow:0 0 8px rgba(76,206,106,.4); }
 .stat-badge.nerf{ background:rgba(255,93,93,.18); color:var(--low); border:1px solid var(--low); }
 
@@ -384,26 +438,25 @@ select option{
 }
 .vsfield{ display:flex; flex-direction:column; gap:18px; position:relative; min-height:170px; padding:6px 4%; }
 
-.log{ margin:14px 0; background:#0b0b10; border:1px solid var(--line-bright); border-radius:3px; padding:14px 18px; font-size:15px; color:var(--text-main); min-height:38px; line-height:1.5;
+.log{ margin:14px 0; background:#0b0b10; border:1px solid var(--line-bright); border-radius:3px; padding:10px 14px; font-size:12px; color:var(--text-main); min-height:38px; line-height:1.5;
   box-shadow:inset 0 2px 6px rgba(0,0,0,.5); letter-spacing:.3px; }
 .log b{ color:var(--text-main); }
 .battle-controls .moves{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .move-btn{
   background:linear-gradient(180deg,#282840 0%,#1c1c2e 100%); border:1px solid var(--line); color:var(--text-main); border-radius:3px; padding:11px 10px;
-  font-family:inherit; font-size:14px; text-align:left; cursor:pointer;
+  font-family:inherit; font-size:12px; text-align:left; cursor:pointer;
   box-shadow:0 3px 0 #0a0a14; transition:transform .1s, box-shadow .1s;
-  padding:13px 12px;
 }
 .move-btn:hover:not(:disabled){ border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 0 #0a0a14; }
 .move-btn:disabled{ opacity:.35; cursor:not-allowed; }
-.move-btn small{ display:block; color:var(--text-dim); font-size:12px; margin-top:3px;}
+.move-btn small{ display:block; color:var(--text-dim); font-size:10px; margin-top:3px;}
 .switch-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
 
 
-.dex-card{ background:linear-gradient(160deg,#232335 0%,var(--bg-card) 100%); border:2px solid var(--line); border-radius:4px; padding:12px; text-align:center; }
+.dex-card{ background:var(--bg-card); border:2px solid var(--line); border-radius:4px; padding:12px; text-align:center; }
 .rarity-badge{
-  font-size:11px; padding:4px 10px; border-radius:3px; letter-spacing:.8px;
+  font-size:8px; padding:3px 9px; border-radius:3px; letter-spacing:.8px;
   text-transform:uppercase; display:inline-block; margin-bottom:6px;
   font-weight:700;
 }
@@ -412,228 +465,69 @@ select option{
 .rarity-rare     { background:#1a2a50; color:#7ab0ff; border:1px solid #3060a0; }
 .rarity-pseudo   { background:#2e1a40; color:#cc88ff; border:1px solid #6030a0; }
 .rarity-legendaire{ background:#40100a; color:#ff6060; border:1px solid #902020; }
-.dex-rate{ font-size:12px; color:var(--text-dim); margin-top:4px; }
+.dex-rate{ font-size:10px; color:var(--text-dim); margin-top:4px; }
 
 .move-select-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
 .move-select-row select{ font-size:11px; padding:4px 6px; }
 .base-stats-box{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; background:#0d1b2a; border:1px solid var(--line); border-radius:3px; padding:10px; margin-bottom:14px; }
-.base-stats-box div{ font-size:13px; color:var(--text-dim); text-align:center; }
-.base-stats-box b{ color:var(--text-main); display:block; font-size:17px; }
+.base-stats-box div{ font-size:11px; color:var(--text-dim); text-align:center; }
+.base-stats-box b{ color:var(--text-main); display:block; font-size:14px; }
 .base-stats-box b.stat-boost{ color:var(--good); }
 .base-stats-box b.stat-nerf{ color:var(--low); }
 
 .effect-desc{
-  font-size:13px; color:var(--text-main); background:rgba(255,210,63,.08);
+  font-size:11px; color:var(--text-main); background:rgba(255,210,63,.08);
   border-left:3px solid var(--accent); border-radius:0 6px 6px 0;
   padding:4px 8px; margin-top:3px; line-height:1.3;
 }
 
-/* ===== RESPONSIVE ===== */
-
-/* Tablet large (< 1100px) */
-@media (max-width:1100px){
-  .app{ max-width:100%; }
-  .draft-cards{ grid-template-columns:repeat(2,1fr); gap:16px; }
-  #dexGrid{ grid-template-columns:repeat(3,1fr) !important; }
+/* ===== Responsive Mobile ===== */
+@media (max-width:768px){
+body{padding:8px;}
+.panel{padding:12px;}
+.site-header{margin-bottom:12px;}
+.site-header::before,.site-header::after{display:none;}
+.draft-cards,#dexGrid{grid-template-columns:1fr !important;gap:12px;}
+.team-grid,.battle-controls .moves,.switch-grid{grid-template-columns:1fr;}
+.editor-row{flex-direction:column;}
+.editor-block{min-width:100%;}
+.ev-grid,.iv-grid,.base-stats-box{grid-template-columns:1fr 1fr;}
+.sprite{width:90px;height:90px;font-size:48px;}
+.poke-card .emoji{font-size:48px;width:72px;height:72px;}
+.team-card .emoji,.dex-card .emoji{font-size:40px;}
+.combatant{max-width:100%;}
+.btn{width:100%;padding:14px 12px;font-size:14px;}
+.editor-actions{flex-direction:column;}
+.side-row{flex-direction:column;gap:8px;}
 }
-
-/* Tablet (< 900px) */
-@media (max-width:900px){
-  body{ padding:16px 12px 32px; }
-  .site-logo{ font-size:clamp(18px,4vw,28px); }
-  .draft-cards{ grid-template-columns:repeat(2,1fr); gap:14px; }
-  #dexGrid{ grid-template-columns:repeat(2,1fr) !important; }
-  .team-grid{ grid-template-columns:repeat(2,1fr); }
-  .editor-row{ flex-direction:column; gap:10px; }
-  .editor-block{ min-width:100%; }
-  .vsfield{ padding:4px 2%; }
-  .combatant{ max-width:100%; }
-}
-
-/* Mobile (< 640px) */
-@media (max-width:640px){
-  body{ padding:10px 8px 24px; font-size:14px; }
-  .panel{ padding:14px 12px; }
-  .site-header{ margin-bottom:12px; }
-  .site-header::before,.site-header::after{ display:none; }
-  .site-logo{ font-size:clamp(16px,6vw,26px); letter-spacing:1px; }
-  .site-subtitle{ font-size:clamp(7px,2.5vw,11px); letter-spacing:2px; }
-
-  /* Boutons full-width sur mobile */
-  .btn{ width:100%; padding:14px 12px; font-size:15px; box-sizing:border-box; }
-  .btn.secondary{ width:100%; }
-  /* Sauf les petits boutons de nav */
-  #draftHomeBtn,.btn[style*="padding:6px"],.btn[style*="padding:8px"],
-  #builderHomeBtn,#battleHomeBtn,#dexBackBtn,
-  .order-btn,#dexResetFilter,#cancelSwitchBtn{ width:auto; }
-
-  /* Draft */
-  .draft-cards{ grid-template-columns:1fr; gap:12px; }
-  .draft-team-strip{ gap:6px; }
-  .draft-team-slot{ width:56px; height:68px; }
-  .draft-team-slot .emoji{ width:30px; height:30px; font-size:22px; }
-  .draft-progress span{ width:22px; height:7px; }
-
-  /* Poke-card plus compact */
-  .poke-card .emoji{ width:80px; height:80px; font-size:52px; }
-  .poke-card{ padding:16px 12px; }
-
-  /* Team builder */
-  .team-grid{ grid-template-columns:1fr; gap:10px; }
-  .team-card-sprite{ width:44px; height:44px; font-size:28px; }
-  .team-card .emoji{ width:56px; height:56px; font-size:38px; }
-
-  /* Éditeur */
-  .editor-row{ flex-direction:column; }
-  .editor-block{ min-width:100%; }
-  .ev-grid,.iv-grid{ grid-template-columns:1fr 1fr; }
-  .base-stats-box{ grid-template-columns:1fr 1fr 1fr; }
-  .editor-actions{ flex-direction:column; gap:8px; }
-  .csel-dropdown{ max-height:200px; }
-
-  /* Combat */
-  .vsfield{ flex-direction:column; gap:12px; padding:4px 0; min-height:auto; }
-  .combatant{ max-width:100%; }
-  .combatant.foe{ align-self:stretch; }
-  .combatant.you{ align-self:stretch; }
-  .sprite{ width:96px; height:96px; font-size:52px; }
-  .side-row{ flex-direction:row; justify-content:space-between; }
-  .battle-controls .moves{ grid-template-columns:1fr 1fr; gap:8px; }
-  .switch-grid{ grid-template-columns:1fr; }
-  .move-btn{ padding:10px 8px; font-size:13px; }
-  .move-btn small{ font-size:11px; }
-  .log{ padding:10px 12px; font-size:14px; }
-  .name-row{ font-size:14px; }
-  .hp-text{ font-size:12px; }
-
-  /* Pokédex */
-  #dexGrid{ grid-template-columns:repeat(2,1fr) !important; gap:10px; }
-  .dex-card{ padding:10px 8px; }
-  .dex-card .emoji{ width:60px; height:60px; font-size:40px; }
-
-  /* Tour */
-  .tower-floor .floor-num{ font-size:38px !important; }
-
-  /* Bandeaux de navigation */
-  #screenDraft > div:first-child,
-  #screenBuilder > div:first-child,
-  #screenBattle > div:first-child{ flex-wrap:wrap; gap:6px; }
-
-  /* Pokédex filters */
-  #screenDex > div:nth-child(2){ flex-direction:column; align-items:stretch; }
-  #screenDex > div:nth-child(2) select,
-  #screenDex > div:nth-child(2) input{ width:100%; }
-}
-
-/* Très petit mobile (< 400px) */
-@media (max-width:400px){
-  .site-logo{ font-size:15px; }
-  .battle-controls .moves{ grid-template-columns:1fr; }
-  .ev-grid,.iv-grid{ grid-template-columns:1fr 1fr; }
-  .base-stats-box{ grid-template-columns:1fr 1fr; }
-  #dexGrid{ grid-template-columns:1fr !important; }
-  .draft-cards{ grid-template-columns:1fr; }
-  .sprite{ width:80px; height:80px; font-size:44px; }
-  .poke-card .emoji{ width:68px; height:68px; font-size:44px; }
-  .type-tag{ font-size:9px; padding:2px 6px; }
+@media (max-width:480px){
+.site-logo{font-size:22px;}
+.floor-num{font-size:34px!important;}
+.ev-grid,.iv-grid,.base-stats-box{grid-template-columns:1fr;}
 }
 
 
-/* === NOUVEAUX STYLES === */
-@keyframes splashPulse{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-6deg) scale(1.12)}}
-@keyframes tickerMove{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-.splash-text{
-  position:absolute;top:12px;left:12px;
-  transform:rotate(-8deg);
-  animation:splashPulse 2s ease-in-out infinite;
-  color:var(--accent);font-size:11px;cursor:pointer;
-  text-shadow:2px 2px 0 rgba(0,0,0,.8);
-  padding:2px 6px;z-index:10;
-  font-family:'Press Start 2P',monospace;
-  letter-spacing:0.5px;
+/* ===== Mobile XXL ===== */
+@media (max-width:768px){
+html{font-size:18px;}
+body{padding:4px;}
+.panel{padding:10px!important;}
+.sub,.stat-line,.evoline,.team-card-footer,.floor-label,.hp-text,.log,.move-btn small{font-size:0.95rem!important;}
+.site-logo{font-size:2rem!important;}
+.btn{font-size:1rem!important;min-height:56px;}
+.poke-card{padding:18px;}
+.poke-card .emoji{font-size:84px!important;width:100px!important;height:100px!important;}
+.team-card .emoji,.dex-card .emoji{font-size:64px!important;width:90px!important;height:90px!important;}
+.sprite{width:120px!important;height:120px!important;font-size:80px!important;}
+.combatant{padding:18px;}
+.name-row{font-size:1.1rem!important;}
+.hpbar-track{height:18px;}
+.type-tag{font-size:.8rem;padding:6px 12px;}
+input,select{font-size:1rem!important;min-height:48px;}
+.move-btn{font-size:1rem!important;padding:16px;}
+.csel-dropdown{z-index:99999;max-height:50vh;}
+.editor,.editor-body,.editor-section,.move-select-row,.csel{overflow:visible!important;}
 }
-.splash-text:hover{filter:brightness(1.3);}
-
-
-
-.money-hud{display:inline-flex;align-items:center;gap:5px;
-  background:rgba(232,200,74,.1);border:1px solid rgba(232,200,74,.3);
-  border-radius:4px;padding:4px 10px;font-size:11px;color:var(--accent);font-weight:700;}
-
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:500;
-  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
-.modal-overlay.hidden{display:none;}
-.modal-box{background:var(--bg-panel);border:1px solid var(--line-bright);border-radius:6px;
-  width:min(540px,96vw);max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;
-  box-shadow:0 24px 64px rgba(0,0,0,.85);animation:fadeUp .2s ease;}
-.modal-header{display:flex;align-items:center;justify-content:space-between;
-  padding:12px 16px;border-bottom:2px solid var(--line);
-  font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);
-  letter-spacing:1px;background:rgba(0,0,0,.2);flex-shrink:0;}
-.modal-close{background:rgba(255,255,255,.07);border:1px solid var(--line-bright);
-  border-radius:3px;color:var(--text-dim);cursor:pointer;padding:3px 9px;font-size:13px;}
-.modal-close:hover{color:var(--low);border-color:var(--low);}
-.modal-body{padding:14px 16px;}
-
-.item-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
-.item-card{background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
-  padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
-.item-card.usable{border-color:var(--line-bright);cursor:pointer;}
-.item-card.usable:hover{border-color:var(--accent);}
-.item-name{font-size:11px;font-weight:700;color:var(--text-main);}
-.item-desc{font-size:9px;color:var(--text-dim);line-height:1.5;}
-.item-qty{font-size:10px;color:var(--accent);font-weight:700;}
-.item-locked{font-size:9px;color:var(--low);}
-
-.target-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
-.target-btn{display:flex;align-items:center;gap:10px;padding:8px 12px;
-  background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
-  cursor:pointer;width:100%;text-align:left;}
-.target-btn:hover:not(:disabled){border-color:var(--accent);}
-.target-btn:disabled{opacity:.4;cursor:not-allowed;}
-
-.hp-mini{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:3px;}
-.hp-mini-fill{height:100%;border-radius:3px;transition:width .3s;}
-
-.manage-card{display:flex;align-items:center;gap:10px;padding:10px 12px;
-  background:var(--bg-card);border:1px solid var(--line);border-radius:4px;margin-bottom:6px;}
-.manage-card.lead-card{border-color:var(--accent);}
-.manage-card-info{flex:1;}
-.manage-card-name{font-size:12px;font-weight:700;color:var(--text-main);}
-
-.reward-card{background:rgba(232,200,74,.06);border:1px solid rgba(232,200,74,.3);
-  border-radius:4px;padding:12px;text-align:center;cursor:pointer;margin-bottom:8px;}
-.reward-card:hover{background:rgba(232,200,74,.14);}
-
-.village-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
-.village-tab{flex:1;padding:10px 8px;border:1px solid var(--line);border-radius:4px;
-  background:var(--bg-card);color:var(--text-dim);cursor:pointer;text-align:center;
-  font-size:10px;font-family:inherit;transition:.15s;}
-.village-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(232,200,74,.08);}
-.village-tab:hover:not(.active){border-color:var(--line-bright);}
-
-.shop-row{display:flex;align-items:center;gap:10px;padding:8px 12px;
-  background:var(--bg-card);border:1px solid var(--line);border-radius:4px;margin-bottom:6px;}
-.ranch-card{background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
-  padding:12px;text-align:center;cursor:pointer;transition:.15s;}
-.ranch-card:hover:not(:disabled){border-color:var(--accent);}
-.ranch-card:disabled{opacity:.5;cursor:not-allowed;}
-
-.pc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.pc-slot{background:var(--bg-card);border:1px solid var(--line);border-radius:4px;
-  padding:8px;text-align:center;cursor:pointer;transition:.15s;}
-.pc-slot:hover{border-color:var(--accent);}
-.pc-slot.empty{border-style:dashed;color:var(--text-dim);font-size:10px;cursor:default;}
-.pc-slot.empty:hover{border-color:var(--line);}
-
-.patch-entry{margin-bottom:10px;}
-.patch-version{font-size:11px;color:var(--accent);font-family:'Press Start 2P',monospace;margin-bottom:6px;}
-.patch-list{list-style:none;padding:0;margin:0;}
-.patch-list li{font-size:10px;color:var(--text-dim);padding:3px 0 3px 12px;
-  border-left:2px solid var(--line);margin-bottom:4px;line-height:1.6;}
-.patch-list li::before{content:'+ ';color:var(--good);}
 
 </style>
 </head>
@@ -641,19 +535,18 @@ select option{
 <div class="app">
   <div class="site-header">
     <span class="site-logo">DRAFT MON</span>
-    <span class="site-subtitle">◆ TOUR DE COMBAT ◆</span>
+    <span class="site-subtitle">◆ TOUR DE COMBAT — GEN I ◆</span>
   </div>
 
-  <div class="panel" id="screenMenu" style="position:relative;">
-    <div class="splash-text" id="splashText">Village Update !</div>
+  <div class="panel" id="screenMenu">
+    <button class="menu-splash" id="splashTextBtn">Gen 2 is here!!!</button>
     <div class="tower-floor" style="padding:40px 20px;">
       <div style="font-size:64px;margin:0 0 10px;">🗼</div>
-      <div class="floor-label" style="letter-spacing:6px;font-size:14px;color:var(--accent);margin-bottom:6px;">TOUR DE COMBAT</div>
-
-      <div class="floor-label" id="bestFloorLabel" style="font-size:13px;color:var(--text-dim);margin-bottom:24px;">Meilleur étage : 1</div>
+      <div class="floor-label" style="letter-spacing:6px;font-size:11px;color:var(--accent);margin-bottom:6px;">TOUR DE COMBAT</div>
+      <div class="floor-label" id="bestFloorLabel" style="font-size:10px;color:var(--text-dim);margin-bottom:24px;">Meilleur étage : 1</div>
       <div style="border:1px solid var(--line);border-radius:2px;padding:18px 24px;margin:0 auto 28px;max-width:360px;background:rgba(0,0,0,.3);">
-        <div class="floor-label" style="font-size:12px;letter-spacing:3px;margin-bottom:12px;color:var(--text-dim);">▸ COMMENT JOUER ◂</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:2;text-align:left;">
+        <div class="floor-label" style="font-size:9px;letter-spacing:3px;margin-bottom:12px;color:var(--text-dim);">▸ COMMENT JOUER ◂</div>
+        <div style="font-size:10px;color:var(--text-dim);line-height:1.8;text-align:left;">
           1. Drafts 6 Pokémon parmi les offres<br>
           2. Configure stats, nature et attaques<br>
           3. Affronte la Tour de Combat !
@@ -671,14 +564,40 @@ select option{
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--line);position:sticky;top:0;background:var(--bg-panel);z-index:10;">
       <button class="btn" id="dexBackBtn" style="padding:8px 16px;font-size:11px;flex-shrink:0;">← Menu</button>
       <div style="flex:1;">
-        <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;">POKÉDEX</div>
+        <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;">POKÉDEX GEN I</div>
         <div style="font-size:10px;color:var(--text-dim);margin-top:3px;" id="dexCount">151 Pokémon</div>
       </div>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px;padding:10px;background:var(--bg-card);border:1px solid var(--line);border-radius:4px;">
       <input id="dexSearch" type="text" placeholder="Rechercher un nom..." style="flex:1;min-width:150px;background:#0b0b10;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 10px;font-family:inherit;font-size:12px;">
-      <div id="dexTypeFilterWrap" style="flex:1;min-width:120px;"></div>
-      <div id="dexRarityFilterWrap" style="flex:1;min-width:120px;"></div>
+      <select id="dexTypeFilter" style="background:#0b0b10;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 8px;font-family:inherit;font-size:12px;">
+        <option value="">Tous les types</option>
+        <option value="normal">Normal</option>
+        <option value="feu">Feu</option>
+        <option value="eau">Eau</option>
+        <option value="plante">Plante</option>
+        <option value="electrik">Electrik</option>
+        <option value="vol">Vol</option>
+        <option value="poison">Poison</option>
+        <option value="sol">Sol</option>
+        <option value="insecte">Insecte</option>
+        <option value="combat">Combat</option>
+        <option value="glace">Glace</option>
+        <option value="psy">Psy</option>
+        <option value="fantome">Fantôme</option>
+        <option value="roche">Roche</option>
+        <option value="dragon">Dragon</option>
+        <option value="acier">Acier</option>
+        <option value="tenebres">Ténèbres</option>
+      </select>
+      <select id="dexRarityFilter" style="background:#0b0b10;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 8px;font-family:inherit;font-size:12px;">
+        <option value="">Toutes raretés</option>
+        <option value="commun">Commun</option>
+        <option value="evo">Évolution</option>
+        <option value="rare">Rare</option>
+        <option value="pseudo">Pseudo-légendaire</option>
+        <option value="legendaire">Légendaire</option>
+      </select>
       <button class="btn secondary" id="dexResetFilter" style="padding:6px 12px;font-size:11px;">✕ Reset</button>
     </div>
     <div class="draft-cards" id="dexGrid" style="grid-template-columns:repeat(3,1fr);"></div>
@@ -704,7 +623,7 @@ select option{
     <div class="team-grid" id="teamGrid"></div>
     <div class="editor hidden" id="editor"></div>
     <div style="text-align:center;margin-top:16px;">
-      <button class="btn" id="validateTeamBtn" style="width:100%;max-width:480px;" disabled>Valider l'équipe et entrer dans la tour</button>
+      <button class="btn" id="validateTeamBtn" disabled>Valider l'équipe et entrer dans la tour</button>
     </div>
   </div>
 
@@ -713,11 +632,8 @@ select option{
       <div class="floor-label">TOUR DE COMBAT</div>
       <div class="floor-num" id="floorNum">1</div>
       <div class="floor-label" id="floorDesc">Un dresseur t'attend...</div>
-      <div style="display:flex;justify-content:center;margin:10px 0;"><div class="money-hud" id="towerMoneyHud">0 &#x20bd;</div></div>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
-        <button class="btn" id="fightBtn">&#x2694; Combattre</button>
-        <button class="btn secondary" id="towerBagBtn">Sac</button>
-        <button class="btn secondary" id="towerTeamBtn">Equipe</button>
+      <div style="margin-top:18px;">
+        <button class="btn" id="fightBtn">Combattre</button>
       </div>
     </div>
   </div>
@@ -747,10 +663,6 @@ select option{
       </div>
     </div>
     <div class="log" id="log">Le combat commence...</div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-      <div class="money-hud" id="battleMoneyHud">0 &#x20bd;</div>
-      <button class="btn secondary" id="battleBagBtn" style="padding:5px 12px;font-size:11px;">Sac</button>
-    </div>
     <div class="battle-controls">
       <div class="moves" id="movesGrid"></div>
       <div class="switch-grid hidden" id="switchGrid"></div>
@@ -771,115 +683,33 @@ select option{
       </div>
     </div>
   </div>
-
-<!-- PATCH NOTE MODAL -->
-<div id="patchModal" class="modal-overlay hidden">
-  <div class="modal-box">
-    <div class="modal-header">Notes de patch<button class="modal-close" id="patchCloseBtn">x</button></div>
-    <div class="modal-body" id="patchContent"></div>
-  </div>
-</div>
-
-<!-- BAG MODAL -->
-<div id="bagModal" class="modal-overlay hidden">
-  <div class="modal-box">
-    <div class="modal-header">Sac<button class="modal-close" id="bagCloseBtn">x</button></div>
-    <div class="modal-body" id="bagContent"></div>
-  </div>
-</div>
-
-<!-- TEAM MANAGE MODAL -->
-<div id="teamManageModal" class="modal-overlay hidden">
-  <div class="modal-box">
-    <div class="modal-header">Equipe &amp; PC<button class="modal-close" id="tmCloseBtn">x</button></div>
-    <div class="modal-body" id="teamManageContent"></div>
-  </div>
-</div>
-
-<!-- REWARD MODAL -->
-<div id="rewardModal" class="modal-overlay hidden">
-  <div class="modal-box">
-    <div class="modal-header" id="rewardTitle">Recompense</div>
-    <div class="modal-body" id="rewardContent"></div>
-  </div>
-</div>
-
-<!-- RANCH BUILD MODAL -->
-<div id="ranchBuildModal" class="modal-overlay hidden">
-  <div class="modal-box" style="width:min(720px,98vw);">
-    <div class="modal-header">Ranch &#x2014; Configurer le Pokemon<button class="modal-close" id="ranchBuildCloseBtn">x</button></div>
-    <div class="modal-body" id="ranchBuildContent"></div>
-  </div>
-</div>
-
-<!-- VILLAGE SCREEN -->
-<div class="panel hidden" id="screenVillage">
-  <div style="text-align:center;padding:16px 0 10px;">
-    <div style="font-size:40px;margin-bottom:6px;">&#x1F3D8;</div>
-    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;">VILLAGE DE REPOS</div>
-    <div style="font-size:10px;color:var(--text-dim);margin-top:4px;" id="villageFloorLabel"></div>
-    <div style="display:flex;justify-content:center;margin-top:8px;"><div class="money-hud" id="shopMoneyHud">0 &#x20bd;</div></div>
-  </div>
-  <div class="village-tabs">
-    <button class="village-tab active" onclick="showVillageTab('centre')">&#x1F3E5; Pokecentre</button>
-    <button class="village-tab" onclick="showVillageTab('shop')">&#x1F6D2; Shop</button>
-    <button class="village-tab" onclick="showVillageTab('ranch')">&#x1F434; Ranch</button>
-    <button class="village-tab" onclick="showVillageTab('pc')">&#x1F4BB; PC</button>
-  </div>
-  <div id="villageCentre">
-    <div style="text-align:center;padding:20px 0;">
-      <div style="font-size:36px;margin-bottom:10px;">&#x1F3E5;</div>
-      <div style="font-size:12px;font-weight:700;color:var(--text-main);margin-bottom:8px;">POKECENTRE</div>
-      <div style="font-size:10px;color:var(--text-dim);margin-bottom:16px;">Soigne gratuitement toute ton equipe (PV + statuts + KO).</div>
-      <button class="btn" id="pokeCentreBtn" style="min-width:200px;">Soigner l'equipe</button>
-    </div>
-  </div>
-  <div id="villageShop" class="hidden">
-    <div id="shopItemList"></div>
-  </div>
-  <div id="villageRanch" class="hidden">
-    <div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;" id="ranchDesc">3 Pokemon disponibles a l'achat. Un seul achat par visite.</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="ranchCards"></div>
-  </div>
-  <div id="villagePC" class="hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <div style="font-size:10px;color:var(--accent);font-weight:700;">Reserve PC</div>
-      <div style="font-size:9px;color:var(--text-dim);" id="pcCountLabel">0 Pokemon</div>
-    </div>
-    <div class="pc-grid" id="pcGrid"></div>
-  </div>
-  <div style="text-align:center;margin-top:18px;">
-    <button class="btn" id="villageLeaveBtn">Continuer la tour &#x2192;</button>
-  </div>
-</div>
-
 </div>
 
 <script>
 /* =================== TYPES =================== */
 const TYPE_EMOJI = {
   normal:'⭐',feu:'🔥',eau:'💧',plante:'🌿',electrik:'⚡',vol:'🪶',poison:'☠️',sol:'⛰️',
-  insecte:'🐛',combat:'🥊',glace:'🧊',psy:'🔮',fantome:'👻',roche:'🪨',dragon:'🐲'
+  insecte:'🐛',combat:'🥊',glace:'🧊',psy:'🔮',fantome:'👻',roche:'🪨',dragon:'🐲',
+  acier:'⚙️',tenebres:'🌑'
 };
 const TYPE_CHART = {
-  // Lu depuis la table officielle (image fournie)
-  normal:   {roche:.5, fantome:0, acier:.5},
-  feu:      {feu:.5, eau:.5, plante:2, glace:2, insecte:2, roche:.5, dragon:.5, acier:2},
-  eau:      {feu:2, eau:.5, plante:.5, sol:2, roche:2, dragon:.5, acier:.5},
-  plante:   {feu:.5, eau:2, plante:.5, poison:.5, sol:2, vol:.5, insecte:.5, roche:2, dragon:.5, acier:.5},
-  electrik: {eau:2, plante:.5, electrik:.5, sol:0, vol:2, dragon:.5, acier:.5},
-  glace:    {feu:.5, eau:.5, plante:2, glace:.5, sol:2, vol:2, dragon:2, acier:.5},
-  combat:   {normal:2, glace:2, roche:2, tenebres:2, acier:2, poison:.5, vol:.5, psy:.5, insecte:.5, fantome:0},
-  poison:   {plante:2, poison:.5, sol:.5, roche:.5, fantome:.5, acier:0},
-  sol:      {feu:2, electrik:2, poison:2, roche:2, acier:2, plante:.5, insecte:.5, vol:0},
-  vol:      {plante:2, insecte:2, combat:2, electrik:.5, roche:.5, acier:.5},
-  psy:      {combat:2, poison:2, psy:.5, tenebres:0, acier:.5},
-  insecte:  {plante:2, psy:2, tenebres:2, feu:.5, combat:.5, vol:.5, fantome:.5, acier:.5},
-  roche:    {feu:2, glace:2, insecte:2, vol:2, combat:.5, sol:.5, acier:.5},
-  fantome:  {normal:0, combat:0, psy:2, fantome:2, tenebres:.5, acier:.5},
-  dragon:   {dragon:2, acier:.5},
-  tenebres: {psy:2, fantome:2, combat:.5, tenebres:.5},
-  acier:    {glace:2, roche:2, feu:.5, eau:.5, electrik:.5, acier:.5},
+  normal:{roche:.5,fantome:0,acier:.5},
+  feu:{plante:2,glace:2,insecte:2,feu:.5,eau:.5,roche:.5,dragon:.5,acier:2},
+  eau:{feu:2,sol:2,roche:2,eau:.5,plante:.5,dragon:.5},
+  electrik:{eau:2,vol:2,electrik:.5,plante:.5,dragon:.5,sol:0},
+  plante:{eau:2,sol:2,roche:2,feu:.5,plante:.5,vol:.5,poison:.5,insecte:.5,dragon:.5,acier:.5},
+  glace:{plante:2,sol:2,vol:2,dragon:2,feu:.5,eau:.5,glace:.5,acier:.5},
+  combat:{normal:2,glace:2,roche:2,poison:.5,vol:.5,psy:.5,insecte:.5,fantome:0,acier:2,tenebres:2},
+  poison:{plante:2,poison:.5,sol:.5,roche:.5,fantome:.5,acier:0},
+  sol:{feu:2,electrik:2,poison:2,roche:2,plante:.5,insecte:.5,vol:0,acier:2},
+  vol:{plante:2,insecte:2,combat:2,electrik:.5,roche:.5,acier:.5},
+  psy:{combat:2,poison:2,psy:.5,acier:.5,tenebres:0},
+  insecte:{plante:2,psy:2,tenebres:2,feu:.5,combat:.5,poison:.5,vol:.5,fantome:.5,acier:.5},
+  roche:{feu:2,glace:2,vol:2,insecte:2,combat:.5,sol:.5,acier:.5},
+  fantome:{psy:2,fantome:2,normal:0,tenebres:.5,acier:.5},
+  dragon:{dragon:2,acier:.5},
+  acier:{glace:2,roche:2,feu:.5,eau:.5,electrik:.5,acier:.5},
+  tenebres:{psy:2,fantome:2,combat:.5,tenebres:.5}
 };
 function getMult(atkType, defTypes){
   let m = 1;
@@ -979,6 +809,17 @@ const MOVES = {
   dragonbreath:{name:'Draco-Souffle',type:'dragon',cat:'spec',power:50,desc:"Souffle une énergie féroce sur l'adversaire."},
   dragonclaw:{name:'Dracogriffe',type:'dragon',cat:'phys',power:65,desc:"De vastes griffes tranchent l'adversaire."},
 
+  ironhead:{name:'Tête de Fer',type:'acier',cat:'phys',power:65,desc:"Un coup de tête recouvert d'acier étincelant."},
+  steelwing:{name:"Aile d'Acier",type:'acier',cat:'phys',power:50,desc:"Frappe avec des ailes durcies comme du métal."},
+  irondefense:{name:'Défense de Fer',type:'acier',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:2}]},desc:"Durcit son corps pour booster fortement la Défense."},
+  flashcannon:{name:"Éclair d'Acier",type:'acier',cat:'spec',power:70,desc:"Libère une lumière métallique aveuglante."},
+
+  crunch:{name:'Crocs Féroces',type:'tenebres',cat:'phys',power:65,desc:"Mord avec des crocs redoutables, écrasant tout sur son passage."},
+  darkpulse:{name:'Canon Obscur',type:'tenebres',cat:'spec',power:65,desc:"Libère une onde de ténèbres pures et terrifiantes."},
+  suckerpunch:{name:'Coup Bas',type:'tenebres',cat:'phys',power:55,desc:"Une attaque sournoise qui surprend l'adversaire."},
+  nightslash:{name:'Tranche-Nuit',type:'tenebres',cat:'phys',power:60,desc:"Lacère l'adversaire dès qu'une occasion se présente."},
+  feintattack:{name:'Coup Vicieux',type:'tenebres',cat:'phys',power:50,desc:"Une attaque sournoise qui ne rate jamais sa cible."},
+
   /* ---- Nouvelles attaques Gen 1 ---- */
   scratch:{name:'Griffe',type:'normal',cat:'phys',power:40,desc:"Lacère l'adversaire avec des griffes acérées."},
   peck:{name:'Picpic',type:'vol',cat:'phys',power:35,desc:"Donne des coups de bec rapides à l'adversaire."},
@@ -1011,75 +852,6 @@ const MOVES = {
   dragonrage:{name:'Draco-Rage',type:'dragon',cat:'spec',power:0,fixedDamage:40,desc:"Une attaque mystérieuse qui infligera toujours 40 dégâts."}
 };
 
-
-/* =================== PATCH NOTES =================== */
-const PATCH_NOTES = [
-  {version:"v0.2 - Village Update",notes:[
-    "PV persistants entre les combats",
-    "Systeme d'argent - gains apres chaque combat",
-    "Mini-boss tous les 5 etages, Boss tous les 10",
-    "Village de repos debloque apres chaque Boss",
-    "Pokecentre, Pokeshop, Ranch et PC au Village",
-    "Sac utilisable en combat et entre les combats",
-    "Objets tenus (Baie Oran, Reste, Ceinture Force...)",
-    "Objets strategiques en recompense boss",
-    "Gestion d'equipe avec changement de lead",
-  ]},
-  {version:"v0.1 - Base",notes:[
-    "Draft de 6 Pokemon Gen 1",
-    "Builder complet EV/IV/Nature/Talent/Attaques",
-    "Tour de combat avec 17 archetypes de dresseurs",
-    "Systeme de combat au tour par tour",
-    "Pokedex avec filtres",
-  ]},
-];
-
-/* =================== ITEMS =================== */
-const ITEMS = {
-  potion:      {name:'Potion',        cat:'heal',   price:80,  unlock:1,  desc:'Restaure 30 PV.',               effect:{hp:30}},
-  superpotion: {name:'Super Potion',  cat:'heal',   price:150, unlock:1,  desc:'Restaure 60 PV.',               effect:{hp:60}},
-  hyperpotion: {name:'Hyper Potion',  cat:'heal',   price:300, unlock:10, desc:'Restaure 120 PV.',              effect:{hp:120}},
-  restoremax:  {name:'Restore Max',   cat:'heal',   price:700, unlock:30, desc:'Restaure tous les PV.',         effect:{hp:'full'}},
-  antidote:    {name:'Antidote',      cat:'status', price:50,  unlock:1,  desc:'Soigne le poison.',             effect:{cure:'poison'}},
-  antigel:     {name:'Antigel',       cat:'status', price:50,  unlock:1,  desc:'Soigne la brulure.',            effect:{cure:'brulure'}},
-  paralysoin:  {name:'Paraly-Soin',   cat:'status', price:60,  unlock:1,  desc:'Soigne la paralysie.',          effect:{cure:'paralysie'}},
-  reveil:      {name:'Reveil',        cat:'status', price:60,  unlock:1,  desc:'Soigne le sommeil.',            effect:{cure:'sommeil'}},
-  sointegral:  {name:'Soin Total',    cat:'status', price:180, unlock:10, desc:'Soigne tous les statuts.',      effect:{cure:'all'}},
-  rappel:      {name:'Rappel',        cat:'revive', price:400, unlock:1,  desc:'Releve un KO avec 50% PV.',     effect:{revive:0.5}},
-  superrappel: {name:'Super Rappel',  cat:'revive', price:900, unlock:20, desc:'Releve un KO avec 100% PV.',    effect:{revive:1.0}},
-  xattaque:    {name:'X-Attaque',     cat:'boost',  price:200, unlock:10, desc:'+1 Atq ce combat.', battleOnly:true, effect:{boost:{stat:'atk',stages:1}}},
-  xdefense:    {name:'X-Defense',     cat:'boost',  price:200, unlock:10, desc:'+1 Def ce combat.', battleOnly:true, effect:{boost:{stat:'def',stages:1}}},
-  xvitesse:    {name:'X-Vitesse',     cat:'boost',  price:200, unlock:10, desc:'+1 Vit ce combat.', battleOnly:true, effect:{boost:{stat:'spe',stages:1}}},
-  baieoran:    {name:'Baie Oran',     cat:'held',   price:100, unlock:1,  desc:'Rend 10 PV sous 50% PV. Usage unique.',       heldEffect:'oran',      consumed:true},
-  baiesitrus:  {name:'Baie Sitrus',   cat:'held',   price:250, unlock:10, desc:'Rend 25% PV max sous 50% PV. Usage unique.',  heldEffect:'sitrus',    consumed:true},
-  reste:       {name:'Reste',         cat:'held',   price:600, unlock:20, desc:'Rend 6% PV max par tour.',                     heldEffect:'reste',     consumed:false},
-  plaquevie:   {name:'Plaque Vie',    cat:'held',   price:400, unlock:10, desc:'+10% PV max.',                                 heldEffect:'plaquevie', consumed:false},
-  ceinturef:   {name:'Ceinture Force',cat:'held',   price:500, unlock:20, desc:'Survit une fois a un KO a PV pleins.',         heldEffect:'ceinturef', consumed:true},
-  bandeauchoix:{name:'Bandeau Choix', cat:'held',   price:600, unlock:20, desc:'+50% Atq, bloque sur une attaque.',            heldEffect:'choiceatk', consumed:false},
-  lunetteschoix:{name:'Lunettes Choix',cat:'held',  price:600, unlock:20, desc:'+50% AtqSp, bloque sur une attaque.',          heldEffect:'choicespa', consumed:false},
-  mouchoirchoix:{name:'Mouchoir Choix',cat:'held',  price:600, unlock:20, desc:'+50% Vit, bloque sur une attaque.',            heldEffect:'choicespe', consumed:false},
-  proteine:    {name:'Proteine',  cat:'strategic', desc:'+Atq permanent.',  effect:{permBoost:'atk'}},
-  fer:         {name:'Fer',       cat:'strategic', desc:'+Def permanent.',  effect:{permBoost:'def'}},
-  carbone:     {name:'Carbone',   cat:'strategic', desc:'+AtqSp permanent.',effect:{permBoost:'spa'}},
-  zinc:        {name:'Zinc',      cat:'strategic', desc:'+DefSp permanent.',effect:{permBoost:'spd'}},
-  calcium:     {name:'Calcium',   cat:'strategic', desc:'+Vit permanent.',  effect:{permBoost:'spe'}},
-  rarecandy:   {name:'Rarecandy', cat:'strategic', desc:'+10% toutes stats.',effect:{permBoost:'all'}},
-};
-const SHOP_ITEMS=['potion','superpotion','antidote','antigel','paralysoin','reveil','rappel','baieoran','hyperpotion','sointegral','xattaque','xdefense','xvitesse','baiesitrus','plaquevie','superrappel','reste','ceinturef','bandeauchoix','lunetteschoix','mouchoirchoix','restoremax'];
-const MINI_BOSS_POOL=['potion','superpotion','sointegral','rappel','baieoran','baiesitrus','plaquevie','ceinturef'];
-const BOSS_POOL=['proteine','fer','carbone','zinc','calcium','rarecandy'];
-
-let money=0, bag={}, reserve=[];
-function addToBag(id,n=1){bag[id]=(bag[id]||0)+n;}
-function removeFromBag(id,n=1){if(bag[id]){bag[id]=Math.max(0,bag[id]-n);if(!bag[id])delete bag[id];}}
-function moneyFmt(){return money+' ₽';}
-function updateMoneyHud(){
-  ['towerMoneyHud','battleMoneyHud','shopMoneyHud'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.textContent=moneyFmt();
-  });
-}
-function ranchPrice(){return Math.floor(500*Math.pow(1.005,towerFloor));}
-
 const NATURES = [
  {name:'Hardi', plus:null, minus:null},
  {name:'Solo', plus:'atk', minus:'def'},
@@ -1109,383 +881,533 @@ const NATURES = [
 ];
 const STAT_LABEL = {hp:'PV', atk:'Atq', def:'Déf', spa:'AtqSp', spd:'DéfSp', spe:'Vit'};
 
-/* ---- buildCsel : dropdown universel style attaques ---- */
-function buildCsel({options, value='', onChange, placeholder='— Choisir —', noEmpty=false}){
-  const wrap = document.createElement('div');
-  wrap.className = 'csel';
-  const trigger = document.createElement('div');
-  trigger.className = 'csel-trigger';
-  const dropdown = document.createElement('div');
-  dropdown.className = 'csel-dropdown';
-  const allOpts = [];
-
-  function renderTrigger(opt){
-    trigger.innerHTML = opt
-      ? (opt.triggerHTML || `<span class="csel-name">${opt.label}</span>`) + '<span class="csel-arrow">&#x25be;</span>'
-      : `<span class="csel-name csel-empty">${placeholder}</span><span class="csel-arrow">&#x25be;</span>`;
-  }
-  function pick(opt){
-    onChange(opt ? opt.value : '');
-    renderTrigger(opt);
-    allOpts.forEach(o=>o.el.classList.toggle('selected', o.opt===opt));
-    dropdown.classList.remove('open');
-    trigger.classList.remove('open');
-  }
-
-  if(!noEmpty){
-    const emptyEl = document.createElement('div');
-    emptyEl.className = 'csel-opt' + (!value?' selected':'');
-    emptyEl.innerHTML = `<span class="csel-opt-empty">${placeholder}</span>`;
-    emptyEl.onclick = ()=>pick(null);
-    dropdown.appendChild(emptyEl);
-    allOpts.push({el:emptyEl, opt:null});
-  }
-
-  let current = null;
-  options.forEach(opt=>{
-    const el = document.createElement('div');
-    el.className = 'csel-opt' + (opt.value===value?' selected':'');
-    el.innerHTML = opt.html || `<span class="csel-name">${opt.label}</span>`;
-    el.onclick = ()=>pick(opt);
-    dropdown.appendChild(el);
-    allOpts.push({el, opt});
-    if(opt.value===value) current=opt;
-  });
-  renderTrigger(current);
-
-  trigger.onclick = (e)=>{
-    e.stopPropagation();
-    const wasOpen = dropdown.classList.contains('open');
-    document.querySelectorAll('.csel-dropdown.open').forEach(d=>d.classList.remove('open'));
-    document.querySelectorAll('.csel-trigger.open').forEach(d=>d.classList.remove('open'));
-    if(!wasOpen){ dropdown.classList.add('open'); trigger.classList.add('open'); }
-  };
-  // Setter externe
-  wrap._setValue = (v)=>{
-    const opt = options.find(o=>o.value===v)||null;
-    renderTrigger(opt);
-    allOpts.forEach(o=>o.el.classList.toggle('selected',o.opt===opt));
-  };
-  wrap.appendChild(trigger);
-  wrap.appendChild(dropdown);
-  return wrap;
-}
-
-
 function st(hp,atk,def,spa,spd,spe){ return {hp,atk,def,spa,spd,spe}; }
 
 /* =================== POKÉDEX GÉNÉRATION 1 (151) =================== */
 const LINES = [
 {id:'bulbasaur',abilities:['Engrais','Chlorophylle'],moveIds:['absorb','vinewhip','razorleaf','megadrain','gigadrain','solarbeam','sludge','poisonjab','bodyslam','doubleedge','toxic','sleeppowder','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Bulbizarre',types:['plante','poison'],emoji:'🌱',base:st(45,49,49,65,65,45)},
-  {name:'Herbizarre',types:['plante','poison'],emoji:'🪴',base:st(60,62,63,80,80,60)},
-  {name:'Florizarre',types:['plante','poison'],emoji:'🌺',base:st(80,82,83,100,100,80)}]},
+  {name:'Bulbizarre',types:['plante','poison'],base:st(45,49,49,65,65,45)},
+  {name:'Herbizarre',types:['plante','poison'],base:st(60,62,63,80,80,60)},
+  {name:'Florizarre',types:['plante','poison'],base:st(80,82,83,100,100,80)}]},
 {id:'charmander',abilities:['Brasier','Sève Solaire'],moveIds:['scratch','ember','flamethrower','fireblast','firepunch','slash','bite','bodyslam','doubleedge','dragonrage','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Salamèche',types:['feu'],emoji:'🦎',base:st(39,52,43,60,50,65)},
-  {name:'Reptincel',types:['feu'],emoji:'🐉',base:st(58,64,58,80,65,80)},
-  {name:'Dracaufeu',types:['feu','vol'],emoji:'🐲',base:st(78,84,78,109,85,100)}]},
+  {name:'Salamèche',types:['feu'],base:st(39,52,43,60,50,65)},
+  {name:'Reptincel',types:['feu'],base:st(58,64,58,80,65,80)},
+  {name:'Dracaufeu',types:['feu','vol'],base:st(78,84,78,109,85,100)}]},
 {id:'squirtle',abilities:['Torrent','Pluie Bienfaisante'],moveIds:['tackle','bubble','watergun','surf','hydropump','bubblebeam','waterfall','icebeam','bite','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Carapuce',types:['eau'],emoji:'🐢',base:st(44,48,65,50,64,43)},
-  {name:'Carabaffe',types:['eau'],emoji:'🐸',base:st(59,63,80,65,80,58)},
-  {name:'Tortank',types:['eau'],emoji:'🐢',base:st(79,83,100,85,105,78)}]},
+  {name:'Carapuce',types:['eau'],base:st(44,48,65,50,64,43)},
+  {name:'Carabaffe',types:['eau'],base:st(59,63,80,65,80,58)},
+  {name:'Tortank',types:['eau'],base:st(79,83,100,85,105,78)}]},
 {id:'caterpie',abilities:['Armurine','Œil Composé'],moveIds:['tackle','leechlife','bugbite','pinmissile','megahorn','gust','wingattack','quickattack','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Chenipan',types:['insecte'],emoji:'🐛',base:st(45,30,35,20,20,45)},
-  {name:'Chrysacier',types:['insecte'],emoji:'🦋',base:st(50,20,55,25,25,30)},
-  {name:'Papilusion',types:['insecte','vol'],emoji:'🦋',base:st(60,45,50,90,80,70)}]},
+  {name:'Chenipan',types:['insecte'],base:st(45,30,35,20,20,45)},
+  {name:'Chrysacier',types:['insecte'],base:st(50,20,55,25,25,30)},
+  {name:'Papilusion',types:['insecte','vol'],base:st(60,45,50,90,80,70)}]},
 {id:'weedle',abilities:['Armurine','Essaim'],moveIds:['poisonsting','twineedle','bugbite','pinmissile','sludge','acid','tackle','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Aspicot',types:['insecte','poison'],emoji:'🐛',base:st(40,35,30,20,20,50)},
-  {name:'Coconfort',types:['insecte','poison'],emoji:'🛡️',base:st(45,25,50,25,25,35)},
-  {name:'Dardargnan',types:['insecte','poison'],emoji:'🐝',base:st(65,90,40,45,80,75)}]},
+  {name:'Aspicot',types:['insecte','poison'],base:st(40,35,30,20,20,50)},
+  {name:'Coconfort',types:['insecte','poison'],base:st(45,25,50,25,25,35)},
+  {name:'Dardargnan',types:['insecte','poison'],base:st(65,90,40,45,80,75)}]},
 {id:'pidgey',abilities:['Œil Perçant','Pieds Fébriles'],moveIds:['tackle','peck','gust','quickattack','wingattack','furyattack','drillpeck','bodyslam','doubleedge','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Roucool',types:['normal','vol'],emoji:'🐦',base:st(40,45,40,35,35,56)},
-  {name:'Roucoups',types:['normal','vol'],emoji:'🐦',base:st(63,60,55,50,50,71)},
-  {name:'Roucarnage',types:['normal','vol'],emoji:'🦅',base:st(83,80,75,70,70,101)}]},
+  {name:'Roucool',types:['normal','vol'],base:st(40,45,40,35,35,56)},
+  {name:'Roucoups',types:['normal','vol'],base:st(63,60,55,50,50,71)},
+  {name:'Roucarnage',types:['normal','vol'],base:st(83,80,75,70,70,101)}]},
 {id:'rattata',abilities:['Cuvette','Fébrile'],moveIds:['tackle','quickattack','bite','hyperfang','slash','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Rattata',types:['normal'],emoji:'🐀',base:st(30,56,35,25,35,72)},
-  {name:'Rattatac',types:['normal'],emoji:'🐭',base:st(55,81,60,50,70,97)}]},
+  {name:'Rattata',types:['normal'],base:st(30,56,35,25,35,72)},
+  {name:'Rattatac',types:['normal'],base:st(55,81,60,50,70,97)}]},
 {id:'spearow',abilities:['Œil Perçant','Sniper'],moveIds:['tackle','peck','furyattack','quickattack','drillpeck','wingattack','agility','bodyslam','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Piafabec',types:['normal','vol'],emoji:'🐤',base:st(40,60,30,31,31,70)},
-  {name:'Rapasdepic',types:['normal','vol'],emoji:'🦅',base:st(65,90,65,61,61,100)}]},
+  {name:'Piafabec',types:['normal','vol'],base:st(40,60,30,31,31,70)},
+  {name:'Rapasdepic',types:['normal','vol'],base:st(65,90,65,61,61,100)}]},
 {id:'ekans',abilities:['Intimidation','Mue'],moveIds:['tackle','poisonsting','acid','sludge','sludgebomb','bite','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Abo',types:['poison'],emoji:'🐍',base:st(35,60,44,40,54,55)},
-  {name:'Arbok',types:['poison'],emoji:'🐍',base:st(60,85,69,65,79,80)}]},
+  {name:'Abo',types:['poison'],base:st(35,60,44,40,54,55)},
+  {name:'Arbok',types:['poison'],base:st(60,85,69,65,79,80)}]},
 {id:'pikachu',abilities:['Statik','Paratonnerre'],moveIds:['tackle','quickattack','thundershock','thunderbolt','thunder','thunderpunch','bodyslam','doubleedge','agility','swordsdance','growl','leer','harden','amnesia','thunderwave','recover','strength'],
  stages:[
-  {name:'Pichu',types:['electrik'],emoji:'🐹',base:st(20,40,15,35,35,60)},
-  {name:'Pikachu',types:['electrik'],emoji:'🐭',base:st(35,55,40,50,50,90)},
-  {name:'Raichu',types:['electrik'],emoji:'⚡',base:st(60,90,55,90,80,110)}]},
+  {name:'Pichu',types:['electrik'],base:st(20,40,15,35,35,60)},
+  {name:'Pikachu',types:['electrik'],base:st(35,55,40,50,50,90)},
+  {name:'Raichu',types:['electrik'],base:st(60,90,55,90,80,110)}]},
 {id:'sandshrew',abilities:['Voile Sable','Vivacité'],moveIds:['scratch','slash','dig','earthquake','bonemerang','rockslide','mudshot','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Sabelette',types:['sol'],emoji:'🦔',base:st(50,75,85,20,30,40)},
-  {name:'Sablaireau',types:['sol'],emoji:'🦫',base:st(65,100,110,45,55,65)}]},
+  {name:'Sabelette',types:['sol'],base:st(50,75,85,20,30,40)},
+  {name:'Sablaireau',types:['sol'],base:st(65,100,110,45,55,65)}]},
 {id:'nidoranf',abilities:['Point Poison','Rivalité'],moveIds:['tackle','poisonsting','hornattack','doublekick','bite','sludge','sludgebomb','bodyslam','doubleedge','earthquake','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Nidoran♀',types:['poison'],emoji:'🐰',base:st(55,47,52,40,40,41)},
-  {name:'Nidorina',types:['poison'],emoji:'🐰',base:st(70,62,67,55,55,56)},
-  {name:'Nidoqueen',types:['poison','sol'],emoji:'🦏',base:st(90,82,87,75,85,76)}]},
+  {name:'Nidoran♀',types:['poison'],base:st(55,47,52,40,40,41)},
+  {name:'Nidorina',types:['poison'],base:st(70,62,67,55,55,56)},
+  {name:'Nidoqueen',types:['poison','sol'],base:st(90,82,87,75,85,76)}]},
 {id:'nidoranm',abilities:['Point Poison','Rivalité'],moveIds:['tackle','poisonsting','hornattack','doublekick','bite','sludge','sludgebomb','bodyslam','doubleedge','earthquake','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Nidoran♂',types:['poison'],emoji:'🐰',base:st(46,57,40,40,40,50)},
-  {name:'Nidorino',types:['poison'],emoji:'🦏',base:st(61,72,57,55,55,65)},
-  {name:'Nidoking',types:['poison','sol'],emoji:'🦏',base:st(81,92,77,85,75,85)}]},
+  {name:'Nidoran♂',types:['poison'],base:st(46,57,40,40,40,50)},
+  {name:'Nidorino',types:['poison'],base:st(61,72,57,55,55,65)},
+  {name:'Nidoking',types:['poison','sol'],base:st(81,92,77,85,75,85)}]},
 {id:'clefairy',abilities:['Charme','Magie Sereine'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Mélofée',types:['normal'],emoji:'🌸',base:st(70,45,48,60,65,35)},
-  {name:'Mélodelfe',types:['normal'],emoji:'🌷',base:st(95,70,73,95,90,60)}]},
+  {name:'Mélo',types:['normal'],base:st(50,25,28,45,55,15)},
+  {name:'Mélofée',types:['normal'],base:st(70,45,48,60,65,35)},
+  {name:'Mélodelfe',types:['normal'],base:st(95,70,73,95,90,60)}]},
 {id:'vulpix',abilities:['Don de Soi','Torche'],moveIds:['tackle','ember','flamethrower','fireblast','quickattack','bite','bodyslam','confuseray','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Goupix',types:['feu'],emoji:'🦊',base:st(38,41,40,50,65,65)},
-  {name:'Feunard',types:['feu'],emoji:'🦊',base:st(73,76,75,81,100,100)}]},
+  {name:'Goupix',types:['feu'],base:st(38,41,40,50,65,65)},
+  {name:'Feunard',types:['feu'],base:st(73,76,75,81,100,100)}]},
 {id:'jigglypuff',abilities:['Charme','Compétiteur'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Rondoudou',types:['normal'],emoji:'🎈',base:st(115,45,20,45,25,20)},
-  {name:'Grodoudou',types:['normal'],emoji:'🎈',base:st(140,70,45,75,50,45)}]},
+  {name:'Toudoudou',types:['normal'],base:st(90,30,15,40,20,15)},
+  {name:'Rondoudou',types:['normal'],base:st(115,45,20,45,25,20)},
+  {name:'Grodoudou',types:['normal'],base:st(140,70,45,75,50,45)}]},
 {id:'zubat',abilities:['Télépathie','Infiltration'],moveIds:['tackle','leechlife','bite','gust','wingattack','poisonsting','acid','sludge','confuseray','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Nosferapti',types:['poison','vol'],emoji:'🦇',base:st(40,45,35,30,40,55)},
-  {name:'Nosferalto',types:['poison','vol'],emoji:'🦇',base:st(75,80,70,65,75,90)}]},
+  {name:'Nosferapti',types:['poison','vol'],base:st(40,45,35,30,40,55)},
+  {name:'Nosferalto',types:['poison','vol'],base:st(75,80,70,65,75,90)},
+  {name:'Nostenfer',types:['poison','vol'],base:st(85,90,80,70,80,130)}]},
 {id:'oddish',abilities:['Chlorophylle','Cuvette'],moveIds:['absorb','vinewhip','megadrain','gigadrain','razorleaf','solarbeam','sludge','acid','poisonjab','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Mystherbe',types:['plante','poison'],emoji:'🌿',base:st(45,50,55,75,65,30)},
-  {name:'Ortide',types:['plante','poison'],emoji:'🌱',base:st(60,65,70,85,75,40)},
-  {name:'Rafflesia',types:['plante','poison'],emoji:'🌺',base:st(75,80,85,100,90,50)}]},
+  {name:'Mystherbe',types:['plante','poison'],base:st(45,50,55,75,65,30)},
+  {name:'Ortide',types:['plante','poison'],base:st(60,65,70,85,75,40)}],
+ branches:[
+  {name:'Rafflesia',types:['plante','poison'],base:st(75,80,85,100,90,50),abilities:['Chlorophylle','Sève Solaire'],extraMoveIds:[]},
+  {name:'Joliflor',types:['plante'],base:st(75,80,95,90,100,50),abilities:['Chlorophylle','Sève Solaire'],extraMoveIds:['leafblade']}
+ ]},
 {id:'paras',abilities:['Pollen Toxique','Peau Sèche'],moveIds:['scratch','leechlife','bugbite','pinmissile','megahorn','absorb','megadrain','gigadrain','razorleaf','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Paras',types:['insecte','plante'],emoji:'🍄',base:st(35,70,55,45,55,25)},
-  {name:'Parasect',types:['insecte','plante'],emoji:'🍄',base:st(60,95,80,60,80,30)}]},
+  {name:'Paras',types:['insecte','plante'],base:st(35,70,55,45,55,25)},
+  {name:'Parasect',types:['insecte','plante'],base:st(60,95,80,60,80,30)}]},
 {id:'venonat',abilities:['Œil Composé','Cuvette'],moveIds:['tackle','leechlife','bugbite','poisonsting','psybeam','confusion','psychic','sludge','acid','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Mimitoss',types:['insecte','poison'],emoji:'🦋',base:st(60,55,50,40,55,45)},
-  {name:'Aéromite',types:['insecte','poison'],emoji:'🦋',base:st(70,65,60,90,75,90)}]},
+  {name:'Mimitoss',types:['insecte','poison'],base:st(60,55,50,40,55,45)},
+  {name:'Aéromite',types:['insecte','poison'],base:st(70,65,60,90,75,90)}]},
 {id:'diglett',abilities:['Voile Sable','Piège de Sable'],moveIds:['scratch','dig','earthquake','slash','bonemerang','mudshot','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Taupiqueur',types:['sol'],emoji:'🕳️',base:st(10,55,25,35,45,95)},
-  {name:'Triopikeur',types:['sol'],emoji:'🕳️',base:st(50,100,50,50,70,120)}]},
+  {name:'Taupiqueur',types:['sol'],base:st(10,55,25,35,45,95)},
+  {name:'Triopikeur',types:['sol'],base:st(50,100,50,50,70,120)}]},
 {id:'meowth',abilities:['Ramassage','Technicien'],moveIds:['scratch','bite','slash','furyattack','quickattack','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Miaouss',types:['normal'],emoji:'🐱',base:st(40,45,35,40,40,90)},
-  {name:'Persian',types:['normal'],emoji:'🐈',base:st(65,70,60,65,65,115)}]},
+  {name:'Miaouss',types:['normal'],base:st(40,45,35,40,40,90)},
+  {name:'Persian',types:['normal'],base:st(65,70,60,65,65,115)}]},
 {id:'psyduck',abilities:['Moiteur','Anti-Brume'],moveIds:['scratch','tackle','bubble','watergun','surf','hydropump','bubblebeam','psybeam','confusion','psychic','bite','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Psykokwak',types:['eau'],emoji:'🦆',base:st(50,52,48,65,50,55)},
-  {name:'Akwakwak',types:['eau'],emoji:'🦆',base:st(80,82,78,95,80,85)}]},
+  {name:'Psykokwak',types:['eau'],base:st(50,52,48,65,50,55)},
+  {name:'Akwakwak',types:['eau'],base:st(80,82,78,95,80,85)}]},
 {id:'mankey',abilities:['Vital Esprit','Tête Brûlée'],moveIds:['scratch','karatechop','submission','highjumpkick','doublekick','crosschop','bite','bodyslam','rockslide','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Férosinge',types:['combat'],emoji:'🐒',base:st(40,80,35,35,45,70)},
-  {name:'Colossinge',types:['combat'],emoji:'🦍',base:st(65,105,60,60,70,95)}]},
+  {name:'Férosinge',types:['combat'],base:st(40,80,35,35,45,70)},
+  {name:'Colossinge',types:['combat'],base:st(65,105,60,60,70,95)}]},
 {id:'growlithe',abilities:['Intimidation','Torche'],moveIds:['tackle','bite','ember','flamethrower','firepunch','fireblast','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Caninos',types:['feu'],emoji:'🐕',base:st(55,70,45,70,50,60)},
-  {name:'Arcanin',types:['feu'],emoji:'🐕',base:st(90,110,80,100,80,95)}]},
+  {name:'Caninos',types:['feu'],base:st(55,70,45,70,50,60)},
+  {name:'Arcanin',types:['feu'],base:st(90,110,80,100,80,95)}]},
 {id:'poliwag',abilities:['Absorbe Eau','Moiteur'],moveIds:['tackle','bubble','watergun','surf','hydropump','bubblebeam','waterfall','bodyslam','doubleedge','submission','doublekick','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Ptitard',types:['eau'],emoji:'🐸',base:st(40,50,40,40,40,90)},
-  {name:'Têtarte',types:['eau'],emoji:'🐸',base:st(65,65,65,50,50,90)},
-  {name:'Tartard',types:['eau','combat'],emoji:'🐸',base:st(90,85,95,70,90,70)}]},
+  {name:'Ptitard',types:['eau'],base:st(40,50,40,40,40,90)},
+  {name:'Têtarte',types:['eau'],base:st(65,65,65,50,50,90)}],
+ branches:[
+  {name:'Tartard',types:['eau','combat'],base:st(90,85,95,70,90,70),abilities:['Absorbe Eau','Moiteur'],extraMoveIds:['submission','crosschop']},
+  {name:'Tarpaud',types:['eau'],base:st(90,75,75,90,100,70),abilities:['Absorbe Eau','Moiteur'],extraMoveIds:['icebeam','mudshot']}
+ ]},
 {id:'abra',abilities:['Synchro','Télépathie'],moveIds:['confusion','psychic','psybeam','extrasensory','shadowball','swift','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'Abra',types:['psy'],emoji:'🧘',base:st(25,20,15,105,55,90)},
-  {name:'Kadabra',types:['psy'],emoji:'🧙',base:st(40,35,30,120,70,105)},
-  {name:'Alakazam',types:['psy'],emoji:'🧙',base:st(55,50,45,135,95,120)}]},
+  {name:'Abra',types:['psy'],base:st(25,20,15,105,55,90)},
+  {name:'Kadabra',types:['psy'],base:st(40,35,30,120,70,105)},
+  {name:'Alakazam',types:['psy'],base:st(55,50,45,135,95,120)}]},
 {id:'machop',abilities:['Mental','Sans Garde'],moveIds:['tackle','karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','bodyslam','rockslide','earthquake','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Machoc',types:['combat'],emoji:'🥋',base:st(70,80,50,35,35,35)},
-  {name:'Machopeur',types:['combat'],emoji:'💪',base:st(80,100,70,50,60,45)},
-  {name:'Mackogneur',types:['combat'],emoji:'💪',base:st(90,130,80,65,85,55)}]},
+  {name:'Machoc',types:['combat'],base:st(70,80,50,35,35,35)},
+  {name:'Machopeur',types:['combat'],base:st(80,100,70,50,60,45)},
+  {name:'Mackogneur',types:['combat'],base:st(90,130,80,65,85,55)}]},
 {id:'bellsprout',abilities:['Chlorophylle','Gourmandise'],moveIds:['absorb','vinewhip','megadrain','gigadrain','razorleaf','solarbeam','sludge','acid','poisonjab','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Chétiflor',types:['plante','poison'],emoji:'🌱',base:st(50,75,35,70,30,40)},
-  {name:'Boustiflor',types:['plante','poison'],emoji:'🌿',base:st(65,90,50,85,45,55)},
-  {name:'Empiflor',types:['plante','poison'],emoji:'🌺',base:st(80,105,65,100,60,70)}]},
+  {name:'Chétiflor',types:['plante','poison'],base:st(50,75,35,70,30,40)},
+  {name:'Boustiflor',types:['plante','poison'],base:st(65,90,50,85,45,55)},
+  {name:'Empiflor',types:['plante','poison'],base:st(80,105,65,100,60,70)}]},
 {id:'tentacool',abilities:['Corps Sain','Suintement'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','acid','sludge','sludgebomb','waterfall','bodyslam','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Tentacool',types:['eau','poison'],emoji:'🎐',base:st(40,40,35,50,100,70)},
-  {name:'Tentacruel',types:['eau','poison'],emoji:'🎐',base:st(80,70,65,80,120,100)}]},
+  {name:'Tentacool',types:['eau','poison'],base:st(40,40,35,50,100,70)},
+  {name:'Tentacruel',types:['eau','poison'],base:st(80,70,65,80,120,100)}]},
 {id:'geodude',abilities:['Tête de Roc','Solidroc'],moveIds:['tackle','rockthrow','rockslide','stoneedge','earthquake','dig','bonemerang','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Racaillou',types:['roche','sol'],emoji:'🪨',base:st(40,80,100,30,30,20)},
-  {name:'Gravalanch',types:['roche','sol'],emoji:'🪨',base:st(55,95,115,45,45,35)},
-  {name:'Grolem',types:['roche','sol'],emoji:'🪨',base:st(80,120,130,55,65,45)}]},
+  {name:'Racaillou',types:['roche','sol'],base:st(40,80,100,30,30,20)},
+  {name:'Gravalanch',types:['roche','sol'],base:st(55,95,115,45,45,35)},
+  {name:'Grolem',types:['roche','sol'],base:st(80,120,130,55,65,45)}]},
 {id:'ponyta',abilities:['Cuvette','Flamme Corps'],moveIds:['tackle','stomp','ember','flamethrower','firepunch','fireblast','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Ponyta',types:['feu'],emoji:'🐴',base:st(50,85,55,65,65,90)},
-  {name:'Galopa',types:['feu'],emoji:'🐎',base:st(65,100,70,80,80,105)}]},
+  {name:'Ponyta',types:['feu'],base:st(50,85,55,65,65,90)},
+  {name:'Galopa',types:['feu'],base:st(65,100,70,80,80,105)}]},
 {id:'slowpoke',abilities:['Insouciance','Régénération'],moveIds:['tackle','headbutt','watergun','surf','psybeam','confusion','psychic','amnesia','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','confuseray','recover','strength'],
  stages:[
-  {name:'Ramoloss',types:['eau','psy'],emoji:'🐌',base:st(90,65,65,40,40,15)},
-  {name:'Flagadoss',types:['eau','psy'],emoji:'🐌',base:st(95,75,80,100,80,30)}]},
+  {name:'Ramoloss',types:['eau','psy'],base:st(90,65,65,40,40,15)}],
+ branches:[
+  {name:'Flagadoss',types:['eau','psy'],base:st(95,75,80,100,80,30),abilities:['Insouciance','Régénération'],extraMoveIds:[]},
+  {name:'Roigada',types:['eau','psy'],base:st(95,75,80,100,110,30),abilities:['Insouciance','Régénération'],extraMoveIds:['icebeam']}
+ ]},
 {id:'magnemite',abilities:['Magnépiège','Solidroc'],moveIds:['tackle','thundershock','thunderbolt','thunder','thunderpunch','swift','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','thunderwave','recover','strength'],
  stages:[
-  {name:'Magnéti',types:['electrik'],emoji:'🧲',base:st(25,35,70,95,55,45)},
-  {name:'Magnéton',types:['electrik'],emoji:'🧲',base:st(50,60,95,120,70,70)}]},
+  {name:'Magnéti',types:['electrik'],base:st(25,35,70,95,55,45)},
+  {name:'Magnéton',types:['electrik'],base:st(50,60,95,120,70,70)}]},
 {id:'farfetchd',abilities:['Œil Perçant','Télépathie'],moveIds:['tackle','peck','furyattack','slash','wingattack','quickattack','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Canarticho',types:['normal','vol'],emoji:'🦆',base:st(52,90,55,58,62,60)}]},
+  {name:'Canarticho',types:['normal','vol'],base:st(52,90,55,58,62,60)}]},
 {id:'doduo',abilities:['Cuvette','Lève-tôt'],moveIds:['tackle','peck','furyattack','drillpeck','quickattack','bite','bodyslam','agility','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
-  {name:'Doduo',types:['normal','vol'],emoji:'🐦',base:st(35,85,45,35,35,75)},
-  {name:'Dodrio',types:['normal','vol'],emoji:'🦤',base:st(60,110,70,60,60,110)}]},
+  {name:'Doduo',types:['normal','vol'],base:st(35,85,45,35,35,75)},
+  {name:'Dodrio',types:['normal','vol'],base:st(60,110,70,60,60,110)}]},
 {id:'seel',abilities:['Isolat','Hydratation'],moveIds:['tackle','bubble','watergun','surf','hydropump','bubblebeam','icebeam','icepunch','blizzard','bodyslam','headbutt','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Otaria',types:['eau'],emoji:'🦭',base:st(65,45,55,45,70,45)},
-  {name:'Lamantine',types:['eau'],emoji:'🦭',base:st(90,70,80,70,95,70)}]},
+  {name:'Otaria',types:['eau'],base:st(65,45,55,45,70,45)},
+  {name:'Lamantine',types:['eau'],base:st(90,70,80,70,95,70)}]},
 {id:'grimer',abilities:['Fétidité','Glu'],moveIds:['tackle','poisonsting','sludge','sludgebomb','acid','bite','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Tadmorv',types:['poison'],emoji:'🟣',base:st(80,80,50,40,50,25)},
-  {name:'Grotadmorv',types:['poison'],emoji:'🟣',base:st(105,105,75,65,100,50)}]},
+  {name:'Tadmorv',types:['poison'],base:st(80,80,50,40,50,25)},
+  {name:'Grotadmorv',types:['poison'],base:st(105,105,75,65,100,50)}]},
 {id:'shellder',abilities:['Coque Armure','Enchaînement'],moveIds:['tackle','watergun','surf','bubblebeam','icebeam','icepunch','blizzard','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Kokiyas',types:['eau'],emoji:'🐚',base:st(30,65,100,45,25,40)},
-  {name:'Crustabri',types:['eau','glace'],emoji:'🐚',base:st(50,95,180,85,45,70)}]},
+  {name:'Kokiyas',types:['eau'],base:st(30,65,100,45,25,40)},
+  {name:'Crustabri',types:['eau','glace'],base:st(50,95,180,85,45,70)}]},
 {id:'gastly',abilities:['Lévitation','Corps Maudit'],moveIds:['tackle','lick','shadowball','shadowclaw','nightshade','sludge','sludgebomb','confusion','bite','confuseray','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Fantominus',types:['fantome','poison'],emoji:'👻',base:st(30,35,30,100,35,80)},
-  {name:'Spectrum',types:['fantome','poison'],emoji:'👻',base:st(45,50,45,115,55,95)},
-  {name:'Ectoplasma',types:['fantome','poison'],emoji:'👻',base:st(60,65,60,130,75,110)}]},
-{id:'onix',abilities:['Tête de Roc','Solidroc'],moveIds:['tackle','rockthrow','rockslide','stoneedge','earthquake','dig','bonemerang','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
+  {name:'Fantominus',types:['fantome','poison'],base:st(30,35,30,100,35,80)},
+  {name:'Spectrum',types:['fantome','poison'],base:st(45,50,45,115,55,95)},
+  {name:'Ectoplasma',types:['fantome','poison'],base:st(60,65,60,130,75,110)}]},
+{id:'onix',abilities:['Tête de Roc','Solidroc'],moveIds:['tackle','rockthrow','rockslide','stoneedge','earthquake','dig','bonemerang','ironhead','irondefense','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Onix',types:['roche','sol'],emoji:'🪨',base:st(35,45,160,30,45,70)}]},
+  {name:'Onix',types:['roche','sol'],base:st(35,45,160,30,45,70)},
+  {name:'Steelix',types:['roche','acier'],base:st(75,85,200,55,65,30)}]},
 {id:'drowzee',abilities:['Insomnia','Télépathie'],moveIds:['tackle','headbutt','confusion','psychic','psybeam','zenheadbutt','bodyslam','meditate','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'Soporifik',types:['psy'],emoji:'🐘',base:st(60,48,45,43,90,42)},
-  {name:'Hypnomade',types:['psy'],emoji:'🐘',base:st(85,73,70,73,115,67)}]},
+  {name:'Soporifik',types:['psy'],base:st(60,48,45,43,90,42)},
+  {name:'Hypnomade',types:['psy'],base:st(85,73,70,73,115,67)}]},
 {id:'krabby',abilities:['Lame Affilée','Coque Armure'],moveIds:['tackle','watergun','surf','bubblebeam','crabhammer','waterfall','bite','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Krabby',types:['eau'],emoji:'🦀',base:st(30,105,90,25,25,50)},
-  {name:'Krabboss',types:['eau'],emoji:'🦀',base:st(50,130,115,50,50,75)}]},
+  {name:'Krabby',types:['eau'],base:st(30,105,90,25,25,50)},
+  {name:'Krabboss',types:['eau'],base:st(50,130,115,50,50,75)}]},
 {id:'voltorb',abilities:['Anti-Bruit','Statik'],moveIds:['tackle','thundershock','thunderbolt','thunder','thunderpunch','swift','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','thunderwave','recover','strength'],
  stages:[
-  {name:'Voltorbe',types:['electrik'],emoji:'⚫',base:st(40,30,50,55,55,100)},
-  {name:'Electrode',types:['electrik'],emoji:'⚫',base:st(60,50,70,80,80,150)}]},
+  {name:'Voltorbe',types:['electrik'],base:st(40,30,50,55,55,100)},
+  {name:'Electrode',types:['electrik'],base:st(60,50,70,80,80,150)}]},
 {id:'exeggcute',abilities:['Chlorophylle','Récolte'],moveIds:['absorb','megadrain','gigadrain','razorleaf','solarbeam','psybeam','confusion','psychic','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','confuseray','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Noeunoeuf',types:['plante','psy'],emoji:'🥚',base:st(60,40,80,60,45,40)},
-  {name:'Noadkoko',types:['plante','psy'],emoji:'🥥',base:st(95,95,85,125,75,55)}]},
+  {name:'Noeunoeuf',types:['plante','psy'],base:st(60,40,80,60,45,40)},
+  {name:'Noadkoko',types:['plante','psy'],base:st(95,95,85,125,75,55)}]},
 {id:'cubone',abilities:['Tête de Roc','Paratonnerre'],moveIds:['tackle','bonemerang','earthquake','dig','rockslide','stoneedge','headbutt','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Osselait',types:['sol'],emoji:'🦴',base:st(50,50,95,40,50,35)},
-  {name:'Ossatueur',types:['sol'],emoji:'🦴',base:st(60,80,110,50,80,45)}]},
-{id:'hitmonlee',abilities:['Échauffement','Casse-Cou'],moveIds:['tackle','karatechop','highjumpkick','submission','doublekick','brickbreak','bodyslam','rockslide','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
- stages:[
-  {name:'Kicklee',types:['combat'],emoji:'🥋',base:st(50,120,53,35,110,87)}]},
-{id:'hitmonchan',abilities:['Œil Perçant','Poing de Fer'],moveIds:['tackle','karatechop','highjumpkick','submission','doublekick','firepunch','icepunch','thunderpunch','brickbreak','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
- stages:[
-  {name:'Tygnon',types:['combat'],emoji:'🥊',base:st(50,105,79,35,110,76)}]},
+  {name:'Osselait',types:['sol'],base:st(50,50,95,40,50,35)},
+  {name:'Ossatueur',types:['sol'],base:st(60,80,110,50,80,45)}]},
 {id:'lickitung',abilities:['Tempo Perso','Insouciance'],moveIds:['tackle','lick','bodyslam','doubleedge','hyperbeam','stomp','headbutt','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Excelangue',types:['normal'],emoji:'👅',base:st(90,55,75,60,75,30)}]},
+  {name:'Excelangue',types:['normal'],base:st(90,55,75,60,75,30)}]},
 {id:'koffing',abilities:['Lévitation','Gaz Neutralisant'],moveIds:['tackle','poisonsting','sludge','sludgebomb','acid','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Smogo',types:['poison'],emoji:'☁️',base:st(40,65,95,60,45,35)},
-  {name:'Smogogo',types:['poison'],emoji:'☁️',base:st(65,90,120,85,70,60)}]},
+  {name:'Smogo',types:['poison'],base:st(40,65,95,60,45,35)},
+  {name:'Smogogo',types:['poison'],base:st(65,90,120,85,70,60)}]},
 {id:'rhyhorn',abilities:['Paratonnerre','Tête de Roc'],moveIds:['tackle','hornattack','stomp','rockthrow','rockslide','stoneedge','earthquake','dig','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Rhinocorne',types:['sol','roche'],emoji:'🦏',base:st(80,85,95,30,30,25)},
-  {name:'Rhinoféros',types:['sol','roche'],emoji:'🦏',base:st(105,130,120,45,45,40)}]},
+  {name:'Rhinocorne',types:['sol','roche'],base:st(80,85,95,30,30,25)},
+  {name:'Rhinoféros',types:['sol','roche'],base:st(105,130,120,45,45,40)}]},
 {id:'chansey',abilities:['Soin Naturel','Grâce Sereine'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','swift','psybeam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Leveinard',types:['normal'],emoji:'🥚',base:st(250,5,5,35,105,50)}]},
+  {name:'Leveinard',types:['normal'],base:st(250,5,5,35,105,50)},
+  {name:'Leuphorie',types:['normal'],base:st(255,10,10,75,135,55)}]},
 {id:'tangela',abilities:['Chlorophylle','Garde Feuille'],moveIds:['absorb','vinewhip','megadrain','gigadrain','razorleaf','solarbeam','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','toxic','sleeppowder','recover','strength'],
  stages:[
-  {name:'Saquedeneu',types:['plante'],emoji:'🌿',base:st(65,55,115,100,40,60)}]},
+  {name:'Saquedeneu',types:['plante'],base:st(65,55,115,100,40,60)}]},
 {id:'kangaskhan',abilities:['Lève-tôt','Audacieux'],moveIds:['tackle','bite','stomp','bodyslam','doubleedge','hyperbeam','slash','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Kangourex',types:['normal'],emoji:'🦘',base:st(105,95,80,40,80,90)}]},
-{id:'horsea',abilities:['Nage Rapide','Sniper'],moveIds:['bubble','watergun','surf','hydropump','bubblebeam','waterfall','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
+  {name:'Kangourex',types:['normal'],base:st(105,95,80,40,80,90)}]},
+{id:'horsea',abilities:['Nage Rapide','Sniper'],moveIds:['bubble','watergun','surf','hydropump','bubblebeam','waterfall','dragonbreath','dragonclaw','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Hypotrempe',types:['eau'],emoji:'🐉',base:st(30,40,70,70,25,60)},
-  {name:'Hypocéan',types:['eau'],emoji:'🐉',base:st(55,65,95,95,45,85)}]},
+  {name:'Hypotrempe',types:['eau'],base:st(30,40,70,70,25,60)},
+  {name:'Hypocéan',types:['eau'],base:st(55,65,95,95,45,85)},
+  {name:'Hyporoi',types:['eau','dragon'],base:st(75,95,95,95,95,85)}]},
 {id:'goldeen',abilities:['Nage Rapide',"Voile d'Eau"],moveIds:['tackle','peck','hornattack','furyattack','watergun','surf','bubblebeam','icebeam','waterfall','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Poissirène',types:['eau'],emoji:'🐠',base:st(45,67,60,35,50,63)},
-  {name:'Poissoroy',types:['eau'],emoji:'🐠',base:st(80,92,65,65,80,68)}]},
+  {name:'Poissirène',types:['eau'],base:st(45,67,60,35,50,63)},
+  {name:'Poissoroy',types:['eau'],base:st(80,92,65,65,80,68)}]},
 {id:'staryu',abilities:['Luminescence','Soin Naturel'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','psybeam','confusion','swift','waterfall','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'Stari',types:['eau'],emoji:'⭐',base:st(30,45,55,70,55,85)},
-  {name:'Staross',types:['eau','psy'],emoji:'⭐',base:st(60,75,85,100,85,115)}]},
+  {name:'Stari',types:['eau'],base:st(30,45,55,70,55,85)},
+  {name:'Staross',types:['eau','psy'],base:st(60,75,85,100,85,115)}]},
 {id:'mrmime',abilities:['Anti-Bruit','Filtre'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','barrier','meditate','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'M. Mime',types:['psy'],emoji:'🤡',base:st(40,45,65,100,120,90)}]},
-{id:'scyther',abilities:['Essaim','Technicien'],moveIds:['tackle','leechlife','bugbite','pinmissile','megahorn','slash','quickattack','wingattack','agility','swordsdance','harden','growl','leer','amnesia','toxic','recover','strength'],
+  {name:'M. Mime',types:['psy'],base:st(40,45,65,100,120,90)}]},
+{id:'scyther',abilities:['Essaim','Technicien'],moveIds:['tackle','leechlife','bugbite','pinmissile','megahorn','slash','quickattack','wingattack','ironhead','steelwing','agility','swordsdance','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Insécateur',types:['insecte','vol'],emoji:'🦗',base:st(70,110,80,55,80,105)}]},
+  {name:'Insécateur',types:['insecte','vol'],base:st(70,110,80,55,80,105)},
+  {name:'Cizayox',types:['insecte','acier'],base:st(70,130,100,55,80,65)}]},
 {id:'jynx',abilities:['Insouciance','Avant-Garde'],moveIds:['tackle','doubleslap','sing','icebeam','icepunch','blizzard','psychic','psybeam','confusion','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'Lippoutou',types:['glace','psy'],emoji:'💋',base:st(65,50,35,115,95,95)}]},
+  {name:'Lippouti',types:['glace','psy'],base:st(45,30,15,85,65,65)},
+  {name:'Lippoutou',types:['glace','psy'],base:st(65,50,35,115,95,95)}]},
 {id:'electabuzz',abilities:['Statik','Vital Esprit'],moveIds:['tackle','quickattack','thundershock','thunderbolt','thunder','thunderpunch','bodyslam','firepunch','icepunch','swordsdance','agility','harden','growl','leer','amnesia','thunderwave','recover','strength'],
  stages:[
-  {name:'Élektek',types:['electrik'],emoji:'⚡',base:st(65,83,57,95,85,105)}]},
+  {name:'Élekid',types:['electrik'],base:st(45,63,37,65,55,95)},
+  {name:'Élektek',types:['electrik'],base:st(65,83,57,95,85,105)}]},
 {id:'magmar',abilities:['Flamme Corps','Vital Esprit'],moveIds:['tackle','ember','flamethrower','fireblast','firepunch','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Magmar',types:['feu'],emoji:'🔥',base:st(65,95,57,100,85,93)}]},
+  {name:'Magby',types:['feu'],base:st(45,75,37,70,55,83)},
+  {name:'Magmar',types:['feu'],base:st(65,95,57,100,85,93)}]},
 {id:'pinsir',abilities:['Lame Affilée','Brise-Moule'],moveIds:['tackle','slash','leechlife','bugbite','pinmissile','megahorn','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','toxic','recover','strength'],
  stages:[
-  {name:'Scarabrute',types:['insecte'],emoji:'🦗',base:st(65,125,100,55,70,85)}]},
+  {name:'Scarabrute',types:['insecte'],base:st(65,125,100,55,70,85)}]},
 {id:'tauros',abilities:['Intimidation','Tête Brûlée'],moveIds:['tackle','stomp','bite','hornattack','bodyslam','doubleedge','hyperbeam','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Tauros',types:['normal'],emoji:'🐂',base:st(75,100,95,40,70,110)}]},
+  {name:'Tauros',types:['normal'],base:st(75,100,95,40,70,110)}]},
 {id:'magikarp',abilities:['Nage Rapide','Tournis'],moveIds:['tackle','watergun','bubble','surf','hydropump','waterfall','bodyslam','doubleedge','bite','hyperbeam','agility','swordsdance','harden','growl','leer','amnesia','dragonrage','recover','strength'],
  stages:[
-  {name:'Magicarpe',types:['eau'],emoji:'🐟',base:st(20,10,55,15,20,80)},
-  {name:'Léviator',types:['eau','vol'],emoji:'🐉',base:st(95,125,79,60,100,81)}]},
+  {name:'Magicarpe',types:['eau'],base:st(20,10,55,15,20,80)},
+  {name:'Léviator',types:['eau','vol'],base:st(95,125,79,60,100,81)}]},
 {id:'lapras',abilities:['Absorbe Eau','Coque Armure'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','icebeam','icepunch','blizzard','bodyslam','sing','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'Lokhlass',types:['eau','glace'],emoji:'🐳',base:st(130,85,80,85,95,60)}]},
+  {name:'Lokhlass',types:['eau','glace'],base:st(130,85,80,85,95,60)}]},
 {id:'eevee',abilities:['Cuvette','Adaptabilité'],moveIds:['tackle','quickattack','bite','bodyslam','doubleedge','swift','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Évoli',types:['normal'],emoji:'🦊',base:st(55,55,50,45,65,55)}],
+  {name:'Évoli',types:['normal'],base:st(55,55,50,45,65,55)}],
  branches:[
-  {name:'Aquali',types:['eau'],emoji:'💧',base:st(130,65,60,110,95,65),abilities:['Absorbe Eau','Hydratation'],extraMoveIds:['watergun','surf','hydropump','bubblebeam','waterfall','icebeam','aurora','blizzard']},
-  {name:'Voltali',types:['electrik'],emoji:'⚡',base:st(65,65,60,110,95,130),abilities:['Absorbe Volt','Pied Véloce'],extraMoveIds:['thundershock','thunderbolt','thunder','thunderpunch','thunderwave','discharge']},
-  {name:'Pyroli',types:['feu'],emoji:'🔥',base:st(65,130,60,95,110,65),abilities:['Torche','Mental'],extraMoveIds:['ember','flamethrower','fireblast','firepunch']}
+  {name:'Aquali',types:['eau'],base:st(130,65,60,110,95,65),abilities:['Absorbe Eau','Hydratation'],extraMoveIds:['watergun','surf','hydropump','bubblebeam','waterfall','icebeam','blizzard']},
+  {name:'Voltali',types:['electrik'],base:st(65,65,60,110,95,130),abilities:['Absorbe Volt','Pied Véloce'],extraMoveIds:['thundershock','thunderbolt','thunder','thunderpunch','thunderwave','discharge']},
+  {name:'Pyroli',types:['feu'],base:st(65,130,60,95,110,65),abilities:['Torche','Mental'],extraMoveIds:['ember','flamethrower','fireblast','firepunch']},
+  {name:'Mentali',types:['psy'],base:st(65,65,60,130,95,110),abilities:['Synchro','Avant-Garde'],extraMoveIds:['confusion','psychic','psybeam','extrasensory']},
+  {name:'Noctali',types:['tenebres'],base:st(95,65,110,60,130,65),abilities:['Insomnia','Synchro'],extraMoveIds:['crunch','darkpulse','suckerpunch','nightslash']}
  ]},
 {id:'porygon',abilities:['Calque','Téléchargement'],moveIds:['tackle','bodyslam','hyperbeam','swift','psybeam','confusion','psychic','thunderbolt','thunderwave','icebeam','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Porygon',types:['normal'],emoji:'🤖',base:st(65,60,70,85,75,40)}]},
+  {name:'Porygon',types:['normal'],base:st(65,60,70,85,75,40)},
+  {name:'Porygon2',types:['normal'],base:st(85,80,90,105,95,60)}]},
 {id:'omanyte',abilities:['Nage Rapide','Coque Armure'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','waterfall','icebeam','rockthrow','rockslide','bite','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Amonita',types:['roche','eau'],emoji:'🐚',base:st(35,40,100,90,55,35)},
-  {name:'Amonistar',types:['roche','eau'],emoji:'🐚',base:st(70,60,125,115,70,55)}]},
+  {name:'Amonita',types:['roche','eau'],base:st(35,40,100,90,55,35)},
+  {name:'Amonistar',types:['roche','eau'],base:st(70,60,125,115,70,55)}]},
 {id:'kabuto',abilities:['Nage Rapide','Armure Carapace'],moveIds:['scratch','tackle','rockthrow','rockslide','stoneedge','watergun','surf','waterfall','slash','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Kabuto',types:['roche','eau'],emoji:'🦂',base:st(30,80,90,55,45,55)},
-  {name:'Kabutops',types:['roche','eau'],emoji:'🦂',base:st(60,115,105,65,70,80)}]},
+  {name:'Kabuto',types:['roche','eau'],base:st(30,80,90,55,45,55)},
+  {name:'Kabutops',types:['roche','eau'],base:st(60,115,105,65,70,80)}]},
 {id:'aerodactyl',abilities:['Tête de Roc','Pression'],moveIds:['tackle','bite','peck','wingattack','rockthrow','rockslide','stoneedge','hyperbeam','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Ptéra',types:['roche','vol'],emoji:'🦖',base:st(80,105,65,60,75,130)}]},
+  {name:'Ptéra',types:['roche','vol'],base:st(80,105,65,60,75,130)}]},
 {id:'snorlax',abilities:['Immunité','Isolat'],moveIds:['tackle','bodyslam','doubleedge','hyperbeam','headbutt','bite','surf','icebeam','blizzard','swordsdance','amnesia','harden','growl','leer','recover','strength'],
  stages:[
-  {name:'Ronflex',types:['normal'],emoji:'🐻',base:st(160,110,65,65,110,30)}]},
+  {name:'Ronflex',types:['normal'],base:st(160,110,65,65,110,30)}]},
 {id:'articuno',abilities:['Pression','Camouflage Neige'],moveIds:['tackle','peck','gust','icebeam','icepunch','blizzard','icefang','wingattack','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Artikodin',types:['glace','vol'],emoji:'🦅',base:st(90,85,100,95,125,85)}]},
+  {name:'Artikodin',types:['glace','vol'],base:st(90,85,100,95,125,85)}]},
 {id:'zapdos',abilities:['Pression','Statik'],moveIds:['tackle','thundershock','thunderbolt','thunder','thunderpunch','drillpeck','agility','thunderwave','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Électhor',types:['electrik','vol'],emoji:'🦅',base:st(90,90,85,125,90,100)}]},
+  {name:'Électhor',types:['electrik','vol'],base:st(90,90,85,125,90,100)}]},
 {id:'moltres',abilities:['Pression','Flamme Corps'],moveIds:['tackle','ember','flamethrower','fireblast','firepunch','wingattack','drillpeck','agility','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
-  {name:'Sulfura',types:['feu','vol'],emoji:'🦅',base:st(90,100,90,125,85,90)}]},
+  {name:'Sulfura',types:['feu','vol'],base:st(90,100,90,125,85,90)}]},
 {id:'dratini',abilities:['Mue','Écaille Spéciale'],moveIds:['tackle','bodyslam','surf','agility','bite','swordsdance','harden','growl','leer','amnesia','recover','strength','dragonrage','dragonbreath','dragonclaw'],
  stages:[
-  {name:'Minidraco',types:['dragon'],emoji:'🐍',base:st(41,64,45,50,50,50)},
-  {name:'Draco',types:['dragon'],emoji:'🐉',base:st(61,84,65,70,70,70)},
-  {name:'Dracolosse',types:['dragon','vol'],emoji:'🐲',base:st(91,134,95,100,100,80)}]},
+  {name:'Minidraco',types:['dragon'],base:st(41,64,45,50,50,50)},
+  {name:'Draco',types:['dragon'],base:st(61,84,65,70,70,70)},
+  {name:'Dracolosse',types:['dragon','vol'],base:st(91,134,95,100,100,80)}]},
 {id:'mewtwo',abilities:['Pression','Trouble-Fête'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','hyperbeam','thunderbolt','icebeam','blizzard','thunder','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'Mewtwo',types:['psy'],emoji:'🧬',base:st(106,110,90,154,90,130)}]},
+  {name:'Mewtwo',types:['psy'],base:st(106,110,90,154,90,130)}]},
 {id:'mew',abilities:['Synchro'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','hyperbeam','thunderbolt','icebeam','blizzard','thunder','flamethrower','surf','earthquake','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength'],
  stages:[
-  {name:'Mew',types:['psy'],emoji:'✨',base:st(100,100,100,100,100,100)}]}
+  {name:'Mew',types:['psy'],base:st(100,100,100,100,100,100)}]},
+
+/* =================== POKÉDEX GÉNÉRATION 2 (100) =================== */
+{id:'chikorita',abilities:['Engrais','Sève Solaire'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Germignon',types:['plante'],base:st(45,49,65,49,65,45)},
+  {name:'Macronium',types:['plante'],base:st(60,62,80,63,80,60)},
+  {name:'Méganium',types:['plante'],base:st(80,82,100,83,100,80)}]},
+{id:'cyndaquil',abilities:['Brasier','Torche'],moveIds:['ember','flamethrower','fireblast','firepunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Héricendre',types:['feu'],base:st(39,52,43,60,50,65)},
+  {name:'Feurisson',types:['feu'],base:st(58,64,58,80,65,80)},
+  {name:'Typhlosion',types:['feu'],base:st(78,84,78,109,85,100)}]},
+{id:'totodile',abilities:['Torrent','Intimidation'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bite','crabhammer','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Kaiminus',types:['eau'],base:st(50,65,64,44,48,43)},
+  {name:'Crocrodil',types:['eau'],base:st(65,80,80,59,63,58)},
+  {name:'Aligatueur',types:['eau'],base:st(85,105,100,79,83,78)}]},
+{id:'sentret',abilities:['Cuvette','Lève-tôt'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Fouinette',types:['normal'],base:st(35,46,34,35,45,20)},
+  {name:'Fouinar',types:['normal'],base:st(85,76,64,45,55,90)}]},
+{id:'hoothoot',abilities:['Insomnia','Vital Esprit'],moveIds:['tackle','quickattack','headbutt','bite','stomp','gust','wingattack','drillpeck','airslash','peck','confuseray','hyperbeam','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Hoothoot',types:['normal','vol'],base:st(60,30,30,36,56,50)},
+  {name:'Noarfang',types:['normal','vol'],base:st(100,50,50,76,96,70)}]},
+{id:'ledyba',abilities:['Essaim','Œil Composé'],moveIds:['leechlife','pinmissile','megahorn','bugbite','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Coxy',types:['insecte','vol'],base:st(40,20,30,40,80,55)},
+  {name:'Coxyclaque',types:['insecte','vol'],base:st(55,35,50,55,110,85)}]},
+{id:'spinarak',abilities:['Pied Véloce','Anti-Bruit'],moveIds:['leechlife','pinmissile','megahorn','bugbite','sludge','poisonsting','acid','sludgebomb','poisonjab','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Mimigal',types:['insecte','poison'],base:st(40,60,40,40,40,30)},
+  {name:'Migalos',types:['insecte','poison'],base:st(70,90,70,60,70,40)}]},
+{id:'chinchou',abilities:['Absorbe Volt','Luminescence'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','thundershock','thunderbolt','thunder','thunderpunch','discharge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Loupio',types:['eau','electrik'],base:st(75,38,38,56,56,67)},
+  {name:'Lanturn',types:['eau','electrik'],base:st(125,58,58,76,76,67)}]},
+{id:'togepi',abilities:['Charme','Magie Sereine'],moveIds:['tackle','quickattack','headbutt','bite','stomp','toxic','sleeppowder','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Togepi',types:['normal'],base:st(35,20,65,40,65,20)},
+  {name:'Togetic',types:['normal','vol'],base:st(55,40,85,80,105,40)}]},
+{id:'natu',abilities:['Synchro','Avant-Garde'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Natu',types:['psy','vol'],base:st(40,50,45,70,45,70)},
+  {name:'Xatu',types:['psy','vol'],base:st(65,75,70,95,70,95)}]},
+{id:'mareep',abilities:['Statik','Paratonnerre'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Wattouat',types:['electrik'],base:st(55,40,40,65,45,35)},
+  {name:'Lainergie',types:['electrik'],base:st(70,55,55,80,60,45)},
+  {name:'Pharamp',types:['electrik'],base:st(90,75,85,115,90,55)}]},
+{id:'marill',abilities:['Isolat','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Marill',types:['eau'],base:st(70,20,50,20,50,40)},
+  {name:'Azumarill',types:['eau'],base:st(100,50,80,50,80,50)}]},
+{id:'sudowoodo',abilities:['Solidroc','Tête de Roc'],moveIds:['rockthrow','rockslide','stoneedge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Simularbre',types:['roche'],base:st(70,100,115,30,65,30)}]},
+{id:'hoppip',abilities:['Chlorophylle','Cuvette'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Granivol',types:['plante','vol'],base:st(35,35,40,35,55,50)},
+  {name:'Floravol',types:['plante','vol'],base:st(55,45,50,45,65,80)},
+  {name:'Cotovol',types:['plante','vol'],base:st(75,55,70,55,95,110)}]},
+{id:'aipom',abilities:['Pied Véloce','Cuvette'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Capumain',types:['normal'],base:st(55,70,55,40,55,85)}]},
+{id:'sunkern',abilities:['Chlorophylle','Sève Solaire'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Tournegrain',types:['plante'],base:st(30,30,30,30,30,30)},
+  {name:'Héliatronc',types:['plante'],base:st(75,75,55,105,85,30)}]},
+{id:'yanma',abilities:['Œil Composé','Technicien'],moveIds:['leechlife','pinmissile','megahorn','bugbite','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Yanma',types:['insecte','vol'],base:st(65,65,45,75,45,95)}]},
+{id:'wooper',abilities:['Absorbe Eau','Moiteur'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','dig','earthquake','bonemerang','mudshot','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Axoloto',types:['eau','sol'],base:st(55,45,45,25,25,15)},
+  {name:'Maraiste',types:['eau','sol'],base:st(95,85,85,65,65,35)}]},
+{id:'murkrow',abilities:['Insomnia','Œil Perçant'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Cornèbre',types:['tenebres','vol'],base:st(60,85,42,85,42,91)}]},
+{id:'misdreavus',abilities:['Lévitation','Corps Maudit'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Feuforêve',types:['fantome'],base:st(60,60,60,85,85,85)}]},
+{id:'wobbuffet',abilities:['Sans Garde','Télépathie'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Qulbutoké',types:['psy'],base:st(190,33,58,33,58,33)}]},
+{id:'girafarig',abilities:['Avant-Garde','Télépathie'],moveIds:['tackle','quickattack','headbutt','bite','stomp','confusion','psychic','psybeam','zenheadbutt','extrasensory','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Girafarig',types:['normal','psy'],base:st(70,80,65,90,65,85)}]},
+{id:'pineco',abilities:['Solidroc','Corps Sain'],moveIds:['leechlife','pinmissile','megahorn','bugbite','ironhead','steelwing','irondefense','flashcannon','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Kokiabo',types:['insecte'],base:st(50,65,90,35,35,15)},
+  {name:'Sécorang',types:['insecte','acier'],base:st(75,90,140,60,60,40)}]},
+{id:'dunsparce',abilities:['Insouciance','Récolte'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Insolourdo',types:['normal'],base:st(100,70,70,65,65,45)}]},
+{id:'gligar',abilities:['Voile Sable','Lame Affilée'],moveIds:['dig','earthquake','bonemerang','mudshot','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Scorplane',types:['sol','vol'],base:st(65,75,105,35,65,85)}]},
+{id:'snubbull',abilities:['Intimidation','Charme'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Snubbull',types:['normal'],base:st(60,80,50,40,40,30)},
+  {name:'Grimbull',types:['normal'],base:st(90,120,75,60,60,45)}]},
+{id:'qwilfish',abilities:['Point Poison','Armurine'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','sludge','poisonsting','acid','sludgebomb','poisonjab','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Qwilfish',types:['eau','poison'],base:st(65,95,75,55,55,85)}]},
+{id:'shuckle',abilities:['Coque Armure','Gourmandise'],moveIds:['leechlife','pinmissile','megahorn','bugbite','rockthrow','rockslide','stoneedge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Caratroc',types:['insecte','roche'],base:st(20,10,230,10,230,5)}]},
+{id:'heracross',abilities:['Rivalité','Sans Garde'],moveIds:['leechlife','pinmissile','megahorn','bugbite','karatechop','submission','doublekick','crosschop','brickbreak','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Scarhino',types:['insecte','combat'],base:st(80,125,75,40,95,85)}]},
+{id:'sneasel',abilities:['Voile Sable','Pieds Fébriles'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','crunch','darkpulse','suckerpunch','nightslash','feintattack','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Farfuret',types:['glace','tenebres'],base:st(55,95,55,35,75,115)}]},
+{id:'teddiursa',abilities:['Ramassage','Pied Véloce'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Teddiursa',types:['normal'],base:st(60,80,50,50,50,40)},
+  {name:'Ursaring',types:['normal'],base:st(90,130,75,75,75,55)}]},
+{id:'slugma',abilities:['Torche','Don de Soi'],moveIds:['ember','flamethrower','fireblast','firepunch','rockthrow','rockslide','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Limagma',types:['feu'],base:st(40,40,40,70,40,20)},
+  {name:'Volcaropod',types:['feu','roche'],base:st(60,50,120,90,80,30)}]},
+{id:'swinub',abilities:['Voile Sable','Isolat'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','dig','earthquake','bonemerang','mudshot','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Marcacrin',types:['glace','sol'],base:st(50,50,40,30,30,50)},
+  {name:'Cochignon',types:['glace','sol'],base:st(100,100,80,60,60,50)}]},
+{id:'corsola',abilities:['Nage Rapide',"Voile d'Eau"],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','rockthrow','rockslide','stoneedge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Corayon',types:['eau','roche'],base:st(65,55,95,65,95,35)}]},
+{id:'remoraid',abilities:['Enchaînement','Sniper'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Rémoraid',types:['eau'],base:st(35,65,35,65,35,65)},
+  {name:'Octillery',types:['eau'],base:st(75,105,75,105,75,45)}]},
+{id:'delibird',abilities:['Ramassage','Voile Sable'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Delibird',types:['glace','vol'],base:st(45,55,45,65,45,75)}]},
+{id:'mantine',abilities:['Nage Rapide','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Démanta',types:['eau','vol'],base:st(65,40,70,80,140,70)}]},
+{id:'skarmory',abilities:['Solidroc','Œil Perçant'],moveIds:['ironhead','steelwing','irondefense','flashcannon','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Airmure',types:['acier','vol'],base:st(65,80,140,40,70,70)}]},
+{id:'houndour',abilities:['Torche','Don de Soi'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','ember','flamethrower','fireblast','firepunch','bite','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Malosse',types:['tenebres','feu'],base:st(45,60,30,80,50,65)},
+  {name:'Démolosse',types:['tenebres','feu'],base:st(75,90,50,110,80,95)}]},
+{id:'phanpy',abilities:['Solidroc','Tête de Roc'],moveIds:['dig','earthquake','bonemerang','mudshot','rockslide','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Phanpy',types:['sol'],base:st(90,60,60,40,40,40)},
+  {name:'Donphan',types:['sol'],base:st(90,120,120,60,60,50)}]},
+{id:'stantler',abilities:['Insomnia','Avant-Garde'],moveIds:['tackle','quickattack','headbutt','bite','stomp','zenheadbutt','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Cerfrousse',types:['normal'],base:st(73,95,62,85,65,85)}]},
+{id:'smeargle',abilities:['Ramassage','Technicien'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Queulorior',types:['normal'],base:st(55,20,35,20,45,75)}]},
+{id:'tyrogue',abilities:['Sans Garde','Casse-Cou'],moveIds:['karatechop','doublekick','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Debugant',types:['combat'],base:st(35,35,35,35,35,35)}],
+ branches:[
+  {name:'Kicklee',types:['combat'],base:st(50,120,53,35,110,87),abilities:['Échauffement','Casse-Cou'],extraMoveIds:['highjumpkick','submission','crosschop','rockslide']},
+  {name:'Tygnon',types:['combat'],base:st(50,105,79,35,110,76),abilities:['Œil Perçant','Poing de Fer'],extraMoveIds:['firepunch','icepunch','thunderpunch','submission']},
+  {name:'Kicklang',types:['combat'],base:st(50,95,95,35,110,70),abilities:['Sans Garde','Technicien'],extraMoveIds:['crosschop','brickbreak','submission']}
+ ]},
+{id:'smoochum',abilities:['Insouciance','Avant-Garde'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','confusion','psychic','psybeam','zenheadbutt','extrasensory','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Lippouti',types:['glace','psy'],base:st(45,30,15,85,65,65)}]},
+{id:'miltank',abilities:['Corps Sain','Pied Véloce'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Écrémeuh',types:['normal'],base:st(95,80,105,40,70,100)}]},
+{id:'raikou',abilities:['Pression','Statik'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Raikou',types:['electrik'],base:st(90,85,75,115,100,115)}]},
+{id:'entei',abilities:['Pression','Torche'],moveIds:['ember','flamethrower','fireblast','firepunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Entei',types:['feu'],base:st(115,115,85,90,75,100)}]},
+{id:'suicune',abilities:['Pression','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Suicune',types:['eau'],base:st(100,75,115,90,115,85)}]},
+{id:'larvitar',abilities:['Tête de Roc','Sans Garde'],moveIds:['rockthrow','rockslide','stoneedge','dig','earthquake','bonemerang','mudshot','crunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Embrylex',types:['roche','sol'],base:st(50,64,50,45,50,41)},
+  {name:'Ymphect',types:['roche','sol'],base:st(70,84,70,65,70,51)},
+  {name:'Séracrawl',types:['roche','tenebres'],base:st(100,134,110,95,100,61)}]},
+{id:'lugia',abilities:['Pression','Lévitation'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','gust','wingattack','drillpeck','airslash','peck','hyperbeam','hurricane','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Lugia',types:['psy','vol'],base:st(106,90,130,90,154,110)}]},
+{id:'hooh',abilities:['Pression','Flamme Corps'],moveIds:['ember','flamethrower','fireblast','firepunch','gust','wingattack','drillpeck','airslash','peck','hyperbeam','hurricane','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Ho-Oh',types:['feu','vol'],base:st(106,130,90,110,154,90)}]},
+{id:'celebi',abilities:['Synchro','Soin Naturel'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','vinewhip','razorleaf','solarbeam','megadrain','gigadrain','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+ stages:[
+  {name:'Celebi',types:['psy','plante'],base:st(100,100,100,100,100,100)}]},
+{id:'unown',abilities:['Lévitation','Sans Garde'],moveIds:['confusion','psybeam','psychic','extrasensory','swift','hyperbeam'],
+ stages:[
+  {name:'Zarbi',types:['psy'],base:st(48,72,48,72,48,48)}]}
 ];
+
 
 const LEVEL = 50;
 
@@ -1498,9 +1420,9 @@ let editingIndex = null;
 let towerFloor = 1;
 let battleState = null;
 
-const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew'];
-const PSEUDO_IDS = ['dratini'];
-const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','hitmonlee','hitmonchan','tauros','kangaskhan','pinsir'];
+const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi'];
+const PSEUDO_IDS = ['dratini','larvitar'];
+const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown'];
 function lineWeight(line){
   if(LEGENDARY_IDS.includes(line.id)) return 0.5;  // Très rare : ~2× moins fréquent qu'avant
   if(PSEUDO_IDS.includes(line.id)) return 3;         // Pseudo-légendaire : rare
@@ -1588,11 +1510,11 @@ const DEX_NUMBERS = {
   'Sabelette':27,'Sablaireau':28,
   'Nidoran♀':29,'Nidorina':30,'Nidoqueen':31,
   'Nidoran♂':32,'Nidorino':33,'Nidoking':34,
-  'Mélofée':35,'Mélodelfe':36,
+  'Mélofée':35,'Mélodelfe':36,'Mélo':173,
   'Goupix':37,'Feunard':38,
-  'Rondoudou':39,'Grodoudou':40,
-  'Nosferapti':41,'Nosferalto':42,
-  'Mystherbe':43,'Ortide':44,'Rafflesia':45,
+  'Rondoudou':39,'Grodoudou':40,'Toudoudou':174,
+  'Nosferapti':41,'Nosferalto':42,'Nostenfer':169,
+  'Mystherbe':43,'Ortide':44,'Rafflesia':45,'Joliflor':182,
   'Paras':46,'Parasect':47,
   'Mimitoss':48,'Aéromite':49,
   'Taupiqueur':50,'Triopikeur':51,
@@ -1600,14 +1522,14 @@ const DEX_NUMBERS = {
   'Psykokwak':54,'Akwakwak':55,
   'Férosinge':56,'Colossinge':57,
   'Caninos':58,'Arcanin':59,
-  'Ptitard':60,'Têtarte':61,'Tartard':62,
+  'Ptitard':60,'Têtarte':61,'Tartard':62,'Tarpaud':186,
   'Abra':63,'Kadabra':64,'Alakazam':65,
   'Machoc':66,'Machopeur':67,'Mackogneur':68,
   'Chétiflor':69,'Boustiflor':70,'Empiflor':71,
   'Tentacool':72,'Tentacruel':73,
   'Racaillou':74,'Gravalanch':75,'Grolem':76,
   'Ponyta':77,'Galopa':78,
-  'Ramoloss':79,'Flagadoss':80,
+  'Ramoloss':79,'Flagadoss':80,'Roigada':199,
   'Magnéti':81,'Magnéton':82,
   'Canarticho':83,
   'Doduo':84,'Dodrio':85,
@@ -1615,7 +1537,7 @@ const DEX_NUMBERS = {
   'Tadmorv':88,'Grotadmorv':89,
   'Kokiyas':90,'Crustabri':91,
   'Fantominus':92,'Spectrum':93,'Ectoplasma':94,
-  'Onix':95,
+  'Onix':95,'Steelix':208,
   'Soporifik':96,'Hypnomade':97,
   'Krabby':98,'Krabboss':99,
   'Voltorbe':100,'Electrode':101,
@@ -1626,17 +1548,17 @@ const DEX_NUMBERS = {
   'Excelangue':108,
   'Smogo':109,'Smogogo':110,
   'Rhinocorne':111,'Rhinoféros':112,
-  'Leveinard':113,
+  'Leveinard':113,'Leuphorie':242,
   'Saquedeneu':114,
   'Kangourex':115,
-  'Hypotrempe':116,'Hypocéan':117,
+  'Hypotrempe':116,'Hypocéan':117,'Hyporoi':230,
   'Poissirène':118,'Poissoroy':119,
   'Stari':120,'Staross':121,
   'M. Mime':122,
-  'Insécateur':123,
-  'Lippoutou':124,
-  'Élektek':125,
-  'Magmar':126,
+  'Insécateur':123,'Cizayox':212,
+  'Lippoutou':124,'Lippouti':238,
+  'Élektek':125,'Élekid':239,
+  'Magmar':126,'Magby':240,
   'Scarabrute':127,
   'Tauros':128,
   'Magicarpe':129,'Léviator':130,
@@ -1645,7 +1567,9 @@ const DEX_NUMBERS = {
   'Aquali':134,
   'Voltali':135,
   'Pyroli':136,
-  'Porygon':137,
+  'Mentali':196,
+  'Noctali':197,
+  'Porygon':137,'Porygon2':233,
   'Amonita':138,'Amonistar':139,
   'Kabuto':140,'Kabutops':141,
   'Ptéra':142,
@@ -1655,19 +1579,79 @@ const DEX_NUMBERS = {
   'Sulfura':146,
   'Minidraco':147,'Draco':148,'Dracolosse':149,
   'Mewtwo':150,
-  'Mew':151
+  'Mew':151,
+  /* ---- Génération 2 ---- */
+  'Germignon':152,'Macronium':153,'Méganium':154,
+  'Héricendre':155,'Feurisson':156,'Typhlosion':157,
+  'Kaiminus':158,'Crocrodil':159,'Aligatueur':160,
+  'Fouinette':161,'Fouinar':162,
+  'Hoothoot':163,'Noarfang':164,
+  'Coxy':165,'Coxyclaque':166,
+  'Mimigal':167,'Migalos':168,
+  'Loupio':170,'Lanturn':171,
+  'Togepi':175,'Togetic':176,
+  'Natu':177,'Xatu':178,
+  'Wattouat':179,'Lainergie':180,'Pharamp':181,
+  'Marill':183,'Azumarill':184,
+  'Simularbre':185,
+  'Granivol':187,'Floravol':188,'Cotovol':189,
+  'Capumain':190,
+  'Tournegrain':191,'Héliatronc':192,
+  'Yanma':193,
+  'Axoloto':194,'Maraiste':195,
+  'Cornèbre':198,
+  'Feuforêve':200,
+  'Qulbutoké':202,
+  'Girafarig':203,
+  'Kokiabo':204,'Sécorang':205,
+  'Insolourdo':206,
+  'Scorplane':207,
+  'Snubbull':209,'Grimbull':210,
+  'Qwilfish':211,
+  'Caratroc':213,
+  'Scarhino':214,
+  'Farfuret':215,
+  'Teddiursa':216,'Ursaring':217,
+  'Limagma':218,'Volcaropod':219,
+  'Marcacrin':220,'Cochignon':221,
+  'Corayon':222,
+  'Rémoraid':223,'Octillery':224,
+  'Delibird':225,
+  'Démanta':226,
+  'Airmure':227,
+  'Malosse':228,'Démolosse':229,
+  'Phanpy':231,'Donphan':232,
+  'Cerfrousse':234,
+  'Queulorior':235,
+  'Debugant':236,
+  'Kicklang':237,
+  'Écrémeuh':241,
+  'Raikou':243,
+  'Entei':244,
+  'Suicune':245,
+  'Embrylex':246,'Ymphect':247,'Séracrawl':248,
+  'Lugia':249,
+  'Ho-Oh':250,
+  'Celebi':251
 };
-function getSpriteHTML(name, emoji){
+const ZARBI_FORMS = ['201','201-b','201-c','201-d','201-e','201-f','201-g','201-h','201-i','201-j','201-k','201-l','201-m','201-n','201-o','201-p','201-q','201-r','201-s','201-t','201-u','201-v','201-w','201-x','201-y','201-z','201-exclamation','201-question'];
+function pickRandomZarbiForm(){ return ZARBI_FORMS[Math.floor(Math.random()*ZARBI_FORMS.length)]; }
+function getSpriteHTML(name, unownForm){
+  if(name==='Zarbi'){
+    const id = unownForm || pickRandomZarbiForm();
+    const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+    return `<img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;" onerror="handleSpriteError(this)">`;
+  }
   const id = DEX_NUMBERS[name];
-  if(!id) return `<span style="font-size:1em;line-height:1;">${emoji}</span>`;
+  if(!id) return `<span class="sprite-fallback">?</span>`;
   const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-  const safeEmoji = emoji.replace(/'/g, "\\'");
-  return `<img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;" onerror="handleSpriteError(this,'${safeEmoji}')">`;
+  return `<img src="${url}" alt="${name}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;" onerror="handleSpriteError(this)">`;
 }
-function handleSpriteError(img, emoji){
+function handleSpriteError(img){
   const span = document.createElement('span');
-  span.textContent = emoji;
-  span.style.cssText = 'font-size:1em;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%;';
+  span.textContent = '?';
+  span.className = 'sprite-fallback';
+  span.style.cssText = 'display:flex;align-items:center;justify-content:center;width:100%;height:100%;';
   img.replaceWith(span);
 }
 
@@ -1816,7 +1800,7 @@ function updateBestFloor(floor){
 }
 function saveGame(){
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ team, towerFloor, money, bag, reserve }));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ team, towerFloor }));
   } catch(e){ console.error('Sauvegarde impossible', e); }
 }
 function loadGame(){
@@ -1829,10 +1813,7 @@ function loadGame(){
       const sp = speciesOf(m);
       m.computedStats = calcStats(sp.base, m.ivs, m.evs, m.nature);
     });
-    towerFloor=data.towerFloor||1;
-    money=data.money||0; bag=data.bag||{}; reserve=data.reserve||[];
-    team.forEach(m=>{if(m.currentHp==null)m.currentHp=m.computedStats?m.computedStats.hp:0;if(m.heldItem===undefined)m.heldItem=null;});
-    updateMoneyHud();
+    towerFloor = data.towerFloor || 1;
     return true;
   } catch(e){ console.error('Chargement impossible', e); return false; }
 }
@@ -1883,13 +1864,16 @@ function calcStats(base, ivs, evs, nature){
 }
 
 function defaultMember(lineId, initialStage){
+  const line = lineOf(lineId);
+  const sp = line.stages[initialStage||0];
   return {
     lineId, stage: initialStage||0, branch: null,
     nature: NATURES[0],
     ivs:{hp:31,atk:31,def:31,spa:31,spd:31,spe:31},
     evs:{hp:0,atk:0,def:0,spa:0,spd:0,spe:0},
     ability:null,
-    moves:[null,null,null,null]
+    moves:[null,null,null,null],
+    unownForm: sp.name==='Zarbi' ? pickRandomZarbiForm() : null
   };
 }
 
@@ -1917,7 +1901,7 @@ function renderDraftTeamStrip(){
     if(team[i]){
       const sp = speciesOf(team[i]);
       slot.className = 'draft-team-slot filled';
-      slot.innerHTML = `<div class="emoji">${getSpriteHTML(sp.name, sp.emoji)}</div><div class="pname">${sp.name}</div>`;
+      slot.innerHTML = `<div class="emoji">${getSpriteHTML(sp.name, team[i].unownForm)}</div><div class="pname">${sp.name}</div>`;
     } else {
       slot.className = 'draft-team-slot';
       slot.innerHTML = `<div class="emoji">?</div><div class="pname">Vide</div>`;
@@ -1945,7 +1929,7 @@ function nextDraftRound(){
     card.className='poke-card';
     card.innerHTML = `
       <span class="rarity-badge ${rarity.css}">${rarity.label}</span>
-      <div class="emoji">${getSpriteHTML(sp.name, sp.emoji)}</div>
+      <div class="emoji">${getSpriteHTML(sp.name)}</div>
       <div class="pname">${sp.name}</div>
       <div class="evoline">${line.stages.map(s=>s.name).join(' → ')}</div>
       <div class="types-row">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
@@ -1993,7 +1977,7 @@ function renderTeamGrid(){
     card.className = 'team-card' + (configured ? ' configured' : '');
     card.innerHTML = `
       <div class="team-card-header">
-        <div class="team-card-sprite">${getSpriteHTML(sp.name, sp.emoji)}</div>
+        <div class="team-card-sprite">${getSpriteHTML(sp.name, m.unownForm)}</div>
         <div class="team-card-info">
           <div class="pname">${sp.name}</div>
           <div class="types-row" style="justify-content:flex-start;margin:3px 0;">
@@ -2067,19 +2051,19 @@ function openEditor(idx){
       <div class="editor-section-title">Évolution</div>
       ${isBranched
         ? `<button class="btn secondary" disabled style="font-size:10px;">Déjà évolué en ${sp.name}</button>`
-        : line.branches.map((b,bi)=>`<button class="btn secondary evolveBranchBtn" data-branch="${bi}" style="margin:3px;font-size:10px;">→ ${b.name} ${b.emoji}</button>`).join('')
+        : line.branches.map((b,bi)=>`<button class="btn secondary evolveBranchBtn" data-branch="${bi}" style="margin:3px;font-size:10px;">→ ${b.name}</button>`).join('')
       }
     </div>` : (line.stages.length>1 ? `
     <div class="editor-section">
       <div class="editor-section-title">Évolution</div>
       <button class="btn secondary" id="evolveBtn" ${!hasNextStage?'disabled':''} style="font-size:10px;">
-        ${hasNextStage ? `→ Évoluer en ${line.stages[m.stage+1].name} ${line.stages[m.stage+1].emoji}` : `Stade final — ${sp.name}`}
+        ${hasNextStage ? `→ Évoluer en ${line.stages[m.stage+1].name}` : `Stade final — ${sp.name}`}
       </button>
     </div>` : '');
 
   ed.innerHTML = `
     <div class="editor-topbar">
-      <div class="editor-sprite">${getSpriteHTML(sp.name, sp.emoji)}</div>
+      <div class="editor-sprite">${getSpriteHTML(sp.name, m.unownForm)}</div>
       <div class="editor-ident">
         <h3>${sp.name}</h3>
         <div class="types-row" style="justify-content:flex-start;margin-bottom:4px;">
@@ -2106,11 +2090,13 @@ function openEditor(idx){
             <div class="editor-section-title">Nature & Talent</div>
             <div style="margin-bottom:8px;">
               <label style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px;">Nature</label>
-              <div id="natureSelectWrap"></div>
+              <select id="natureSelect">${natureOptions}</select>
             </div>
             <div>
               <label style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px;">Talent</label>
-              <div id="abilitySelectWrap"></div>
+              <select id="abilitySelect">
+                ${abilities.map(a=>`<option value="${a}" ${m.ability===a?'selected':''}>${a}</option>`).join('')}
+              </select>
               <div class="effect-desc" id="abilityDesc" style="margin-top:5px;">${ABILITY_DESC[m.ability||abilities[0]]||''}</div>
             </div>
           </div>
@@ -2305,30 +2291,14 @@ function openEditor(idx){
     document.querySelectorAll('.csel-trigger.open').forEach(d=>d.classList.remove('open'));
   }, {once:false});
 
-  // Nature csel
-  const natOpts = NATURES.map(n=>({
-    value: n.name, label: n.name,
-    html: n.plus
-      ? `<span class="csel-name">${n.name}</span><span style="font-size:9px;color:var(--good);margin-left:auto;">+${STAT_LABEL[n.plus]}</span><span style="font-size:9px;color:var(--low);margin-left:5px;">-${STAT_LABEL[n.minus]}</span>`
-      : `<span class="csel-name">${n.name}</span><span style="font-size:9px;color:var(--text-dim);margin-left:auto;">neutre</span>`,
-    triggerHTML: n.plus
-      ? `<span class="csel-name">${n.name} <span style="font-size:9px;color:var(--good);">+${STAT_LABEL[n.plus]}</span><span style="font-size:9px;color:var(--low);">-${STAT_LABEL[n.minus]}</span></span>`
-      : `<span class="csel-name">${n.name} <span style="font-size:9px;color:var(--text-dim);">neutre</span></span>`
-  }));
-  const natCsel = buildCsel({options:natOpts, value:m.nature.name, noEmpty:true,
-    onChange:(v)=>{ m.nature=NATURES.find(n=>n.name===v)||m.nature; openEditor(idx); }
-  });
-  document.getElementById('natureSelectWrap').appendChild(natCsel);
-
-  // Ability csel
-  const abOpts = abilities.map(a=>({
-    value:a, label:a,
-    html:`<span class="csel-name">${a}</span><span style="font-size:9px;color:var(--text-dim);margin-left:auto;max-width:180px;text-align:right;">${ABILITY_DESC[a]||''}</span>`
-  }));
-  const abCsel = buildCsel({options:abOpts, value:m.ability||abilities[0], noEmpty:true,
-    onChange:(v)=>{ m.ability=v; document.getElementById('abilityDesc').textContent=ABILITY_DESC[v]||''; }
-  });
-  document.getElementById('abilitySelectWrap').appendChild(abCsel);
+  document.getElementById('natureSelect').onchange = (e)=>{
+    m.nature = NATURES.find(n=>n.name===e.target.value);
+    openEditor(idx);
+  };
+  document.getElementById('abilitySelect').onchange = (e)=>{
+    m.ability = e.target.value;
+    document.getElementById('abilityDesc').textContent = ABILITY_DESC[m.ability]||'';
+  };
   if(!m.ability) m.ability = abilities[0];
 
   if(line.branches){
@@ -2354,34 +2324,22 @@ function openEditor(idx){
 
 document.getElementById('validateTeamBtn').onclick = ()=>{
   team.forEach(m=>{
-    const sp=speciesOf(m);
-    m.computedStats=calcStats(sp.base,m.ivs,m.evs,m.nature);
-    m.currentHp=m.computedStats.hp;
-    m.currentStatus=null;
-    if(m.heldItem===undefined)m.heldItem=null;
+    const sp = speciesOf(m);
+    m.computedStats = calcStats(sp.base, m.ivs, m.evs, m.nature);
   });
-  money=0;bag={};reserve=[];
-  updateMoneyHud();
   document.getElementById('screenBuilder').classList.add('hidden');
   document.getElementById('screenTower').classList.remove('hidden');
-  towerFloor=1;
+  towerFloor = 1;
   renderTower();
 };
 
 /* =================== TOWER =================== */
-function isMiniBosFlorr(f){return f%5===0&&f%10!==0;}
-function isBossFloor(f){return f%10===0;}
-function syncTeamHp(){
-  if(!battleState)return;
-  battleState.player.forEach((c,i)=>{if(team[i]){team[i].currentHp=c.hp;team[i].currentStatus=c.status||null;}});
-}
 function renderTower(){
-  document.getElementById('floorNum').textContent=towerFloor;
+  document.getElementById('floorNum').textContent = towerFloor;
   updateBestFloor(towerFloor);
-  const sizes=[3,3,4,4,5,6],size=sizes[Math.min(towerFloor-1,sizes.length-1)];
-  const tag=isBossFloor(towerFloor)?'BOSS - ':isMiniBosFlorr(towerFloor)?'MINI-BOSS - ':'';
-  document.getElementById('floorDesc').textContent=tag+'Equipe : '+size+' Pokemon - Menace '+towerFloor+(bestFloor>1?' - Record '+bestFloor:'');
-  updateMoneyHud();
+  const sizes = [3,3,4,4,5,6];
+  const size = sizes[Math.min(towerFloor-1, sizes.length-1)];
+  document.getElementById('floorDesc').textContent = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor} · Meilleur étage : ${bestFloor}`;
   saveGame();
 }
 document.getElementById('fightBtn').onclick = ()=>{ startBattle(); };
@@ -2448,8 +2406,7 @@ function generateEnemyTeam(floor, trainerTheme){
       ? pickSmartMoves(movepool, sp, floor)
       : shuffle(movepool).slice(0,4);
     return {
-      lineId:id, stage, branch, name:sp.name, types:sp.types, emoji:sp.emoji,
-      moveObjs: moveIds.map(mid=>MOVES[mid]),
+      lineId:id, stage, branch, name:sp.name, types:sp.types, unownForm: sp.name==='Zarbi' ? pickRandomZarbiForm() : null, moveObjs: moveIds.map(mid=>MOVES[mid]),
       stats, maxHp: stats.hp, hp: stats.hp, ...freshBattleFields()
     };
   });
@@ -2573,34 +2530,20 @@ function chooseFoeMove(foe, player){
 
 /* =================== BATTLE =================== */
 function startBattle(){
-  const trainer=generateTrainer(towerFloor);
-  const enemyTeam=generateEnemyTeam(towerFloor,trainer.theme);
-  const playerRoster=team.map((m,i)=>{
-    const sp=speciesOf(m),heldId=m.heldItem||null,hi=heldId?ITEMS[heldId]:null;
-    let maxHp=m.computedStats.hp;
-    if(hi&&hi.heldEffect==='plaquevie')maxHp=Math.floor(maxHp*1.1);
-    const startHp=Math.min(Math.max(0,m.currentHp!=null?m.currentHp:maxHp),maxHp);
-    let stats={...m.computedStats};
-    if(hi&&hi.heldEffect==='choiceatk')stats={...stats,atk:Math.floor(stats.atk*1.5)};
-    if(hi&&hi.heldEffect==='choicespa')stats={...stats,spa:Math.floor(stats.spa*1.5)};
-    if(hi&&hi.heldEffect==='choicespe')stats={...stats,spe:Math.floor(stats.spe*1.5)};
+  const trainer = generateTrainer(towerFloor);
+  const enemyTeam = generateEnemyTeam(towerFloor, trainer.theme);
+  const playerRoster = team.map(m=>{
+    const sp = speciesOf(m);
     return {
-      lineId:m.lineId,name:sp.name,types:sp.types,emoji:sp.emoji,
-      moves:m.moves.filter(Boolean).map(mid=>MOVES[mid]),
-      stats,maxHp,hp:startHp,
-      heldItem:heldId,heldConsumed:false,teamIdx:i,
-      ...freshBattleFields(),status:m.currentStatus||null
+      lineId:m.lineId, name:sp.name, types:sp.types, unownForm:m.unownForm, moves:m.moves.map(mid=>MOVES[mid]), stats:m.computedStats, maxHp:m.computedStats.hp, hp:m.computedStats.hp, ...freshBattleFields()
     };
   });
 
-  const firstAlive = playerRoster.findIndex(c=>c.hp>0);
-  if(firstAlive<0){ gameOver(); return; }
-  battleState = { player: playerRoster, foe: enemyTeam, pActive: firstAlive, fActive: 0, locked:false, trainer };
+  battleState = { player: playerRoster, foe: enemyTeam, pActive: 0, fActive: 0, locked:false, trainer };
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenBattle').classList.remove('hidden');
   document.getElementById('trainerBanner').innerHTML = `${trainer.emoji} <b>${trainer.name}</b> veut se battre ! <span style="color:var(--text-dim);font-size:10px;">"${trainer.dialogue}"</span>`;
-  setLog('<b>Etage '+towerFloor+'</b> - l\'adversaire envoie '+enemyTeam[0].name+' !');
-  updateMoneyHud();
+  setLog(`<b>Étage ${towerFloor}</b> — l'adversaire envoie ${enemyTeam[0].name} !`);
   renderBattle();
 }
 
@@ -2652,7 +2595,7 @@ function renderCombatantBox(c, prefix){
   if(c.confuseCounter>0){
     statBadgesEl.innerHTML += `<span class="stat-badge nerf">${STATUS_ICON['confusion']} Confus</span>`;
   }
-  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.emoji);
+  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.unownForm);
   const ratio = Math.max(c.hp,0)/c.maxHp;
   const fill = document.getElementById(prefix+'HpFill');
   fill.style.width = (ratio*100)+'%';
@@ -2705,7 +2648,7 @@ function openManualSwitch(){
     const c = bs.player[i];
     const btn = document.createElement('button');
     btn.className='move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.emoji)}</span>${c.name} <small>${c.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
     btn.onclick = ()=> doVoluntarySwitch(i);
     sw.appendChild(btn);
   });
@@ -2826,21 +2769,17 @@ function checkStatusBeforeMove(battler, logs){
   }
   return true;
 }
-function endOfTurnStatus(battler,logs){
-  if(battler.hp<=0)return;
-  if(battler.status==='poison'){const d=Math.max(1,Math.round(battler.maxHp/8));battler.hp=Math.max(0,battler.hp-d);logs.push(battler.name+' souffre du poison ('+d+' degats).');}
-  else if(battler.status==='brulure'){const d=Math.max(1,Math.round(battler.maxHp/16));battler.hp=Math.max(0,battler.hp-d);logs.push(battler.name+' souffre de sa brulure ('+d+' degats).');}
-  if(battler.hp>0&&battler.heldItem&&!battler.heldConsumed){
-    const eff=(ITEMS[battler.heldItem]||{}).heldEffect;
-    if(eff==='reste'&&battler.hp<battler.maxHp){const h=Math.max(1,Math.floor(battler.maxHp*0.0625));battler.hp=Math.min(battler.maxHp,battler.hp+h);logs.push(battler.name+' recupere '+h+' PV (Restes).');}
+function endOfTurnStatus(battler, logs){
+  if(battler.hp<=0) return;
+  if(battler.status==='poison'){
+    const dmg = Math.max(1, Math.round(battler.maxHp/8));
+    battler.hp = Math.max(0, battler.hp-dmg);
+    logs.push(`${battler.name} souffre du poison (${dmg} dégâts).`);
+  } else if(battler.status==='brulure'){
+    const dmg = Math.max(1, Math.round(battler.maxHp/16));
+    battler.hp = Math.max(0, battler.hp-dmg);
+    logs.push(`${battler.name} souffre de sa brûlure (${dmg} dégâts).`);
   }
-}
-function checkHeldOnDamage(b){
-  if(!b.heldItem||b.heldConsumed||b.hp<=0)return null;
-  const eff=(ITEMS[b.heldItem]||{}).heldEffect;
-  if(eff==='oran'&&b.hp<=b.maxHp*0.5){b.hp=Math.min(b.maxHp,b.hp+10);b.heldConsumed=true;return b.name+' utilise sa Baie Oran (+10 PV) !';}
-  if(eff==='sitrus'&&b.hp<=b.maxHp*0.5){const h=Math.max(1,Math.floor(b.maxHp*0.25));b.hp=Math.min(b.maxHp,b.hp+h);b.heldConsumed=true;return b.name+' utilise sa Baie Sitrus (+'+h+' PV) !';}
-  return null;
 }
 
 function effectiveSpeed(c){
@@ -2888,16 +2827,11 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
-  const {dmg,eff}=computeDamage(actor,move,defender);
-  const defFull=defender.hp>=defender.maxHp;
-  defender.hp=Math.max(0,defender.hp-dmg);
-  if(defender.hp<=0&&defFull&&defender.heldItem&&!defender.heldConsumed){
-    if((ITEMS[defender.heldItem]||{}).heldEffect==='ceinturef'){defender.hp=1;defender.heldConsumed=true;}
-  }
-  let msg='<b>'+actor.name+'</b> '+(actorIsPlayer?'utilise':'riposte avec')+' '+move.name+' !'+effLabel(eff)+' ('+dmg+' degats)';
-  if(defender.hp>0){const bm=checkHeldOnDamage(defender);if(bm)msg+=' '+bm;}
-  if(move.drain){const h=Math.max(1,Math.round(dmg*move.drain));actor.hp=Math.min(actor.maxHp,actor.hp+h);msg+=' '+actor.name+' recupere '+h+' PV !';}
-  if(move.recoil){const r=Math.max(1,Math.round(dmg*move.recoil));actor.hp=Math.max(0,actor.hp-r);msg+=' Le contrecoup blesse '+actor.name+' ('+r+' degats) !';}
+  const { dmg, eff } = computeDamage(actor, move, defender);
+  defender.hp = Math.max(0, defender.hp-dmg);
+  let msg = `<b>${actor.name}</b> ${actorIsPlayer?'utilise':'riposte avec'} ${move.name} !${effLabel(eff)} (${dmg} dégâts)`;
+  if(move.drain){ const h=Math.max(1,Math.round(dmg*move.drain)); actor.hp=Math.min(actor.maxHp,actor.hp+h); msg+=` ${actor.name} récupère ${h} PV !`; }
+  if(move.recoil){ const r=Math.max(1,Math.round(dmg*move.recoil)); actor.hp=Math.max(0,actor.hp-r); msg+=` Le contrecoup blesse ${actor.name} (${r} dégâts) !`; }
   if(move.secondaryStatus && defender.hp>0 && Math.random()<move.secondaryStatus.chance){
     let slogs = [];
     inflictStatus(defender, move.secondaryStatus.status, slogs);
@@ -2989,7 +2923,7 @@ function showSwitchPrompt(aliveIdx){
     const c = bs.player[i];
     const btn = document.createElement('button');
     btn.className='move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.emoji)}</span>${c.name} <small>${c.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
     btn.onclick = ()=>{
       bs.pActive = i;
       resetBattleFields(c);
@@ -3004,31 +2938,11 @@ function showSwitchPrompt(aliveIdx){
 }
 
 function floorCleared(){
-  syncTeamHp();
-  battleState.player.forEach(c=>{resetBattleFields(c);c.sleepCounter=0;c.confuseCounter=0;});
-  const cf=towerFloor; towerFloor++;
-  let earned=0;
-  if(isBossFloor(cf))earned=Math.floor(400+cf*20+Math.random()*200);
-  else if(isMiniBosFlorr(cf))earned=Math.floor(150+cf*10+Math.random()*100);
-  else earned=Math.floor(40+cf*4+Math.random()*40);
-  money+=earned; updateMoneyHud();
+  battleState.player.forEach(c=>{ c.hp = c.maxHp; resetBattleFields(c); c.status=null; c.sleepCounter=0; c.confuseCounter=0; });
+  towerFloor++;
   document.getElementById('screenBattle').classList.add('hidden');
-  if(isBossFloor(cf)){
-    const rid=BOSS_POOL[Math.floor(Math.random()*BOSS_POOL.length)];
-    addToBag(rid);
-    document.getElementById('villageFloorLabel').textContent='Etage '+cf+' - Boss vaincu ! +'+earned+' ₽';
-    document.getElementById('pokeCentreBtn').disabled=false;
-    document.getElementById('pokeCentreBtn').textContent="Soigner l'equipe";
-    prepareVillage();
-    showScreen('screenVillage');showVillageTab('centre');
-    setTimeout(()=>showRewardModal([rid],'Recompense Boss - Etage '+cf,false),400);
-  } else if(isMiniBosFlorr(cf)){
-    showScreen('screenTower'); renderTower();
-    const pool=shuffle(MINI_BOSS_POOL).slice(0,3);
-    setTimeout(()=>showRewardModal(pool,'Mini-Boss - Etage '+cf,true),400);
-  } else {
-    showScreen('screenTower'); renderTower();
-  }
+  document.getElementById('screenTower').classList.remove('hidden');
+  renderTower();
 }
 
 function gameOver(){
@@ -3044,469 +2958,9 @@ document.getElementById('restartBtn').onclick = ()=>{
   initDraft();
 };
 
-/* =================== ALL NEW FUNCTIONS =================== */
-
-/* --- Patch Note --- */
-document.getElementById('splashText').onclick = function(){
-  document.getElementById('patchModal').classList.remove('hidden');
-  renderPatchNotes();
-};
-document.getElementById('patchCloseBtn').onclick = function(){document.getElementById('patchModal').classList.add('hidden');};
-function renderPatchNotes(){
-  var div=document.getElementById('patchContent'),html='';
-  PATCH_NOTES.forEach(function(p){
-    html+='<div class="patch-entry"><div class="patch-version">'+p.version+'</div><ul class="patch-list">';
-    p.notes.forEach(function(n){html+='<li>'+n+'</li>';});
-    html+='</ul></div>';
-  });
-  div.innerHTML=html;
-}
-
-/* --- Bag --- */
-var bagInBattle=false, pendingItemId=null;
-function openBag(inBattle){
-  bagInBattle=!!inBattle; pendingItemId=null;
-  document.getElementById('bagModal').classList.remove('hidden');
-  renderBagContent();
-}
-document.getElementById('bagCloseBtn').onclick=function(){document.getElementById('bagModal').classList.add('hidden');};
-function renderBagContent(){
-  var div=document.getElementById('bagContent');
-  if(pendingItemId){renderTargetPicker(div,pendingItemId);return;}
-  var cats=bagInBattle
-    ?[['heal','Soins PV'],['status','Statuts'],['revive','Rappels'],['boost','Boosts']]
-    :[['heal','Soins PV'],['status','Statuts'],['revive','Rappels'],['held','Objets tenus'],['strategic','Strategiques']];
-  var html='<div style="margin-bottom:10px;font-size:10px;color:var(--text-dim);">Argent : <b style="color:var(--accent)">'+moneyFmt()+'</b></div>';
-  var hasAny=false;
-  cats.forEach(function(c){
-    var cat=c[0],label=c[1];
-    var ids=Object.keys(bag).filter(function(id){return ITEMS[id]&&ITEMS[id].cat===cat&&bag[id]>0;});
-    if(!ids.length)return;
-    html+='<div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;">'+label+'</div><div class="item-grid">';
-    ids.forEach(function(id){
-      var item=ITEMS[id],bo=item.battleOnly&&!bagInBattle;
-      html+='<div class="item-card'+(bo?'':' usable')+'" data-item="'+id+'" style="'+(bo?'opacity:.5':'')+'">'+
-        '<div class="item-name">'+item.name+'</div>'+
-        '<div class="item-desc">'+item.desc+'</div>'+
-        '<div class="item-qty" style="margin-top:4px;">x'+bag[id]+(bo?' <span style="font-size:8px;">(combat)</span>':'')+'</div>'+
-        '</div>';
-      hasAny=true;
-    });
-    html+='</div>';
-  });
-  if(!hasAny)html+='<div style="text-align:center;color:var(--text-dim);font-size:11px;padding:20px;">Sac vide...</div>';
-  div.innerHTML=html;
-  div.querySelectorAll('.item-card.usable').forEach(function(el){
-    el.onclick=function(){pendingItemId=el.dataset.item;renderBagContent();};
-  });
-}
-function renderTargetPicker(div,itemId){
-  var item=ITEMS[itemId];
-  var roster=bagInBattle?battleState.player:team;
-  var html='<button onclick="pendingItemId=null;renderBagContent();" class="btn secondary" style="margin-bottom:12px;font-size:10px;">Retour</button>'+
-    '<div style="font-size:12px;font-weight:700;color:var(--text-main);margin-bottom:4px;">'+item.name+'</div>'+
-    '<div style="font-size:10px;color:var(--text-dim);margin-bottom:14px;">'+item.desc+'</div>'+
-    '<div class="target-list">';
-  roster.forEach(function(c,i){
-    var sp=bagInBattle?c:speciesOf(c);
-    var name=bagInBattle?c.name:sp.name,emoji=bagInBattle?c.emoji:sp.emoji;
-    var maxHp=bagInBattle?c.maxHp:(c.computedStats?c.computedStats.hp:0);
-    var curHp=bagInBattle?c.hp:(c.currentHp!=null?c.currentHp:maxHp);
-    var status=bagInBattle?c.status:c.currentStatus;
-    var isKo=curHp<=0,pct=Math.max(0,Math.min(100,maxHp?curHp/maxHp*100:0));
-    var col=pct>50?'var(--good)':pct>25?'#f0b030':'var(--low)';
-    var ok=canUseItemOn(itemId,c,bagInBattle);
-    html+='<button class="target-btn" data-idx="'+i+'" '+(ok?'':'disabled')+'>'+
-      '<div style="font-size:24px;">'+emoji+'</div>'+
-      '<div style="flex:1;">'+
-        '<div style="font-size:12px;font-weight:700;color:var(--text-main);">'+name+(isKo?' <span style="color:var(--low);">[KO]</span>':'')+'</div>'+
-        '<div style="font-size:10px;color:var(--text-dim);">'+(isKo?'KO':curHp+'/'+maxHp+' PV')+(status?' - '+status:'')+'</div>'+
-        (!isKo?'<div class="hp-mini" style="width:130px;"><div class="hp-mini-fill" style="width:'+pct+'%;background:'+col+';"></div></div>':'')+
-      '</div></button>';
-  });
-  html+='</div>';
-  div.innerHTML=html;
-  div.querySelectorAll('.target-btn:not(:disabled)').forEach(function(btn){
-    btn.onclick=function(){useItem(itemId,parseInt(btn.dataset.idx),bagInBattle);};
-  });
-}
-function canUseItemOn(itemId,target,inBattle){
-  var item=ITEMS[itemId];
-  var hp=inBattle?target.hp:(target.currentHp!=null?target.currentHp:(target.computedStats?target.computedStats.hp:0));
-  var maxHp=inBattle?target.maxHp:(target.computedStats?target.computedStats.hp:0);
-  var status=inBattle?target.status:target.currentStatus;
-  var isKo=hp<=0;
-  if(item.battleOnly&&!inBattle)return false;
-  if(item.cat==='revive')return isKo;
-  if(isKo)return false;
-  if(item.cat==='heal')return hp<maxHp;
-  if(item.cat==='status')return!!status;
-  if(item.cat==='boost')return!!inBattle;
-  return true;
-}
-function useItem(itemId,idx,inBattle){
-  var item=ITEMS[itemId];
-  if(!bag[itemId]||bag[itemId]<=0)return;
-  if(inBattle){
-    var c=battleState.player[idx];
-    applyItemToBattler(item,c);
-    removeFromBag(itemId);
-    renderBattle();
-    setLog('Tu utilises '+item.name+' sur '+c.name+' !');
-    document.getElementById('bagModal').classList.add('hidden');
-    if(battleState)battleState.locked=false;
-  } else {
-    var m=team[idx];
-    applyItemToMember(item,m,itemId);
-    if(item.cat!=='held'&&item.cat!=='strategic')removeFromBag(itemId);
-    document.getElementById('bagModal').classList.add('hidden');
-    var tm=document.getElementById('teamManageModal');
-    if(tm&&!tm.classList.contains('hidden'))renderTeamManage();
-  }
-}
-function applyItemToBattler(item,c){
-  var eff=item.effect||{};
-  if(eff.hp==='full')c.hp=c.maxHp;else if(eff.hp)c.hp=Math.min(c.maxHp,c.hp+eff.hp);
-  if(eff.cure){if(eff.cure==='all')c.status=null;else if(c.status===eff.cure)c.status=null;}
-  if(eff.revive)c.hp=eff.revive>=1?c.maxHp:Math.floor(c.maxHp*eff.revive);
-  if(eff.boost)applyStatBoost(c,[{stat:eff.boost.stat,stages:eff.boost.stages}],[]);
-}
-function applyItemToMember(item,m,itemId){
-  var eff=item.effect||{},maxHp=m.computedStats?m.computedStats.hp:0;
-  if(eff.hp==='full')m.currentHp=maxHp;else if(eff.hp)m.currentHp=Math.min(maxHp,(m.currentHp||0)+eff.hp);
-  if(eff.cure){if(eff.cure==='all')m.currentStatus=null;else if(m.currentStatus===eff.cure)m.currentStatus=null;}
-  if(eff.revive){m.currentHp=eff.revive>=1?maxHp:Math.floor(maxHp*eff.revive);m.currentStatus=null;}
-  if(item.cat==='held')m.heldItem=itemId;
-  if(eff.permBoost){
-    var STATS=['atk','def','spa','spd','spe'];
-    function boost(s){if(m.computedStats[s])m.computedStats[s]=Math.floor(m.computedStats[s]*1.1);}
-    if(eff.permBoost==='all')STATS.forEach(boost);else boost(eff.permBoost);
-    m.currentHp=Math.min(m.currentHp||maxHp,m.computedStats.hp);
-  }
-}
-
-/* --- Reward Modal --- */
-function showRewardModal(ids,title,pick){
-  var modal=document.getElementById('rewardModal');
-  document.getElementById('rewardTitle').textContent=title;
-  var div=document.getElementById('rewardContent');
-  if(pick){
-    var html='<div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">Choisis une recompense :</div><div id="rewardChoices"></div>';
-    div.innerHTML=html;
-    ids.forEach(function(id){
-      var item=ITEMS[id],card=document.createElement('div');
-      card.className='reward-card';
-      card.innerHTML='<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px;">'+item.name+'</div><div style="font-size:9px;color:var(--text-dim);">'+item.desc+'</div>';
-      card.onclick=function(){addToBag(id);modal.classList.add('hidden');};
-      document.getElementById('rewardChoices').appendChild(card);
-    });
-  } else {
-    var item=ITEMS[ids[0]];
-    div.innerHTML='<div style="text-align:center;padding:16px 0;">'+
-      '<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px;">'+item.name+'</div>'+
-      '<div style="font-size:10px;color:var(--text-dim);margin-bottom:14px;">'+item.desc+'</div>'+
-      '<button class="btn" onclick="document.getElementById(\'rewardModal\').classList.add(\'hidden\');">Super !</button>'+
-      '</div>';
-  }
-  modal.classList.remove('hidden');
-}
-
-/* --- Team Manage --- */
-function openTeamManage(){document.getElementById('teamManageModal').classList.remove('hidden');renderTeamManage();}
-document.getElementById('tmCloseBtn').onclick=function(){document.getElementById('teamManageModal').classList.add('hidden');};
-function makeTeamLead(idx){var tmp=team[0];team[0]=team[idx];team[idx]=tmp;renderTeamManage();}
-function unequipHeld(idx){team[idx].heldItem=null;renderTeamManage();}
-function sendToReserve(idx){
-  if(team.length<=1){alert('Equipe trop petite !');return;}
-  reserve.push(team.splice(idx,1)[0]);
-  renderTeamManage();
-}
-function callFromReserve(rIdx){
-  if(team.length>=6){alert('Equipe pleine ! Envoie d\'abord un Pokemon en reserve.');return;}
-  team.push(reserve.splice(rIdx,1)[0]);
-  renderTeamManage();
-}
-function swapWithReserve(teamIdx,rIdx){
-  var tmp=team[teamIdx];team[teamIdx]=reserve[rIdx];reserve[rIdx]=tmp;
-  renderTeamManage();
-}
-function renderTeamManage(){
-  var div=document.getElementById('teamManageContent');
-  var html='<div style="font-size:10px;font-weight:700;color:var(--accent);margin-bottom:8px;">Equipe active ('+team.length+'/6)</div>';
-  team.forEach(function(m,i){
-    var sp=speciesOf(m),maxHp=m.computedStats?m.computedStats.hp:0;
-    var curHp=m.currentHp!=null?m.currentHp:maxHp,isKo=curHp<=0;
-    var pct=Math.max(0,Math.min(100,maxHp?curHp/maxHp*100:0));
-    var col=pct>50?'var(--good)':pct>25?'#f0b030':'var(--low)';
-    var heldName=m.heldItem&&ITEMS[m.heldItem]?ITEMS[m.heldItem].name:'Aucun';
-    html+='<div class="manage-card'+(i===0?' lead-card':'')+'">'+
-      '<div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:28px;">'+getSpriteHTML(sp.name,sp.emoji)+'</div>'+
-      '<div class="manage-card-info">'+
-        '<div class="manage-card-name">'+sp.name+(i===0?' <span style="font-size:7px;color:var(--accent);">[LEAD]</span>':'')+'</div>'+
-        '<div style="font-size:9px;color:var(--text-dim);">'+(isKo?'<span style="color:var(--low);">KO</span>':curHp+'/'+maxHp+' PV')+(m.currentStatus?' - '+m.currentStatus:'')+'</div>'+
-        (!isKo?'<div class="hp-mini" style="width:100px;"><div class="hp-mini-fill" style="width:'+pct+'%;background:'+col+';"></div></div>':'')+
-        '<div style="font-size:8px;color:var(--text-dim);margin-top:2px;">Objet : '+heldName+(m.heldItem?' <button onclick="unequipHeld('+i+')" style="font-size:7px;color:var(--low);background:none;border:1px solid var(--low);border-radius:2px;cursor:pointer;padding:0 3px;">x</button>':'')+'</div>'+
-      '</div>'+
-      '<div style="display:flex;flex-direction:column;gap:4px;">'+
-        (i>0?'<button class="btn secondary" style="padding:3px 8px;font-size:8px;" onclick="makeTeamLead('+i+')">Lead</button>':'')+
-        (team.length>1?'<button class="btn secondary" style="padding:3px 8px;font-size:8px;" onclick="sendToReserve('+i+')">PC</button>':'')+
-      '</div>'+
-    '</div>';
-  });
-  if(reserve.length>0){
-    html+='<div style="font-size:10px;font-weight:700;color:var(--accent);margin:14px 0 8px;">Reserve PC ('+reserve.length+')</div>';
-    html+='<div class="pc-grid">';
-    reserve.forEach(function(m,ri){
-      var sp=speciesOf(m),maxHp=m.computedStats?m.computedStats.hp:0;
-      var curHp=m.currentHp!=null?m.currentHp:maxHp,isKo=curHp<=0;
-      html+='<div class="pc-slot" onclick="callFromReserve('+ri+')">'+
-        '<div style="font-size:26px;">'+sp.emoji+'</div>'+
-        '<div style="font-size:9px;font-weight:700;color:var(--text-main);">'+sp.name+'</div>'+
-        '<div style="font-size:8px;color:var(--text-dim);">'+(isKo?'KO':curHp+'/'+maxHp)+'</div>'+
-        '<div style="font-size:7px;color:var(--accent);margin-top:2px;">Clic pour rappeler</div>'+
-      '</div>';
-    });
-    html+='</div>';
-  }
-  html+='<div style="margin-top:14px;text-align:center;display:flex;gap:8px;justify-content:center;">'+
-    '<button class="btn secondary" onclick="document.getElementById(\'teamManageModal\').classList.add(\'hidden\');openBag(false);">Ouvrir le Sac</button>'+
-  '</div>';
-  div.innerHTML=html;
-}
-
-/* --- Village --- */
-var ranchPokes=[], ranchBought=false;
-function prepareVillage(){
-  ranchBought=false;
-  ranchPokes=[];
-  var pool=[...LINES];shuffle(pool);
-  var selected=pool.slice(0,3);
-  ranchPokes=selected.map(function(line){
-    var stageIdx=Math.floor(Math.random()*(line.stages.length));
-    var nature=NATURES[Math.floor(Math.random()*NATURES.length)];
-    var ivs={hp:31,atk:31,def:31,spa:31,spd:31,spe:31};
-    var evs={hp:0,atk:0,def:0,spa:0,spd:0,spe:0};
-    var pool2=movepoolFor({lineId:line.id,stage:stageIdx});
-    var moves=shuffle([...pool2]).slice(0,4);
-    var m={lineId:line.id,stage:stageIdx,nature:nature,ivs:ivs,evs:evs,
-      moves:moves,ability:speciesOf({lineId:line.id,stage:stageIdx}).abilities[0]||'',
-      heldItem:null,currentHp:null,currentStatus:null};
-    m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);
-    m.currentHp=m.computedStats.hp;
-    return m;
-  });
-  renderVillagePC();
-}
-function showVillageTab(tab){
-  ['centre','shop','ranch','pc'].forEach(function(t){
-    document.getElementById('village'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('hidden',t!==tab);
-  });
-  document.querySelectorAll('.village-tab').forEach(function(btn,i){
-    btn.classList.toggle('active',['centre','shop','ranch','pc'][i]===tab);
-  });
-  if(tab==='shop')renderShop();
-  if(tab==='ranch')renderRanch();
-  if(tab==='pc')renderVillagePC();
-  updateMoneyHud();
-}
-document.getElementById('pokeCentreBtn').onclick=function(){
-  team.forEach(function(m){m.currentHp=m.computedStats?m.computedStats.hp:0;m.currentStatus=null;});
-  document.getElementById('pokeCentreBtn').textContent='Equipe soignee !';
-  document.getElementById('pokeCentreBtn').disabled=true;
-};
-function renderShop(){
-  var div=document.getElementById('shopItemList'),html='';
-  SHOP_ITEMS.forEach(function(id){
-    var item=ITEMS[id];if(!item)return;
-    var locked=towerFloor<item.unlock,qty=bag[id]||0;
-    html+='<div class="shop-row">'+
-      '<div style="flex:1;">'+
-        '<div class="item-name">'+item.name+(qty?' <span style="color:var(--text-dim);">x'+qty+'</span>':'')+'</div>'+
-        '<div class="item-desc">'+item.desc+'</div>'+
-        (locked?'<div class="item-locked">Debloque etage '+item.unlock+'</div>':'')+
-      '</div>'+
-      '<div style="text-align:right;flex-shrink:0;">'+
-        '<div style="font-size:10px;color:var(--good);">'+item.price+' \u20bd</div>'+
-        '<button class="btn secondary" style="padding:4px 10px;font-size:10px;margin-top:4px;" '+(locked||money<item.price?'disabled':'')+' onclick="buyItem(\''+id+'\')">Acheter</button>'+
-      '</div>'+
-    '</div>';
-  });
-  div.innerHTML=html||'<div style="color:var(--text-dim);text-align:center;padding:20px;">Aucun objet.</div>';
-}
-function buyItem(id){
-  var item=ITEMS[id];if(!item||money<item.price)return;
-  money-=item.price;addToBag(id);updateMoneyHud();renderShop();
-}
-function renderRanch(){
-  var div=document.getElementById('ranchCards');
-  var price=ranchPrice();
-  document.getElementById('ranchDesc').textContent='3 Pokemon disponibles. Prix : '+price+' \u20bd.'+(ranchBought?' Deja achete cette visite.':'');
-  var html='';
-  ranchPokes.forEach(function(m,i){
-    var sp=speciesOf(m);
-    var types=sp.types.map(function(t){return '<span class="type-tag t-'+t+'" style="font-size:7px;padding:1px 6px;">'+t+'</span>';}).join(' ');
-    html+='<div class="ranch-card" '+(ranchBought?'style="opacity:.5;cursor:not-allowed;"':'')+' onclick="'+(ranchBought?'':'buyRanchPoke('+i+')')+'" >'+
-      '<div style="font-size:32px;">'+sp.emoji+'</div>'+
-      '<div style="font-size:11px;font-weight:700;color:var(--text-main);margin:4px 0 2px;">'+sp.name+'</div>'+
-      '<div style="margin-bottom:4px;">'+types+'</div>'+
-      '<div style="font-size:8px;color:var(--text-dim);">Nature : '+m.nature.name+'</div>'+
-      '<div style="font-size:8px;color:var(--text-dim);">Attaques : '+m.moves.map(function(mid){return MOVES[mid]?MOVES[mid].name:mid;}).join(', ')+'</div>'+
-      '<div style="font-size:9px;color:var(--accent);margin-top:6px;">'+price+' \u20bd</div>'+
-    '</div>';
-  });
-  div.innerHTML=html;
-}
-function buyRanchPoke(idx){
-  var price=ranchPrice();
-  if(money<price){alert('Pas assez d\'argent !');return;}
-  money-=price; updateMoneyHud();
-  ranchBought=true;
-  var m=ranchPokes[idx];
-  openRanchBuilder(m);
-}
-function openRanchBuilder(m){
-  document.getElementById('ranchBuildModal').classList.remove('hidden');
-  var div=document.getElementById('ranchBuildContent');
-  div.innerHTML='<div style="text-align:center;font-size:11px;color:var(--text-dim);padding:20px;">Chargement du builder...</div>';
-  setTimeout(function(){buildRanchEditor(m,div);},100);
-}
-document.getElementById('ranchBuildCloseBtn').onclick=function(){document.getElementById('ranchBuildModal').classList.add('hidden');};
-
-function buildRanchEditor(m,container){
-  var sp=speciesOf(m);
-  var line=LINES.find(function(l){return l.id===m.lineId;})||{stages:[]};
-  var abilities=sp.abilities&&sp.abilities.length?sp.abilities:['Aucun'];
-  if(!m.ability)m.ability=abilities[0];
-  var natOpts=NATURES.map(function(n){return '<option value="'+n.name+'"'+(n.name===m.nature.name?' selected':'')+'>'+n.name+(n.plus?' (+'+STAT_LABEL[n.plus]+'/-'+STAT_LABEL[n.minus]+')':'')+'</option>';}).join('');
-  var abilOpts=abilities.map(function(a){return '<option value="'+a+'"'+(a===m.ability?' selected':'')+'>'+a+'</option>';}).join('');
-  var stageOpts=line.stages.map(function(s,i){return '<option value="'+i+'"'+(i===m.stage?' selected':'')+'>'+s.name+'</option>';}).join('');
-
-  var html='<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;">'+
-    '<div style="text-align:center;min-width:100px;">'+
-      '<div style="font-size:52px;margin-bottom:4px;">'+sp.emoji+'</div>'+
-      '<div style="font-size:11px;font-weight:700;color:var(--text-main);">'+sp.name+'</div>'+
-      '<div style="font-size:9px;color:var(--text-dim);margin-bottom:8px;">'+sp.types.map(function(t){return '<span class="type-tag t-'+t+'" style="font-size:7px;padding:1px 5px;">'+t+'</span>';}).join(' ')+'</div>'+
-      (line.stages.length>1?'<div style="margin-bottom:6px;"><select id="rb_stage" style="background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;width:100%;">'+stageOpts+'</select></div>':'')+
-    '</div>'+
-    '<div style="flex:1;min-width:200px;">'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">'+
-        '<div><label style="font-size:9px;color:var(--text-dim);">Nature</label><br><select id="rb_nature" style="background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;width:100%;">'+natOpts+'</select></div>'+
-        '<div><label style="font-size:9px;color:var(--text-dim);">Talent</label><br><select id="rb_ability" style="background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;width:100%;">'+abilOpts+'</select></div>'+
-      '</div>'+
-      '<div style="font-size:9px;color:var(--text-dim);margin-bottom:6px;">EVs (max 252/stat, 510 total)</div>'+
-      '<div id="rb_evs" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"></div>'+
-      '<div style="font-size:9px;color:var(--text-dim);margin-bottom:6px;">IVs</div>'+
-      '<div id="rb_ivs" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"></div>'+
-    '</div>'+
-  '</div>'+
-  '<div style="font-size:9px;color:var(--text-dim);margin-bottom:6px;">Attaques (4 max)</div>'+
-  '<div id="rb_moves" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;"></div>'+
-  '<div style="text-align:center;display:flex;gap:8px;justify-content:center;">'+
-    '<button class="btn" id="rb_confirm">Confirmer et placer</button>'+
-    '<button class="btn secondary" id="rb_cancel">Annuler</button>'+
-  '</div>';
-  container.innerHTML=html;
-
-  ['hp','atk','def','spa','spd','spe'].forEach(function(stat){
-    var evDiv=document.getElementById('rb_evs'),ivDiv=document.getElementById('rb_ivs');
-    var eEl=document.createElement('div');
-    eEl.innerHTML='<label style="font-size:8px;color:var(--text-dim);">'+STAT_LABEL[stat]+'</label><input type="number" min="0" max="252" step="4" value="'+m.evs[stat]+'" data-stat="'+stat+'" class="rb-ev" style="width:100%;background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;">';
-    evDiv.appendChild(eEl);
-    var iEl=document.createElement('div');
-    iEl.innerHTML='<label style="font-size:8px;color:var(--text-dim);">'+STAT_LABEL[stat]+'</label><input type="number" min="0" max="31" value="'+m.ivs[stat]+'" data-stat="'+stat+'" class="rb-iv" style="width:100%;background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;">';
-    ivDiv.appendChild(iEl);
-  });
-
-  function rebuildMoves(){
-    var pool2=movepoolFor(m),mvDiv=document.getElementById('rb_moves');mvDiv.innerHTML='';
-    [0,1,2,3].forEach(function(slot){
-      var sel=document.createElement('select');
-      sel.style.cssText='width:100%;background:#0b0b10;border:1px solid var(--line);color:var(--text-main);font-size:10px;padding:3px 6px;border-radius:3px;';
-      sel.innerHTML='<option value="">-</option>'+pool2.map(function(mid){var mv=MOVES[mid];return mv?'<option value="'+mid+'"'+(m.moves[slot]===mid?' selected':'')+'>'+mv.name+'</option>':'';}).join('');
-      sel.onchange=function(){m.moves[slot]=sel.value||null;};
-      mvDiv.appendChild(sel);
-    });
-  }
-  rebuildMoves();
-
-  if(document.getElementById('rb_stage')){
-    document.getElementById('rb_stage').onchange=function(e){m.stage=parseInt(e.target.value);m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);m.currentHp=m.computedStats.hp;buildRanchEditor(m,container);};
-  }
-  document.getElementById('rb_nature').onchange=function(e){m.nature=NATURES.find(function(n){return n.name===e.target.value;})||m.nature;};
-  document.getElementById('rb_ability').onchange=function(e){m.ability=e.target.value;};
-  container.querySelectorAll('.rb-ev').forEach(function(inp){inp.onchange=function(){m.evs[inp.dataset.stat]=Math.max(0,Math.min(252,parseInt(inp.value)||0));m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);m.currentHp=m.computedStats.hp;};});
-  container.querySelectorAll('.rb-iv').forEach(function(inp){inp.onchange=function(){m.ivs[inp.dataset.stat]=Math.max(0,Math.min(31,parseInt(inp.value)||0));m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);m.currentHp=m.computedStats.hp;};});
-
-  document.getElementById('rb_confirm').onclick=function(){
-    m.computedStats=calcStats(speciesOf(m).base,m.ivs,m.evs,m.nature);
-    m.currentHp=m.computedStats.hp;
-    document.getElementById('ranchBuildModal').classList.add('hidden');
-    showPlacementChoice(m);
-  };
-  document.getElementById('rb_cancel').onclick=function(){document.getElementById('ranchBuildModal').classList.add('hidden');};
-}
-
-function showPlacementChoice(m){
-  var sp=speciesOf(m);
-  var modal=document.getElementById('rewardModal');
-  document.getElementById('rewardTitle').textContent='Ou placer '+sp.name+' ?';
-  var div=document.getElementById('rewardContent');
-  var teamFull=team.length>=6;
-  div.innerHTML='<div style="text-align:center;margin-bottom:14px;"><div style="font-size:36px;">'+sp.emoji+'</div><div style="font-size:12px;font-weight:700;color:var(--text-main);">'+sp.name+'</div></div>'+
-    '<div class="reward-card" '+(teamFull?'style="opacity:.5;cursor:not-allowed;"':'')+' onclick="'+(teamFull?'':'placeInTeam(ranchLastBuilt)')+'">'+(teamFull?'Equipe pleine':'Ajouter a l\'equipe active')+'</div>'+
-    '<div class="reward-card" onclick="placeInReserve(ranchLastBuilt)">Envoyer au PC (reserve)</div>';
-  ranchLastBuilt=m;
-  modal.classList.remove('hidden');
-}
-var ranchLastBuilt=null;
-function placeInTeam(m){
-  if(team.length<6)team.push(m);
-  else reserve.push(m);
-  document.getElementById('rewardModal').classList.add('hidden');
-  renderRanch();
-}
-function placeInReserve(m){
-  reserve.push(m);
-  document.getElementById('rewardModal').classList.add('hidden');
-  renderRanch();
-}
-
-function renderVillagePC(){
-  var div=document.getElementById('pcGrid');
-  document.getElementById('pcCountLabel').textContent=reserve.length+' Pokemon';
-  if(!reserve.length){div.innerHTML='<div class="pc-slot empty" style="grid-column:1/-1;padding:20px;">Reserve vide</div>';return;}
-  var html='';
-  reserve.forEach(function(m,i){
-    var sp=speciesOf(m),maxHp=m.computedStats?m.computedStats.hp:0;
-    var curHp=m.currentHp!=null?m.currentHp:maxHp;
-    html+='<div class="pc-slot" title="Clic pour rappeler" onclick="callFromVillagePC('+i+')">'+
-      '<div style="font-size:28px;">'+sp.emoji+'</div>'+
-      '<div style="font-size:9px;font-weight:700;color:var(--text-main);">'+sp.name+'</div>'+
-      '<div style="font-size:8px;color:var(--text-dim);">'+curHp+'/'+maxHp+' PV</div>'+
-    '</div>';
-  });
-  div.innerHTML=html;
-}
-function callFromVillagePC(rIdx){
-  if(team.length>=6){alert('Equipe pleine !');return;}
-  team.push(reserve.splice(rIdx,1)[0]);
-  renderVillagePC();
-}
-
-document.getElementById('villageLeaveBtn').onclick=function(){
-  document.getElementById('pokeCentreBtn').disabled=false;
-  document.getElementById('pokeCentreBtn').textContent="Soigner l'equipe";
-  showScreen('screenTower');renderTower();
-};
-
-/* --- Buttons --- */
-document.getElementById('towerBagBtn').onclick=function(){openBag(false);};
-document.getElementById('towerTeamBtn').onclick=function(){openTeamManage();};
-document.getElementById('battleBagBtn').onclick=function(){openBag(true);};
-
 /* =================== MENU & POKÉDEX =================== */
 function showScreen(id){
-  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenBattle','screenEnd','screenVillage'].forEach(s=>{
+  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenBattle','screenEnd'].forEach(s=>{
     document.getElementById(s).classList.toggle('hidden', s!==id);
   });
   if(id==='screenMenu') refreshMenuUI();
@@ -3580,7 +3034,7 @@ function renderDex(){
       card.className='dex-card';
       card.innerHTML = `
         <span class="rarity-badge ${rarity.css}">${rarity.label}</span>
-        <div class="emoji">${getSpriteHTML(sp.name, sp.emoji)}</div>
+        <div class="emoji">${getSpriteHTML(sp.name)}</div>
         <div class="pname">${sp.name}</div>
         <div class="types-row">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
         <div class="stat-line">PV ${sp.base.hp} · Atq ${sp.base.atk} · Déf ${sp.base.def}</div>
@@ -3596,35 +3050,81 @@ function renderDex(){
 }
 
 document.getElementById('dexSearch').oninput = (e)=>{ dexFilters.search = e.target.value; renderDex(); };
-// Dex type csel
-const TYPE_LIST = ['normal','feu','eau','plante','electrik','glace','combat','poison','sol','vol','psy','insecte','roche','fantome','dragon'];
-const dexTypeCsel = buildCsel({
-  options: TYPE_LIST.map(t=>({value:t, label:t, html:`<span class="type-tag t-${t}" style="font-size:8px;padding:2px 8px;">${t}</span>`})),
-  value:'', placeholder:'Tous les types',
-  onChange:(v)=>{ dexFilters.type=v; renderDex(); }
-});
-document.getElementById('dexTypeFilterWrap').appendChild(dexTypeCsel);
-
-// Dex rarity csel
-const RARITY_OPTS=[
-  {value:'commun',    label:'Commun',           html:'<span class="rarity-badge rarity-commun">Commun</span>'},
-  {value:'evo',       label:'Evolution',         html:'<span class="rarity-badge rarity-evo">Evolution</span>'},
-  {value:'rare',      label:'Rare',              html:'<span class="rarity-badge rarity-rare">Rare</span>'},
-  {value:'pseudo',    label:'Pseudo-leg.',       html:'<span class="rarity-badge rarity-pseudo">Pseudo-leg.</span>'},
-  {value:'legendaire',label:'Legendaire',        html:'<span class="rarity-badge rarity-legendaire">Legendaire</span>'},
-];
-const dexRarityCsel = buildCsel({
-  options:RARITY_OPTS, value:'', placeholder:'Toutes raretés',
-  onChange:(v)=>{ dexFilters.rarity=v; renderDex(); }
-});
-document.getElementById('dexRarityFilterWrap').appendChild(dexRarityCsel);
+document.getElementById('dexTypeFilter').onchange = (e)=>{ dexFilters.type = e.target.value; renderDex(); };
+document.getElementById('dexRarityFilter').onchange = (e)=>{ dexFilters.rarity = e.target.value; renderDex(); };
 document.getElementById('dexResetFilter').onclick = ()=>{
   dexFilters = {search:'', type:'', rarity:''};
   document.getElementById('dexSearch').value = '';
-  if(typeof dexTypeCsel!=='undefined')dexTypeCsel._setValue('');
-  if(typeof dexRarityCsel!=='undefined')dexRarityCsel._setValue('');
+  document.getElementById('dexTypeFilter').value = '';
+  document.getElementById('dexRarityFilter').value = '';
   renderDex();
 };
+
+/* =================== SPLASH TEXT & PATCH NOTES =================== */
+const PATCH_NOTES = [
+  {
+    version: 'v0.3',
+    title: 'v0.3 — Update Génération 2',
+    items: [
+      "100 Pokémon de la Génération 2 ajoutés (Johto complet, hors Zarbi)",
+      "2 nouveaux types : Acier et Ténèbres, avec leurs efficacités",
+      "Nouvelles capacités Acier/Ténèbres (Tête de Fer, Canon Obscur, Coup Bas...)",
+      "Évolutions ajoutées : Crobat, Steelix, Blissey, Kingdra, Scizor, Porygon2...",
+      "Nouvelles branches d'évolution : Bellossom, Politoed, Slowking, Espeon, Umbreon"
+    ]
+  },
+  {
+    version: 'v0.2',
+    title: 'v0.2 — Village Update',
+    items: [
+      "PV persistants entre les combats",
+      "Système d'argent - gains après chaque combat",
+      "Mini-boss tous les 5 étages, Boss tous les 10",
+      "Village de repos débloqué après chaque Boss",
+      "Pokécentre, Pokéshop, Ranch et PC au Village",
+      "Sac utilisable en combat et entre les combats",
+      "Objets tenus (Baie Oran, Reste, Ceinture Force...)",
+      "Objets stratégiques en récompense boss",
+      "Gestion d'équipe avec changement de lead"
+    ]
+  },
+  {
+    version: 'v0.1',
+    title: 'v0.1 — Base',
+    items: [
+      "Draft de 6 Pokémon Gen 1",
+      "Builder complet EV/IV/Nature/Talent/Attaques",
+      "Tour de combat avec 17 archétypes de dresseurs",
+      "Système de combat au tour par tour",
+      "Pokédex avec filtres"
+    ]
+  }
+];
+const SPLASH_TEXTS = ["Gen 2 is here!!!"];
+function renderPatchNotes(){
+  return PATCH_NOTES.map(v => `
+    <div class="patchnotes-version">
+      <div class="patchnotes-version-title">${v.title}</div>
+      <ul>${v.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+    </div>`).join('');
+}
+function openPatchNotes(){
+  const overlay = document.createElement('div');
+  overlay.className = 'patchnotes-overlay';
+  overlay.id = 'patchNotesOverlay';
+  overlay.innerHTML = `
+    <div class="patchnotes-modal">
+      <button class="patchnotes-close" id="patchNotesCloseBtn">✕</button>
+      <h2>◆ NOTES DE MISE À JOUR ◆</h2>
+      ${renderPatchNotes()}
+    </div>`;
+  document.body.appendChild(overlay);
+  const close = ()=> overlay.remove();
+  document.getElementById('patchNotesCloseBtn').onclick = close;
+  overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
+}
+document.getElementById('splashTextBtn').textContent = SPLASH_TEXTS[Math.floor(Math.random()*SPLASH_TEXTS.length)];
+document.getElementById('splashTextBtn').onclick = openPatchNotes;
 
 /* =================== START =================== */
 showScreen('screenMenu');
