@@ -265,12 +265,12 @@ body{
 /* ---- EDITOR REDESIGN ---- */
 .editor{
   background:var(--bg-card); border:1px solid var(--line-bright); border-radius:6px;
-  margin-top:10px; box-shadow:0 4px 20px rgba(0,0,0,.5); overflow:hidden;
+  margin-top:10px; box-shadow:0 4px 20px rgba(0,0,0,.5); overflow:visible;
 }
 .editor-topbar{
   display:flex; align-items:center; gap:12px; padding:12px 16px;
   background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 60%);
-  border-bottom:2px solid var(--line);
+  border-bottom:2px solid var(--line); border-radius:6px 6px 0 0;
 }
 .editor-sprite{ width:72px; height:72px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:52px; }
 .editor-ident{ flex:1; }
@@ -1212,158 +1212,158 @@ const LINES = [
   {name:'Mew',types:['psy'],base:st(100,100,100,100,100,100)}]},
 
 /* =================== POKÉDEX GÉNÉRATION 2 (100) =================== */
-{id:'chikorita',abilities:['Engrais','Sève Solaire'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'chikorita',abilities:['Engrais','Sève Solaire'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','bodyslam','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Germignon',types:['plante'],base:st(45,49,65,49,65,45)},
   {name:'Macronium',types:['plante'],base:st(60,62,80,63,80,60)},
   {name:'Méganium',types:['plante'],base:st(80,82,100,83,100,80)}]},
-{id:'cyndaquil',abilities:['Brasier','Torche'],moveIds:['ember','flamethrower','fireblast','firepunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'cyndaquil',abilities:['Brasier','Torche'],moveIds:['ember','flamethrower','fireblast','firepunch','quickattack','bodyslam','swordsdance','agility','growl','leer','recover','strength'],
  stages:[
   {name:'Héricendre',types:['feu'],base:st(39,52,43,60,50,65)},
   {name:'Feurisson',types:['feu'],base:st(58,64,58,80,65,80)},
   {name:'Typhlosion',types:['feu'],base:st(78,84,78,109,85,100)}]},
-{id:'totodile',abilities:['Torrent','Intimidation'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bite','crabhammer','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'totodile',abilities:['Torrent','Intimidation'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bite','crabhammer','waterfall','slash','swordsdance','agility','growl','leer','recover','strength'],
  stages:[
   {name:'Kaiminus',types:['eau'],base:st(50,65,64,44,48,43)},
   {name:'Crocrodil',types:['eau'],base:st(65,80,80,59,63,58)},
   {name:'Aligatueur',types:['eau'],base:st(85,105,100,79,83,78)}]},
-{id:'sentret',abilities:['Cuvette','Lève-tôt'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'sentret',abilities:['Cuvette','Lève-tôt'],moveIds:['tackle','quickattack','headbutt','furyattack','bodyslam','doubleedge','swift','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Fouinette',types:['normal'],base:st(35,46,34,35,45,20)},
   {name:'Fouinar',types:['normal'],base:st(85,76,64,45,55,90)}]},
-{id:'hoothoot',abilities:['Insomnia','Vital Esprit'],moveIds:['tackle','quickattack','headbutt','bite','stomp','gust','wingattack','drillpeck','airslash','peck','confuseray','hyperbeam','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'hoothoot',abilities:['Insomnia','Vital Esprit'],moveIds:['tackle','peck','wingattack','gust','confuseray','hyperbeam','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Hoothoot',types:['normal','vol'],base:st(60,30,30,36,56,50)},
   {name:'Noarfang',types:['normal','vol'],base:st(100,50,50,76,96,70)}]},
-{id:'ledyba',abilities:['Essaim','Œil Composé'],moveIds:['leechlife','pinmissile','megahorn','bugbite','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'ledyba',abilities:['Essaim','Œil Composé'],moveIds:['tackle','leechlife','bugbite','pinmissile','gust','wingattack','swift','growl','leer','harden','amnesia','recover'],
  stages:[
   {name:'Coxy',types:['insecte','vol'],base:st(40,20,30,40,80,55)},
   {name:'Coxyclaque',types:['insecte','vol'],base:st(55,35,50,55,110,85)}]},
-{id:'spinarak',abilities:['Pied Véloce','Anti-Bruit'],moveIds:['leechlife','pinmissile','megahorn','bugbite','sludge','poisonsting','acid','sludgebomb','poisonjab','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'spinarak',abilities:['Pied Véloce','Anti-Bruit'],moveIds:['leechlife','bugbite','poisonsting','sludge','sludgebomb','pinmissile','bite','swordsdance','agility','growl','leer','toxic','recover','strength'],
  stages:[
   {name:'Mimigal',types:['insecte','poison'],base:st(40,60,40,40,40,30)},
   {name:'Migalos',types:['insecte','poison'],base:st(70,90,70,60,70,40)}]},
-{id:'chinchou',abilities:['Absorbe Volt','Luminescence'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','thundershock','thunderbolt','thunder','thunderpunch','discharge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'chinchou',abilities:['Absorbe Volt','Luminescence'],moveIds:['watergun','bubblebeam','surf','thundershock','thunderbolt','discharge','bodyslam','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Loupio',types:['eau','electrik'],base:st(75,38,38,56,56,67)},
   {name:'Lanturn',types:['eau','electrik'],base:st(125,58,58,76,76,67)}]},
-{id:'togepi',abilities:['Charme','Magie Sereine'],moveIds:['tackle','quickattack','headbutt','bite','stomp','toxic','sleeppowder','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'togepi',abilities:['Charme','Magie Sereine'],moveIds:['tackle','swift','bodyslam','toxic','sleeppowder','sing','growl','leer','harden','amnesia','recover'],
  stages:[
   {name:'Togepi',types:['normal'],base:st(35,20,65,40,65,20)},
   {name:'Togetic',types:['normal','vol'],base:st(55,40,85,80,105,40)}]},
-{id:'natu',abilities:['Synchro','Avant-Garde'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'natu',abilities:['Synchro','Avant-Garde'],moveIds:['confusion','psychic','psybeam','extrasensory','peck','wingattack','swordsdance','agility','growl','leer','recover','strength'],
  stages:[
   {name:'Natu',types:['psy','vol'],base:st(40,50,45,70,45,70)},
   {name:'Xatu',types:['psy','vol'],base:st(65,75,70,95,70,95)}]},
-{id:'mareep',abilities:['Statik','Paratonnerre'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'mareep',abilities:['Statik','Paratonnerre'],moveIds:['thundershock','thunderbolt','thunder','discharge','bodyslam','headbutt','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Wattouat',types:['electrik'],base:st(55,40,40,65,45,35)},
   {name:'Lainergie',types:['electrik'],base:st(70,55,55,80,60,45)},
   {name:'Pharamp',types:['electrik'],base:st(90,75,85,115,90,55)}]},
-{id:'marill',abilities:['Isolat','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'marill',abilities:['Isolat','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','tackle','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Marill',types:['eau'],base:st(70,20,50,20,50,40)},
   {name:'Azumarill',types:['eau'],base:st(100,50,80,50,80,50)}]},
-{id:'sudowoodo',abilities:['Solidroc','Tête de Roc'],moveIds:['rockthrow','rockslide','stoneedge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'sudowoodo',abilities:['Solidroc','Tête de Roc'],moveIds:['rockthrow','rockslide','stoneedge','tackle','headbutt','doubleedge','bodyslam','swordsdance','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Simularbre',types:['roche'],base:st(70,100,115,30,65,30)}]},
-{id:'hoppip',abilities:['Chlorophylle','Cuvette'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'hoppip',abilities:['Chlorophylle','Cuvette'],moveIds:['vinewhip','razorleaf','megadrain','gust','wingattack','airslash','sleeppowder','growl','leer','harden','amnesia','recover'],
  stages:[
   {name:'Granivol',types:['plante','vol'],base:st(35,35,40,35,55,50)},
   {name:'Floravol',types:['plante','vol'],base:st(55,45,50,45,65,80)},
   {name:'Cotovol',types:['plante','vol'],base:st(75,55,70,55,95,110)}]},
-{id:'aipom',abilities:['Pied Véloce','Cuvette'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'aipom',abilities:['Pied Véloce','Cuvette'],moveIds:['tackle','quickattack','furyattack','headbutt','doubleslap','swift','doubleedge','agility','growl','leer','recover','strength'],
  stages:[
   {name:'Capumain',types:['normal'],base:st(55,70,55,40,55,85)}]},
-{id:'sunkern',abilities:['Chlorophylle','Sève Solaire'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'sunkern',abilities:['Chlorophylle','Sève Solaire'],moveIds:['vinewhip','megadrain','gigadrain','solarbeam','sleeppowder','growl','leer','harden','amnesia','recover'],
  stages:[
   {name:'Tournegrain',types:['plante'],base:st(30,30,30,30,30,30)},
   {name:'Héliatronc',types:['plante'],base:st(75,75,55,105,85,30)}]},
-{id:'yanma',abilities:['Œil Composé','Technicien'],moveIds:['leechlife','pinmissile','megahorn','bugbite','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'yanma',abilities:['Œil Composé','Technicien'],moveIds:['leechlife','bugbite','gust','wingattack','airslash','drillpeck','quickattack','swift','agility','growl','leer','recover'],
  stages:[
   {name:'Yanma',types:['insecte','vol'],base:st(65,65,45,75,45,95)}]},
-{id:'wooper',abilities:['Absorbe Eau','Moiteur'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','dig','earthquake','bonemerang','mudshot','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'wooper',abilities:['Absorbe Eau','Moiteur'],moveIds:['watergun','surf','bubblebeam','dig','earthquake','mudshot','bodyslam','tackle','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Axoloto',types:['eau','sol'],base:st(55,45,45,25,25,15)},
   {name:'Maraiste',types:['eau','sol'],base:st(95,85,85,65,65,35)}]},
-{id:'murkrow',abilities:['Insomnia','Œil Perçant'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'murkrow',abilities:['Insomnia','Œil Perçant'],moveIds:['crunch','darkpulse','suckerpunch','feintattack','gust','wingattack','peck','quickattack','swift','agility','growl','leer','toxic'],
  stages:[
   {name:'Cornèbre',types:['tenebres','vol'],base:st(60,85,42,85,42,91)}]},
-{id:'misdreavus',abilities:['Lévitation','Corps Maudit'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'misdreavus',abilities:['Lévitation','Corps Maudit'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','sludge','harden','amnesia','recover'],
  stages:[
   {name:'Feuforêve',types:['fantome'],base:st(60,60,60,85,85,85)}]},
-{id:'wobbuffet',abilities:['Sans Garde','Télépathie'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'wobbuffet',abilities:['Sans Garde','Télépathie'],moveIds:['tackle','confusion','psybeam','harden','amnesia','recover','growl','leer'],
  stages:[
   {name:'Qulbutoké',types:['psy'],base:st(190,33,58,33,58,33)}]},
-{id:'girafarig',abilities:['Avant-Garde','Télépathie'],moveIds:['tackle','quickattack','headbutt','bite','stomp','confusion','psychic','psybeam','zenheadbutt','extrasensory','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'girafarig',abilities:['Avant-Garde','Télépathie'],moveIds:['tackle','headbutt','confusion','psychic','psybeam','zenheadbutt','doubleedge','agility','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Girafarig',types:['normal','psy'],base:st(70,80,65,90,65,85)}]},
-{id:'pineco',abilities:['Solidroc','Corps Sain'],moveIds:['leechlife','pinmissile','megahorn','bugbite','ironhead','steelwing','irondefense','flashcannon','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'pineco',abilities:['Solidroc','Corps Sain'],moveIds:['tackle','headbutt','ironhead','irondefense','bodyslam','doubleedge','harden','growl','leer','amnesia','recover','strength'],
  stages:[
   {name:'Kokiabo',types:['insecte'],base:st(50,65,90,35,35,15)},
   {name:'Sécorang',types:['insecte','acier'],base:st(75,90,140,60,60,40)}]},
-{id:'dunsparce',abilities:['Insouciance','Récolte'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'dunsparce',abilities:['Insouciance','Récolte'],moveIds:['tackle','headbutt','bite','furyattack','bodyslam','doubleedge','swift','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Insolourdo',types:['normal'],base:st(100,70,70,65,65,45)}]},
-{id:'gligar',abilities:['Voile Sable','Lame Affilée'],moveIds:['dig','earthquake','bonemerang','mudshot','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'gligar',abilities:['Voile Sable','Lame Affilée'],moveIds:['dig','earthquake','mudshot','gust','wingattack','airslash','quickattack','slash','swordsdance','agility','growl','leer','recover'],
  stages:[
   {name:'Scorplane',types:['sol','vol'],base:st(65,75,105,35,65,85)}]},
-{id:'snubbull',abilities:['Intimidation','Charme'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'snubbull',abilities:['Intimidation','Charme'],moveIds:['tackle','bite','hyperfang','headbutt','bodyslam','doubleedge','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Snubbull',types:['normal'],base:st(60,80,50,40,40,30)},
   {name:'Grimbull',types:['normal'],base:st(90,120,75,60,60,45)}]},
-{id:'qwilfish',abilities:['Point Poison','Armurine'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','sludge','poisonsting','acid','sludgebomb','poisonjab','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'qwilfish',abilities:['Point Poison','Armurine'],moveIds:['watergun','surf','bubblebeam','sludge','poisonsting','sludgebomb','poisonjab','acid','waterfall','toxic','growl','leer','harden','recover'],
  stages:[
   {name:'Qwilfish',types:['eau','poison'],base:st(65,95,75,55,55,85)}]},
-{id:'shuckle',abilities:['Coque Armure','Gourmandise'],moveIds:['leechlife','pinmissile','megahorn','bugbite','rockthrow','rockslide','stoneedge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'shuckle',abilities:['Coque Armure','Gourmandise'],moveIds:['rockthrow','rockslide','bugbite','leechlife','harden','growl','leer','amnesia','recover','toxic'],
  stages:[
   {name:'Caratroc',types:['insecte','roche'],base:st(20,10,230,10,230,5)}]},
-{id:'heracross',abilities:['Rivalité','Sans Garde'],moveIds:['leechlife','pinmissile','megahorn','bugbite','karatechop','submission','doublekick','crosschop','brickbreak','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'heracross',abilities:['Rivalité','Sans Garde'],moveIds:['leechlife','megahorn','pinmissile','bugbite','karatechop','submission','crosschop','brickbreak','swordsdance','agility','growl','leer','recover','strength'],
  stages:[
   {name:'Scarhino',types:['insecte','combat'],base:st(80,125,75,40,95,85)}]},
-{id:'sneasel',abilities:['Voile Sable','Pieds Fébriles'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','crunch','darkpulse','suckerpunch','nightslash','feintattack','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'sneasel',abilities:['Voile Sable','Pieds Fébriles'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','icepunch','icefang','slash','quickattack','swordsdance','agility','growl','leer'],
  stages:[
   {name:'Farfuret',types:['glace','tenebres'],base:st(55,95,55,35,75,115)}]},
-{id:'teddiursa',abilities:['Ramassage','Pied Véloce'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'teddiursa',abilities:['Ramassage','Pied Véloce'],moveIds:['tackle','furyattack','bite','headbutt','slash','bodyslam','doubleedge','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Teddiursa',types:['normal'],base:st(60,80,50,50,50,40)},
   {name:'Ursaring',types:['normal'],base:st(90,130,75,75,75,55)}]},
-{id:'slugma',abilities:['Torche','Don de Soi'],moveIds:['ember','flamethrower','fireblast','firepunch','rockthrow','rockslide','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'slugma',abilities:['Torche','Don de Soi'],moveIds:['ember','flamethrower','fireblast','rockthrow','rockslide','bodyslam','harden','growl','leer','amnesia','recover'],
  stages:[
   {name:'Limagma',types:['feu'],base:st(40,40,40,70,40,20)},
   {name:'Volcaropod',types:['feu','roche'],base:st(60,50,120,90,80,30)}]},
-{id:'swinub',abilities:['Voile Sable','Isolat'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','dig','earthquake','bonemerang','mudshot','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'swinub',abilities:['Voile Sable','Isolat'],moveIds:['icebeam','icepunch','icefang','icywind','dig','earthquake','mudshot','bodyslam','tackle','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Marcacrin',types:['glace','sol'],base:st(50,50,40,30,30,50)},
   {name:'Cochignon',types:['glace','sol'],base:st(100,100,80,60,60,50)}]},
-{id:'corsola',abilities:['Nage Rapide',"Voile d'Eau"],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','rockthrow','rockslide','stoneedge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'corsola',abilities:['Nage Rapide',"Voile d'Eau"],moveIds:['watergun','bubblebeam','surf','rockthrow','rockslide','stoneedge','harden','growl','leer','amnesia','recover'],
  stages:[
   {name:'Corayon',types:['eau','roche'],base:st(65,55,95,65,95,35)}]},
-{id:'remoraid',abilities:['Enchaînement','Sniper'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'remoraid',abilities:['Enchaînement','Sniper'],moveIds:['watergun','bubblebeam','hydropump','surf','aquatail','swift','growl','leer','harden','recover','strength'],
  stages:[
   {name:'Rémoraid',types:['eau'],base:st(35,65,35,65,35,65)},
   {name:'Octillery',types:['eau'],base:st(75,105,75,105,75,45)}]},
-{id:'delibird',abilities:['Ramassage','Voile Sable'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'delibird',abilities:['Ramassage','Voile Sable'],moveIds:['icebeam','icywind','icefang','gust','wingattack','peck','quickattack','swift','growl','leer','recover'],
  stages:[
   {name:'Delibird',types:['glace','vol'],base:st(45,55,45,65,45,75)}]},
-{id:'mantine',abilities:['Nage Rapide','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'mantine',abilities:['Nage Rapide','Absorbe Eau'],moveIds:['watergun','surf','bubblebeam','gust','wingattack','airslash','hurricane','harden','growl','leer','amnesia','recover'],
  stages:[
   {name:'Démanta',types:['eau','vol'],base:st(65,40,70,80,140,70)}]},
-{id:'skarmory',abilities:['Solidroc','Œil Perçant'],moveIds:['ironhead','steelwing','irondefense','flashcannon','gust','wingattack','drillpeck','airslash','peck','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'skarmory',abilities:['Solidroc','Œil Perçant'],moveIds:['steelwing','ironhead','irondefense','flashcannon','gust','wingattack','airslash','peck','slash','swordsdance','agility','growl','leer'],
  stages:[
   {name:'Airmure',types:['acier','vol'],base:st(65,80,140,40,70,70)}]},
-{id:'houndour',abilities:['Torche','Don de Soi'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','ember','flamethrower','fireblast','firepunch','bite','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'houndour',abilities:['Torche','Don de Soi'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','ember','flamethrower','fireblast','firepunch','bite','swordsdance','agility','growl','leer'],
  stages:[
   {name:'Malosse',types:['tenebres','feu'],base:st(45,60,30,80,50,65)},
   {name:'Démolosse',types:['tenebres','feu'],base:st(75,90,50,110,80,95)}]},
-{id:'phanpy',abilities:['Solidroc','Tête de Roc'],moveIds:['dig','earthquake','bonemerang','mudshot','rockslide','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'phanpy',abilities:['Solidroc','Tête de Roc'],moveIds:['dig','earthquake','mudshot','rockslide','tackle','headbutt','bodyslam','doubleedge','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Phanpy',types:['sol'],base:st(90,60,60,40,40,40)},
   {name:'Donphan',types:['sol'],base:st(90,120,120,60,60,50)}]},
-{id:'stantler',abilities:['Insomnia','Avant-Garde'],moveIds:['tackle','quickattack','headbutt','bite','stomp','zenheadbutt','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'stantler',abilities:['Insomnia','Avant-Garde'],moveIds:['tackle','headbutt','zenheadbutt','confusion','psybeam','doubleedge','swift','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Cerfrousse',types:['normal'],base:st(73,95,62,85,65,85)}]},
-{id:'smeargle',abilities:['Ramassage','Technicien'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'smeargle',abilities:['Ramassage','Technicien'],moveIds:['tackle','quickattack','headbutt','swift','growl','leer','harden','amnesia','recover'],
  stages:[
   {name:'Queulorior',types:['normal'],base:st(55,20,35,20,45,75)}]},
 {id:'tyrogue',abilities:['Sans Garde','Casse-Cou'],moveIds:['karatechop','doublekick','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
@@ -1374,33 +1374,33 @@ const LINES = [
   {name:'Tygnon',types:['combat'],base:st(50,105,79,35,110,76),abilities:['Œil Perçant','Poing de Fer'],extraMoveIds:['firepunch','icepunch','thunderpunch','submission']},
   {name:'Kicklang',types:['combat'],base:st(50,95,95,35,110,70),abilities:['Sans Garde','Technicien'],extraMoveIds:['crosschop','brickbreak','submission']}
  ]},
-{id:'smoochum',abilities:['Insouciance','Avant-Garde'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','confusion','psychic','psybeam','zenheadbutt','extrasensory','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'smoochum',abilities:['Insouciance','Avant-Garde'],moveIds:['icebeam','icepunch','icefang','confusion','psychic','psybeam','sing','doubleslap','growl','leer','amnesia','recover'],
  stages:[
   {name:'Lippouti',types:['glace','psy'],base:st(45,30,15,85,65,65)}]},
-{id:'miltank',abilities:['Corps Sain','Pied Véloce'],moveIds:['tackle','quickattack','headbutt','bite','stomp','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'miltank',abilities:['Corps Sain','Pied Véloce'],moveIds:['tackle','stomp','bodyslam','doubleedge','hyperbeam','headbutt','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Écrémeuh',types:['normal'],base:st(95,80,105,40,70,100)}]},
-{id:'raikou',abilities:['Pression','Statik'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'raikou',abilities:['Pression','Statik'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','quickattack','bite','swift','hyperbeam','agility','growl','leer','recover','strength'],
  stages:[
   {name:'Raikou',types:['electrik'],base:st(90,85,75,115,100,115)}]},
-{id:'entei',abilities:['Pression','Torche'],moveIds:['ember','flamethrower','fireblast','firepunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'entei',abilities:['Pression','Torche'],moveIds:['ember','flamethrower','fireblast','firepunch','bite','stomp','doubleedge','hyperbeam','swordsdance','growl','leer','recover','strength'],
  stages:[
   {name:'Entei',types:['feu'],base:st(115,115,85,90,75,100)}]},
-{id:'suicune',abilities:['Pression','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'suicune',abilities:['Pression','Absorbe Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','icebeam','bite','hyperbeam','agility','growl','leer','recover','strength'],
  stages:[
   {name:'Suicune',types:['eau'],base:st(100,75,115,90,115,85)}]},
-{id:'larvitar',abilities:['Tête de Roc','Sans Garde'],moveIds:['rockthrow','rockslide','stoneedge','dig','earthquake','bonemerang','mudshot','crunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'larvitar',abilities:['Tête de Roc','Sans Garde'],moveIds:['rockthrow','rockslide','stoneedge','dig','earthquake','crunch','bite','bodyslam','doubleedge','swordsdance','growl','leer','harden','amnesia','recover','strength'],
  stages:[
   {name:'Embrylex',types:['roche','sol'],base:st(50,64,50,45,50,41)},
   {name:'Ymphect',types:['roche','sol'],base:st(70,84,70,65,70,51)},
   {name:'Séracrawl',types:['roche','tenebres'],base:st(100,134,110,95,100,61)}]},
-{id:'lugia',abilities:['Pression','Lévitation'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','gust','wingattack','drillpeck','airslash','peck','hyperbeam','hurricane','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'lugia',abilities:['Pression','Lévitation'],moveIds:['confusion','psychic','psybeam','extrasensory','gust','wingattack','airslash','hurricane','hyperbeam','recover','growl','leer','harden','amnesia','strength'],
  stages:[
   {name:'Lugia',types:['psy','vol'],base:st(106,90,130,90,154,110)}]},
-{id:'hooh',abilities:['Pression','Flamme Corps'],moveIds:['ember','flamethrower','fireblast','firepunch','gust','wingattack','drillpeck','airslash','peck','hyperbeam','hurricane','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'hooh',abilities:['Pression','Flamme Corps'],moveIds:['ember','flamethrower','fireblast','firepunch','gust','wingattack','airslash','hurricane','hyperbeam','recover','growl','leer','harden','amnesia','strength'],
  stages:[
   {name:'Ho-Oh',types:['feu','vol'],base:st(106,130,90,110,154,90)}]},
-{id:'celebi',abilities:['Synchro','Soin Naturel'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','vinewhip','razorleaf','solarbeam','megadrain','gigadrain','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength'],
+{id:'celebi',abilities:['Synchro','Soin Naturel'],moveIds:['confusion','psychic','psybeam','extrasensory','vinewhip','razorleaf','solarbeam','megadrain','gigadrain','recover','growl','leer','harden','amnesia','swordsdance','agility'],
  stages:[
   {name:'Celebi',types:['psy','plante'],base:st(100,100,100,100,100,100)}]},
 {id:'unown',abilities:['Lévitation','Sans Garde'],moveIds:['confusion','psybeam','psychic','extrasensory','swift','hyperbeam'],
