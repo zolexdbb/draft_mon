@@ -745,7 +745,7 @@ const MOVES = {
   slash:{name:'Tranche',type:'normal',cat:'phys',power:50,desc:"Lacère l'adversaire avec griffes, queue ou faux."},
   bodyslam:{name:'Plaquage',type:'normal',cat:'phys',power:55,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Plaque l'adversaire de tout son poids. Peut paralyser."},
   swift:{name:'Météores',type:'normal',cat:'spec',power:50,accuracy:1.0,desc:"Une pluie d'étoiles qui ne rate presque jamais."},
-  hyperbeam:{name:'Hyper Lazer',type:'normal',cat:'spec',power:85,desc:"Un rayon dévastateur qui épuise l'attaquant.",accuracy:0.9},
+  hyperbeam:{name:'Ultralaser',type:'normal',cat:'spec',power:85,desc:"Un rayon dévastateur qui épuise l'attaquant.",accuracy:0.9},
 
   ember:{name:'Flammèche',type:'feu',cat:'spec',power:45,secondaryStatus:{status:'brulure',chance:0.1},desc:"Projette une petite flamme sur l'adversaire. Peut brûler."},
   flamethrower:{name:'Lance-Flammes',type:'feu',cat:'spec',power:70,secondaryStatus:{status:'brulure',chance:0.1},desc:"Souffle un torrent de flammes intenses. Peut brûler."},
@@ -756,20 +756,20 @@ const MOVES = {
   hydropump:{name:'Hydrocanon',type:'eau',cat:'spec',power:80,desc:"Une trombe d'eau d'une puissance colossale.",accuracy:0.8},
   surf:{name:'Surf',type:'eau',cat:'spec',power:65,desc:"Une vague immense submerge le terrain."},
   bubblebeam:{name:"Bulles d'O",type:'eau',cat:'spec',power:50,secondaryBoost:{stat:'spe',stages:-1,chance:0.1},desc:"Tire un faisceau de bulles compressées. Peut réduire la Vitesse."},
-  aquatail:{name:'Aqua Queue',type:'eau',cat:'phys',power:60,desc:"Frappe avec la queue comme une vague déferlante."},
+  aquatail:{name:'Hydroqueue',type:'eau',cat:'phys',power:60,desc:"Frappe avec la queue comme une vague déferlante."},
 
   vinewhip:{name:'Fouet Lianes',type:'plante',cat:'phys',power:45,desc:"Fouette l'adversaire avec des lianes fines."},
   razorleaf:{name:"Tranch'Herbe",type:'plante',cat:'phys',power:55,desc:"Des feuilles tranchantes comme des lames."},
   solarbeam:{name:'Lance-Soleil',type:'plante',cat:'spec',power:70,desc:"Absorbe la lumière puis libère un rayon puissant."},
   megadrain:{name:'Méga-Sangsue',type:'plante',cat:'spec',power:50,drain:0.5,desc:"Aspire l'énergie vitale de l'adversaire pour se soigner."},
   gigadrain:{name:'Giga Sangsue',type:'plante',cat:'spec',power:65,drain:0.5,desc:"Draine une grande quantité d'énergie adverse pour se soigner."},
-  leafblade:{name:'Tranchage',type:'plante',cat:'phys',power:65,desc:"Une feuille aussi tranchante qu'une épée."},
+  leafblade:{name:'Lame-Feuille',type:'plante',cat:'phys',power:65,desc:"Une feuille aussi tranchante qu'une épée."},
 
   thundershock:{name:'Éclair',type:'electrik',cat:'spec',power:45,secondaryStatus:{status:'paralysie',chance:0.1},desc:"Une faible décharge électrique surprend l'adversaire. Peut paralyser."},
   thunderbolt:{name:'Tonnerre',type:'electrik',cat:'spec',power:70,secondaryStatus:{status:'paralysie',chance:0.1},desc:"Une puissante décharge électrique s'abat. Peut paralyser."},
   thunder:{name:'Fatal-Foudre',type:'electrik',cat:'spec',power:85,desc:"Un éclair surpuissant venu du ciel. Peut paralyser.",accuracy:0.75,secondaryStatus:{status:'paralysie',chance:0.3}},
   thunderpunch:{name:'Poing Éclair',type:'electrik',cat:'phys',power:55,secondaryStatus:{status:'paralysie',chance:0.1},desc:"Un coup de poing chargé d'électricité. Peut paralyser."},
-  discharge:{name:'Tension',type:'electrik',cat:'spec',power:65,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Décharge de l'électricité tout autour de soi. Peut paralyser."},
+  discharge:{name:"Coup d'jus",type:'electrik',cat:'spec',power:65,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Décharge de l'électricité tout autour de soi. Peut paralyser."},
 
   icebeam:{name:'Laser Glace',type:'glace',cat:'spec',power:70,secondaryStatus:{status:'gel',chance:0.1},desc:"Un rayon de glace ultra-froid. Peut geler."},
   icepunch:{name:'Poing Glace',type:'glace',cat:'phys',power:55,secondaryStatus:{status:'gel',chance:0.1},desc:"Un coup de poing glacial. Peut geler."},
@@ -778,10 +778,10 @@ const MOVES = {
   icywind:{name:'Vent Glace',type:'glace',cat:'spec',power:45,secondaryBoost:{stat:'spe',stages:-1,chance:1.0},desc:"Un vent glacial qui ralentit l'adversaire."},
 
   karatechop:{name:'Poing Karaté',type:'combat',cat:'phys',power:50,desc:"Un coup tranchant porté avec précision."},
-  submission:{name:'Soumission',type:'combat',cat:'phys',power:65,recoil:0.25,desc:"Plaque l'adversaire au sol, mais le contrecoup blesse l'attaquant."},
-  highjumpkick:{name:"Coud'Genou",type:'combat',cat:'phys',power:70,recoil:0.33,desc:"Un saut suivi d'un coup de genou ; un échec blesserait l'attaquant.",accuracy:0.85},
+  submission:{name:'Sacrifice',type:'combat',cat:'phys',power:65,recoil:0.25,desc:"Plaque l'adversaire au sol, mais le contrecoup blesse l'attaquant."},
+  highjumpkick:{name:'Pied Voltige',type:'combat',cat:'phys',power:70,recoil:0.33,desc:"Un saut suivi d'un coup de genou ; un échec blesserait l'attaquant.",accuracy:0.85},
   doublekick:{name:'Double Pied',type:'combat',cat:'phys',power:55,desc:"Deux coups de pied enchaînés rapidement."},
-  crosschop:{name:'Pic-Croix',type:'combat',cat:'phys',power:75,desc:"Un coup croisé des deux bras, dur à éviter."},
+  crosschop:{name:'Coup-Croix',type:'combat',cat:'phys',power:75,desc:"Un coup croisé des deux bras, dur à éviter."},
   brickbreak:{name:'Casse-Brique',type:'combat',cat:'phys',power:60,desc:"Un coup tranchant capable de briser n'importe quoi."},
 
   sludge:{name:'Détritus',type:'poison',cat:'spec',power:50,secondaryStatus:{status:'poison',chance:0.3},desc:"Projette de la boue toxique sur l'adversaire. Peut empoisonner."},
@@ -792,7 +792,7 @@ const MOVES = {
 
   dig:{name:'Tunnel',type:'sol',cat:'phys',power:50,desc:"S'enfonce sous terre puis surgit pour frapper."},
   earthquake:{name:'Séisme',type:'sol',cat:'phys',power:75,desc:"Provoque un puissant séisme sous l'adversaire."},
-  bonemerang:{name:'Os Boomerang',type:'sol',cat:'phys',power:55,desc:"Lance un os qui frappe à l'aller et au retour."},
+  bonemerang:{name:'Osmerang',type:'sol',cat:'phys',power:55,desc:"Lance un os qui frappe à l'aller et au retour."},
   mudshot:{name:'Tir de Boue',type:'sol',cat:'spec',power:45,secondaryBoost:{stat:'spe',stages:-1,chance:1.0},desc:"Projette une motte de boue sur l'adversaire et réduit sa Vitesse."},
 
   gust:{name:'Tornade',type:'vol',cat:'spec',power:45,desc:"Bat des ailes pour créer une rafale de vent."},
@@ -805,12 +805,12 @@ const MOVES = {
   psychic:{name:'Psyko',type:'psy',cat:'spec',power:75,secondaryBoost:{stat:'spd',stages:-1,chance:0.1},desc:"Une puissante attaque télékinétique. Peut réduire la Défense Spéciale."},
   psybeam:{name:'Rayon Psy',type:'psy',cat:'spec',power:55,secondaryStatus:{status:'confusion',chance:0.1},desc:"Tire un rayon étrange qui perturbe l'esprit. Peut rendre confus."},
   zenheadbutt:{name:"Psykoud'Boul",type:'psy',cat:'phys',power:55,flinch:0.2,desc:"Un coup de tête chargé de pouvoir psychique. Peut faire peur."},
-  extrasensory:{name:'Synchroclair',type:'psy',cat:'spec',power:60,flinch:0.1,desc:"Une attaque psychique soudaine et surprenante. Peut faire peur."},
+  extrasensory:{name:'Extrasenseur',type:'psy',cat:'spec',power:60,flinch:0.1,desc:"Une attaque psychique soudaine et surprenante. Peut faire peur."},
 
-  leechlife:{name:'Lèche-Vie',type:'insecte',cat:'phys',power:45,drain:0.5,desc:"Aspire le sang de l'adversaire pour se soigner."},
+  leechlife:{name:'Vampirisme',type:'insecte',cat:'phys',power:45,drain:0.5,desc:"Aspire le sang de l'adversaire pour se soigner."},
   pinmissile:{name:'Dard-Nuée',type:'insecte',cat:'phys',power:50,desc:"Tire une volée d'aiguillons pointus."},
   megahorn:{name:'Mégacorne',type:'insecte',cat:'phys',power:70,desc:"Charge violemment avec une corne robuste."},
-  bugbite:{name:"Coup d'Bouille",type:'insecte',cat:'phys',power:45,desc:"Mord vivement l'adversaire avec ses mandibules."},
+  bugbite:{name:'Piqûre',type:'insecte',cat:'phys',power:45,desc:"Mord vivement l'adversaire avec ses mandibules."},
 
   rockthrow:{name:'Jet de Pierres',type:'roche',cat:'phys',power:45,desc:"Soulève et lance des pierres sur l'adversaire."},
   rockslide:{name:'Éboulement',type:'roche',cat:'phys',power:65,flinch:0.3,desc:"De grosses roches s'écrasent sur l'adversaire. Peut faire peur."},
@@ -826,14 +826,14 @@ const MOVES = {
 
   ironhead:{name:'Tête de Fer',type:'acier',cat:'phys',power:65,flinch:0.3,desc:"Un coup de tête recouvert d'acier étincelant. Peut faire peur."},
   steelwing:{name:"Aile d'Acier",type:'acier',cat:'phys',power:50,secondarySelfBoost:{stat:'def',stages:1,chance:0.1},desc:"Frappe avec des ailes durcies comme du métal. Peut booster sa Défense."},
-  irondefense:{name:'Défense de Fer',type:'acier',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:2}]},desc:"Durcit son corps pour booster fortement la Défense."},
-  flashcannon:{name:"Éclair d'Acier",type:'acier',cat:'spec',power:70,secondaryBoost:{stat:'spd',stages:-1,chance:0.1},desc:"Libère une lumière métallique aveuglante. Peut réduire la Défense Spéciale."},
+  irondefense:{name:'Mur de Fer',type:'acier',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:2}]},desc:"Durcit son corps pour booster fortement la Défense."},
+  flashcannon:{name:'Luminocanon',type:'acier',cat:'spec',power:70,secondaryBoost:{stat:'spd',stages:-1,chance:0.1},desc:"Libère une lumière métallique aveuglante. Peut réduire la Défense Spéciale."},
 
-  crunch:{name:'Crocs Féroces',type:'tenebres',cat:'phys',power:65,secondaryBoost:{stat:'def',stages:-1,chance:0.2},desc:"Mord avec des crocs redoutables. Peut réduire la Défense."},
+  crunch:{name:'Machouille',type:'tenebres',cat:'phys',power:65,secondaryBoost:{stat:'def',stages:-1,chance:0.2},desc:"Mord avec des crocs redoutables. Peut réduire la Défense."},
   darkpulse:{name:'Vibrobscur',type:'tenebres',cat:'spec',power:65,flinch:0.2,desc:"Libère une onde de ténèbres pures et terrifiantes. Peut faire peur."},
   suckerpunch:{name:'Coup Bas',type:'tenebres',cat:'phys',power:55,priority:1,desc:"Une attaque sournoise qui surprend l'adversaire."},
   nightslash:{name:'Tranche-Nuit',type:'tenebres',cat:'phys',power:60,desc:"Lacère l'adversaire dès qu'une occasion se présente."},
-  feintattack:{name:'Coup Vicieux',type:'tenebres',cat:'phys',power:50,accuracy:1.0,desc:"Une attaque sournoise qui ne rate jamais sa cible."},
+  feintattack:{name:'Feinte',type:'tenebres',cat:'phys',power:50,accuracy:1.0,desc:"Une attaque sournoise qui ne rate jamais sa cible."},
 
   /* ---- Nouvelles attaques Gen 1 ---- */
   scratch:{name:'Griffe',type:'normal',cat:'phys',power:40,desc:"Lacère l'adversaire avec des griffes acérées."},
@@ -844,17 +844,17 @@ const MOVES = {
   hornattack:{name:"Koud'Korne",type:'normal',cat:'phys',power:65,desc:"Transperce l'adversaire avec une corne acérée."},
   furyattack:{name:'Furie',type:'normal',cat:'phys',power:45,desc:"Attaque l'adversaire deux à cinq fois de suite."},
   waterfall:{name:'Cascade',type:'eau',cat:'phys',power:65,flinch:0.2,desc:"Charge comme une vague déferlante. Peut faire peur."},
-  crabhammer:{name:'Attrape-Tétard',type:'eau',cat:'phys',power:90,accuracy:0.85,desc:"Frappe avec de puissantes pinces de crabe."},
+  crabhammer:{name:'Pince-Masse',type:'eau',cat:'phys',power:90,accuracy:0.85,desc:"Frappe avec de puissantes pinces de crabe."},
   twineedle:{name:'Double-Dard',type:'insecte',cat:'phys',power:50,secondaryStatus:{status:'poison',chance:0.2},desc:"Pique deux fois de suite. Peut empoisonner."},
   sing:{name:'Berceuse',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.55,effect:{status:'sommeil'},desc:"Une mélodie apaisante qui endort l'adversaire."},
   doubleslap:{name:'Torgnoles',type:'normal',cat:'phys',power:45,desc:"Gifle l'adversaire deux à cinq fois de suite."},
   barrier:{name:'Bouclier',type:'psy',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:2}]},desc:"Érige un mur psychique qui booste fortement la Défense."},
-  meditate:{name:'Méditation',type:'psy',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1}]},desc:"Se concentre profondément pour booster son Attaque."},
+  meditate:{name:'Yoga',type:'psy',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1}]},desc:"Se concentre profondément pour booster son Attaque."},
   raindance:{name:'Danse Pluie',type:'eau',cat:'status',power:0,target:'self',effect:{weather:'pluie'},desc:"Invoque une forte pluie pendant 5 tours."},
   sunnyday:{name:'Zénith',type:'feu',cat:'status',power:0,target:'self',effect:{weather:'soleil'},desc:"Invoque un fort ensoleillement pendant 5 tours."},
   sandstorm:{name:'Tempête de Sable',type:'roche',cat:'status',power:0,target:'self',effect:{weather:'sable'},desc:"Déclenche une tempête de sable pendant 5 tours."},
   hail:{name:'Grêle',type:'glace',cat:'status',power:0,target:'self',effect:{weather:'grele'},desc:"Fait tomber une grêle glaciale pendant 5 tours."},
-  absorb:{name:'Sangsue',type:'plante',cat:'spec',power:35,drain:0.5,desc:"Aspire l'énergie de l'adversaire pour se soigner."},
+  absorb:{name:'Vol-Vie',type:'plante',cat:'spec',power:35,drain:0.5,desc:"Aspire l'énergie de l'adversaire pour se soigner."},
 
   growl:{name:'Rugissement',type:'normal',cat:'status',power:0,target:'foe',effect:{foeBoost:[{stat:'atk',stages:-1}]},desc:"Un grondement mignon qui baisse l'Attaque adverse."},
   leer:{name:"Groz'Yeux",type:'normal',cat:'status',power:0,target:'foe',effect:{foeBoost:[{stat:'def',stages:-1}]},desc:"Un regard noir qui baisse la Défense adverse."},
@@ -865,7 +865,7 @@ const MOVES = {
   toxic:{name:'Toxik',type:'poison',cat:'status',power:0,target:'foe',accuracy:0.9,effect:{status:'poison'},desc:"Empoisonne gravement l'adversaire."},
   thunderwave:{name:'Cage-Éclair',type:'electrik',cat:'status',power:0,target:'foe',accuracy:0.9,effect:{status:'paralysie'},desc:"Une faible décharge qui paralyse l'adversaire."},
   sleeppowder:{name:'Poudre Dodo',type:'plante',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'sommeil'},desc:"Une poudre soporifique qui endort l'adversaire."},
-  confuseray:{name:'Cage Mentale',type:'fantome',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{status:'confusion'},desc:"Une lumière sinistre qui rend l'adversaire confus."},
+  confuseray:{name:'Onde Folie',type:'fantome',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{status:'confusion'},desc:"Une lumière sinistre qui rend l'adversaire confus."},
   recover:{name:'Soin',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Régénère la moitié de ses PV maximum."},
   strength:{name:'Force',type:'normal',cat:'phys',power:80,desc:"Pousse l'adversaire de toutes ses forces."},
   dragonrage:{name:'Draco-Rage',type:'dragon',cat:'spec',power:0,fixedDamage:40,desc:"Une attaque mystérieuse qui infligera toujours 40 dégâts."},
@@ -898,24 +898,24 @@ const MOVES = {
   mist:{name:'Brume',type:'glace',cat:'status',power:0,target:'self',effect:{mist:true},desc:"Enveloppe l'équipe d'une brume qui protège des baisses de statistiques pendant 5 tours."},
 
   /* ---- BLOC 2 : capacités manquantes (indices Pokédex 59-115) ---- */
-  aurorabeam:{name:'Voile Glace',type:'glace',cat:'spec',power:55,secondaryBoost:{stat:'atk',stages:-1,chance:0.1},desc:"Un rayon arc-en-ciel qui peut réduire l'Attaque de la cible."},
+  aurorabeam:{name:'Onde Boréale',type:'glace',cat:'spec',power:55,secondaryBoost:{stat:'atk',stages:-1,chance:0.1},desc:"Un rayon arc-en-ciel qui peut réduire l'Attaque de la cible."},
   lowkick:{name:'Frappe Talon',type:'combat',cat:'phys',power:60,desc:"Un coup de pied bas qui déséquilibre la cible."},
   counter:{name:'Riposte',type:'combat',cat:'phys',power:0,counter:true,desc:"Riposte en renvoyant le double des dégâts physiques subis ce tour."},
-  seismictoss:{name:'Beau Milieu',type:'combat',cat:'phys',power:0,fixedDamage:50,desc:"Une prise de catch qui inflige toujours 50 dégâts."},
+  seismictoss:{name:'Frappe Atlas',type:'combat',cat:'phys',power:0,fixedDamage:50,desc:"Une prise de catch qui inflige toujours 50 dégâts."},
   growth:{name:'Croissance',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'spa',stages:1}]},desc:"Le corps grandit soudainement, boostant l'Attaque Spéciale."},
   poisonpowder:{name:'Poudre Toxik',type:'poison',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'poison'},desc:"Disperse une poudre toxique qui empoisonne la cible."},
   stunspore:{name:'Para-Spore',type:'plante',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'paralysie'},desc:"Disperse une poudre paralysante sur la cible."},
-  petaldance:{name:'Danse Fleurs',type:'plante',cat:'phys',power:65,desc:"Se déchaîne au milieu d'une tempête de pétales."},
+  petaldance:{name:'Danse-Fleur',type:'plante',cat:'phys',power:65,desc:"Se déchaîne au milieu d'une tempête de pétales."},
   stringshot:{name:'Sécrétion',type:'insecte',cat:'status',power:0,target:'foe',effect:{foeBoost:[{stat:'spe',stages:-1}]},desc:"Recouvre la cible d'un fil collant qui réduit sa Vitesse."},
-  firespin:{name:'Ligot-Flamme',type:'feu',cat:'spec',power:40,accuracy:0.85,desc:"Emprisonne la cible dans un tourbillon de flammes."},
+  firespin:{name:'Danseflamme',type:'feu',cat:'spec',power:40,accuracy:0.85,desc:"Emprisonne la cible dans un tourbillon de flammes."},
   fissure:{name:'Lame du Vide',type:'sol',cat:'phys',power:0,ohko:true,accuracy:0.3,desc:"Ouvre une crevasse qui engloutit la cible, la mettant K.O. d'un coup si l'attaque touche."},
   hypnosis:{name:'Hypnose',type:'psy',cat:'status',power:0,target:'foe',accuracy:0.6,effect:{status:'sommeil'},desc:"Un regard hypnotique qui endort la cible."},
-  rage:{name:'Rage',type:'normal',cat:'phys',power:40,desc:"Une charge rageuse et impulsive."},
+  rage:{name:'Frénésie',type:'normal',cat:'phys',power:40,desc:"Une charge rageuse et impulsive."},
   teleport:{name:'Téléport',type:'psy',cat:'status',power:0,target:'self',effect:{selfSwitch:true},desc:"Se téléporte hors de portée pour laisser place à un autre Pokémon."},
   mimic:{name:'Copie',type:'normal',cat:'status',power:0,target:'self',effect:{mimic:true},desc:"Copie la dernière capacité utilisée par l'adversaire pour le reste du combat."},
   screech:{name:'Grincement',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.85,effect:{foeBoost:[{stat:'def',stages:-2}]},desc:"Un cri strident qui baisse fortement la Défense adverse."},
   doubleteam:{name:'Reflet',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'eva',stages:1}]},desc:"Crée des copies illusoires qui augmentent l'Esquive."},
-  minimize:{name:'Minimisation',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'eva',stages:2}]},desc:"Se recroqueville pour augmenter fortement l'Esquive."},
+  minimize:{name:'Lilliput',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'eva',stages:2}]},desc:"Se recroqueville pour augmenter fortement l'Esquive."},
   smokescreen:{name:'Écran Fumée',type:'normal',cat:'status',power:0,target:'foe',effect:{foeBoost:[{stat:'acc',stages:-1}]},desc:"Répand un écran de fumée qui réduit la précision adverse."},
   withdraw:{name:'Repli',type:'eau',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:1}]},desc:"Se rétracte dans sa carapace pour booster la Défense."},
   defensecurl:{name:"Boul'Armure",type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:1}]},desc:"Se roule en boule pour cacher ses points faibles et booster la Défense."},
@@ -924,32 +924,32 @@ const MOVES = {
   reflect:{name:'Protection',type:'psy',cat:'status',power:0,target:'self',effect:{reflect:true},desc:"Érige un mur qui réduit les dégâts des capacités Physiques pendant 5 tours."},
 
   /* ---- BLOC 3 : capacités manquantes (fin de la Gen 1, indices ~116-155) ---- */
-  focusenergy:{name:'Concentration',type:'normal',cat:'status',power:0,target:'self',effect:{critBoost:true},desc:"Se concentre intensément pour améliorer ses chances de coup critique."},
+  focusenergy:{name:'Puissance',type:'normal',cat:'status',power:0,target:'self',effect:{critBoost:true},desc:"Se concentre intensément pour améliorer ses chances de coup critique."},
   bide:{name:'Patience',type:'normal',cat:'phys',power:70,desc:"Encaisse puis riposte avec une force redoublée."},
   metronome:{name:'Métronome',type:'normal',cat:'status',power:0,target:'self',metronome:true,effect:{},desc:"Agite un doigt et invoque presque n'importe quelle capacité au hasard."},
   mirrormove:{name:'Mimique',type:'vol',cat:'status',power:0,target:'self',mirrorMove:true,effect:{},desc:"Copie et utilise immédiatement la dernière capacité employée par l'adversaire."},
   selfdestruct:{name:'Destruction',type:'normal',cat:'phys',power:130,selfDestruct:true,desc:"Une explosion dévastatrice qui met K.O. son lanceur."},
   explosion:{name:'Explosion',type:'normal',cat:'phys',power:170,selfDestruct:true,desc:"Une explosion titanesque qui met K.O. son lanceur."},
   eggbomb:{name:"Bomb'Œuf",type:'normal',cat:'phys',power:70,accuracy:0.75,desc:"Projette un œuf massif sur la cible."},
-  smog:{name:'Smog',type:'poison',cat:'spec',power:40,accuracy:0.7,secondaryStatus:{status:'poison',chance:0.4},desc:"Un nuage de gaz sale qui peut empoisonner la cible."},
-  boneclub:{name:'Massue Os',type:'sol',cat:'phys',power:55,accuracy:0.85,flinch:0.1,desc:"Frappe avec un os solide. Peut faire peur."},
+  smog:{name:'Puredpois',type:'poison',cat:'spec',power:40,accuracy:0.7,secondaryStatus:{status:'poison',chance:0.4},desc:"Un nuage de gaz sale qui peut empoisonner la cible."},
+  boneclub:{name:"Massd'Os",type:'sol',cat:'phys',power:55,accuracy:0.85,flinch:0.1,desc:"Frappe avec un os solide. Peut faire peur."},
   clamp:{name:'Coquille',type:'eau',cat:'phys',power:40,accuracy:0.85,desc:"Enferme la cible dans une coquille robuste."},
-  skullbash:{name:'Tacle Costaud',type:'normal',cat:'phys',power:80,desc:"Fonce tête baissée avec une puissance colossale."},
-  spikecannon:{name:'Pique',type:'normal',cat:'phys',power:50,desc:"Tire une volée de pointes acérées sur la cible."},
+  skullbash:{name:"Coud'Krâne",type:'normal',cat:'phys',power:80,desc:"Fonce tête baissée avec une puissance colossale."},
+  spikecannon:{name:'Picanon',type:'normal',cat:'phys',power:50,desc:"Tire une volée de pointes acérées sur la cible."},
   constrict:{name:'Constriction',type:'normal',cat:'phys',power:35,secondaryBoost:{stat:'spe',stages:-1,chance:0.1},desc:"Étouffe la cible avec de longs tentacules ou lianes."},
   kinesis:{name:'Télékinésie',type:'psy',cat:'status',power:0,target:'foe',accuracy:0.8,effect:{foeBoost:[{stat:'acc',stages:-1}]},desc:"Tord une cuillère pour brouiller l'esprit de la cible et baisser sa précision."},
   softboiled:{name:'E-Coque',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Sacrifie un peu de son propre corps pour récupérer la moitié de ses PV max."},
-  glare:{name:'Regard Noir',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'paralysie'},desc:"Un regard intimidant qui paralyse la cible."},
+  glare:{name:'Intimidation',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'paralysie'},desc:"Un regard intimidant qui paralyse la cible."},
   dreameater:{name:'Dévorêve',type:'psy',cat:'spec',power:65,drain:0.5,sleepOnly:true,desc:"Dévore les rêves de la cible endormie et absorbe des PV. Échoue si la cible est éveillée."},
   poisongas:{name:'Gaz Toxik',type:'poison',cat:'status',power:0,target:'foe',accuracy:0.55,effect:{status:'poison'},desc:"Asperge la cible d'un gaz toxique."},
-  barrage:{name:'Bombardement',type:'normal',cat:'phys',power:45,accuracy:0.85,desc:"Bombarde la cible avec des sphères rondes."},
-  lovelykiss:{name:'Beau Bisou',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'sommeil'},desc:"Un baiser irrésistible qui endort la cible."},
-  skyattack:{name:'Attaque Céleste',type:'vol',cat:'phys',power:85,accuracy:0.9,desc:"Fond sur la cible depuis les cieux avec une force phénoménale."},
+  barrage:{name:'Pilonnage',type:'normal',cat:'phys',power:45,accuracy:0.85,desc:"Bombarde la cible avec des sphères rondes."},
+  lovelykiss:{name:'Grobisou',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'sommeil'},desc:"Un baiser irrésistible qui endort la cible."},
+  skyattack:{name:'Pique',type:'vol',cat:'phys',power:85,accuracy:0.9,desc:"Fond sur la cible depuis les cieux avec une force phénoménale."},
   transform:{name:'Morphing',type:'normal',cat:'status',power:0,target:'foe',effect:{transform:true},desc:"Se transforme en copie exacte de l'adversaire, empruntant son apparence et ses capacités."},
-  dizzypunch:{name:'Poing Toupie',type:'normal',cat:'phys',power:60,secondaryStatus:{status:'confusion',chance:0.2},desc:"Un coup de poing rotatif qui peut rendre confus."},
+  dizzypunch:{name:'Uppercut',type:'normal',cat:'phys',power:60,secondaryStatus:{status:'confusion',chance:0.2},desc:"Un coup de poing rotatif qui peut rendre confus."},
   spore:{name:'Spore',type:'plante',cat:'status',power:0,target:'foe',effect:{status:'sommeil'},desc:"Libère un nuage de spores qui endort infailliblement la cible."},
   flash:{name:'Flash',type:'normal',cat:'status',power:0,target:'foe',effect:{foeBoost:[{stat:'acc',stages:-1}]},desc:"Un éclair de lumière aveuglant qui baisse la précision adverse."},
-  psywave:{name:'Onde Folie',type:'psy',cat:'spec',power:0,psywave:true,desc:"Inflige des dégâts d'intensité aléatoire et imprévisible."},
+  psywave:{name:'Vague Psy',type:'psy',cat:'spec',power:0,psywave:true,desc:"Inflige des dégâts d'intensité aléatoire et imprévisible."},
   splash:{name:'Trempette',type:'normal',cat:'status',power:0,target:'self',effect:{noop:true},desc:"Le lanceur fait juste des éclaboussures... ça ne sert absolument à rien."},
   acidarmor:{name:'Carapace Armure',type:'poison',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:2}]},desc:"Liquéfie son corps pour booster fortement la Défense."},
   furyswipes:{name:'Griffes Furie',type:'normal',cat:'phys',power:45,accuracy:0.8,desc:"Griffe la cible à répétition, rapidement et sauvagement."},
@@ -957,12 +957,12 @@ const MOVES = {
   sharpen:{name:'Affûtage',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1}]},desc:"Durcit son corps anguleux pour booster son Attaque."},
   conversion:{name:'Conversion',type:'normal',cat:'status',power:0,target:'self',effect:{},desc:"Change de type pour adopter celui de sa première capacité."},
   triattack:{name:'Triplattaque',type:'normal',cat:'spec',power:65,triStatus:true,desc:"Tire trois faisceaux simultanés qui peuvent brûler, geler ou paralyser la cible."},
-  superfang:{name:'Superdent',type:'normal',cat:'phys',power:0,halfHp:true,accuracy:0.9,desc:"Mord violemment pour réduire de moitié les PV actuels de la cible."},
+  superfang:{name:'Croc Fatal',type:'normal',cat:'phys',power:0,halfHp:true,accuracy:0.9,desc:"Mord violemment pour réduire de moitié les PV actuels de la cible."},
 
   /* ---- BLOC 4 : vraies capacités de Génération 2 ---- */
-  sketch:{name:'Sketch',type:'normal',cat:'status',power:0,target:'self',effect:{mimic:true},desc:"Copie durablement la dernière capacité utilisée par l'adversaire."},
+  sketch:{name:'Gribouille',type:'normal',cat:'status',power:0,target:'self',effect:{mimic:true},desc:"Copie durablement la dernière capacité utilisée par l'adversaire."},
   triplekick:{name:'Triple Pied',type:'combat',cat:'phys',power:40,accuracy:0.9,desc:"Trois coups de pied enchaînés à la suite."},
-  thief:{name:'Vol',type:'tenebres',cat:'phys',power:40,desc:"Une attaque sournoise qui déroberait normalement l'objet tenu de la cible."},
+  thief:{name:'Implore',type:'tenebres',cat:'phys',power:40,desc:"Une attaque sournoise qui déroberait normalement l'objet tenu de la cible."},
   spiderweb:{name:'Toile',type:'insecte',cat:'status',power:0,target:'foe',effect:{trap:true},desc:"Emprisonne la cible dans une toile qui l'empêche de fuir."},
   mindreader:{name:'Lire-Esprit',type:'normal',cat:'status',power:0,target:'self',effect:{lockOn:true},desc:"Verrouille la cible : la prochaine capacité ne pourra pas rater."},
   nightmare:{name:'Cauchemar',type:'fantome',cat:'spec',power:30,sleepOnly:true,desc:"Plonge la cible endormie dans un cauchemar douloureux."},
@@ -990,21 +990,21 @@ const MOVES = {
   perishsong:{name:'Requiem',type:'normal',cat:'status',power:0,target:'foe',effect:{perishSong:true},desc:"Tous les Pokémon sur le terrain seront K.O. dans 3 tours."},
   detect:{name:'Détection',type:'combat',cat:'status',power:0,target:'self',priority:4,effect:{protect:true},desc:"Anticipe et évite totalement les attaques ce tour-ci."},
   bonerush:{name:'Os Rush',type:'sol',cat:'phys',power:25,accuracy:0.9,desc:"Frappe la cible à répétition avec un os solide."},
-  lockon:{name:'Chape',type:'normal',cat:'status',power:0,target:'foe',effect:{lockOn:true},desc:"Verrouille fermement la cible : la prochaine capacité ne pourra pas rater."},
+  lockon:{name:'Verrouillage',type:'normal',cat:'status',power:0,target:'foe',effect:{lockOn:true},desc:"Verrouille fermement la cible : la prochaine capacité ne pourra pas rater."},
   outrage:{name:'Dracocolère',type:'dragon',cat:'phys',power:75,desc:"Se déchaîne violemment dans une rage draconique incontrôlable."},
   endure:{name:'Ténacité',type:'normal',cat:'status',power:0,target:'self',priority:4,effect:{endure:true},desc:"Permet de survivre à 1 PV face à n'importe quelle attaque ce tour-ci."},
   charm:{name:'Charme',type:'normal',cat:'status',power:0,target:'foe',effect:{foeBoost:[{stat:'atk',stages:-2}]},desc:"Un regard adorable qui baisse fortement l'Attaque adverse."},
   rollout:{name:'Roulade',type:'roche',cat:'phys',power:30,desc:"Une charge roulante qui gagne en puissance à chaque utilisation."},
-  falseswipe:{name:'Damned',type:'normal',cat:'phys',power:40,desc:"Une attaque tout en retenue qui laisse toujours au moins 1 PV à la cible."},
+  falseswipe:{name:'Faux-Chage',type:'normal',cat:'phys',power:40,desc:"Une attaque tout en retenue qui laisse toujours au moins 1 PV à la cible."},
   swagger:{name:'Vantardise',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.85,effect:{foeBoost:[{stat:'atk',stages:2}],status:'confusion'},desc:"Provoque la cible pour booster son Attaque tout en la rendant confuse."},
   milkdrink:{name:'Lait Soin',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Un lait nourrissant qui restaure la moitié des PV max."},
   spark:{name:'Étincelle',type:'electrik',cat:'phys',power:65,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Une charge électrifiée qui peut paralyser la cible."},
   furycutter:{name:'Taillade',type:'insecte',cat:'phys',power:20,desc:"Une lame tranchante dont la puissance augmente à chaque coup consécutif."},
-  meanlook:{name:'Odieux Regard',type:'normal',cat:'status',power:0,target:'foe',effect:{trap:true},desc:"Un regard menaçant qui empêche la cible de fuir ou de switcher."},
+  meanlook:{name:'Regard Noir',type:'normal',cat:'status',power:0,target:'foe',effect:{trap:true},desc:"Un regard menaçant qui empêche la cible de fuir ou de switcher."},
   attract:{name:'Attraction',type:'normal',cat:'status',power:0,target:'foe',effect:{},desc:"Rend la cible amoureuse, ce qui peut l'empêcher d'attaquer."},
   sleeptalk:{name:'Blabla Dodo',type:'normal',cat:'status',power:0,target:'self',selfSleepOnly:true,effect:{},desc:"Utilise une capacité au hasard tout en dormant profondément."},
   healbell:{name:'Chant Guérison',type:'normal',cat:'status',power:0,target:'self',effect:{cureStatus:true},desc:"Une douce mélodie qui guérit toutes les altérations de statut de l'équipe."},
-  return:{name:'Am\u2019Force',type:'normal',cat:'phys',power:70,desc:"Une attaque dont la puissance grandit avec l'affection envers le dresseur."},
+  return:{name:'Retour',type:'normal',cat:'phys',power:70,desc:"Une attaque dont la puissance grandit avec l'affection envers le dresseur."},
   present:{name:'Cadeau',type:'normal',cat:'phys',power:0,present:true,desc:"Offre un cadeau surprise : parfois un soin, parfois une explosion de dégâts."},
   frustration:{name:'Frustration',type:'normal',cat:'phys',power:70,desc:"Une attaque dont la puissance grandit avec le mécontentement envers le dresseur."},
   safeguard:{name:'Rune Protect',type:'normal',cat:'status',power:0,target:'self',effect:{safeguard:true},desc:"Protège l'équipe de toute altération de statut pendant 5 tours."},
@@ -1024,15 +1024,108 @@ const MOVES = {
   synthesis:{name:'Synthèse',type:'plante',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Utilise l'énergie ambiante pour récupérer la moitié de ses PV max."},
   moonlight:{name:'Clair de Lune',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Absorbe la lumière de la lune pour récupérer la moitié de ses PV max."},
   hiddenpower:{name:'Puissance Cachée',type:'normal',cat:'spec',power:60,desc:"Une capacité unique dont le type varie normalement selon chaque Pokémon."},
-  twister:{name:'Vent Violent',type:'dragon',cat:'spec',power:40,flinch:0.2,desc:"Un tourbillon tranchant qui peut faire peur à la cible."},
-  mirrorcoat:{name:'Miroir',type:'psy',cat:'spec',power:0,mirrorCoat:true,desc:"Renvoie le double des dégâts Spéciaux subis ce tour."},
+  twister:{name:'Ouragan',type:'dragon',cat:'spec',power:40,flinch:0.2,desc:"Un tourbillon tranchant qui peut faire peur à la cible."},
+  mirrorcoat:{name:'Voile Miroir',type:'psy',cat:'spec',power:0,mirrorCoat:true,desc:"Renvoie le double des dégâts Spéciaux subis ce tour."},
   psychup:{name:'Boost',type:'normal',cat:'status',power:0,target:'foe',effect:{psychUp:true},desc:"Copie tous les changements de statistiques actuels de la cible."},
   extremespeed:{name:'Vitesse Extrême',type:'normal',cat:'phys',power:70,priority:2,desc:"Une charge d'une rapidité fulgurante qui touche presque toujours en premier."},
   ancientpower:{name:'Puissance Antique',type:'roche',cat:'spec',power:55,secondarySelfBoost:{stat:'atk',stages:1,chance:0.1},desc:"Une énergie ancestrale qui peut booster les capacités du lanceur."},
   futuresight:{name:'Prescience',type:'psy',cat:'spec',power:80,accuracy:0.9,desc:"Prédit l'avenir et frappe la cible avec une force psychique redoutable."},
   rocksmash:{name:'Éclate-Roc',type:'combat',cat:'phys',power:40,secondaryBoost:{stat:'def',stages:-1,chance:0.5},desc:"Un coup puissant qui peut réduire la Défense de la cible."},
   whirlpool:{name:'Siphon',type:'eau',cat:'spec',power:35,accuracy:0.85,desc:"Emprisonne la cible dans un tourbillon aquatique tourbillonnant."},
-  beatup:{name:'Baston',type:'tenebres',cat:'phys',power:55,desc:"Toute l'équipe se relaie pour frapper la cible tour à tour."}
+  beatup:{name:'Baston',type:'tenebres',cat:'phys',power:55,desc:"Toute l'équipe se relaie pour frapper la cible tour à tour."},
+
+  /* ---- BLOC 2 (Gen 3) : nouvelles capacités ---- */
+  stridoson:{name:'Strido-Son',type:'acier',cat:'status',power:0,target:'foe',accuracy:0.85,effect:{foeBoost:[{stat:'spd',stages:-2}]},desc:"Un cri métallique perçant qui baisse fortement la Défense Spéciale adverse."},
+  meteormash:{name:'Poing Météor',type:'acier',cat:'phys',power:100,accuracy:0.85,secondarySelfBoost:{stat:'atk',stages:1,chance:0.2},desc:"Un poing d'acier propulsé telle une comète. Peut booster l'Attaque."},
+  doomdesire:{name:'Carnareket',type:'acier',cat:'spec',power:130,accuracy:0.85,desc:"Libère une énergie destructrice d'une puissance colossale."},
+  bulkup:{name:'Gonflette',type:'combat',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1},{stat:'def',stages:1}]},desc:"Gonfle ses muscles pour booster l'Attaque et la Défense."},
+  armthrust:{name:'Cogne',type:'combat',cat:'phys',power:40,desc:"Une série de coups de bras rapides et répétés."},
+  revenge:{name:'Vendetta',type:'combat',cat:'phys',power:60,desc:"Une contre-attaque redoutable envers qui vient de frapper."},
+  skyuppercut:{name:'Stratopercut',type:'combat',cat:'phys',power:85,accuracy:0.9,desc:"Un uppercut monumental qui atteint même les cibles en plein vol."},
+  superpower:{name:'Surpuissance',type:'combat',cat:'phys',power:120,effect:{},desc:"Une attaque d'une force colossale qui affaiblit un peu le lanceur."},
+  focuspunch:{name:'Mitra-Poing',type:'combat',cat:'phys',power:150,desc:"Un coup de poing concentré d'une puissance dévastatrice."},
+  dragondance:{name:'Danse Draco',type:'dragon',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1},{stat:'spe',stages:1}]},desc:"Une danse rituelle qui booste l'Attaque et la Vitesse."},
+  watersport:{name:'Tourniquet',type:'eau',cat:'status',power:0,target:'self',effect:{},desc:"S'asperge d'eau pour affaiblir les attaques Feu subies."},
+  waterpulse:{name:'Vibraqua',type:'eau',cat:'spec',power:60,secondaryStatus:{status:'confusion',chance:0.2},desc:"Une onde aquatique qui peut rendre la cible confuse."},
+  dive:{name:'Plongée',type:'eau',cat:'spec',power:80,desc:"Plonge sous l'eau avant de refaire surface sur la cible."},
+  muddywater:{name:'Ocroupi',type:'eau',cat:'spec',power:95,accuracy:0.85,secondaryBoost:{stat:'acc',stages:-1,chance:0.3},desc:"Une vague boueuse qui peut réduire la précision adverse."},
+  hydrocannon:{name:'Hydroblast',type:'eau',cat:'spec',power:150,accuracy:0.9,desc:"Un canon d'eau d'une puissance phénoménale."},
+  charge:{name:'Chargeur',type:'electrik',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'spd',stages:1}]},desc:"Accumule de l'énergie électrique pour la prochaine attaque."},
+  shockwave:{name:'Onde de Choc',type:'electrik',cat:'spec',power:60,accuracy:1.0,desc:"Une décharge qui ne rate presque jamais sa cible."},
+  volttackle:{name:'Électacle',type:'electrik',cat:'phys',power:120,recoil:0.33,desc:"Une charge électrifiée d'une puissance immense, mais douloureuse pour le lanceur."},
+  willowisp:{name:'Feu Follet',type:'feu',cat:'status',power:0,target:'foe',accuracy:0.75,effect:{status:'brulure'},desc:"Une flamme sinistre qui brûle la cible."},
+  blazekick:{name:'Pied Brûleur',type:'feu',cat:'phys',power:85,accuracy:0.9,secondaryStatus:{status:'brulure',chance:0.1},desc:"Un coup de pied enflammé qui peut brûler la cible."},
+  heatwave:{name:'Canicule',type:'feu',cat:'spec',power:100,accuracy:0.9,secondaryStatus:{status:'brulure',chance:0.1},desc:"Une vague de chaleur torride qui peut brûler la cible."},
+  overheat:{name:'Surchauffe',type:'feu',cat:'spec',power:140,accuracy:0.9,effect:{},desc:"Une explosion de chaleur intense qui affaiblit l'Attaque Spéciale du lanceur."},
+  blastburn:{name:'Rafale Feu',type:'feu',cat:'spec',power:150,accuracy:0.9,desc:"Un torrent de flammes d'une puissance dévastatrice."},
+  eruption:{name:'Éruption',type:'feu',cat:'spec',power:150,highHpBoost:true,desc:"Une explosion de lave, d'autant plus puissante que le lanceur est en pleine forme."},
+  sheercold:{name:'Glaciation',type:'glace',cat:'spec',power:0,ohko:true,accuracy:0.3,desc:"Un froid glacial qui met K.O. la cible d'un coup si l'attaque touche."},
+  iciclespear:{name:'Stalagtite',type:'glace',cat:'phys',power:45,desc:"Mitraille la cible de glaçons acérés à répétition."},
+  iceball:{name:'Ball\u2019Glace',type:'glace',cat:'phys',power:35,accuracy:0.9,desc:"Une boule de glace roulante qui gagne en puissance à chaque tour."},
+  tailglow:{name:'Lumiqueue',type:'insecte',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'spa',stages:3}]},desc:"Une lueur hypnotique qui booste fortement l'Attaque Spéciale."},
+  silverwind:{name:'Vent Argenté',type:'insecte',cat:'phys',power:60,secondarySelfBoost:{stat:'atk',stages:1,chance:0.1},desc:"Une poussière d'écailles scintillantes qui peut booster le lanceur."},
+  signalbeam:{name:'Rayon Signal',type:'insecte',cat:'spec',power:75,secondaryStatus:{status:'confusion',chance:0.1},desc:"Un rayon étrange qui peut rendre la cible confuse."},
+  swallow:{name:'Avale',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Absorbe l'énergie accumulée pour restaurer ses PV."},
+  stockpile:{name:'Stockage',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:1},{stat:'spd',stages:1}]},desc:"Accumule de l'énergie défensive."},
+  howl:{name:'Grondement',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1}]},desc:"Un hurlement qui booste l'Attaque du lanceur."},
+  natureforce:{name:'Force-Nature',type:'normal',cat:'spec',power:80,desc:"Une capacité mystérieuse qui change de nature selon le terrain."},
+  spitup:{name:'Relâche',type:'normal',cat:'phys',power:75,desc:"Libère l'énergie stockée sous forme d'attaque puissante."},
+  wish:{name:'Voeu',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Fait un voeu qui restaure les PV du lanceur."},
+  assist:{name:'Assistance',type:'normal',cat:'status',power:0,target:'self',metronome:true,effect:{},desc:"Invoque au hasard une capacité connue par l'équipe."},
+  recycle:{name:'Recyclage',type:'normal',cat:'status',power:0,target:'self',effect:{recycle:true},desc:"Récupère un objet tenu déjà consommé."},
+  yawn:{name:'Bâillement',type:'normal',cat:'status',power:0,target:'foe',effect:{status:'sommeil'},desc:"Donne sérieusement envie de dormir à la cible."},
+  refresh:{name:'Régénération',type:'normal',cat:'status',power:0,target:'self',effect:{cureStatus:true},desc:"Soigne le lanceur de tout problème de statut."},
+  camouflage:{name:'Camouflage',type:'normal',cat:'status',power:0,target:'self',effect:{},desc:"Change de type en fonction du terrain environnant."},
+  teeterdance:{name:'Danse-Folle',type:'normal',cat:'status',power:0,target:'foe',effect:{dualConfuse:true},desc:"Une danse étourdissante qui rend tout le monde confus."},
+  slackoff:{name:'Paresse',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Se relâche complètement pour restaurer la moitié de ses PV max."},
+  odorsleuth:{name:'Flair',type:'normal',cat:'status',power:0,target:'foe',effect:{},desc:"Permet de toucher un Pokémon Spectre avec des capacités Normal ou Combat."},
+  tickle:{name:'Chatouille',type:'normal',cat:'status',power:0,target:'foe',effect:{foeBoost:[{stat:'atk',stages:-1},{stat:'def',stages:-1}]},desc:"Des chatouilles qui baissent l'Attaque et la Défense adverses."},
+  block:{name:'Barrage',type:'normal',cat:'status',power:0,target:'foe',effect:{trap:true},desc:"Bloque la cible pour l'empêcher de fuir ou de switcher."},
+  endeavor:{name:'Effort',type:'normal',cat:'phys',power:0,endeavor:true,desc:"Ramène les PV de la cible au même niveau que ceux du lanceur."},
+  fakeout:{name:'Bluff',type:'normal',cat:'phys',power:40,priority:3,flinch:1.0,desc:"Une attaque surprise qui fait toujours peur à la cible."},
+  weatherball:{name:"Ball'Météo",type:'normal',cat:'phys',power:50,desc:"Une sphère d'énergie dont la nature varie selon la météo."},
+  smellingsalts:{name:'Stimulant',type:'normal',cat:'phys',power:60,desc:"Réveille les sens de la cible, particulièrement efficace contre la paralysie."},
+  facade:{name:'Façade',type:'normal',cat:'phys',power:70,facadeBoost:true,desc:"Une attaque doublée de puissance si le lanceur a un problème de statut."},
+  secretpower:{name:'Force Cachée',type:'normal',cat:'phys',power:70,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Une capacité dont l'effet secondaire varie selon le terrain."},
+  crushclaw:{name:'Éclategriffe',type:'normal',cat:'phys',power:75,accuracy:0.95,secondaryBoost:{stat:'def',stages:-1,chance:0.5},desc:"Des griffes puissantes qui peuvent réduire la Défense adverse."},
+  uproar:{name:'Brouhaha',type:'normal',cat:'phys',power:90,wakeAllOnHit:true,desc:"Un vacarme assourdissant qui réveille tous les Pokémon endormis."},
+  hypervoice:{name:'Mégaphone',type:'normal',cat:'phys',power:90,desc:"Un cri surpuissant qui ébranle la cible."},
+  aromatherapy:{name:'Aromathérapi',type:'plante',cat:'status',power:0,target:'self',effect:{cureStatus:true},desc:"Un parfum apaisant qui soigne tout problème de statut."},
+  grasswhistle:{name:"Siffl'Herbe",type:'plante',cat:'status',power:0,target:'foe',accuracy:0.55,effect:{status:'sommeil'},desc:"Une douce mélodie qui endort la cible."},
+  ingrain:{name:'Racines',type:'plante',cat:'status',power:0,target:'self',effect:{ingrain:true},desc:"Plante des racines dans le sol pour récupérer des PV chaque tour."},
+  bulletseed:{name:'Balle Graine',type:'plante',cat:'phys',power:25,desc:"Mitraille la cible de graines à répétition."},
+  needlearm:{name:'Poing Dard',type:'plante',cat:'spec',power:60,flinch:0.3,desc:"Un coup végétal acéré qui peut faire peur à la cible."},
+  magicalleaf:{name:'Feuillemagik',type:'plante',cat:'spec',power:60,accuracy:1.0,desc:"Des feuilles magiques qui ne ratent presque jamais leur cible."},
+  frenzyplant:{name:'Végé-Attak',type:'plante',cat:'spec',power:150,accuracy:0.9,desc:"Des racines titanesques surgissent du sol pour écraser la cible."},
+  poisonfang:{name:'Crochetvenin',type:'poison',cat:'phys',power:50,secondaryStatus:{status:'poison',chance:0.3},desc:"Une morsure venimeuse qui peut gravement empoisonner."},
+  poisontail:{name:'Queue-Poison',type:'poison',cat:'phys',power:50,secondaryStatus:{status:'poison',chance:0.1},desc:"Un coup de queue empoisonné."},
+  trick:{name:'Tourmagik',type:'psy',cat:'status',power:0,target:'foe',effect:{itemSwap:true},desc:"Échange son objet tenu avec celui de la cible."},
+  roleplay:{name:'Imitation',type:'psy',cat:'status',power:0,target:'foe',effect:{abilityCopy:true},desc:"Copie le talent de la cible."},
+  magiccoat:{name:'Reflet Magik',type:'psy',cat:'status',power:0,target:'self',effect:{},desc:"Renvoie normalement la prochaine capacité de statut subie."},
+  skillswap:{name:'Échange',type:'psy',cat:'status',power:0,target:'foe',effect:{abilitySwap:true},desc:"Échange son talent avec celui de la cible."},
+  imprison:{name:'Possessif',type:'psy',cat:'status',power:0,target:'self',effect:{},desc:"Empêche normalement la cible d'utiliser les capacités que le lanceur connaît aussi."},
+  cosmicpower:{name:'Force Cosmik',type:'psy',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:1},{stat:'spd',stages:1}]},desc:"Puise dans une force mystique pour booster ses défenses."},
+  calmmind:{name:'Calmesprit',type:'psy',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'spa',stages:1},{stat:'spd',stages:1}]},desc:"Une profonde méditation qui booste l'Attaque et la Défense Spéciales."},
+  lusterpurge:{name:'Lumi-Éclat',type:'psy',cat:'spec',power:70,secondaryBoost:{stat:'spd',stages:-1,chance:0.5},desc:"Un éclat de lumière qui peut réduire la Défense Spéciale adverse."},
+  mistball:{name:"Ball'Brume",type:'psy',cat:'spec',power:70,secondaryBoost:{stat:'spa',stages:-1,chance:0.5},desc:"Une sphère brumeuse qui peut réduire l'Attaque Spéciale adverse."},
+  psychoboost:{name:'Psycho Boost',type:'psy',cat:'spec',power:140,accuracy:0.9,effect:{},desc:"Une explosion psychique dévastatrice qui affaiblit le lanceur."},
+  rockblast:{name:'Boule Roc',type:'roche',cat:'phys',power:25,accuracy:0.9,desc:"Projette une volée de rochers sur la cible."},
+  rocktomb:{name:'Tomberoche',type:'roche',cat:'phys',power:50,accuracy:0.8,secondaryBoost:{stat:'spe',stages:-1,chance:1.0},desc:"Des rochers qui immobilisent et ralentissent la cible."},
+  sandtomb:{name:'Tourbi-Sable',type:'sol',cat:'phys',power:35,accuracy:0.85,desc:"Emprisonne la cible dans un tourbillon de sable."},
+  grudge:{name:'Rancune',type:'fantome',cat:'status',power:0,target:'self',effect:{},desc:"Si le lanceur est mis K.O., la capacité responsable perd tous ses PP."},
+  astonish:{name:'Étonnement',type:'fantome',cat:'phys',power:30,flinch:0.3,desc:"Un cri spectral soudain qui peut faire peur à la cible."},
+  shadowpunch:{name:'Poing Ombre',type:'fantome',cat:'phys',power:60,accuracy:1.0,desc:"Un poing spectral qui ne rate jamais sa cible."},
+  torment:{name:'Tourmente',type:'tenebres',cat:'status',power:0,target:'foe',effect:{},desc:"Empêche normalement la cible d'utiliser deux fois la même capacité de suite."},
+  flatter:{name:'Flatterie',type:'tenebres',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{status:'confusion',foeBoost:[{stat:'spa',stages:1}]},desc:"Flatte la cible pour la rendre confuse tout en boostant son Attaque Spéciale."},
+  memento:{name:'Souvenir',type:'tenebres',cat:'status',power:0,target:'foe',effect:{selfFaintDebuff:true},desc:"Le lanceur se sacrifie pour affaiblir sévèrement la cible."},
+  taunt:{name:'Provoc',type:'tenebres',cat:'status',power:0,target:'foe',effect:{tauntBlock:true},desc:"Provoque la cible pour l'empêcher d'utiliser des capacités de statut."},
+  snatch:{name:'Saisie',type:'tenebres',cat:'status',power:0,target:'self',effect:{},desc:"Vole normalement l'effet de la prochaine capacité non-offensive de l'adversaire."},
+  faketears:{name:'Croco Larme',type:'tenebres',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{foeBoost:[{stat:'spd',stages:-2}]},desc:"De fausses larmes qui baissent fortement la Défense Spéciale adverse."},
+  knockoff:{name:'Sabotage',type:'tenebres',cat:'spec',power:20,itemRemoveOnHit:true,desc:"Fait tomber l'objet tenu de la cible au contact."},
+  featherdance:{name:'Danse-Plume',type:'vol',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{foeBoost:[{stat:'atk',stages:-2}]},desc:"Une pluie de plumes qui baisse fortement l'Attaque adverse."},
+  aircutter:{name:"Tranch'Air",type:'vol',cat:'phys',power:55,accuracy:0.95,desc:"Des lames d'air tranchantes."},
+  aerialace:{name:'Aéropique',type:'vol',cat:'phys',power:60,accuracy:1.0,desc:"Une attaque fulgurante qui ne rate presque jamais."},
+  bounce:{name:'Rebond',type:'vol',cat:'phys',power:85,accuracy:0.85,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Bondit dans les airs avant de retomber sur la cible. Peut paralyser."}
 };
 
 const NATURES = [
@@ -1163,7 +1256,7 @@ const LINES = [
  stages:[
   {name:'Mimitoss',types:['insecte','poison'],base:st(60,55,50,40,55,45)},
   {name:'Aéromite',types:['insecte','poison'],base:st(70,65,60,90,75,90)}]},
-{id:'diglett',abilities:['Voile Sable','Piège Sable'],moveIds:['scratch','dig','earthquake','slash','bonemerang','mudshot','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','mudslap','magnitude','boneclub','bonerush','sandattack'],
+{id:'diglett',abilities:['Voile Sable','Piège'],moveIds:['scratch','dig','earthquake','slash','bonemerang','mudshot','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','mudslap','magnitude','boneclub','bonerush','sandattack'],
  stages:[
   {name:'Taupiqueur',types:['sol'],base:st(10,55,25,35,45,95)},
   {name:'Triopikeur',types:['sol'],base:st(50,100,50,50,70,120)}]},
@@ -1306,7 +1399,7 @@ const LINES = [
  stages:[
   {name:'Poissirène',types:['eau'],base:st(45,67,60,35,50,63)},
   {name:'Poissoroy',types:['eau'],base:st(80,92,65,65,80,68)}]},
-{id:'staryu',abilities:['Luminescence','Médic Nature'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','psybeam','confusion','swift','waterfall','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
+{id:'staryu',abilities:['Lumiattirance','Médic Nature'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','psybeam','confusion','swift','waterfall','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
   {name:'Stari',types:['eau'],base:st(30,45,55,70,55,85)},
   {name:'Staross',types:['eau','psy'],base:st(60,75,85,100,85,115)}]},
@@ -1422,7 +1515,7 @@ const LINES = [
  stages:[
   {name:'Mimigal',types:['insecte','poison'],base:st(40,60,40,40,40,30)},
   {name:'Migalos',types:['insecte','poison'],base:st(70,90,70,60,70,40)}]},
-{id:'chinchou',abilities:['Absorbe-Volt','Luminescence'],moveIds:['watergun','bubblebeam','surf','thundershock','thunderbolt','discharge','bodyslam','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','spark','zapcannon'],
+{id:'chinchou',abilities:['Absorbe-Volt','Lumiattirance'],moveIds:['watergun','bubblebeam','surf','thundershock','thunderbolt','discharge','bodyslam','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','spark','zapcannon'],
  stages:[
   {name:'Loupio',types:['eau','electrik'],base:st(75,38,38,56,56,67)},
   {name:'Lanturn',types:['eau','electrik'],base:st(125,58,58,76,76,67)}]},
@@ -1441,6 +1534,7 @@ const LINES = [
   {name:'Pharamp',types:['electrik'],base:st(90,75,85,115,90,55)}]},
 {id:'marill',abilities:['Isograisse','Absorbe-Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','tackle','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','tailwhip','whirlpool','clamp','octazooka','withdraw'],
  stages:[
+  {name:'Azurill',types:['normal'],base:st(50,20,40,20,40,20)},
   {name:'Marill',types:['eau'],base:st(70,20,50,20,50,40)},
   {name:'Azumarill',types:['eau'],base:st(100,50,80,50,80,50)}]},
 {id:'sudowoodo',abilities:['Solide Roc','Tête de Roc'],moveIds:['rockthrow','rockslide','stoneedge','tackle','headbutt','doubleedge','bodyslam','swordsdance','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','rollout','ancientpower'],
@@ -1473,6 +1567,7 @@ const LINES = [
   {name:'Feuforêve',types:['fantome'],base:st(60,60,60,85,85,85)}]},
 {id:'wobbuffet',abilities:['Annule Garde','Télépathe'],moveIds:['tackle','confusion','psybeam','harden','amnesia','recover','growl','leer','protect','endure','safeguard','doubleteam','focusenergy','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
+  {name:'Wynaut',types:['psy'],base:st(95,23,48,23,48,23)},
   {name:'Qulbutoké',types:['psy'],base:st(190,33,58,33,58,33)}]},
 {id:'girafarig',abilities:['Prédiction','Télépathe'],moveIds:['tackle','headbutt','confusion','psychic','psybeam','zenheadbutt','doubleedge','agility','growl','leer','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','extremespeed','slam','scaryface','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
@@ -1583,7 +1678,294 @@ const LINES = [
   {name:'Celebi',types:['psy','plante'],base:st(100,100,100,100,100,100)}]},
 {id:'unown',abilities:['Lévitation','Annule Garde'],moveIds:['confusion','psybeam','psychic','extrasensory','swift','hyperbeam','protect','endure','safeguard','doubleteam','focusenergy','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
-  {name:'Zarbi',types:['psy'],base:st(48,72,48,72,48,48)}]}
+  {name:'Zarbi',types:['psy'],base:st(48,72,48,72,48,48)}]},
+
+/* =================== POKÉDEX GÉNÉRATION 3 (135) =================== */
+{id:'treecko',abilities:['Engrais','Cran'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Arcko',types:['plante'],base:st(40,45,35,65,55,70)},
+  {name:'Massko',types:['plante'],base:st(50,65,45,85,65,95)},
+  {name:'Jungko',types:['plante'],base:st(70,85,65,105,85,120)}]},
+{id:'torchic',abilities:['Brasier','Cran'],moveIds:['ember','flamethrower','fireblast','firepunch','flamewheel','willowisp','heatwave','overheat','karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','bulkup','superpower','skyuppercut','machpunch','rocksmash','dynamicpunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Poussifeu',types:['feu'],base:st(45,60,40,70,50,45)},
+  {name:'Galifeu',types:['feu','combat'],base:st(60,85,60,85,60,55)},
+  {name:'Braségali',types:['feu','combat'],base:st(80,120,70,110,70,80)}]},
+{id:'mudkip',abilities:['Torrent','Moiteur'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','earthquake','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Gobou',types:['eau'],base:st(50,70,50,50,50,40)},
+  {name:'Flobio',types:['eau','sol'],base:st(70,85,70,60,70,50)},
+  {name:'Laggron',types:['eau','sol'],base:st(100,110,90,85,90,60)}]},
+{id:'poochyena',abilities:['Intimidation','Cran'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','thief','pursuit','knockoff','faketears','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Medhyèna',types:['tenebres'],base:st(35,55,35,30,30,35)},
+  {name:'Grahyèna',types:['tenebres'],base:st(70,90,70,60,60,70)}]},
+{id:'zigzagoon',abilities:['Ramassage','Cran'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Zigzaton',types:['normal'],base:st(38,30,41,30,41,60)},
+  {name:'Linéon',types:['normal'],base:st(78,70,61,50,61,100)}]},
+{id:'wurmple',abilities:['Essaim','Peau Dure'],moveIds:['leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','gust','wingattack','sludge','poisonsting','acid','sludgebomb','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Chenipotte',types:['insecte'],base:st(45,45,35,20,30,20)}],
+ branches:[
+  {name:'Charmillon',types:['insecte','vol'],base:st(60,70,50,90,50,65),abilities:['Essaim'],extraMoveIds:['drillpeck','hurricane','airslash','aircutter','aerialace','bounce']},
+  {name:'Papinox',types:['insecte','poison'],base:st(60,50,70,50,90,65),abilities:['Essaim','Peau Dure'],extraMoveIds:['sludgebomb','poisonjab','poisonfang','poisontail','acidarmor']}
+ ]},
+{id:'lotad',abilities:['Engrais','Absorbe-Eau'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Nénupiot',types:['eau','plante'],base:st(40,30,30,40,50,30)},
+  {name:'Lombre',types:['eau','plante'],base:st(60,50,50,60,70,50)},
+  {name:'Ludicolo',types:['eau','plante'],base:st(80,70,70,90,100,70)}]},
+{id:'seedot',abilities:['Engrais','Isograisse'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Grainipiot',types:['plante'],base:st(40,40,50,30,30,30)},
+  {name:'Pifeuil',types:['plante','tenebres'],base:st(70,70,40,60,40,60)},
+  {name:'Tengalice',types:['plante','tenebres'],base:st(90,100,60,90,60,80)}]},
+{id:'taillow',abilities:['Cran'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Nirondelle',types:['normal','vol'],base:st(40,55,30,30,30,85)},
+  {name:'Hélédelle',types:['normal','vol'],base:st(60,85,60,75,50,125)}]},
+{id:'wingull',abilities:['Moiteur'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Goélise',types:['eau','vol'],base:st(40,30,30,55,30,85)},
+  {name:'Bekipan',types:['eau','vol'],base:st(60,50,100,95,70,65)}]},
+{id:'ralts',abilities:['Synchro','Corps Sain'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Tarsal',types:['psy'],base:st(28,25,25,45,35,40)},
+  {name:'Kirlia',types:['psy'],base:st(38,35,35,65,55,50)},
+  {name:'Gardevoir',types:['psy'],base:st(68,65,65,125,115,80)}]},
+{id:'surskit',abilities:['Glissade'],moveIds:['leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Arakdo',types:['insecte','eau'],base:st(40,30,32,50,52,65)},
+  {name:'Maskadra',types:['insecte','vol'],base:st(70,60,62,80,82,60)}]},
+{id:'shroomish',abilities:['Engrais','Corps Sain'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','crosschop','karatechop','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Balignon',types:['plante'],base:st(60,40,60,40,60,35)},
+  {name:'Chapignon',types:['plante','combat'],base:st(60,130,80,60,60,70)}]},
+{id:'slakoth',abilities:['Coloforce'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Parécool',types:['normal'],base:st(60,60,60,35,35,30)},
+  {name:'Vigoroth',types:['normal'],base:st(80,80,80,55,55,90)},
+  {name:'Monaflèmit',types:['normal'],base:st(150,160,100,95,65,100)}]},
+{id:'nincada',abilities:['Essaim'],moveIds:['leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','dig','earthquake','bonemerang','mudshot','mudslap','magnitude','sandtomb','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Ningale',types:['insecte','sol'],base:st(31,45,90,30,30,40)}],
+ branches:[
+  {name:'Ninjask',types:['insecte','vol'],base:st(61,90,45,50,50,160),abilities:['Turbo','Infiltration'],extraMoveIds:['aerialace','airslash']},
+  {name:'Munja',types:['insecte','fantome'],base:st(1,90,45,30,30,40),abilities:['Corps Sain'],extraMoveIds:['shadowball','shadowpunch']}
+ ]},
+{id:'whismur',abilities:['Corps Sain'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','uproar','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Chuchmur',types:['normal'],base:st(64,51,23,51,23,28)},
+  {name:'Ramboum',types:['normal'],base:st(84,71,43,71,43,48)},
+  {name:'Brouhabam',types:['normal'],base:st(104,91,63,91,73,68)}]},
+{id:'makuhita',abilities:['Cran'],moveIds:['karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','bulkup','superpower','skyuppercut','machpunch','rocksmash','dynamicpunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Makuhita',types:['combat'],base:st(72,60,30,20,30,25)},
+  {name:'Hariyama',types:['combat'],base:st(144,120,60,40,60,50)}]},
+{id:'nosepass',abilities:['Magnépiège','Solide Roc'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Tarinor',types:['roche'],base:st(30,45,135,45,90,30)}]},
+{id:'skitty',abilities:['Joli Sourire','Cran'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip','sweetscent','charm'],
+ stages:[
+  {name:'Skitty',types:['normal'],base:st(50,45,45,35,35,50)},
+  {name:'Delcatty',types:['normal'],base:st(70,65,65,55,55,90)}]},
+{id:'sableye',abilities:['Fermeté'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','thief','pursuit','knockoff','faketears','lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Ténéfix',types:['tenebres','fantome'],base:st(50,75,75,65,65,50)}]},
+{id:'mawile',abilities:['Force Pure','Isograisse'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Mysdibule',types:['acier'],base:st(50,85,85,55,55,50)}]},
+{id:'aron',abilities:['Solide Roc','Armurbaston'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Galekid',types:['acier','roche'],base:st(50,70,100,40,40,30)},
+  {name:'Galegon',types:['acier','roche'],base:st(60,90,140,50,50,40)},
+  {name:'Galeking',types:['acier','roche'],base:st(70,110,180,60,60,50)}]},
+{id:'meditite',abilities:['Télépathe','Cran'],moveIds:['karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','bulkup','superpower','skyuppercut','machpunch','rocksmash','dynamicpunch','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Méditikka',types:['combat','psy'],base:st(30,40,55,40,55,60)},
+  {name:'Charmina',types:['combat','psy'],base:st(60,60,75,60,75,80)}]},
+{id:'electrike',abilities:['Paratonnerre','Statik'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','shockwave','spark','zapcannon','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Dynavolt',types:['electrik'],base:st(40,45,40,65,40,65)},
+  {name:'Élecsprint',types:['electrik'],base:st(70,75,60,105,60,105)}]},
+{id:'plusle',abilities:['Paratonnerre'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','shockwave','spark','zapcannon','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Posipi',types:['electrik'],base:st(60,50,40,85,75,95)}]},
+{id:'minun',abilities:['Absorbe-Volt'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','shockwave','spark','zapcannon','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Négapi',types:['electrik'],base:st(60,40,50,75,85,95)}]},
+{id:'volbeat',abilities:['Lumiattirance','Essaim'],moveIds:['leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Muciole',types:['insecte'],base:st(65,73,55,47,75,85)}]},
+{id:'illumise',abilities:['Lumiattirance','Corps Sain'],moveIds:['leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Lumivole',types:['insecte'],base:st(65,47,55,73,75,85)}]},
+{id:'roselia',abilities:['Engrais','Point Poison'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','sludge','poisonsting','acid','sludgebomb','poisonjab','poisonfang','poisontail','acidarmor','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Rosélia',types:['plante','poison'],base:st(50,60,45,100,80,65)}]},
+{id:'gulpin',abilities:['Glu','Corps Sain'],moveIds:['sludge','poisonsting','acid','sludgebomb','poisonjab','poisonfang','poisontail','acidarmor','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Gloupti',types:['poison'],base:st(70,43,53,43,53,40)},
+  {name:'Avaltout',types:['poison'],base:st(100,73,83,73,83,55)}]},
+{id:'carvanha',abilities:['Cran'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','crunch','darkpulse','suckerpunch','nightslash','feintattack','thief','pursuit','knockoff','faketears','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Carvanha',types:['eau','tenebres'],base:st(45,90,20,65,20,65)},
+  {name:'Sharpedo',types:['eau','tenebres'],base:st(70,120,40,95,40,95)}]},
+{id:'wailmer',abilities:['Moiteur','Isograisse'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Wailmer',types:['eau'],base:st(130,70,35,70,35,60)},
+  {name:'Wailord',types:['eau'],base:st(170,90,45,90,45,60)}]},
+{id:'numel',abilities:['Engrais','Isograisse'],moveIds:['ember','flamethrower','fireblast','firepunch','flamewheel','willowisp','heatwave','overheat','dig','earthquake','bonemerang','mudshot','mudslap','magnitude','sandtomb','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Chamallot',types:['feu','sol'],base:st(60,60,40,65,45,35)},
+  {name:'Camérupt',types:['feu','sol'],base:st(70,100,70,105,75,40)}]},
+{id:'torkoal',abilities:['Brasier','Corps Sain'],moveIds:['ember','flamethrower','fireblast','firepunch','flamewheel','willowisp','heatwave','overheat','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Chartor',types:['feu'],base:st(70,85,140,85,70,20)}]},
+{id:'spoink',abilities:['Télépathe','Corps Sain'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Spoink',types:['psy'],base:st(60,25,35,70,80,60)},
+  {name:'Groret',types:['psy'],base:st(80,45,55,90,110,80)}]},
+{id:'spinda',abilities:['Tempo Perso'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Spinda',types:['normal'],base:st(60,60,60,60,60,60)}]},
+{id:'trapinch',abilities:['Piège'],moveIds:['dig','earthquake','bonemerang','mudshot','mudslap','magnitude','sandtomb','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Kraknoix',types:['sol'],base:st(45,100,45,45,45,10)}]},
+{id:'vibrava',abilities:['Lévitation'],moveIds:['dragonbreath','dragonclaw','dragonrage','dragondance','twister','outrage','dig','earthquake','bonemerang','mudshot','mudslap','magnitude','sandtomb','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Vibraninf',types:['dragon','sol'],base:st(50,70,50,50,50,70)},
+  {name:'Libégon',types:['dragon','sol'],base:st(80,100,80,80,80,100)}]},
+{id:'cacnea',abilities:['Piège','Voile Sable'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Cacnea',types:['plante'],base:st(50,85,40,85,40,35)},
+  {name:'Cacturne',types:['plante','tenebres'],base:st(70,115,60,115,60,55)}]},
+{id:'swablu',abilities:['Corps Sain'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Tylton',types:['normal','vol'],base:st(45,40,60,40,75,50)},
+  {name:'Altaria',types:['dragon','vol'],base:st(75,70,90,70,105,80)}]},
+{id:'zangoose',abilities:['Rivalité'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Mangriff',types:['normal'],base:st(73,115,60,60,60,90)}]},
+{id:'seviper',abilities:['Point Poison'],moveIds:['sludge','poisonsting','acid','sludgebomb','poisonjab','poisonfang','poisontail','acidarmor','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Séviper',types:['poison'],base:st(73,100,60,100,60,65)}]},
+{id:'lunatone',abilities:['Lévitation'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Séléroc',types:['roche','psy'],base:st(90,55,65,95,85,70)}]},
+{id:'solrock',abilities:['Lévitation'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Solaroc',types:['roche','psy'],base:st(90,95,85,55,65,70)}]},
+{id:'barboach',abilities:['Moiteur'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','dig','earthquake','bonemerang','mudshot','mudslap','magnitude','sandtomb','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Barloche',types:['eau','sol'],base:st(50,48,43,46,41,60)},
+  {name:'Barbicha',types:['eau','sol'],base:st(110,78,73,76,71,60)}]},
+{id:'corphish',abilities:['Rivalité'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Écrapince',types:['eau'],base:st(43,80,65,50,35,35)},
+  {name:'Colhomard',types:['eau','tenebres'],base:st(63,120,85,90,55,55)}]},
+{id:'baltoy',abilities:['Lévitation'],moveIds:['dig','earthquake','bonemerang','mudshot','mudslap','magnitude','sandtomb','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Balbuto',types:['sol','psy'],base:st(40,40,55,40,70,55)},
+  {name:'Kaorine',types:['sol','psy'],base:st(60,70,105,70,120,75)}]},
+{id:'lileep',abilities:['Suintement'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Lilia',types:['roche','plante'],base:st(66,41,77,61,87,23)},
+  {name:'Vacilys',types:['roche','plante'],base:st(86,81,97,81,107,43)}]},
+{id:'anorith',abilities:['Coque Armure'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Anorith',types:['roche','insecte'],base:st(45,95,50,40,50,75)},
+  {name:'Armaldo',types:['roche','insecte'],base:st(75,125,100,70,80,45)}]},
+{id:'feebas',abilities:['Glissade'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Barpau',types:['eau'],base:st(20,15,20,10,55,80)},
+  {name:'Milobellus',types:['eau'],base:st(95,60,79,100,125,81)}]},
+{id:'castform',abilities:['Météo'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Morphéo',types:['normal'],base:st(70,70,70,70,70,70)}]},
+{id:'kecleon',abilities:['Déguisement'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Kecleon',types:['normal'],base:st(60,90,70,60,120,40)}]},
+{id:'shuppet',abilities:['Corps Sain'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Polichombr',types:['fantome'],base:st(44,75,35,63,33,45)},
+  {name:'Branette',types:['fantome'],base:st(64,115,65,83,63,65)}]},
+{id:'duskull',abilities:['Lévitation'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Skelénox',types:['fantome'],base:st(20,40,90,30,90,25)},
+  {name:'Téraclope',types:['fantome'],base:st(40,70,130,60,130,25)}]},
+{id:'tropius',abilities:['Engrais'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Tropius',types:['plante','vol'],base:st(99,68,83,72,87,51)}]},
+{id:'chimecho',abilities:['Lévitation'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Éoko',types:['psy'],base:st(65,50,70,95,80,65)}]},
+{id:'absol',abilities:['Turbo'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','thief','pursuit','knockoff','faketears','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Absol',types:['tenebres'],base:st(65,130,60,75,60,75)}]},
+{id:'snorunt',abilities:['Rideau Neige','Armumagma'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','aurorabeam','powdersnow','iciclespear','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Stalgamin',types:['glace'],base:st(50,50,50,50,50,50)},
+  {name:'Oniglali',types:['glace'],base:st(80,80,80,80,80,80)}]},
+{id:'spheal',abilities:['Isograisse'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','aurorabeam','powdersnow','iciclespear','watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Obalie',types:['glace','eau'],base:st(70,40,50,55,50,25)},
+  {name:'Phogleur',types:['glace','eau'],base:st(90,60,70,75,70,45)},
+  {name:'Kaimorse',types:['glace','eau'],base:st(110,80,90,95,90,65)}]},
+{id:'clamperl',abilities:['Coque Armure'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Coquiperl',types:['eau'],base:st(35,64,85,74,55,32)}],
+ branches:[
+  {name:'Serpang',types:['eau'],base:st(55,104,105,94,75,52),abilities:['Coque Armure'],extraMoveIds:['crunch','icefang']},
+  {name:'Rosabyss',types:['eau'],base:st(55,84,105,114,75,52),abilities:['Coque Armure'],extraMoveIds:['icebeam','psychic']}
+ ]},
+{id:'relicanth',abilities:['Solide Roc','Coque Armure'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Relicanth',types:['eau','roche'],base:st(100,90,130,45,65,55)}]},
+{id:'luvdisc',abilities:['Glissade'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Paporeille',types:['eau'],base:st(43,30,55,40,65,97)}]},
+{id:'bagon',abilities:['Cran'],moveIds:['dragonbreath','dragonclaw','dragonrage','dragondance','twister','outrage','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
+ stages:[
+  {name:'Draby',types:['dragon'],base:st(45,75,60,40,30,50)},
+  {name:'Drackhaus',types:['dragon'],base:st(65,95,100,60,50,50)},
+  {name:'Drattak',types:['dragon','vol'],base:st(95,135,80,110,80,100)}]},
+{id:'beldum',abilities:['Corps Sain'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Balbeuth',types:['acier','psy'],base:st(40,55,80,35,60,30)},
+  {name:'Métang',types:['acier','psy'],base:st(60,75,100,55,80,50)},
+  {name:'Métalosse',types:['acier','psy'],base:st(80,135,130,95,90,70)}]},
+{id:'regirock',abilities:['Fermeté'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Regirock',types:['roche'],base:st(80,100,200,50,100,50)}]},
+{id:'regice',abilities:['Fermeté'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','aurorabeam','powdersnow','iciclespear','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Regice',types:['glace'],base:st(80,50,100,100,200,50)}]},
+{id:'registeel',abilities:['Fermeté'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Registeel',types:['acier'],base:st(80,75,150,75,150,50)}]},
+{id:'latias',abilities:['Lévitation'],moveIds:['dragonbreath','dragonclaw','dragonrage','dragondance','twister','outrage','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Latias',types:['dragon','psy'],base:st(80,80,90,110,130,110)}]},
+{id:'latios',abilities:['Lévitation'],moveIds:['dragonbreath','dragonclaw','dragonrage','dragondance','twister','outrage','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Latios',types:['dragon','psy'],base:st(80,90,80,130,110,110)}]},
+{id:'kyogre',abilities:['Pression'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','hydrocannon','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Kyogre',types:['eau'],base:st(100,100,90,150,140,90)}]},
+{id:'groudon',abilities:['Pression'],moveIds:['dig','earthquake','bonemerang','mudshot','mudslap','magnitude','sandtomb','blastburn','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Groudon',types:['sol'],base:st(100,150,140,100,90,90)}]},
+{id:'rayquaza',abilities:['Air Lock'],moveIds:['dragonbreath','dragonclaw','dragonrage','dragondance','twister','outrage','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','extremespeed','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Rayquaza',types:['dragon','vol'],base:st(105,150,90,150,90,95)}]},
+{id:'jirachi',abilities:['Fermeté'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','wish','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Jirachi',types:['acier','psy'],base:st(100,100,100,100,100,100)}]},
+{id:'deoxys',abilities:['Pression'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+ stages:[
+  {name:'Deoxys',types:['psy'],base:st(50,150,50,150,50,150)}]}
 ];
 
 
@@ -1604,11 +1986,16 @@ try { difficulty = localStorage.getItem('draftArenaDifficulty') || 'facile'; } c
 let money = 100;
 let bag = { potion:0, baieOran:0, reste:0, ceintureForce:0 };
 const ITEMS = {
-  potion:      { name:'Potion',         emoji:'💊', price:100, kind:'consumable', desc:"Restaure 50% des PV max. Utilisable en combat ou entre deux combats." },
-  baieOran:    { name:'Baie Oran',      emoji:'🍇', price:150, kind:'held',       desc:"Objet tenu : soigne automatiquement 25% des PV max une fois que le Pokémon passe sous 25% de ses PV." },
-  reste:       { name:'Reste',          emoji:'🍙', price:200, kind:'held',       desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
-  ceintureForce:{ name:'Ceinture Force', emoji:'🥊', price:250, kind:'held',       desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." }
+  potion:      { name:'Potion',         emoji:'💊', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/potion.png', price:100, kind:'consumable', desc:"Restaure 50% des PV max. Utilisable en combat ou entre deux combats." },
+  baieOran:    { name:'Baie Oran',      emoji:'🍇', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png', price:150, kind:'held',       desc:"Objet tenu : soigne automatiquement 25% des PV max une fois que le Pokémon passe sous 25% de ses PV." },
+  reste:       { name:'Reste',          emoji:'🍙', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leftovers.png', price:200, kind:'held',       desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
+  ceintureForce:{ name:'Ceinture Force', emoji:'🥊', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/focus-sash.png', price:250, kind:'held',       desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." }
 };
+function itemIconHTML(key, size){
+  const item = ITEMS[key];
+  const s = size||22;
+  return `<img src="${item.sprite}" alt="${item.name}" style="width:${s}px;height:${s}px;object-fit:contain;image-rendering:pixelated;vertical-align:middle;" onerror="this.outerHTML='${item.emoji}';">`;
+}
 function isBossFloor(floor){ return floor%10===0; }
 function isMiniBossFloor(floor){ return floor%5===0 && !isBossFloor(floor); }
 function moneyReward(floor){
@@ -1618,9 +2005,9 @@ function moneyReward(floor){
   return Math.round(base);
 }
 
-const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi'];
-const PSEUDO_IDS = ['dratini','larvitar'];
-const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown'];
+const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','jirachi','deoxys'];
+const PSEUDO_IDS = ['dratini','larvitar','bagon'];
+const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown','absol','relicanth','mawile','beldum'];
 function lineWeight(line){
   if(LEGENDARY_IDS.includes(line.id)) return 0.5;  // Très rare : ~2× moins fréquent qu'avant
   if(PSEUDO_IDS.includes(line.id)) return 3;         // Pseudo-légendaire : rare
@@ -1851,7 +2238,84 @@ const DEX_NUMBERS = {
   'Embrylex':246,'Ymphect':247,'Séracrawl':248,
   'Lugia':249,
   'Ho-Oh':250,
-  'Celebi':251
+  'Celebi':251,
+  /* ---- Génération 3 ---- */
+  'Arcko':252,'Massko':253,'Jungko':254,
+  'Poussifeu':255,'Galifeu':256,'Braségali':257,
+  'Gobou':258,'Flobio':259,'Laggron':260,
+  'Medhyèna':261,'Grahyèna':262,
+  'Zigzaton':263,'Linéon':264,
+  'Chenipotte':265,'Armulys':266,'Charmillon':267,'Blindalys':268,'Papinox':269,
+  'Nénupiot':270,'Lombre':271,'Ludicolo':272,
+  'Grainipiot':273,'Pifeuil':274,'Tengalice':275,
+  'Nirondelle':276,'Hélédelle':277,
+  'Goélise':278,'Bekipan':279,
+  'Tarsal':280,'Kirlia':281,'Gardevoir':282,
+  'Arakdo':283,'Maskadra':284,
+  'Balignon':285,'Chapignon':286,
+  'Parécool':287,'Vigoroth':288,'Monaflèmit':289,
+  'Ningale':290,'Ninjask':291,'Munja':292,
+  'Chuchmur':293,'Ramboum':294,'Brouhabam':295,
+  'Makuhita':296,'Hariyama':297,
+  'Azurill':298,
+  'Tarinor':299,
+  'Skitty':300,'Delcatty':301,
+  'Ténéfix':302,
+  'Mysdibule':303,
+  'Galekid':304,'Galegon':305,'Galeking':306,
+  'Méditikka':307,'Charmina':308,
+  'Dynavolt':309,'Élecsprint':310,
+  'Posipi':311,
+  'Négapi':312,
+  'Muciole':313,
+  'Lumivole':314,
+  'Rosélia':315,
+  'Gloupti':316,'Avaltout':317,
+  'Carvanha':318,'Sharpedo':319,
+  'Wailmer':320,'Wailord':321,
+  'Chamallot':322,'Camérupt':323,
+  'Chartor':324,
+  'Spoink':325,'Groret':326,
+  'Spinda':327,
+  'Kraknoix':328,
+  'Vibraninf':329,'Libégon':330,
+  'Cacnea':331,'Cacturne':332,
+  'Tylton':333,'Altaria':334,
+  'Mangriff':335,
+  'Séviper':336,
+  'Séléroc':337,
+  'Solaroc':338,
+  'Barloche':339,'Barbicha':340,
+  'Écrapince':341,'Colhomard':342,
+  'Balbuto':343,'Kaorine':344,
+  'Lilia':345,'Vacilys':346,
+  'Anorith':347,'Armaldo':348,
+  'Barpau':349,'Milobellus':350,
+  'Morphéo':351,
+  'Kecleon':352,
+  'Polichombr':353,'Branette':354,
+  'Skelénox':355,'Téraclope':356,
+  'Tropius':357,
+  'Éoko':358,
+  'Absol':359,
+  'Wynaut':360,
+  'Stalgamin':361,'Oniglali':362,
+  'Obalie':363,'Phogleur':364,'Kaimorse':365,
+  'Coquiperl':366,'Serpang':367,'Rosabyss':368,
+  'Relicanth':369,
+  'Paporeille':370,
+  'Draby':371,'Drackhaus':372,'Drattak':373,
+  'Balbeuth':374,'Métang':375,'Métalosse':376,
+  'Regirock':377,
+  'Regice':378,
+  'Registeel':379,
+  'Latias':380,
+  'Latios':381,
+  'Kyogre':382,
+  'Groudon':383,
+  'Rayquaza':384,
+  'Jirachi':385,
+  'Deoxys':386
 };
 const ZARBI_FORMS = ['201','201-b','201-c','201-d','201-e','201-f','201-g','201-h','201-i','201-j','201-k','201-l','201-m','201-n','201-o','201-p','201-q','201-r','201-s','201-t','201-u','201-v','201-w','201-x','201-y','201-z','201-exclamation','201-question'];
 function pickRandomZarbiForm(){ return ZARBI_FORMS[Math.floor(Math.random()*ZARBI_FORMS.length)]; }
@@ -1907,7 +2371,7 @@ const ABILITY_DESC = {
   'Infiltration':"Ignore les effets de protection adverses comme le Mur Lumière.",
   'Pose Spore':"Peut empoisonner, endormir ou paralyser au contact.",
   'Peau Sèche':"Récupère des PV sous la pluie, en perd sous un fort soleil.",
-  'Piège Sable':"Empêche l'adversaire de fuir le combat.",
+  'Piège':"Empêche l'adversaire de fuir le combat.",
   'Ramassage':"Peut parfois trouver un objet après le combat.",
   'Technicien':"Renforce les attaques de faible puissance de base.",
   'Moiteur':"Empêche les attaques explosives de l'adversaire.",
@@ -1947,7 +2411,7 @@ const ABILITY_DESC = {
   'Audacieux':"Ignore les différences de niveau pour les dégâts et la capture.",
   'Glissade':"Double la Vitesse sous la pluie.",
   'Ignifu-Voile':"Empêche d'être brûlé.",
-  'Luminescence':"Réduit l'évasion adverse et révèle les Pokémon à l'état sauvage.",
+  'Lumiattirance':"Réduit l'évasion adverse et révèle les Pokémon à l'état sauvage.",
   'Filtre':"Réduit les dégâts des attaques super efficaces.",
   'Prédiction':"Révèle un type d'attaque que prépare l'adversaire.",
   'Brise Moule':"Ignore les talents défensifs de l'adversaire.",
@@ -1966,7 +2430,29 @@ const ABILITY_DESC = {
   'Échauffement':"Empêche d'être paralysé.",
   'Téméraire':"Met l'Attaque au maximum si touché par une attaque super efficace.",
   'Poing de Fer':"Renforce les attaques de poing.",
-  'Calque':"Copie le talent du Pokémon adverse en combat."
+  'Calque':"Copie le talent du Pokémon adverse en combat.",
+
+  /* ---- BLOC 1 (Gen 3) : talents manquants ---- */
+  'Absentéisme':"Le Pokémon n'agit pas un tour sur deux.",
+  'Air Lock':"Annule les effets de la météo tant que le Pokémon est sur le terrain.",
+  'Armumagma':"Empêche d'être gelé.",
+  'Attention':"Empêche de reculer de peur.",
+  'Ciel Gris':"Annule les effets de la météo tant que le Pokémon est sur le terrain.",
+  'Crachin':"Invoque la pluie à l'entrée sur le terrain.",
+  'Cran':"Augmente l'Attaque de 50% en cas de problème de statut.",
+  'Déguisement':"Change de type pour adopter celui de la dernière capacité offensive subie.",
+  'Fermeté':"Survit toujours à 1 PV face à un coup qui l'aurait mis K.O. depuis les PV max, et immunise contre les capacités K.O. Direct.",
+  'Force Pure':"Double l'Attaque du Pokémon.",
+  'Garde Mystik':"Immunise contre toutes les capacités qui ne sont pas super efficaces.",
+  'Marque Ombre':"Empêche l'adversaire de fuir ou de switcher.",
+  'Météo':"Change de type selon la météo actuelle.",
+  'Minus':"Augmente l'Attaque Spéciale si un allié possède le talent Plus.",
+  'Peau Dure':"Blesse l'attaquant au contact.",
+  'Plus':"Augmente l'Attaque Spéciale si un allié possède le talent Minus.",
+  'Sable Volant':"Invoque une tempête de sable à l'entrée sur le terrain.",
+  'Sécheresse':"Invoque un fort ensoleillement à l'entrée sur le terrain.",
+  'Turbo':"Augmente la Vitesse d'un cran à la fin de chaque tour.",
+  'Ventouse':"Empêche d'être forcé de quitter le combat."
 };
 
 /* =================== DRESSEURS THÉMATIQUES =================== */
@@ -2939,7 +3425,7 @@ function startBattle(){
   document.getElementById('screenBattle').classList.remove('hidden');
   document.getElementById('trainerBanner').innerHTML = `${trainer.emoji} <b>${trainer.name}</b> veut se battre ! <span style="color:var(--text-dim);font-size:10px;">"${trainer.dialogue}"</span>`;
   const pLead = playerRoster[aliveIdx], fLead = enemyTeam[0];
-  const intimMsg = triggerIntimidate(fLead, pLead) + triggerIntimidate(pLead, fLead);
+  const intimMsg = triggerIntimidate(fLead, pLead) + triggerIntimidate(pLead, fLead) + triggerSwitchInAbilities(fLead, pLead) + triggerSwitchInAbilities(pLead, fLead);
   setLog(`<b>Étage ${towerFloor}</b> — l'adversaire envoie ${enemyTeam[0].name} !${intimMsg}`);
   renderBattle();
 }
@@ -3078,7 +3564,7 @@ function doVoluntarySwitch(i){
   closeManualSwitch();
   renderBattle();
   const incoming = bs.player[i];
-  const intimidateMsg = triggerIntimidate(incoming, bs.foe[bs.fActive]);
+  const intimidateMsg = triggerIntimidate(incoming, bs.foe[bs.fActive]) + triggerSwitchInAbilities(incoming, bs.foe[bs.fActive]);
   setLog(`Tu rappelles ton Pokémon et envoies ${incoming.name} !${switchMsg}${intimidateMsg}`);
   setTimeout(()=>{
     const f = bs.foe[bs.fActive];
@@ -3102,7 +3588,7 @@ function openBag(){
   document.getElementById('cancelSwitchBtn').classList.remove('hidden');
   const sw = document.getElementById('switchGrid');
   sw.classList.remove('hidden');
-  sw.innerHTML = `<div class="dex-rate" style="text-align:center;margin-bottom:6px;">💊 Potion (${bag.potion} restante${bag.potion>1?'s':''}) — choisis la cible :</div>`;
+  sw.innerHTML = `<div class="dex-rate" style="text-align:center;margin-bottom:6px;">${itemIconHTML('potion',18)} Potion (${bag.potion} restante${bag.potion>1?'s':''}) — choisis la cible :</div>`;
   let any = false;
   bs.player.forEach((c,i)=>{
     if(c.hp<=0 || c.hp>=c.maxHp) return;
@@ -3165,6 +3651,13 @@ function rollCrit(attacker, defender){
   if(attacker.critBoost) chance *= 4;
   return Math.random() < chance;
 }
+function weatherNullified(){
+  if(!battleState) return false;
+  const p = battleState.player[battleState.pActive];
+  const f = battleState.foe[battleState.fActive];
+  const check = c => c && (c.ability==='Air Lock' || c.ability==='Ciel Gris');
+  return check(p) || check(f);
+}
 function computeDamage(attacker, move, defender){
   if(move.fixedDamage){
     return { dmg: move.fixedDamage, eff: 1, crit:false };
@@ -3183,11 +3676,12 @@ function computeDamage(attacker, move, defender){
   const stab = atkTypes.includes(move.type) ? (attacker.ability==='Adaptabilité' ? 2 : 1.5) : 1;
   const eff = getMult(move.type, defTypes);
   const variance = 0.85 + Math.random()*0.3;
-  const burnPenalty = (attacker.status==='brulure' && move.cat==='phys') ? 0.5 : 1;
+  const burnPenalty = (attacker.status==='brulure' && move.cat==='phys' && attacker.ability!=='Cran') ? 0.5 : 1;
   const critMult = crit ? (attacker.ability==='Sniper' ? 2.25 : 1.5) : 1;
 
   // Multiplicateurs liés aux talents
   let abilityMult = 1;
+  if(attacker.ability==='Cran' && attacker.status) abilityMult *= 1.5;
   const lowHp = attacker.hp <= attacker.maxHp/3;
   if(lowHp){
     if(attacker.ability==='Engrais' && move.type==='plante') abilityMult *= 1.5;
@@ -3205,7 +3699,7 @@ function computeDamage(attacker, move, defender){
 
   // Météo
   let weatherMult = 1;
-  const weather = battleState ? battleState.weather : null;
+  const weather = (battleState && !weatherNullified()) ? battleState.weather : null;
   if(weather){
     if(weather.type==='pluie'){
       if(move.type==='eau') weatherMult *= 1.5;
@@ -3221,6 +3715,11 @@ function computeDamage(attacker, move, defender){
     const hpFrac = Math.max(0.001, attacker.hp/attacker.maxHp);
     effectivePower = Math.round(move.power * (1 + (1-hpFrac)*4));
   }
+  if(move.highHpBoost){
+    const hpFrac = Math.max(0.001, attacker.hp/attacker.maxHp);
+    effectivePower = Math.max(1, Math.round(move.power * hpFrac));
+  }
+  if(move.facadeBoost && attacker.status) effectivePower *= 2;
   if(move.variablePower){
     effectivePower = 30 + Math.floor(Math.random()*61); // entre 30 et 90
   }
@@ -3239,6 +3738,27 @@ function triggerIntimidate(incoming, opponent){
   }
   return '';
 }
+function triggerSwitchInAbilities(incoming, opponent){
+  let msg = '';
+  if(!battleState) return msg;
+  if(incoming.ability==='Crachin' && (!battleState.weather || battleState.weather.type!=='pluie')){
+    battleState.weather = { type:'pluie', turns:5 };
+    msg += ` ${incoming.name} déclenche la pluie grâce à Crachin !`;
+  }
+  if(incoming.ability==='Sécheresse' && (!battleState.weather || battleState.weather.type!=='soleil')){
+    battleState.weather = { type:'soleil', turns:5 };
+    msg += ` ${incoming.name} déclenche un fort ensoleillement grâce à Sécheresse !`;
+  }
+  if(incoming.ability==='Sable Volant' && (!battleState.weather || battleState.weather.type!=='sable')){
+    battleState.weather = { type:'sable', turns:5 };
+    msg += ` ${incoming.name} déclenche une tempête de sable grâce à Sable Volant !`;
+  }
+  if(incoming.ability==='Marque Ombre' && opponent && !opponent.trapped){
+    opponent.trapped = true;
+    msg += ` ${opponent.name} ne peut plus s'échapper à cause de Marque Ombre !`;
+  }
+  return msg;
+}
 function applyStatBoost(target, boosts, logs){
   boosts.forEach(b=>{
     const before = target.stages[b.stat];
@@ -3252,8 +3772,13 @@ function applyStatBoost(target, boosts, logs){
   });
 }
 function inflictStatus(target, status, logs){
+  const types = target.transformedTypes || target.types || [];
   if(status!=='confusion' && target.safeguardTurns>0){
     logs.push(`${target.name} est protégé par Rune Protect !`);
+    return;
+  }
+  if(status==='gel' && (target.ability==='Armumagma' || types.includes('glace'))){
+    logs.push(`${target.name} ne peut pas être gelé !`);
     return;
   }
   if(status==='confusion'){
@@ -3266,7 +3791,7 @@ function inflictStatus(target, status, logs){
     logs.push(`${target.name} ne peut pas s'endormir grâce à son talent !`);
     return;
   }
-  if(status==='poison' && target.ability==='Vaccin'){
+  if(status==='poison' && (target.ability==='Vaccin' || types.includes('poison') || types.includes('acier'))){
     logs.push(`${target.name} est immunisé contre le poison !`);
     return;
   }
@@ -3274,8 +3799,8 @@ function inflictStatus(target, status, logs){
     logs.push(`${target.name} ne peut pas être paralysé grâce à son talent !`);
     return;
   }
-  if(status==='brulure' && target.ability==='Ignifu-Voile'){
-    logs.push(`${target.name} ne peut pas être brûlé grâce à son talent !`);
+  if(status==='brulure' && (target.ability==='Ignifu-Voile' || types.includes('feu'))){
+    logs.push(`${target.name} ne peut pas être brûlé !`);
     return;
   }
   if(target.status){ logs.push(`Ça n'a aucun effet, ${target.name} a déjà un problème de statut !`); return; }
@@ -3334,6 +3859,9 @@ function applyStatusEffect(user, target, move, logs){
     }
   }
   if(eff.forceSwitch && battleState){
+    if(target.ability==='Ventouse'){
+      logs.push(`${target.name} résiste grâce à Ventouse !`);
+    } else {
     const bs = battleState;
     const isTargetPlayer = (target===bs.player[bs.pActive]);
     const roster = isTargetPlayer ? bs.player : bs.foe;
@@ -3345,10 +3873,11 @@ function applyStatusEffect(user, target, move, logs){
       resetBattleFields(roster[newIdx]);
       logs.push(`${target.name} est rappelé de force ! ${roster[newIdx].name} entre sur le terrain !`);
       const opponent = isTargetPlayer ? bs.foe[bs.fActive] : bs.player[bs.pActive];
-      const intimMsg = triggerIntimidate(roster[newIdx], opponent);
+      const intimMsg = triggerIntimidate(roster[newIdx], opponent) + triggerSwitchInAbilities(roster[newIdx], opponent);
       if(intimMsg) logs.push(intimMsg.trim());
     } else {
       logs.push(`${target.name} n'a personne pour le remplacer !`);
+    }
     }
   }
   if(eff.selfSwitch && battleState){
@@ -3367,7 +3896,7 @@ function applyStatusEffect(user, target, move, logs){
         ? `${user.name} passe le relais ! ${roster[newIdx].name} entre sur le terrain en gardant les changements de statistiques !`
         : `${user.name} se téléporte hors du combat ! ${roster[newIdx].name} entre sur le terrain !`);
       const opponent = isUserPlayer ? bs.foe[bs.fActive] : bs.player[bs.pActive];
-      const intimMsg = triggerIntimidate(roster[newIdx], opponent);
+      const intimMsg = triggerIntimidate(roster[newIdx], opponent) + triggerSwitchInAbilities(roster[newIdx], opponent);
       if(intimMsg) logs.push(intimMsg.trim());
     } else {
       logs.push(`${user.name} n'a personne pour le remplacer, ça échoue !`);
@@ -3453,6 +3982,71 @@ function applyStatusEffect(user, target, move, logs){
       logs.push(`${user.name} n'avait aucune altération de statut.`);
     }
   }
+  if(eff.abilitySwap){
+    const tmp = user.ability;
+    user.ability = target.ability;
+    target.ability = tmp;
+    logs.push(`${user.name} et ${target.name} échangent leurs talents !`);
+  }
+  if(eff.abilityCopy){
+    user.ability = target.ability;
+    logs.push(`${user.name} copie le talent ${target.ability} !`);
+  }
+  if(eff.abilityRemove){
+    logs.push(`Le talent de ${target.name} est supprimé !`);
+    target.ability = null;
+  }
+  if(eff.itemSwap){
+    const tmp = user.heldItem;
+    user.heldItem = target.heldItem;
+    target.heldItem = tmp;
+    logs.push(`${user.name} et ${target.name} échangent leurs objets tenus !`);
+  }
+  if(eff.itemRemove){
+    if(target.heldItem){
+      logs.push(`${target.name} perd son objet tenu !`);
+      target.heldItem = null;
+    } else {
+      logs.push("Ça n'a aucun effet, il n'y a rien à faire tomber !");
+    }
+  }
+  if(eff.leechSeed){
+    if(!target.seeded){
+      target.seeded = true;
+      logs.push(`${target.name} est vampirisé par Vampigraine !`);
+    } else {
+      logs.push(`${target.name} est déjà vampirisé !`);
+    }
+  }
+  if(eff.ingrain){
+    user.ingrained = true;
+    logs.push(`${user.name} plante ses racines dans le sol !`);
+  }
+  if(eff.tauntBlock){
+    target.tauntTurns = 3;
+    logs.push(`${target.name} est provoqué et ne peut plus utiliser de capacités de statut !`);
+  }
+  if(eff.recycle){
+    if(user.itemUsed && user.heldItem){
+      user.itemUsed = false;
+      logs.push(`${user.name} récupère son objet grâce à Recyclage !`);
+    } else {
+      logs.push("Ça n'a aucun effet, il n'y a rien à recycler !");
+    }
+  }
+  if(eff.selfFaintDebuff){
+    user.hp = 0;
+    applyStatBoost(target, [{stat:'atk',stages:-2},{stat:'spa',stages:-2}], logs);
+    logs.push(`${user.name} se sacrifie complètement !`);
+  }
+  if(eff.dualConfuse){
+    inflictStatus(user, 'confusion', logs);
+    inflictStatus(target, 'confusion', logs);
+  }
+  if(eff.wakeAll){
+    if(user.status==='sommeil'){ user.status=null; user.sleepCounter=0; logs.push(`${user.name} se réveille !`); }
+    if(target.status==='sommeil'){ target.status=null; target.sleepCounter=0; logs.push(`${target.name} se réveille !`); }
+  }
 }
 function checkStatusBeforeMove(battler, logs, move){
   if(battler.flinched){
@@ -3508,7 +4102,7 @@ function endOfTurnStatus(battler, logs){
     battler.hp = Math.max(0, battler.hp-dmg);
     logs.push(`${battler.name} souffre de sa brûlure (${dmg} dégâts).`);
   }
-  const weather = battleState ? battleState.weather : null;
+  const weather = weatherNullified() ? null : (battleState ? battleState.weather : null);
   if(weather && battler.hp>0){
     if(weather.type==='sable' && !battler.types.some(t=>['roche','sol','acier'].includes(t))){
       const dmg = Math.max(1, Math.round(battler.maxHp/16));
@@ -3553,13 +4147,17 @@ function endOfTurnStatus(battler, logs){
     battler.status = null;
     battler.sleepCounter = 0;
   }
+  if(battler.hp>0 && battler.ability==='Turbo' && battler.stages.spe<6){
+    battler.stages.spe = Math.min(6, battler.stages.spe+1);
+    logs.push(`La Vitesse de ${battler.name} augmente grâce à Turbo !`);
+  }
 }
 
 function effectiveSpeed(c){
   let spe = c.stats.spe * statMultiplier(c.stages.spe);
   if(c.status && c.ability==='Pied Véloce') spe *= 1.5;
   else if(c.status==='paralysie') spe *= 0.5;
-  const weather = battleState ? battleState.weather : null;
+  const weather = weatherNullified() ? null : (battleState ? battleState.weather : null);
   if(weather){
     if(weather.type==='soleil' && c.ability==='Chlorophylle') spe *= 2;
     if(weather.type==='pluie' && c.ability==='Glissade') spe *= 2;
@@ -3675,6 +4273,12 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     return;
   }
   if(move.cat==='status'){
+    if(actor.tauntTurns>0){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> est provoqué et ne peut pas utiliser ${move.name} !`);
+      setTimeout(callback, 900);
+      return;
+    }
     applyStatusEffect(actor, defender, move, logs);
     renderBattle();
     if(move.target==='foe') shakeBox(actorIsPlayer ? 'foeBox' : 'playerBox');
@@ -3710,6 +4314,12 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     thawMsg = ` ${defender.name} dégèle sous la chaleur !`;
   }
   if(move.ohko){
+    if(defender.ability==='Fermeté'){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} résiste grâce à Fermeté !`);
+      setTimeout(callback, 900);
+      return;
+    }
     defender.hp = 0;
     renderBattle();
     shakeBox(actorIsPlayer?'foeBox':'playerBox', true);
@@ -3736,6 +4346,21 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     shakeBox(actorIsPlayer?'foeBox':'playerBox');
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} perd la moitié de ses PV actuels (${hdmg} dégâts) !`);
+    setTimeout(callback, 1000);
+    return;
+  }
+  if(move.endeavor){
+    if(defender.hp<=actor.hp){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
+      setTimeout(callback, 900);
+      return;
+    }
+    const edmg = defender.hp - actor.hp;
+    defender.hp = actor.hp;
+    renderBattle();
+    shakeBox(actorIsPlayer?'foeBox':'playerBox');
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} tombe au même niveau de PV (${edmg} dégâts) !`);
     setTimeout(callback, 1000);
     return;
   }
@@ -3769,10 +4394,17 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   let actualDmg = dmg;
   let sashSaved = false;
   let enduredMsg = '';
-  if(defender.heldItem==='ceintureForce' && !defender.itemUsed && defender.hp===defender.maxHp && dmg>=defender.hp){
+  let wonderGuardMsg = '';
+  if(defender.ability==='Garde Mystik' && eff<=1 && move.power>0){
+    actualDmg = 0;
+    wonderGuardMsg = ` Garde Mystik protège ${defender.name} !`;
+  } else if(defender.heldItem==='ceintureForce' && !defender.itemUsed && defender.hp===defender.maxHp && dmg>=defender.hp){
     actualDmg = defender.hp - 1;
     defender.itemUsed = true;
     sashSaved = true;
+  } else if(defender.ability==='Fermeté' && defender.hp===defender.maxHp && dmg>=defender.hp){
+    actualDmg = defender.hp - 1;
+    enduredMsg = ` ${defender.name} tient bon grâce à Fermeté !`;
   } else if(defender.enduring && dmg>=defender.hp){
     actualDmg = defender.hp - 1;
     enduredMsg = ` ${defender.name} tient bon grâce à Ténacité !`;
@@ -3780,7 +4412,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   defender.hp = Math.max(0, defender.hp-actualDmg);
   if(move.cat==='phys') defender.lastPhysDamage = actualDmg;
   if(move.cat==='spec') defender.lastSpecDamage = actualDmg;
-  let msg = `<b>${actor.name}</b> ${actorIsPlayer?'utilise':'riposte avec'} ${move.name} !${crit?' <b>Coup critique !</b>':''}${effLabel(eff)} (${actualDmg} dégâts)${thawMsg}${enduredMsg}`;
+  let msg = `<b>${actor.name}</b> ${actorIsPlayer?'utilise':'riposte avec'} ${move.name} !${crit?' <b>Coup critique !</b>':''}${effLabel(eff)} (${actualDmg} dégâts)${thawMsg}${enduredMsg}${wonderGuardMsg}`;
   if(sashSaved){ msg += ` ${defender.name} tient bon grâce à sa Ceinture Force !`; }
   if(move.drain){
     const h=Math.max(1,Math.round(actualDmg*move.drain));
@@ -3824,21 +4456,40 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     applyStatBoost(actor, [{stat:move.secondarySelfBoost.stat, stages:move.secondarySelfBoost.stages}], blogs);
     msg += ' ' + blogs.join(' ');
   }
-  if(move.flinch && defender.hp>0 && Math.random()<move.flinch){
+  if(move.flinch && defender.hp>0 && defender.ability!=='Attention' && Math.random()<move.flinch){
     defender.flinched = true;
     msg += ` ${defender.name} recule de peur !`;
   }
+  if(move.itemRemoveOnHit && defender.hp>0 && defender.heldItem){
+    defender.heldItem = null;
+    msg += ` ${defender.name} perd son objet tenu à cause de Sabotage !`;
+  }
+  if(move.wakeAllOnHit){
+    if(actor.status==='sommeil'){ actor.status=null; actor.sleepCounter=0; msg += ` ${actor.name} se réveille !`; }
+    if(defender.status==='sommeil'){ defender.status=null; defender.sleepCounter=0; msg += ` ${defender.name} se réveille !`; }
+  }
+  if(defender.ability==='Déguisement' && defender.hp>0 && actualDmg>0){
+    defender.transformedTypes = [move.type];
+    msg += ` ${defender.name} devient de type ${move.type} grâce à Déguisement !`;
+  }
   // Talents de contact du défenseur (déclenchés par une attaque physique)
-  if(move.cat==='phys' && defender.hp>0 && actor.hp>0 && !actor.status){
-    if(defender.ability==='Statik' && Math.random()<0.3){
-      inflictStatus(actor, 'paralysie', logs);
-      msg += ` ${logs.pop()}`;
-    } else if(defender.ability==='Point Poison' && Math.random()<0.3){
-      inflictStatus(actor, 'poison', logs);
-      msg += ` ${logs.pop()}`;
-    } else if(defender.ability==='Corps Ardent' && Math.random()<0.3){
-      inflictStatus(actor, 'brulure', logs);
-      msg += ` ${logs.pop()}`;
+  if(move.cat==='phys' && defender.hp>0 && actor.hp>0){
+    if(defender.ability==='Peau Dure'){
+      const rdmg = Math.max(1, Math.round(actor.maxHp/8));
+      actor.hp = Math.max(0, actor.hp-rdmg);
+      msg += ` ${actor.name} est blessé par Peau Dure (${rdmg} dégâts) !`;
+    }
+    if(!actor.status){
+      if(defender.ability==='Statik' && Math.random()<0.3){
+        inflictStatus(actor, 'paralysie', logs);
+        msg += ` ${logs.pop()}`;
+      } else if(defender.ability==='Point Poison' && Math.random()<0.3){
+        inflictStatus(actor, 'poison', logs);
+        msg += ` ${logs.pop()}`;
+      } else if(defender.ability==='Corps Ardent' && Math.random()<0.3){
+        inflictStatus(actor, 'brulure', logs);
+        msg += ` ${logs.pop()}`;
+      }
     }
   }
   if(crit && defender.hp>0){
@@ -3906,6 +4557,19 @@ function endTurn(){
   let logs = [];
   endOfTurnStatus(p, logs);
   endOfTurnStatus(f, logs);
+  [[p,f],[f,p]].forEach(([c,opp])=>{
+    if(c.hp>0 && c.seeded && opp.hp>0){
+      const sdmg = Math.max(1, Math.round(c.maxHp/8));
+      c.hp = Math.max(0, c.hp-sdmg);
+      opp.hp = Math.min(opp.maxHp, opp.hp+sdmg);
+      logs.push(`${c.name} perd des PV à cause de Vampigraine, ${opp.name} récupère !`);
+    }
+    if(c.hp>0 && c.ingrained && c.hp<c.maxHp){
+      const idmg = Math.max(1, Math.round(c.maxHp/16));
+      c.hp = Math.min(c.maxHp, c.hp+idmg);
+      logs.push(`${c.name} récupère des PV grâce à ses racines !`);
+    }
+  });
   [p, f].forEach(c=>{
     c.lastPhysDamage = 0;
     c.lastSpecDamage = 0;
@@ -3932,6 +4596,10 @@ function endTurn(){
     if(c.safeguardTurns>0){
       c.safeguardTurns--;
       if(c.safeguardTurns===0) logs.push(`Rune Protect protégeant ${c.name} se dissipe.`);
+    }
+    if(c.tauntTurns>0){
+      c.tauntTurns--;
+      if(c.tauntTurns===0) logs.push(`${c.name} n'est plus provoqué.`);
     }
     if(c.perishCounter>0 && c.hp>0){
       c.perishCounter--;
@@ -3969,7 +4637,7 @@ function handleFoeFaint(){
   setTimeout(()=>{
     const newFoe = bs.foe[bs.fActive];
     const p = bs.player[bs.pActive];
-    const intimMsg = triggerIntimidate(newFoe, p);
+    const intimMsg = triggerIntimidate(newFoe, p) + triggerSwitchInAbilities(newFoe, p);
     setLog(`L'adversaire envoie ${newFoe.name} !${intimMsg}`);
     bs.locked = false;
     renderBattle();
@@ -4007,7 +4675,7 @@ function showSwitchPrompt(aliveIdx){
       document.getElementById('movesGrid').classList.remove('hidden');
       bs.locked = false;
       renderBattle();
-      const intimMsg = triggerIntimidate(c, bs.foe[bs.fActive]);
+      const intimMsg = triggerIntimidate(c, bs.foe[bs.fActive]) + triggerSwitchInAbilities(c, bs.foe[bs.fActive]);
       setLog(`Tu envoies ${c.name} !${intimMsg}`);
     };
     sw.appendChild(btn);
@@ -4085,7 +4753,7 @@ function renderPokeshopPanel(){
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;';
     row.innerHTML = `
-      <div style="font-size:22px;">${item.emoji}</div>
+      <div style="font-size:22px;">${itemIconHTML(key, 28)}</div>
       <div style="flex:1;">
         <div style="font-size:11px;color:var(--text-main);"><b>${item.name}</b> <span style="color:var(--text-dim);">(possédé : ${owned})</span></div>
         <div style="font-size:9px;color:var(--text-dim);line-height:1.4;">${item.desc}</div>
@@ -4132,7 +4800,7 @@ function renderRanchPanel(){
     const heldOptions = [{value:'', label:'Aucun objet'}];
     Object.entries(ITEMS).filter(([k,it])=>it.kind==='held').forEach(([key,item])=>{
       const available = (bag[key]||0) + (m.heldItem===key ? 1 : 0);
-      if(available>0) heldOptions.push({value:key, label:`${item.emoji} ${item.name} (${available})`});
+      if(available>0) heldOptions.push({value:key, label:`${itemIconHTML(key,16)} ${item.name} (${available})`});
     });
     document.getElementById(`ranchSel${idx}`).appendChild(createCustomSelect({
       options: heldOptions,
@@ -4435,10 +5103,21 @@ document.getElementById('dexResetFilter').onclick = ()=>{
 /* =================== SPLASH TEXT & PATCH NOTES =================== */
 const PATCH_NOTES = [
   {
+    version: 'v0.4',
+    title: 'v0.4 — Update Génération 3',
+    items: [
+      "Pokémon de la Génération 3 ajouter",
+      "Nouveaux talents",
+      "Nouvelle attaque",
+      "Ajout des sprites aux objets",
+      "Correction des immunités aux altérations en fonction des types"
+    ]
+  },
+  {
     version: 'v0.3',
     title: 'v0.3 — Update Génération 2',
     items: [
-      "100 Pokémon de la Génération 2 ajoutés (Johto complet, hors Zarbi)",
+      "100 Pokémon de la Génération 2 ajoutés",
       "2 nouveaux types : Acier et Ténèbres, avec leurs efficacités",
       "Nouvelles capacités Acier/Ténèbres (Tête de Fer, Vibrobscur, Coup Bas...)",
       "Évolutions ajoutées : Crobat, Steelix, Blissey, Kingdra, Scizor, Porygon2...",
@@ -4488,7 +5167,7 @@ const PATCH_NOTES = [
     ]
   }
 ];
-const SPLASH_TEXTS = ["Gen 2 is here!!!"];
+const SPLASH_TEXTS = ["Gen 3 is here!!!"];
 function renderPatchNotes(){
   return PATCH_NOTES.map(v => `
     <div class="patchnotes-version">
