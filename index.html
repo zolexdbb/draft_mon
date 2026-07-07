@@ -559,7 +559,7 @@ input,select{font-size:1rem!important;min-height:48px;}
   </div>
 
   <div class="panel" id="screenMenu">
-    <button class="menu-splash" id="splashTextBtn">Gen 2 is here!!!</button>
+    <button class="menu-splash" id="splashTextBtn">Gen 3 is here!!!</button>
     <div class="tower-floor" style="padding:40px 20px;">
       <div style="font-size:64px;margin:0 0 10px;">🗼</div>
       <div class="floor-label" style="letter-spacing:6px;font-size:11px;color:var(--accent);margin-bottom:6px;">TOUR DE COMBAT</div>
@@ -628,8 +628,10 @@ input,select{font-size:1rem!important;min-height:48px;}
       <div class="floor-num" id="floorNum">1</div>
       <div class="floor-label" id="floorDesc">Un dresseur t'attend...</div>
       <div class="dex-rate" id="floorReward" style="margin-top:8px;color:var(--good);"></div>
-      <div style="margin-top:18px;">
+      <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
         <button class="btn" id="fightBtn">Combattre</button>
+        <button class="btn secondary" id="towerBagBtn">🎒 Sac</button>
+        <button class="btn secondary" id="towerTeamBtn">👥 Équipe</button>
       </div>
     </div>
   </div>
@@ -644,6 +646,7 @@ input,select{font-size:1rem!important;min-height:48px;}
       <button class="btn secondary" id="villagePokecentreBtn" style="padding:16px 10px;font-size:11px;">🏥<br>Pokécentre</button>
       <button class="btn secondary" id="villagePokeshopBtn" style="padding:16px 10px;font-size:11px;">🛒<br>Pokéshop</button>
       <button class="btn secondary" id="villageRanchBtn" style="padding:16px 10px;font-size:11px;">🏡<br>Ranch</button>
+      <button class="btn secondary" id="villageTeamBtn" style="padding:16px 10px;font-size:11px;">👥<br>Équipe</button>
     </div>
     <div id="villagePanelContent" style="max-width:640px;margin:0 auto 20px;"></div>
     <div style="text-align:center;">
@@ -1984,12 +1987,43 @@ try { difficulty = localStorage.getItem('draftArenaDifficulty') || 'facile'; } c
 
 /* =================== ÉCONOMIE & OBJETS =================== */
 let money = 100;
-let bag = { potion:0, baieOran:0, reste:0, ceintureForce:0 };
+let bag = {};
+let pcBox = [null,null,null,null,null,null];
+function ITEM_SPRITE(slug){ return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${slug}.png`; }
 const ITEMS = {
-  potion:      { name:'Potion',         emoji:'💊', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/potion.png', price:100, kind:'consumable', desc:"Restaure 50% des PV max. Utilisable en combat ou entre deux combats." },
-  baieOran:    { name:'Baie Oran',      emoji:'🍇', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png', price:150, kind:'held',       desc:"Objet tenu : soigne automatiquement 25% des PV max une fois que le Pokémon passe à 50% de ses PV ou moins." },
-  reste:       { name:'Reste',          emoji:'🍙', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leftovers.png', price:200, kind:'held',       desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
-  ceintureForce:{ name:'Ceinture Force', emoji:'🥊', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/focus-sash.png', price:250, kind:'held',       desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." }
+  // ---- Potions ----
+  potion:       { name:'Potion',        emoji:'💊', sprite:ITEM_SPRITE('potion'),        price:100,  kind:'consumable', category:'potion', heal:0.5,  desc:"Restaure 50% des PV max." },
+  superPotion:  { name:'Super Potion',   emoji:'💊', sprite:ITEM_SPRITE('super-potion'),  price:250,  kind:'consumable', category:'potion', heal:0.75, desc:"Restaure 75% des PV max." },
+  hyperPotion:  { name:'Hyper Potion',   emoji:'💊', sprite:ITEM_SPRITE('hyper-potion'),  price:500,  kind:'consumable', category:'potion', heal:0.9,  desc:"Restaure 90% des PV max." },
+  potionMax:    { name:'Potion Max',     emoji:'💊', sprite:ITEM_SPRITE('max-potion'),    price:900,  kind:'consumable', category:'potion', heal:1.0,  desc:"Restaure tous les PV du Pokémon." },
+  antidote:     { name:'Antidote',       emoji:'🧪', sprite:ITEM_SPRITE('antidote'),      price:80,   kind:'consumable', category:'potion', cureStatus:'poison',   desc:"Soigne un Pokémon empoisonné." },
+  antiBrule:    { name:'Anti-Brûle',     emoji:'🧪', sprite:ITEM_SPRITE('burn-heal'),     price:80,   kind:'consumable', category:'potion', cureStatus:'brulure',  desc:"Soigne un Pokémon brûlé." },
+  antiGel:      { name:'Anti-Gel',       emoji:'🧪', sprite:ITEM_SPRITE('ice-heal'),      price:80,   kind:'consumable', category:'potion', cureStatus:'gel',      desc:"Réchauffe un Pokémon gelé." },
+  antiPara:     { name:'Anti-Para',      emoji:'🧪', sprite:ITEM_SPRITE('paralyze-heal'), price:80,   kind:'consumable', category:'potion', cureStatus:'paralysie',desc:"Soigne un Pokémon paralysé." },
+  reveil:       { name:'Réveil',         emoji:'🧪', sprite:ITEM_SPRITE('awakening'),     price:80,   kind:'consumable', category:'potion', cureStatus:'sommeil',  desc:"Réveille un Pokémon endormi." },
+  totalSoin:    { name:'Total Soin',     emoji:'🧪', sprite:ITEM_SPRITE('full-heal'),     price:200,  kind:'consumable', category:'potion', cureStatus:'all',      desc:"Soigne toutes les altérations de statut." },
+  guerison:     { name:'Guérison',       emoji:'✨', sprite:ITEM_SPRITE('full-restore'),  price:1200, kind:'consumable', category:'potion', heal:1.0, cureStatus:'all', desc:"Restaure tous les PV et soigne toutes les altérations de statut." },
+  // ---- Baies (objets tenus) ----
+  baieOran:     { name:'Baie Oran',      emoji:'🍇', sprite:ITEM_SPRITE('oran-berry'),    price:150, kind:'held', category:'baie', berryHeal:0.12, desc:"Objet tenu : soigne 12% des PV max une fois passé à 50% des PV ou moins." },
+  baieSitrus:   { name:'Baie Sitrus',    emoji:'🍑', sprite:ITEM_SPRITE('sitrus-berry'),  price:250, kind:'held', category:'baie', berryHeal:0.25, desc:"Objet tenu : soigne 25% des PV max une fois passé à 50% des PV ou moins." },
+  baiePecha:    { name:'Baie Prapêche',  emoji:'🍑', sprite:ITEM_SPRITE('pecha-berry'),   price:120, kind:'held', category:'baie', berryCure:'poison',   desc:"Objet tenu : soigne automatiquement le poison." },
+  baieRawst:    { name:'Baie Rawst',     emoji:'🍑', sprite:ITEM_SPRITE('rawst-berry'),   price:120, kind:'held', category:'baie', berryCure:'brulure',  desc:"Objet tenu : soigne automatiquement la brûlure." },
+  baieAspic:    { name:'Baie Aspic',     emoji:'🍑', sprite:ITEM_SPRITE('aspear-berry'),  price:120, kind:'held', category:'baie', berryCure:'gel',      desc:"Objet tenu : dégèle automatiquement le Pokémon." },
+  baiePersim:   { name:'Baie Persim',    emoji:'🍑', sprite:ITEM_SPRITE('persim-berry'),  price:120, kind:'held', category:'baie', berryCure:'confusion',desc:"Objet tenu : soigne automatiquement la confusion." },
+  baieChesto:   { name:'Baie Chesto',    emoji:'🍑', sprite:ITEM_SPRITE('chesto-berry'),  price:120, kind:'held', category:'baie', berryCure:'sommeil',  desc:"Objet tenu : réveille automatiquement le Pokémon." },
+  baieSinelle:  { name:'Baie Sinelle',   emoji:'🍑', sprite:ITEM_SPRITE('cheri-berry'),   price:120, kind:'held', category:'baie', berryCure:'paralysie',desc:"Objet tenu : soigne automatiquement la paralysie." },
+  baieLum:      { name:'Baie Lum',       emoji:'🍑', sprite:ITEM_SPRITE('lum-berry'),     price:300, kind:'held', category:'baie', berryCure:'all',      desc:"Objet tenu : soigne automatiquement n'importe quelle altération de statut." },
+  // ---- Objets stratégiques (tenus) ----
+  bandeauChoix:   { name:'Bandeau Choix',   emoji:'🎗️', sprite:ITEM_SPRITE('choice-band'),   price:400, kind:'held', category:'strat', choiceLock:'atk', desc:"Objet tenu : augmente l'Attaque de 50%, mais bloque sur la première capacité utilisée." },
+  lunettesChoix:  { name:'Lunettes Choix',  emoji:'👓', sprite:ITEM_SPRITE('choice-specs'),  price:400, kind:'held', category:'strat', choiceLock:'spa', desc:"Objet tenu : augmente l'Attaque Spéciale de 50%, mais bloque sur la première capacité utilisée." },
+  mouchoirChoix:  { name:'Mouchoir Choix',  emoji:'🧣', sprite:ITEM_SPRITE('choice-scarf'),  price:400, kind:'held', category:'strat', choiceLock:'spe', desc:"Objet tenu : augmente la Vitesse de 50%, mais bloque sur la première capacité utilisée." },
+  orbeVie:        { name:'Orbe Vie',        emoji:'🔮', sprite:ITEM_SPRITE('life-orb'),      price:450, kind:'held', category:'strat', desc:"Objet tenu : augmente les dégâts infligés de 30%, mais fait perdre 10% des PV max à chaque capacité offensive utilisée." },
+  vesteCombat:    { name:'Veste de Combat', emoji:'🦺', sprite:ITEM_SPRITE('assault-vest'),  price:400, kind:'held', category:'strat', desc:"Objet tenu : augmente la Défense Spéciale de 50%, mais empêche d'utiliser des capacités de statut." },
+  griffeTranchante:{ name:'Griffe Tranchante', emoji:'🗡️', sprite:ITEM_SPRITE('scope-lens'), price:300, kind:'held', category:'strat', desc:"Objet tenu : augmente nettement le taux de coups critiques." },
+  boutonFuite:    { name:'Bouton Fuite',    emoji:'⏏️', sprite:ITEM_SPRITE('eject-button'),  price:300, kind:'held', category:'strat', desc:"Objet tenu : force le porteur à switcher dès qu'il subit une attaque." },
+  herbeMental:    { name:'Herbe Mental',    emoji:'🌿', sprite:ITEM_SPRITE('mental-herb'),   price:250, kind:'held', category:'strat', desc:"Objet tenu : soigne les effets de Provoc et Entrave. Se consomme après usage." },
+  reste:          { name:'Reste',           emoji:'🍙', sprite:ITEM_SPRITE('leftovers'),     price:200, kind:'held', category:'strat', desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
+  ceintureForce:  { name:'Ceinture Force',  emoji:'🥊', sprite:ITEM_SPRITE('focus-sash'),    price:250, kind:'held', category:'strat', desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." }
 };
 function itemIconHTML(key, size){
   const item = ITEMS[key];
@@ -2524,7 +2558,7 @@ function updateBestFloor(floor){
 }
 function saveGame(){
   try {
-    localStorage.setItem(slotKey(currentSlot), JSON.stringify({ team, towerFloor, difficulty, money, bag, savedAt: Date.now() }));
+    localStorage.setItem(slotKey(currentSlot), JSON.stringify({ team, towerFloor, difficulty, money, bag, pcBox, savedAt: Date.now() }));
   } catch(e){ console.error('Sauvegarde impossible', e); }
 }
 function loadGame(slot){
@@ -2541,7 +2575,15 @@ function loadGame(slot){
     towerFloor = data.towerFloor || 1;
     difficulty = data.difficulty || 'facile';
     money = typeof data.money==='number' ? data.money : 100;
-    bag = data.bag || { potion:0, baieOran:0, reste:0, ceintureForce:0 };
+    bag = data.bag || {};
+    pcBox = data.pcBox || [null,null,null,null,null,null];
+    pcBox.forEach(m=>{
+      if(m){
+        const sp = speciesOf(m);
+        m.computedStats = calcStats(sp.base, m.ivs, m.evs, m.nature);
+        if(m.heldItem===undefined) m.heldItem = null;
+      }
+    });
     currentSlot = slot;
     return true;
   } catch(e){ console.error('Chargement impossible', e); return false; }
@@ -2656,7 +2698,8 @@ function initDraft(){
   draftRound = 0;
   team = [];
   money = 100;
-  bag = { potion:0, baieOran:0, reste:0, ceintureForce:0 };
+  bag = {};
+  pcBox = [null,null,null,null,null,null];
   nextDraftRound();
 }
 function renderDraftProgress(){
@@ -3311,6 +3354,7 @@ function resetBattleFields(c){
   // le statut (poison/brûlure/paralysie/sommeil/gel) persiste au changement, la confusion se dissipe en sortant
   c.confuseCounter = 0;
   c.flinched = false;
+  c.lockedMove = null;
 }
 const STATUS_LABEL = { poison:'☠️ Empoisonné', brulure:'🔥 Brûlé', paralysie:'⚡ Paralysé', sommeil:'💤 Endormi', confusion:'💫 Confus', gel:'🧊 Gelé' };
 const STATUS_ICON = { poison:'☠️', brulure:'🔥', paralysie:'⚡', sommeil:'💤', confusion:'💫', gel:'🧊' };
@@ -3318,6 +3362,7 @@ const STATUS_ICON = { poison:'☠️', brulure:'🔥', paralysie:'⚡', sommeil:
 /* =================== IA ADVERSAIRE =================== */
 function chooseFoeMove(foe, player){
   let moves = foe.disabledMove ? foe.moveObjs.filter(mv=>mv.name!==foe.disabledMove.name) : foe.moveObjs;
+  if(foe.lockedMove) moves = foe.moveObjs.filter(mv=>mv.name===foe.lockedMove.name);
   if(moves.length===0) moves = foe.moveObjs;
   const hpRatioFoe = foe.hp / foe.maxHp;
   const hpRatioPlayer = player.hp / player.maxHp;
@@ -3513,8 +3558,9 @@ function renderMoveGrid(){
     const btn = document.createElement('button');
     btn.className='move-btn';
     const isDisabled = p.disabledMove && p.disabledMove.name===mv.name;
-    btn.disabled = bs.locked || isDisabled;
-    btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''} <small>${TYPE_EMOJI[mv.type]||''} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power}${isDisabled?' · Entravé':''}</small>`;
+    const isLockedOut = p.lockedMove && p.lockedMove.name!==mv.name;
+    btn.disabled = bs.locked || isDisabled || isLockedOut;
+    btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${TYPE_EMOJI[mv.type]||''} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power}${isDisabled?' · Entravé':''}${isLockedOut?" · Bloqué par l'objet":''}</small>`;
     btn.onclick = ()=> playerAttack(idx);
     grid.appendChild(btn);
   });
@@ -3649,6 +3695,7 @@ function rollCrit(attacker, defender){
   if(attacker.ability==='Sniper') chance *= 1; // Sniper renforce les dégâts, pas la fréquence
   if(defender.ability==='Écaille Spéciale') chance *= 4;
   if(attacker.critBoost) chance *= 4;
+  if(attacker.heldItem==='griffeTranchante') chance *= 2;
   return Math.random() < chance;
 }
 function weatherNullified(){
@@ -3669,8 +3716,8 @@ function computeDamage(attacker, move, defender){
   let defStage = move.cat==='phys' ? defender.stages.def : defender.stages.spd;
   // Sur un coup critique, les baisses d'Attaque et les hausses de Défense adverses sont ignorées
   if(crit){ atkStage = Math.max(0, atkStage); defStage = Math.min(0, defStage); }
-  const atkStat = atkBase * statMultiplier(atkStage);
-  const defStat = defBase * statMultiplier(defStage);
+  const atkStat = atkBase * statMultiplier(atkStage) * (attacker.heldItem==='bandeauChoix' && move.cat==='phys' ? 1.5 : (attacker.heldItem==='lunettesChoix' && move.cat==='spec' ? 1.5 : 1));
+  const defStat = defBase * statMultiplier(defStage) * (defender.heldItem==='vesteCombat' && move.cat==='spec' ? 1.5 : 1);
   const atkTypes = attacker.transformedTypes || attacker.types;
   const defTypes = defender.transformedTypes || defender.types;
   const stab = atkTypes.includes(move.type) ? (attacker.ability==='Adaptabilité' ? 2 : 1.5) : 1;
@@ -3696,6 +3743,7 @@ function computeDamage(attacker, move, defender){
   if(defender.ability==='Filtre' && eff>1) abilityMult *= 0.75;
   if(defender.reflectTurns>0 && move.cat==='phys') abilityMult *= 0.5;
   if(defender.lightScreenTurns>0 && move.cat==='spec') abilityMult *= 0.5;
+  if(attacker.heldItem==='orbeVie' && move.power>0) abilityMult *= 1.3;
 
   // Météo
   let weatherMult = 1;
@@ -3771,6 +3819,11 @@ function applyStatBoost(target, boosts, logs){
     }
   });
 }
+function berryCuresStatus(target, status){
+  if(!target.heldItem || target.itemUsed) return false;
+  const item = ITEMS[target.heldItem];
+  return !!(item && item.berryCure && (item.berryCure===status || item.berryCure==='all'));
+}
 function inflictStatus(target, status, logs){
   const types = target.transformedTypes || target.types || [];
   if(status!=='confusion' && target.safeguardTurns>0){
@@ -3783,6 +3836,11 @@ function inflictStatus(target, status, logs){
   }
   if(status==='confusion'){
     if(target.confuseCounter>0){ logs.push(`${target.name} est déjà confus !`); return; }
+    if(berryCuresStatus(target, 'confusion')){
+      target.itemUsed = true;
+      logs.push(`${target.name} mange sa ${ITEMS[target.heldItem].name} et ne devient pas confus !`);
+      return;
+    }
     target.confuseCounter = 2+Math.floor(Math.random()*3);
     logs.push(`${target.name} devient confus !`);
     return;
@@ -3804,6 +3862,11 @@ function inflictStatus(target, status, logs){
     return;
   }
   if(target.status){ logs.push(`Ça n'a aucun effet, ${target.name} a déjà un problème de statut !`); return; }
+  if(berryCuresStatus(target, status)){
+    target.itemUsed = true;
+    logs.push(`${target.name} mange sa ${ITEMS[target.heldItem].name} et évite le problème de statut !`);
+    return;
+  }
   target.status = status;
   if(status==='sommeil') target.sleepCounter = 2+Math.floor(Math.random()*2);
   logs.push(`${target.name} est ${STATUS_LABEL[status]} !`);
@@ -3850,7 +3913,10 @@ function applyStatusEffect(user, target, move, logs){
     logs.push("Toutes les modifications de statistiques sont annulées !");
   }
   if(eff.disable){
-    if(target.lastMoveUsed){
+    if(target.heldItem==='herbeMental' && !target.itemUsed){
+      target.itemUsed = true;
+      logs.push(`${target.name} mange son Herbe Mental et résiste à Entrave !`);
+    } else if(target.lastMoveUsed){
       target.disabledMove = target.lastMoveUsed;
       target.disableTurns = 4;
       logs.push(`La capacité ${target.lastMoveUsed.name} de ${target.name} est entravée !`);
@@ -4023,8 +4089,13 @@ function applyStatusEffect(user, target, move, logs){
     logs.push(`${user.name} plante ses racines dans le sol !`);
   }
   if(eff.tauntBlock){
-    target.tauntTurns = 3;
-    logs.push(`${target.name} est provoqué et ne peut plus utiliser de capacités de statut !`);
+    if(target.heldItem==='herbeMental' && !target.itemUsed){
+      target.itemUsed = true;
+      logs.push(`${target.name} mange son Herbe Mental et résiste à Provoc !`);
+    } else {
+      target.tauntTurns = 3;
+      logs.push(`${target.name} est provoqué et ne peut plus utiliser de capacités de statut !`);
+    }
   }
   if(eff.recycle){
     if(user.itemUsed && user.heldItem){
@@ -4157,6 +4228,7 @@ function effectiveSpeed(c){
   let spe = c.stats.spe * statMultiplier(c.stages.spe);
   if(c.status && c.ability==='Pied Véloce') spe *= 1.5;
   else if(c.status==='paralysie') spe *= 0.5;
+  if(c.heldItem==='mouchoirChoix') spe *= 1.5;
   const weather = weatherNullified() ? null : (battleState ? battleState.weather : null);
   if(weather){
     if(weather.type==='soleil' && c.ability==='Chlorophylle') spe *= 2;
@@ -4213,6 +4285,9 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     return;
   }
   actor.lastMoveUsed = move;
+  if(actor.heldItem && ITEMS[actor.heldItem] && ITEMS[actor.heldItem].choiceLock && !actor.lockedMove){
+    actor.lockedMove = move;
+  }
   let acc;
   if(move.target==='self'){
     acc = 1;
@@ -4276,6 +4351,12 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     if(actor.tauntTurns>0){
       renderBattle();
       setLog(`<b>${actor.name}</b> est provoqué et ne peut pas utiliser ${move.name} !`);
+      setTimeout(callback, 900);
+      return;
+    }
+    if(actor.heldItem==='vesteCombat'){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> ne peut pas utiliser ${move.name} à cause de sa Veste de Combat !`);
       setTimeout(callback, 900);
       return;
     }
@@ -4502,12 +4583,32 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       msg += ` La Défense de ${defender.name} augmente !`;
     }
   }
-  if(defender.heldItem==='baieOran' && !defender.itemUsed && defender.hp>0 && defender.hp <= Math.floor(defender.maxHp*0.5)){
-    const heal = Math.max(1, Math.round(defender.maxHp*0.25));
-    defender.hp = Math.min(defender.maxHp, defender.hp+heal);
-    defender.itemUsed = true;
-    msg += ` ${defender.name} mange sa Baie Oran et récupère des PV !`;
+  if(defender.heldItem && !defender.itemUsed && defender.hp>0){
+    const heldItem = ITEMS[defender.heldItem];
+    if(heldItem && heldItem.berryHeal && defender.hp <= Math.floor(defender.maxHp*0.5)){
+      const heal = Math.max(1, Math.round(defender.maxHp*heldItem.berryHeal));
+      defender.hp = Math.min(defender.maxHp, defender.hp+heal);
+      defender.itemUsed = true;
+      msg += ` ${defender.name} mange sa ${heldItem.name} et récupère des PV !`;
+    }
   }
+  let ejectMsg = '';
+  if(defender.heldItem==='boutonFuite' && defender.hp>0 && battleState){
+    const bs = battleState;
+    const isDefPlayer = (defender===bs.player[bs.pActive]);
+    const roster = isDefPlayer ? bs.player : bs.foe;
+    const activeKey = isDefPlayer ? 'pActive' : 'fActive';
+    const aliveIdx = roster.map((c,i)=> (c.hp>0 && i!==bs[activeKey]) ? i : -1).filter(i=>i>=0);
+    if(aliveIdx.length>0 && !defender.trapped){
+      const newIdx = rand(aliveIdx);
+      bs[activeKey] = newIdx;
+      resetBattleFields(roster[newIdx]);
+      ejectMsg = ` ${defender.name} est éjecté grâce à son Bouton Fuite ! ${roster[newIdx].name} entre sur le terrain !`;
+      const opponent = isDefPlayer ? bs.foe[bs.fActive] : bs.player[bs.pActive];
+      ejectMsg += triggerIntimidate(roster[newIdx], opponent) + triggerSwitchInAbilities(roster[newIdx], opponent);
+    }
+  }
+  msg += ejectMsg;
   renderBattle();
   shakeBox(actorIsPlayer?'foeBox':'playerBox', crit);
   if(crit) flashScreen('crit');
@@ -4732,23 +4833,118 @@ function renderPokecentrePanel(){
       <div style="font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.6;">Soigne entièrement les PV et les altérations d'état de toute ton équipe. C'est gratuit !</div>
       <button class="btn" id="healTeamBtn">Soigner l'équipe</button>
       <div class="dex-rate" id="villageMsg" style="margin-top:10px;color:var(--good);"></div>
+      <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px;">
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">Envie de changer ton équipe ?</div>
+        <button class="btn secondary" id="openPCBtn">🖥️ Accéder au PC</button>
+      </div>
     </div>`;
   document.getElementById('healTeamBtn').onclick = ()=>{
     team.forEach(m=>{ m.hp = m.computedStats.hp; m.status=null; m.sleepCounter=0; });
     saveGame();
     setVillageMsg("✓ Ton équipe est en pleine forme !");
   };
+  document.getElementById('openPCBtn').onclick = renderPCPanel;
 }
 
+let pcSelectedTeamIdx = null;
+function pcMemberCardHTML(m, extraLabel){
+  if(!m) return `<div style="font-size:10px;color:var(--text-dim);text-align:center;padding:10px;">Emplacement vide</div>`;
+  const sp = speciesOf(m);
+  return `<div style="width:40px;height:40px;margin:0 auto 4px;">${getSpriteHTML(sp.name, m.unownForm)}</div>
+    <div style="font-size:9px;text-align:center;color:var(--text-main);">${sp.name}${extraLabel||''}</div>`;
+}
+function renderPCPanel(){
+  const wrap = document.getElementById('villagePanelContent');
+  pcSelectedTeamIdx = null;
+  wrap.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;text-align:center;">Choisis un Pokémon de ton équipe, puis un Pokémon du PC pour les échanger.</div>
+      <div class="dex-rate" id="villageMsg" style="text-align:center;margin-bottom:10px;color:var(--good);"></div>
+      <div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Ton équipe</div>
+      <div id="pcTeamGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:16px;"></div>
+      <div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Boîte PC (${pcBox.filter(x=>x).length}/6)</div>
+      <div id="pcBoxGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;"></div>
+      <div style="text-align:center;margin-top:14px;">
+        <button class="btn secondary" id="pcBackBtn">◀ Retour</button>
+      </div>
+    </div>`;
+  const teamGrid = document.getElementById('pcTeamGrid');
+  team.forEach((m,i)=>{
+    const cell = document.createElement('button');
+    cell.className = 'btn secondary';
+    cell.style.cssText = 'padding:6px 4px;height:70px;';
+    cell.innerHTML = pcMemberCardHTML(m);
+    cell.onclick = ()=>{
+      pcSelectedTeamIdx = (pcSelectedTeamIdx===i) ? null : i;
+      renderPCSelection();
+    };
+    teamGrid.appendChild(cell);
+  });
+  const boxGrid = document.getElementById('pcBoxGrid');
+  pcBox.forEach((m,j)=>{
+    const cell = document.createElement('button');
+    cell.className = 'btn secondary';
+    cell.style.cssText = 'padding:6px 4px;height:70px;';
+    cell.disabled = !m;
+    cell.innerHTML = pcMemberCardHTML(m);
+    cell.onclick = ()=>{
+      if(pcSelectedTeamIdx===null || !m) return;
+      const tmp = team[pcSelectedTeamIdx];
+      team[pcSelectedTeamIdx] = m;
+      pcBox[j] = tmp;
+      pcSelectedTeamIdx = null;
+      saveGame();
+      renderPCPanel();
+      setVillageMsg("✓ Échange effectué !");
+    };
+    boxGrid.appendChild(cell);
+  });
+  document.getElementById('pcBackBtn').onclick = renderPokecentrePanel;
+}
+function renderPCSelection(){
+  document.querySelectorAll('#pcTeamGrid .btn').forEach((cell,i)=>{
+    cell.classList.toggle('diff-active', i===pcSelectedTeamIdx);
+  });
+  document.querySelectorAll('#pcBoxGrid .btn').forEach(cell=>{
+    cell.classList.toggle('diff-active', false);
+  });
+  setVillageMsg(pcSelectedTeamIdx!==null ? "Choisis maintenant un Pokémon du PC pour l'échanger." : '');
+}
+
+function depositToPC(member){
+  const idx = pcBox.findIndex(x=>!x);
+  if(idx===-1) return false;
+  pcBox[idx] = member;
+  saveGame();
+  return true;
+}
+function pcHasSpace(){ return pcBox.some(x=>!x); }
+
+const SHOP_CATEGORIES = [
+  {key:'potion', label:'💊 Potions'},
+  {key:'baie', label:'🍑 Baies'},
+  {key:'strat', label:'🎗️ Stratégiques'}
+];
+let shopCategory = 'potion';
 function renderPokeshopPanel(){
   const wrap = document.getElementById('villagePanelContent');
   wrap.innerHTML = `
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
-      <div id="shopList" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div id="shopTabs" style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;"></div>
+      <div id="shopList" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;"></div>
       <div class="dex-rate" id="villageMsg" style="margin-top:10px;color:var(--good);text-align:center;"></div>
     </div>`;
+  const tabs = document.getElementById('shopTabs');
+  SHOP_CATEGORIES.forEach(cat=>{
+    const btn = document.createElement('button');
+    btn.className = 'btn secondary' + (shopCategory===cat.key ? ' diff-active' : '');
+    btn.style.cssText = 'padding:6px 10px;font-size:9px;flex:1;';
+    btn.textContent = cat.label;
+    btn.onclick = ()=>{ shopCategory = cat.key; renderPokeshopPanel(); };
+    tabs.appendChild(btn);
+  });
   const list = document.getElementById('shopList');
-  Object.entries(ITEMS).forEach(([key, item])=>{
+  Object.entries(ITEMS).filter(([k,it])=>it.category===shopCategory).forEach(([key, item])=>{
     const owned = bag[key]||0;
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;';
@@ -4781,39 +4977,83 @@ function renderRanchPanel(){
   const wrap = document.getElementById('villagePanelContent');
   wrap.innerHTML = `
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
-      <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;text-align:center;">Équipe un objet tenu à chaque Pokémon (uniquement les objets tenus achetés au Pokéshop).</div>
-      <div id="ranchList" style="display:flex;flex-direction:column;gap:10px;"></div>
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;text-align:center;">Un dresseur itinérant te propose 3 Pokémon sauvages. Tu ne peux en recruter qu'un seul !</div>
+      <div id="ranchDraftCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;"></div>
+      <div class="dex-rate" id="villageMsg" style="text-align:center;margin-top:10px;color:var(--good);"></div>
     </div>`;
-  const list = document.getElementById('ranchList');
-  team.forEach((m, idx)=>{
-    const sp = speciesOf(m);
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;';
-    row.innerHTML = `
-      <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(sp.name, m.unownForm)}</div>
-      <div style="flex:1;font-size:11px;color:var(--text-main);">${sp.name}</div>
-      <div id="ranchSel${idx}" style="min-width:160px;"></div>
+  const excluded = [...team.map(m=>m.lineId), ...pcBox.filter(x=>x).map(m=>m.lineId)];
+  const isFacile = difficulty==='facile';
+  const pool = isFacile ? buildFacileCandidates(excluded) : buildDraftCandidates(excluded);
+  const choices = weightedSampleCandidates(pool, 3);
+  const cardsWrap = document.getElementById('ranchDraftCards');
+  choices.forEach(choice=>{
+    const line = lineOf(choice.lineId);
+    const hasBranch = choice.branch!==undefined && choice.branch!==null;
+    const sp = hasBranch ? line.branches[choice.branch] : line.stages[choice.stage];
+    const card = document.createElement('div');
+    card.style.cssText = 'background:#0b0b10;border:1px solid var(--line);border-radius:4px;padding:10px;text-align:center;cursor:pointer;';
+    card.innerHTML = `
+      <div style="width:60px;height:60px;margin:0 auto 6px;">${getSpriteHTML(sp.name)}</div>
+      <div style="font-size:10px;color:var(--text-main);margin-bottom:4px;">${sp.name}</div>
+      <div class="types-row" style="justify-content:center;">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
     `;
-    list.appendChild(row);
+    card.onclick = ()=> renderRanchRecruit(choice, sp);
+    cardsWrap.appendChild(card);
   });
-  team.forEach((m, idx)=>{
-    const heldOptions = [{value:'', label:'Aucun objet'}];
-    Object.entries(ITEMS).filter(([k,it])=>it.kind==='held').forEach(([key,item])=>{
-      const available = (bag[key]||0) + (m.heldItem===key ? 1 : 0);
-      if(available>0) heldOptions.push({value:key, label:`${itemIconHTML(key,16)} ${item.name} (${available})`});
-    });
-    document.getElementById(`ranchSel${idx}`).appendChild(createCustomSelect({
-      options: heldOptions,
-      value: m.heldItem || '',
-      onChange: (val)=>{
-        if(m.heldItem){ bag[m.heldItem] = (bag[m.heldItem]||0)+1; }
-        if(val){ bag[val] = Math.max(0,(bag[val]||0)-1); m.heldItem = val; }
-        else { m.heldItem = null; }
+}
+function renderRanchRecruit(choice, sp){
+  const wrap = document.getElementById('villagePanelContent');
+  wrap.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
+      <div style="width:70px;height:70px;margin:0 auto 8px;">${getSpriteHTML(sp.name)}</div>
+      <div style="font-size:12px;color:var(--text-main);margin-bottom:4px;">${sp.name}</div>
+      <div class="types-row" style="justify-content:center;margin-bottom:12px;">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">Où veux-tu l'envoyer ?</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn" id="ranchToTeamBtn">Ajouter à l'équipe</button>
+        <button class="btn secondary" id="ranchToPCBtn" ${pcHasSpace()?'':'disabled'}>Envoyer au PC${pcHasSpace()?'':' (plein)'}</button>
+        <button class="btn secondary" id="ranchCancelBtn">Annuler</button>
+      </div>
+      <div id="ranchTeamPicker" style="margin-top:14px;"></div>
+    </div>`;
+  const buildMember = ()=>{
+    return difficulty==='facile'
+      ? autoBuildMember(choice.lineId, choice.stage, choice.branch)
+      : defaultMember(choice.lineId, choice.stage);
+  };
+  document.getElementById('ranchCancelBtn').onclick = renderRanchPanel;
+  document.getElementById('ranchToPCBtn').onclick = ()=>{
+    if(!pcHasSpace()) return;
+    depositToPC(buildMember());
+    saveGame();
+    setVillageMsg(`✓ ${sp.name} envoyé au PC !`);
+    renderRanchPanel();
+  };
+  document.getElementById('ranchToTeamBtn').onclick = ()=>{
+    const picker = document.getElementById('ranchTeamPicker');
+    picker.innerHTML = `<div style="font-size:9px;color:var(--text-dim);margin-bottom:8px;">Choisis le Pokémon à remplacer :</div>`;
+    team.forEach((m,i)=>{
+      const msp = speciesOf(m);
+      const btn = document.createElement('button');
+      btn.className = 'btn secondary';
+      btn.style.cssText = 'width:100%;text-align:left;padding:8px;margin-bottom:6px;display:flex;align-items:center;gap:8px;';
+      btn.innerHTML = `<span style="width:26px;height:26px;display:inline-block;">${getSpriteHTML(msp.name, m.unownForm)}</span><span style="font-size:10px;">${msp.name}</span>`;
+      btn.onclick = ()=>{
+        const newMember = buildMember();
+        const replaced = team[i];
+        team[i] = newMember;
+        if(pcHasSpace()){
+          depositToPC(replaced);
+          setVillageMsg(`✓ ${sp.name} rejoint l'équipe ! ${msp.name} est envoyé au PC.`);
+        } else {
+          setVillageMsg(`✓ ${sp.name} rejoint l'équipe ! (PC plein, ${msp.name} a été relâché)`);
+        }
         saveGame();
         renderRanchPanel();
-      }
-    }));
-  });
+      };
+      picker.appendChild(btn);
+    });
+  };
 }
 
 document.getElementById('villagePokecentreBtn').onclick = renderPokecentrePanel;
@@ -4970,6 +5210,147 @@ function openScoreModal(){
 }
 document.getElementById('scoreBtn').onclick = openScoreModal;
 document.getElementById('menuPatchNotesBtn').onclick = ()=> openPatchNotes();
+
+function hpBarColor(frac){ return frac>0.5 ? 'var(--good)' : (frac>0.2 ? '#e0a940' : '#e04040'); }
+function openTeamModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'patchnotes-overlay';
+  let rows = '';
+  team.forEach((m,i)=>{
+    const sp = speciesOf(m);
+    const hp = (typeof m.hp==='number') ? m.hp : m.computedStats.hp;
+    const maxHp = m.computedStats.hp;
+    const frac = Math.max(0, hp/maxHp);
+    rows += `
+      <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;margin-bottom:8px;">
+        <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(sp.name, m.unownForm)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:10px;color:var(--text-main);">${i===0?'👑 ':''}${sp.name} ${m.status?STATUS_ICON[m.status]:''}</div>
+          <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
+          <div style="font-size:8px;color:var(--text-dim);">${hp}/${maxHp} PV</div>
+          <div id="teamHeldSel${i}" style="margin-top:4px;max-width:180px;"></div>
+        </div>
+        <button class="btn secondary teamLeadBtn" data-idx="${i}" style="padding:6px 8px;font-size:9px;white-space:nowrap;" ${i===0?'disabled':''}>${i===0?'Leader':'Nommer leader'}</button>
+      </div>`;
+  });
+  overlay.innerHTML = `
+    <div class="patchnotes-modal" style="max-width:440px;position:relative;">
+      <button class="patchnotes-close" id="teamCloseBtn">✕</button>
+      <h2>◆ ÉQUIPE ◆</h2>
+      ${rows}
+    </div>`;
+  document.body.appendChild(overlay);
+  const close = ()=> overlay.remove();
+  document.getElementById('teamCloseBtn').onclick = close;
+  overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
+  overlay.querySelectorAll('.teamLeadBtn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const idx = parseInt(btn.dataset.idx);
+      const [chosen] = team.splice(idx,1);
+      team.unshift(chosen);
+      saveGame();
+      close();
+      openTeamModal();
+    };
+  });
+  team.forEach((m,i)=>{
+    const heldOptions = [{value:'', label:'Aucun objet'}];
+    Object.entries(ITEMS).filter(([k,it])=>it.kind==='held').forEach(([key,item])=>{
+      const available = (bag[key]||0) + (m.heldItem===key ? 1 : 0);
+      if(available>0) heldOptions.push({value:key, label:`${item.name} (${available})`});
+    });
+    document.getElementById(`teamHeldSel${i}`).appendChild(createCustomSelect({
+      options: heldOptions,
+      value: m.heldItem || '',
+      onChange: (val)=>{
+        if(m.heldItem){ bag[m.heldItem] = (bag[m.heldItem]||0)+1; }
+        if(val){ bag[val] = Math.max(0,(bag[val]||0)-1); m.heldItem = val; }
+        else { m.heldItem = null; }
+        saveGame();
+        close();
+        openTeamModal();
+      }
+    }));
+  });
+}
+
+function openBagModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'patchnotes-overlay';
+  overlay.innerHTML = `
+    <div class="patchnotes-modal" style="max-width:420px;position:relative;">
+      <button class="patchnotes-close" id="bagCloseBtn">✕</button>
+      <h2>◆ SAC ◆</h2>
+      <div class="dex-rate" id="bagMsg" style="text-align:center;margin-bottom:8px;color:var(--good);min-height:12px;"></div>
+      <div id="bagItemList" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto;"></div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const close = ()=> overlay.remove();
+  document.getElementById('bagCloseBtn').onclick = close;
+  overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
+  renderBagItemList();
+}
+function renderBagItemList(){
+  const list = document.getElementById('bagItemList');
+  list.innerHTML = '';
+  const owned = Object.entries(ITEMS).filter(([k,it])=> it.kind==='consumable' && (bag[k]||0)>0);
+  if(owned.length===0){
+    list.innerHTML = `<div class="dex-rate" style="text-align:center;">Ton sac est vide. Achète des objets au Village !</div>`;
+    return;
+  }
+  owned.forEach(([key,item])=>{
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;';
+    row.innerHTML = `
+      <div>${itemIconHTML(key, 26)}</div>
+      <div style="flex:1;">
+        <div style="font-size:10px;color:var(--text-main);"><b>${item.name}</b> (${bag[key]})</div>
+        <div style="font-size:8px;color:var(--text-dim);">${item.desc}</div>
+      </div>
+      <button class="btn secondary useBagItemBtn" data-key="${key}" style="padding:6px 10px;font-size:9px;">Utiliser</button>
+    `;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('.useBagItemBtn').forEach(btn=>{
+    btn.onclick = ()=> renderBagTargetList(btn.dataset.key);
+  });
+}
+function renderBagTargetList(key){
+  const item = ITEMS[key];
+  const list = document.getElementById('bagItemList');
+  list.innerHTML = `<div class="dex-rate" style="text-align:center;margin-bottom:8px;">${itemIconHTML(key,16)} ${item.name} — choisis la cible :</div>`;
+  team.forEach((m,i)=>{
+    const sp = speciesOf(m);
+    const hp = (typeof m.hp==='number') ? m.hp : m.computedStats.hp;
+    const maxHp = m.computedStats.hp;
+    const needsHeal = item.heal && hp<maxHp;
+    const needsCure = item.cureStatus && m.status && (item.cureStatus==='all' || item.cureStatus===m.status);
+    const usable = needsHeal || needsCure;
+    const btn = document.createElement('button');
+    btn.className = 'btn secondary';
+    btn.disabled = !usable;
+    btn.style.cssText = 'width:100%;text-align:left;padding:8px;margin-bottom:6px;display:flex;align-items:center;gap:8px;';
+    btn.innerHTML = `<span style="width:28px;height:28px;display:inline-block;">${getSpriteHTML(sp.name, m.unownForm)}</span><span style="font-size:10px;">${sp.name} — ${hp}/${maxHp} PV ${m.status?STATUS_ICON[m.status]:''}</span>`;
+    btn.onclick = ()=>{
+      if(item.heal) m.hp = Math.min(maxHp, hp + Math.round(maxHp*item.heal));
+      if(item.cureStatus){ m.status = null; m.sleepCounter = 0; }
+      bag[key] = Math.max(0, (bag[key]||0)-1);
+      saveGame();
+      document.getElementById('bagMsg').textContent = `✓ ${item.name} utilisé sur ${sp.name} !`;
+      renderBagItemList();
+    };
+    list.appendChild(btn);
+  });
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn secondary';
+  backBtn.style.cssText = 'width:100%;margin-top:6px;';
+  backBtn.textContent = '◀ Retour aux objets';
+  backBtn.onclick = renderBagItemList;
+  list.appendChild(backBtn);
+}
+document.getElementById('towerBagBtn').onclick = openBagModal;
+document.getElementById('towerTeamBtn').onclick = openTeamModal;
+document.getElementById('villageTeamBtn').onclick = openTeamModal;
 function openDifficultyChoice(onConfirm){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -5102,15 +5483,21 @@ document.getElementById('dexResetFilter').onclick = ()=>{
 
 /* =================== SPLASH TEXT & PATCH NOTES =================== */
 const PATCH_NOTES = [
-{
+  {
     version: 'v0.4',
-    title: 'v0.4 — Update Génération 3',
+    title: 'v0.4 — Gen 3 Update',
     items: [
-      "Pokémon de la Génération 3 ajouter",
-      "Nouveaux talents",
-      "Nouvelle attaque",
-      "Ajout des sprites aux objets",
-      "Correction des immunités aux altérations en fonction des types"
+      "135 nouveaux Pokémon ajoutés (Pokédex complet 1 → 386)",
+      "20 nouveaux talents de Génération 3 (Fermeté, Garde Mystik, Cran, Crachin, Sécheresse, Sable Volant, Marque Ombre, Ventouse, Air Lock, Peau Dure, Turbo, Déguisement...)",
+      "45 nouvelles attaques de Génération 3 (Danse Draco, Feu Follet, Surchauffe, Calmesprit, Provoc, Souvenir, Sabotage...)",
+      "Restructuration des évolutions à embranchements façon Évoli (Chenipotte, Arakdo)",
+      "Immunités de type aux altérations de statut corrigées (Poison/Acier immunisés au poison, Feu à la brûlure, Glace au gel)",
+      "Correction du seuil de déclenchement de la Baie Oran",
+      "30 objets ajoutés avec sprites et effets officiels (Potions à paliers, anti-statuts, Baies, objets stratégiques comme Bandeau Choix, Orbe Vie, Veste de Combat...)",
+      "Pokéshop réorganisé en 3 onglets par catégorie",
+      "Nouveau système de PC (6 emplacements, accessible via le Pokécentre)",
+      "Boutons Sac et Équipe accessibles depuis la Tour et le Village",
+      "Le Ranch devient un mini-draft de recrutement (3 choix, 1 seul Pokémon gardé)"
     ]
   },
   {
