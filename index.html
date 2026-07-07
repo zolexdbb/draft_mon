@@ -5102,6 +5102,17 @@ document.getElementById('dexResetFilter').onclick = ()=>{
 
 /* =================== SPLASH TEXT & PATCH NOTES =================== */
 const PATCH_NOTES = [
+{
+    version: 'v0.4',
+    title: 'v0.4 — Update Génération 3',
+    items: [
+      "Pokémon de la Génération 3 ajouter",
+      "Nouveaux talents",
+      "Nouvelle attaque",
+      "Ajout des sprites aux objets",
+      "Correction des immunités aux altérations en fonction des types"
+    ]
+  },
   {
     version: 'v0.3',
     title: 'v0.3 — Update Génération 2',
@@ -5156,7 +5167,7 @@ const PATCH_NOTES = [
     ]
   }
 ];
-const SPLASH_TEXTS = ["Gen 2 is here!!!"];
+const SPLASH_TEXTS = ["Gen 3 is here!!!"];
 function renderPatchNotes(){
   return PATCH_NOTES.map(v => `
     <div class="patchnotes-version">
