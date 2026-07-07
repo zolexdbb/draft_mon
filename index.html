@@ -1063,7 +1063,7 @@ const MOVES = {
   iciclespear:{name:'Stalagtite',type:'glace',cat:'phys',power:45,desc:"Mitraille la cible de glaçons acérés à répétition."},
   iceball:{name:'Ball\u2019Glace',type:'glace',cat:'phys',power:35,accuracy:0.9,desc:"Une boule de glace roulante qui gagne en puissance à chaque tour."},
   tailglow:{name:'Lumiqueue',type:'insecte',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'spa',stages:3}]},desc:"Une lueur hypnotique qui booste fortement l'Attaque Spéciale."},
-  silverwind:{name:'Vent Argenté',type:'insecte',cat:'phys',power:60,secondarySelfBoost:{stat:'atk',stages:1,chance:0.1},desc:"Une poussière d'écailles scintillantes qui peut booster le lanceur."},
+  silverwind:{name:'Vent Argenté',type:'insecte',cat:'spec',power:60,secondarySelfBoost:{stat:'atk',stages:1,chance:0.1},desc:"Une poussière d'écailles scintillantes qui peut booster le lanceur."},
   signalbeam:{name:'Rayon Signal',type:'insecte',cat:'spec',power:75,secondaryStatus:{status:'confusion',chance:0.1},desc:"Un rayon étrange qui peut rendre la cible confuse."},
   swallow:{name:'Avale',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Absorbe l'énergie accumulée pour restaurer ses PV."},
   stockpile:{name:'Stockage',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:1},{stat:'spd',stages:1}]},desc:"Accumule de l'énergie défensive."},
@@ -1089,12 +1089,12 @@ const MOVES = {
   secretpower:{name:'Force Cachée',type:'normal',cat:'phys',power:70,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Une capacité dont l'effet secondaire varie selon le terrain."},
   crushclaw:{name:'Éclategriffe',type:'normal',cat:'phys',power:75,accuracy:0.95,secondaryBoost:{stat:'def',stages:-1,chance:0.5},desc:"Des griffes puissantes qui peuvent réduire la Défense adverse."},
   uproar:{name:'Brouhaha',type:'normal',cat:'phys',power:90,wakeAllOnHit:true,desc:"Un vacarme assourdissant qui réveille tous les Pokémon endormis."},
-  hypervoice:{name:'Mégaphone',type:'normal',cat:'phys',power:90,desc:"Un cri surpuissant qui ébranle la cible."},
+  hypervoice:{name:'Mégaphone',type:'normal',cat:'spec',power:90,desc:"Un cri surpuissant qui ébranle la cible."},
   aromatherapy:{name:'Aromathérapi',type:'plante',cat:'status',power:0,target:'self',effect:{cureStatus:true},desc:"Un parfum apaisant qui soigne tout problème de statut."},
   grasswhistle:{name:"Siffl'Herbe",type:'plante',cat:'status',power:0,target:'foe',accuracy:0.55,effect:{status:'sommeil'},desc:"Une douce mélodie qui endort la cible."},
   ingrain:{name:'Racines',type:'plante',cat:'status',power:0,target:'self',effect:{ingrain:true},desc:"Plante des racines dans le sol pour récupérer des PV chaque tour."},
   bulletseed:{name:'Balle Graine',type:'plante',cat:'phys',power:25,desc:"Mitraille la cible de graines à répétition."},
-  needlearm:{name:'Poing Dard',type:'plante',cat:'spec',power:60,flinch:0.3,desc:"Un coup végétal acéré qui peut faire peur à la cible."},
+  needlearm:{name:'Poing Dard',type:'plante',cat:'phys',power:60,flinch:0.3,desc:"Un coup végétal acéré qui peut faire peur à la cible."},
   magicalleaf:{name:'Feuillemagik',type:'plante',cat:'spec',power:60,accuracy:1.0,desc:"Des feuilles magiques qui ne ratent presque jamais leur cible."},
   frenzyplant:{name:'Végé-Attak',type:'plante',cat:'spec',power:150,accuracy:0.9,desc:"Des racines titanesques surgissent du sol pour écraser la cible."},
   poisonfang:{name:'Crochetvenin',type:'poison',cat:'phys',power:50,secondaryStatus:{status:'poison',chance:0.3},desc:"Une morsure venimeuse qui peut gravement empoisonner."},
@@ -1121,7 +1121,7 @@ const MOVES = {
   taunt:{name:'Provoc',type:'tenebres',cat:'status',power:0,target:'foe',effect:{tauntBlock:true},desc:"Provoque la cible pour l'empêcher d'utiliser des capacités de statut."},
   snatch:{name:'Saisie',type:'tenebres',cat:'status',power:0,target:'self',effect:{},desc:"Vole normalement l'effet de la prochaine capacité non-offensive de l'adversaire."},
   faketears:{name:'Croco Larme',type:'tenebres',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{foeBoost:[{stat:'spd',stages:-2}]},desc:"De fausses larmes qui baissent fortement la Défense Spéciale adverse."},
-  knockoff:{name:'Sabotage',type:'tenebres',cat:'spec',power:20,itemRemoveOnHit:true,desc:"Fait tomber l'objet tenu de la cible au contact."},
+  knockoff:{name:'Sabotage',type:'tenebres',cat:'phys',power:20,itemRemoveOnHit:true,desc:"Fait tomber l'objet tenu de la cible au contact."},
   featherdance:{name:'Danse-Plume',type:'vol',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{foeBoost:[{stat:'atk',stages:-2}]},desc:"Une pluie de plumes qui baisse fortement l'Attaque adverse."},
   aircutter:{name:"Tranch'Air",type:'vol',cat:'phys',power:55,accuracy:0.95,desc:"Des lames d'air tranchantes."},
   aerialace:{name:'Aéropique',type:'vol',cat:'phys',power:60,accuracy:1.0,desc:"Une attaque fulgurante qui ne rate presque jamais."},
@@ -1987,7 +1987,7 @@ let money = 100;
 let bag = { potion:0, baieOran:0, reste:0, ceintureForce:0 };
 const ITEMS = {
   potion:      { name:'Potion',         emoji:'💊', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/potion.png', price:100, kind:'consumable', desc:"Restaure 50% des PV max. Utilisable en combat ou entre deux combats." },
-  baieOran:    { name:'Baie Oran',      emoji:'🍇', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png', price:150, kind:'held',       desc:"Objet tenu : soigne automatiquement 25% des PV max une fois que le Pokémon passe sous 25% de ses PV." },
+  baieOran:    { name:'Baie Oran',      emoji:'🍇', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png', price:150, kind:'held',       desc:"Objet tenu : soigne automatiquement 25% des PV max une fois que le Pokémon passe à 50% de ses PV ou moins." },
   reste:       { name:'Reste',          emoji:'🍙', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leftovers.png', price:200, kind:'held',       desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
   ceintureForce:{ name:'Ceinture Force', emoji:'🥊', sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/focus-sash.png', price:250, kind:'held',       desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." }
 };
@@ -4502,7 +4502,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       msg += ` La Défense de ${defender.name} augmente !`;
     }
   }
-  if(defender.heldItem==='baieOran' && !defender.itemUsed && defender.hp>0 && defender.hp <= Math.floor(defender.maxHp*0.25)){
+  if(defender.heldItem==='baieOran' && !defender.itemUsed && defender.hp>0 && defender.hp <= Math.floor(defender.maxHp*0.5)){
     const heal = Math.max(1, Math.round(defender.maxHp*0.25));
     defender.hp = Math.min(defender.maxHp, defender.hp+heal);
     defender.itemUsed = true;
@@ -5103,21 +5103,10 @@ document.getElementById('dexResetFilter').onclick = ()=>{
 /* =================== SPLASH TEXT & PATCH NOTES =================== */
 const PATCH_NOTES = [
   {
-    version: 'v0.4',
-    title: 'v0.4 — Update Génération 3',
-    items: [
-      "Pokémon de la Génération 3 ajouter",
-      "Nouveaux talents",
-      "Nouvelle attaque",
-      "Ajout des sprites aux objets",
-      "Correction des immunités aux altérations en fonction des types"
-    ]
-  },
-  {
     version: 'v0.3',
     title: 'v0.3 — Update Génération 2',
     items: [
-      "100 Pokémon de la Génération 2 ajoutés",
+      "100 Pokémon de la Génération 2 ajoutés (Johto complet, hors Zarbi)",
       "2 nouveaux types : Acier et Ténèbres, avec leurs efficacités",
       "Nouvelles capacités Acier/Ténèbres (Tête de Fer, Vibrobscur, Coup Bas...)",
       "Évolutions ajoutées : Crobat, Steelix, Blissey, Kingdra, Scizor, Porygon2...",
@@ -5167,7 +5156,7 @@ const PATCH_NOTES = [
     ]
   }
 ];
-const SPLASH_TEXTS = ["Gen 3 is here!!!"];
+const SPLASH_TEXTS = ["Gen 2 is here!!!"];
 function renderPatchNotes(){
   return PATCH_NOTES.map(v => `
     <div class="patchnotes-version">
