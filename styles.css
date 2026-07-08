@@ -51,6 +51,13 @@ body{
 }
 .site-header::before{ left:0; }
 .site-header::after{ right:0; }
+.music-settings-btn{
+  position:absolute; top:0; left:0; z-index:2;
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:4px;
+  font-size:16px; line-height:1; padding:6px 9px; cursor:pointer;
+  color:var(--text-main);
+}
+.music-settings-btn:hover{ border-color:var(--line-bright); }
 /* ---- PANEL ---- */
 .app{ width:100%; max-width:1240px; }
 .panel{
