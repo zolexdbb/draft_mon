@@ -1,3 +1,0 @@
-assets/audio/village.mp3 filter=lfs diff=lfs merge=lfs -text
-assets/audio/menu.mp3 filter=lfs diff=lfs merge=lfs -text
-assets/audio/battle.mp3 filter=lfs diff=lfs merge=lfs -text
