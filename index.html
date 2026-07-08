@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Draft Mon — Tour de Combat</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<body>
+<div class="app">
+  <div class="site-header">
+    <span class="site-logo">DRAFT MON</span>
+    <span class="site-subtitle">◆ TOUR DE COMBAT ◆</span>
+  </div>
+
+  <div class="panel" id="screenMenu">
+    <button class="menu-splash" id="splashTextBtn">Gen 3 is here!!!</button>
+    <div class="tower-floor" style="padding:40px 20px;">
+      <div style="font-size:64px;margin:0 0 10px;">🗼</div>
+      <div class="floor-label" style="letter-spacing:6px;font-size:11px;color:var(--accent);margin-bottom:6px;">TOUR DE COMBAT</div>
+      <button class="btn secondary" id="scoreBtn" style="margin-bottom:24px;padding:8px 16px;font-size:10px;">🏆 Score</button>
+      <div style="border:1px solid var(--line);border-radius:2px;padding:18px 24px;margin:0 auto 28px;max-width:360px;background:rgba(0,0,0,.3);">
+        <div class="floor-label" style="font-size:9px;letter-spacing:3px;margin-bottom:12px;color:var(--text-dim);">▸ COMMENT JOUER ◂</div>
+        <div style="font-size:10px;color:var(--text-dim);line-height:1.8;text-align:left;">
+          1. Drafts 6 Pokémon parmi les offres<br>
+          2. Configure stats, nature et attaques<br>
+          3. Affronte la Tour de Combat !
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn" id="menuPlayBtn">▶ Nouvelle partie</button>
+        <button class="btn secondary hidden" id="menuContinueBtn">💾 Continuer</button>
+        <button class="btn secondary" id="menuDexBtn">📖 Pokédex</button>
+        <button class="btn secondary" id="menuPatchNotesBtn">📋 Notes de MàJ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="screenDex">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--line);position:sticky;top:0;background:var(--bg-panel);z-index:10;">
+      <button class="btn" id="dexBackBtn" style="padding:8px 16px;font-size:11px;flex-shrink:0;">← Menu</button>
+      <div style="flex:1;">
+        <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;">POKÉDEX</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:3px;" id="dexCount">151 Pokémon</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px;padding:10px;background:var(--bg-card);border:1px solid var(--line);border-radius:4px;">
+      <input id="dexSearch" type="text" placeholder="Rechercher un nom..." style="flex:1;min-width:150px;background:#0b0b10;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 10px;font-family:inherit;font-size:12px;">
+      <div id="dexTypeFilter" style="min-width:150px;"></div>
+      <div id="dexRarityFilter" style="min-width:150px;"></div>
+      <button class="btn secondary" id="dexResetFilter" style="padding:6px 12px;font-size:11px;">✕ Reset</button>
+    </div>
+    <div class="draft-cards" id="dexGrid" style="grid-template-columns:repeat(3,1fr);"></div>
+  </div>
+
+  <div class="panel hidden" id="screenDraft">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <button class="btn secondary" id="draftHomeBtn" style="padding:6px 12px;font-size:12px;">🏠 Menu</button>
+      <div class="draft-progress" id="draftProgress" style="margin:0;"></div>
+      <div style="width:80px;"></div>
+    </div>
+    <div class="draft-team-strip" id="draftTeamStrip"></div>
+    <div class="sub" id="draftSub">Choisis un Pokémon pour ton équipe (1/6)</div>
+    <div class="draft-cards" id="draftCards"></div>
+  </div>
+
+  <div class="panel hidden" id="screenBuilder">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <button class="btn secondary" id="builderHomeBtn" style="padding:6px 12px;font-size:12px;">🏠 Menu</button>
+      <div class="sub" style="margin:0;">Configure chaque Pokémon — puis valide ton équipe.</div>
+      <div style="width:80px;"></div>
+    </div>
+    <div class="team-grid" id="teamGrid"></div>
+    <div class="editor hidden" id="editor"></div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn" id="validateTeamBtn" disabled>Valider l'équipe et entrer dans la tour</button>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="screenTower">
+    <div class="tower-floor">
+      <div class="floor-label">TOUR DE COMBAT</div>
+      <div class="floor-num" id="floorNum">1</div>
+      <div class="floor-label" id="floorDesc">Un dresseur t'attend...</div>
+      <div class="dex-rate" id="floorReward" style="margin-top:8px;color:var(--good);"></div>
+      <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn" id="fightBtn">Combattre</button>
+        <button class="btn secondary" id="towerBagBtn">🎒 Sac</button>
+        <button class="btn secondary" id="towerTeamBtn">👥 Équipe</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="screenVillage">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);">🏘️ VILLAGE</div>
+      <div class="dex-rate" id="villageReward" style="color:var(--good);margin-top:6px;"></div>
+      <div class="dex-rate" id="villageMoney" style="margin-top:4px;">💰 0</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:640px;margin:0 auto 20px;">
+      <button class="btn secondary" id="villagePokecentreBtn" style="padding:16px 10px;font-size:11px;">🏥<br>Pokécentre</button>
+      <button class="btn secondary" id="villagePokeshopBtn" style="padding:16px 10px;font-size:11px;">🛒<br>Pokéshop</button>
+      <button class="btn secondary" id="villageRanchBtn" style="padding:16px 10px;font-size:11px;">🏡<br>Ranch</button>
+      <button class="btn secondary" id="villageTeamBtn" style="padding:16px 10px;font-size:11px;">👥<br>Équipe</button>
+    </div>
+    <div id="villagePanelContent" style="max-width:640px;margin:0 auto 20px;"></div>
+    <div style="text-align:center;">
+      <button class="btn" id="villageContinueBtn">▶ Continuer vers la Tour</button>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="screenBattle">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <button class="btn secondary" id="battleHomeBtn" style="padding:6px 12px;font-size:12px;">🏠 Menu</button>
+      <div></div>
+    </div>
+    <div class="dex-rate" id="trainerBanner" style="text-align:center;margin-bottom:10px;font-size:13px;"></div>
+    <div class="dex-rate" id="weatherBanner" style="text-align:center;margin-bottom:8px;font-size:11px;color:var(--accent);"></div>
+    <div class="side-row">
+      <div class="bench" id="playerBench"></div>
+      <div class="bench" id="foeBench"></div>
+    </div>
+    <div class="vsfield">
+      <div class="combatant foe" id="foeBox">
+        <div class="sprite" id="foeSprite">❔</div>
+        <div class="name-row"><b id="foeName">—</b><span class="type-tag" id="foeType">—</span></div>
+        <div class="hpbar-track"><div class="hpbar-fill" id="foeHpFill"></div></div>
+        <div class="hp-text" id="foeHpText">PV</div>
+      </div>
+      <div class="combatant you" id="playerBox">
+        <div class="sprite" id="playerSprite">❔</div>
+        <div class="name-row"><b id="playerName">—</b><span class="type-tag" id="playerType">—</span></div>
+        <div class="hpbar-track"><div class="hpbar-fill" id="playerHpFill"></div></div>
+        <div class="hp-text" id="playerHpText">PV</div>
+      </div>
+    </div>
+    <div class="log" id="log">Le combat commence...</div>
+    <div class="battle-controls">
+      <div class="moves" id="movesGrid"></div>
+      <div class="switch-grid hidden" id="switchGrid"></div>
+      <div style="text-align:center;margin-top:10px;">
+        <button class="btn secondary" id="manualSwitchBtn">🔄 Changer de Pokémon</button>
+        <button class="btn secondary" id="bagBtn">🎒 Sac</button>
+        <button class="btn secondary hidden" id="cancelSwitchBtn">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="screenEnd">
+    <div class="tower-floor">
+      <div class="floor-label" id="endLabel">GAME OVER</div>
+      <div class="floor-num" id="endFloor">1</div>
+      <div class="floor-label">étages franchis</div>
+      <div style="margin-top:18px;">
+        <button class="btn" id="restartBtn">Recommencer un draft</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="core/rng.js"></script>
+<script src="core/type-chart.js"></script>
+<script src="core/natures.js"></script>
+<script src="core/stats.js"></script>
+<script src="core/state.js"></script>
+<script src="items/items.js"></script>
+<script src="moves/moves.js"></script>
+<script src="pokemon/gen1.js"></script>
+<script src="pokemon/gen2.js"></script>
+<script src="pokemon/gen3.js"></script>
+<script src="pokemon/index.js"></script>
+<script src="pokemon/abilities.js"></script>
+<script src="pokemon/forms.js"></script>
+<script src="pokemon/helpers.js"></script>
+<script src="draft/draft-core.js"></script>
+<script src="draft/draft-classic.js"></script>
+<script src="draft/draft-facile.js"></script>
+<script src="combat/tower.js"></script>
+<script src="combat/pp-system.js"></script>
+<script src="combat/damage-calc.js"></script>
+<script src="combat/status-effects.js"></script>
+<script src="combat/ai-foe.js"></script>
+<script src="combat/battle-flow.js"></script>
+<script src="combat/battle-ui.js"></script>
+<script src="village/village-core.js"></script>
+<script src="village/pokecenter.js"></script>
+<script src="village/pc-storage.js"></script>
+<script src="village/shop.js"></script>
+<script src="village/ranch.js"></script>
+<script src="save/save-system.js"></script>
+<script src="ui/editor.js"></script>
+<script src="ui/dropdowns.js"></script>
+<script src="ui/screens.js"></script>
+<script src="ui/bag-modal.js"></script>
+<script src="ui/dex-viewer.js"></script>
+<script src="ui/patch-notes.js"></script>
+</body>
+</html>
