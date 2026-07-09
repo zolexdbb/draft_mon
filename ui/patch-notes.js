@@ -78,26 +78,56 @@ const PATCH_NOTES = [
   {
     version: 'v0.3',
     title: 'v0.3 — Update Génération 2',
-    items: [
-      "100 Pokémon de la Génération 2 ajoutés (Johto complet, hors Zarbi)",
-      "2 nouveaux types : Acier et Ténèbres, avec leurs efficacités",
-      "Nouvelles capacités Acier/Ténèbres (Tête de Fer, Vibrobscur, Coup Bas...)",
-      "Évolutions ajoutées : Crobat, Steelix, Blissey, Kingdra, Scizor, Porygon2...",
-      "Nouvelles branches d'évolution : Bellossom, Politoed, Slowking, Espeon, Umbreon"
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "100 Pokémon de la Génération 2 ajoutés (Johto complet, hors Zarbi)",
+          "Évolutions ajoutées : Crobat, Steelix, Blissey, Kingdra, Scizor, Porygon2...",
+          "Nouvelles branches d'évolution : Bellossom, Politoed, Slowking, Espeon, Umbreon"
+        ]
+      },
+      {
+        icon: '⚡', label: 'Types & Capacités',
+        items: [
+          "2 nouveaux types : Acier et Ténèbres, avec leurs efficacités",
+          "Nouvelles capacités Acier/Ténèbres (Tête de Fer, Vibrobscur, Coup Bas...)"
+        ]
+      }
     ],
     subVersions: [
       {
         version: 'v0.3.1',
         title: 'v0.3.1 — Équilibrage Update',
-        items: [
-          "Ajout de 3 modes de difficulté au lancement d'une partie",
-          "Facile : draft de Pokémon déjà entièrement évolués, avec des builds prêts à l'emploi",
-          "Normal : draft classique, PV restaurés après chaque combat",
-          "Difficile : draft classique, PV et altérations d'état conservés d'un combat à l'autre",
-          "Nouvelles attaques ajoutées",
-          "Traduction des attaques, talents et natures corrigée",
-          "Movepool des Pokémon enrichi",
-          "Système de sauvegarde à 5 emplacements"
+        categories: [
+          {
+            icon: '🎚️', label: 'Modes de difficulté',
+            items: [
+              "Ajout de 3 modes de difficulté au lancement d'une partie",
+              "Facile : draft de Pokémon déjà entièrement évolués, avec des builds prêts à l'emploi",
+              "Normal : draft classique, PV restaurés après chaque combat",
+              "Difficile : draft classique, PV et altérations d'état conservés d'un combat à l'autre"
+            ]
+          },
+          {
+            icon: '📖', label: 'Contenu',
+            items: [
+              "Nouvelles attaques ajoutées",
+              "Movepool des Pokémon enrichi"
+            ]
+          },
+          {
+            icon: '🐛', label: 'Corrections',
+            items: [
+              "Traduction des attaques, talents et natures corrigée"
+            ]
+          },
+          {
+            icon: '💾', label: 'Sauvegarde',
+            items: [
+              "Système de sauvegarde à 5 emplacements"
+            ]
+          }
         ]
       }
     ]
@@ -105,27 +135,52 @@ const PATCH_NOTES = [
   {
     version: 'v0.2',
     title: 'v0.2 — Village Update',
-    items: [
-      "PV persistants entre les combats",
-      "Système d'argent - gains après chaque combat",
-      "Mini-boss tous les 5 étages, Boss tous les 10",
-      "Village de repos débloqué après chaque Boss",
-      "Pokécentre, Pokéshop, Ranch et PC au Village",
-      "Sac utilisable en combat et entre les combats",
-      "Objets tenus (Baie Oran, Reste, Ceinture Force...)",
-      "Objets stratégiques en récompense boss",
-      "Gestion d'équipe avec changement de lead"
+    categories: [
+      {
+        icon: '⚔️', label: 'Tour de combat',
+        items: [
+          "PV persistants entre les combats",
+          "Système d'argent - gains après chaque combat",
+          "Mini-boss tous les 5 étages, Boss tous les 10"
+        ]
+      },
+      {
+        icon: '🏘️', label: 'Village',
+        items: [
+          "Village de repos débloqué après chaque Boss",
+          "Pokécentre, Pokéshop, Ranch et PC au Village"
+        ]
+      },
+      {
+        icon: '🎒', label: 'Objets & Équipe',
+        items: [
+          "Sac utilisable en combat et entre les combats",
+          "Objets tenus (Baie Oran, Reste, Ceinture Force...)",
+          "Objets stratégiques en récompense boss",
+          "Gestion d'équipe avec changement de lead"
+        ]
+      }
     ]
   },
   {
     version: 'v0.1',
     title: 'v0.1 — Base',
-    items: [
-      "Draft de 6 Pokémon Gen 1",
-      "Builder complet EV/IV/Nature/Talent/Attaques",
-      "Tour de combat avec 17 archétypes de dresseurs",
-      "Système de combat au tour par tour",
-      "Pokédex avec filtres"
+    categories: [
+      {
+        icon: '🎯', label: 'Draft & Builder',
+        items: [
+          "Draft de 6 Pokémon Gen 1",
+          "Builder complet EV/IV/Nature/Talent/Attaques"
+        ]
+      },
+      {
+        icon: '⚔️', label: 'Combat & Pokédex',
+        items: [
+          "Tour de combat avec 17 archétypes de dresseurs",
+          "Système de combat au tour par tour",
+          "Pokédex avec filtres"
+        ]
+      }
     ]
   }
 ];
