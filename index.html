@@ -116,27 +116,29 @@
       <button class="btn secondary" id="battleHomeBtn" style="padding:6px 12px;font-size:12px;">🏠 Menu</button>
       <div></div>
     </div>
-    <div class="dex-rate" id="trainerBanner" style="text-align:center;margin-bottom:10px;font-size:13px;"></div>
+    <div class="trainer-banner" id="trainerBanner"></div>
     <div class="dex-rate" id="weatherBanner" style="text-align:center;margin-bottom:8px;font-size:11px;color:var(--accent);"></div>
-    <div class="side-row">
-      <div class="bench" id="playerBench"></div>
-      <div class="bench" id="foeBench"></div>
-    </div>
-    <div class="vsfield">
-      <div class="combatant foe" id="foeBox">
-        <div class="sprite" id="foeSprite">❔</div>
-        <div class="name-row"><b id="foeName">—</b><span class="type-tag" id="foeType">—</span></div>
-        <div class="hpbar-track"><div class="hpbar-fill" id="foeHpFill"></div></div>
-        <div class="hp-text" id="foeHpText">PV</div>
+    <div class="battle-field">
+      <div class="side-row">
+        <div class="bench" id="playerBench"></div>
+        <div class="bench" id="foeBench"></div>
       </div>
-      <div class="combatant you" id="playerBox">
-        <div class="sprite" id="playerSprite">❔</div>
-        <div class="name-row"><b id="playerName">—</b><span class="type-tag" id="playerType">—</span></div>
-        <div class="hpbar-track"><div class="hpbar-fill" id="playerHpFill"></div></div>
-        <div class="hp-text" id="playerHpText">PV</div>
+      <div class="vsfield">
+        <div class="combatant foe" id="foeBox">
+          <div class="sprite" id="foeSprite">❔</div>
+          <div class="name-row"><b id="foeName">—</b><span class="type-badges-row" id="foeType"></span></div>
+          <div class="hpbar-track"><div class="hpbar-fill" id="foeHpFill"></div></div>
+          <div class="hp-text" id="foeHpText">PV</div>
+        </div>
+        <div class="combatant you" id="playerBox">
+          <div class="sprite" id="playerSprite">❔</div>
+          <div class="name-row"><b id="playerName">—</b><span class="type-badges-row" id="playerType"></span></div>
+          <div class="hpbar-track"><div class="hpbar-fill" id="playerHpFill"></div></div>
+          <div class="hp-text" id="playerHpText">PV</div>
+        </div>
       </div>
+      <div class="log" id="log"></div>
     </div>
-    <div class="log" id="log">Le combat commence...</div>
     <div class="battle-controls">
       <div class="moves" id="movesGrid"></div>
       <div class="switch-grid hidden" id="switchGrid"></div>
@@ -185,6 +187,7 @@
 <script src="combat/ai-foe.js"></script>
 <script src="combat/battle-flow.js"></script>
 <script src="combat/battle-ui.js"></script>
+<script src="combat/move-fx.js"></script>
 <script src="village/village-core.js"></script>
 <script src="village/pokecenter.js"></script>
 <script src="village/pc-storage.js"></script>

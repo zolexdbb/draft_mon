@@ -35,8 +35,35 @@ const ITEMS = {
   reste:          { name:'Reste',           emoji:'🍙', sprite:ITEM_SPRITE('leftovers'),     price:200, kind:'held', category:'strat', desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
   ceintureForce:  { name:'Ceinture Force',  emoji:'🥊', sprite:ITEM_SPRITE('focus-sash'),    price:250, kind:'held', category:'strat', desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." }
 };
+const ITEM_SPRITE_SOURCES = [
+  slug => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/items/${slug}.png`,
+  slug => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${slug}.png`
+];
+const ITEM_SPRITE_MAX_ATTEMPTS = 8;
+const ITEM_SPRITE_RETRY_DELAYS = [300, 600, 1200, 2000, 3000, 4000, 5000];
+function itemSlugFromSprite(url){
+  const m = url.match(/items\/([^/]+)\.png$/);
+  return m ? m[1] : null;
+}
 function itemIconHTML(key, size){
   const item = ITEMS[key];
   const s = size||22;
-  return `<img src="${item.sprite}" alt="${item.name}" style="width:${s}px;height:${s}px;object-fit:contain;image-rendering:pixelated;vertical-align:middle;" onerror="this.outerHTML='${item.emoji}';">`;
+  const slug = itemSlugFromSprite(item.sprite);
+  const url = ITEM_SPRITE_SOURCES[0](slug);
+  return `<img src="${url}" alt="${item.name}" data-item-slug="${slug}" data-item-emoji="${item.emoji}" data-item-size="${s}" style="width:${s}px;height:${s}px;object-fit:contain;image-rendering:pixelated;vertical-align:middle;" onerror="handleItemSpriteError(this)">`;
+}
+function handleItemSpriteError(img){
+  const slug = img.dataset.itemSlug;
+  const attempt = parseInt(img.dataset.itemAttempt || '0', 10) + 1;
+  img.dataset.itemAttempt = String(attempt);
+  if(!slug || attempt >= ITEM_SPRITE_MAX_ATTEMPTS){
+    const span = document.createElement('span');
+    span.textContent = img.dataset.itemEmoji || '❔';
+    span.style.cssText = `font-size:${img.dataset.itemSize||22}px;line-height:1;vertical-align:middle;`;
+    img.replaceWith(span);
+    return;
+  }
+  const source = ITEM_SPRITE_SOURCES[attempt % ITEM_SPRITE_SOURCES.length];
+  const delay = ITEM_SPRITE_RETRY_DELAYS[Math.min(attempt-1, ITEM_SPRITE_RETRY_DELAYS.length-1)];
+  setTimeout(()=>{ if(img.isConnected) img.src = source(slug); }, delay);
 }

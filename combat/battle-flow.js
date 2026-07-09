@@ -9,6 +9,8 @@ function resetBattleFields(c){
   c.flinched = false;
   c.lockedMove = null;
   c.protectChain = 0;
+  c.chargingMove = null;
+  c.invulnType = null;
 }
 function startBattle(){
   const trainer = generateTrainer(towerFloor);
@@ -40,7 +42,15 @@ function startBattle(){
   battleState = { player: playerRoster, foe: enemyTeam, pActive: aliveIdx, fActive: 0, locked:false, trainer, weather:null };
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenBattle').classList.remove('hidden');
-  document.getElementById('trainerBanner').innerHTML = `${trainer.emoji} <b>${trainer.name}</b> veut se battre ! <span style="color:var(--text-dim);font-size:10px;">"${trainer.dialogue}"</span>`;
+  const bannerEl = document.getElementById('trainerBanner');
+  bannerEl.className = 'trainer-banner' + (trainer.boss?' boss':(trainer.miniBoss?' miniboss':''));
+  bannerEl.innerHTML = `
+    <div class="trainer-avatar">${trainer.emoji}</div>
+    <div class="trainer-info">
+      <div class="trainer-name">${trainer.name}</div>
+      <div class="trainer-quote">"${trainer.dialogue}"</div>
+    </div>`;
+  clearLog();
   const pLead = playerRoster[aliveIdx], fLead = enemyTeam[0];
   const intimMsg = triggerIntimidate(fLead, pLead) + triggerIntimidate(pLead, fLead) + triggerSwitchInAbilities(fLead, pLead) + triggerSwitchInAbilities(pLead, fLead);
   setLog(`<b>Étage ${towerFloor}</b> — l'adversaire envoie ${enemyTeam[0].name} !${intimMsg}`);
@@ -50,6 +60,8 @@ function startBattle(){
 function doVoluntarySwitch(i){
   const bs = battleState;
   const leaving = bs.player[bs.pActive];
+  leaving.chargingMove = null;
+  leaving.invulnType = null;
   let switchMsg = '';
   if(leaving.ability==='Régé-Force' && leaving.hp>0){
     const heal = Math.max(1, Math.round(leaving.maxHp/3));
@@ -73,8 +85,6 @@ function doVoluntarySwitch(i){
     });
   }, 1000);
 }
-document.getElementById('manualSwitchBtn').onclick = openManualSwitch;
-document.getElementById('cancelSwitchBtn').onclick = closeManualSwitch;
 
 function useBagPotion(i){
   const bs = battleState;
@@ -95,7 +105,6 @@ function useBagPotion(i){
     });
   }, 1000);
 }
-document.getElementById('bagBtn').onclick = openBag;
 
 function checkStatusBeforeMove(battler, logs, move){
   if(battler.flinched){
@@ -185,6 +194,24 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(actor.heldItem && ITEMS[actor.heldItem] && ITEMS[actor.heldItem].choiceLock && !actor.lockedMove){
     actor.lockedMove = move;
   }
+  if(move.charge){
+    const isReleasing = actor.chargingMove === move;
+    if(!isReleasing){
+      const weatherNow0 = battleState ? battleState.weather : null;
+      const skipCharge = move.sunSkip && weatherNow0 && weatherNow0.type==='soleil';
+      if(!skipCharge){
+        actor.chargingMove = move;
+        if(move.semiInvuln) actor.invulnType = move.semiInvuln;
+        renderBattle();
+        setLog(`<b>${actor.name}</b> ${move.chargeMsg||'se prépare à attaquer'} !`);
+        setTimeout(callback, 900);
+        return;
+      }
+    } else {
+      actor.chargingMove = null;
+      actor.invulnType = null;
+    }
+  }
   let acc;
   if(move.target==='self'){
     acc = 1;
@@ -200,7 +227,18 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     if(weatherNow.type==='sable' && defender.ability==='Voile Sable') acc *= 0.8;
     if(weatherNow.type==='grele' && defender.ability==='Rideau Neige') acc *= 0.8;
   }
+  if(defender.invulnType && move.target!=='self'){
+    if(move.bypassInvuln && move.bypassInvuln.includes(defender.invulnType)){
+      acc = 1;
+    } else {
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ${defender.name} est hors d'atteinte !`);
+      setTimeout(callback, 900);
+      return;
+    }
+  }
   lungeBox(actorIsPlayer ? 'playerBox' : 'foeBox');
+  playMoveFx(move, actorIsPlayer);
   if(Math.random() > acc){
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais rate son coup !`);
     actor.guaranteedHit = false;
@@ -366,6 +404,16 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     shakeBox(actorIsPlayer?'foeBox':'playerBox');
     setLog(`<b>${actor.name}</b> offre un Cadeau piégé ! ${defender.name} subit ${pdmg} dégâts !`);
     setTimeout(callback, 1000);
+    return;
+  }
+  if(move.futureSight){
+    const { dmg: fsDmg } = computeDamage(actor, move, defender);
+    const bs = battleState;
+    bs.pendingFutureSight = bs.pendingFutureSight || [];
+    bs.pendingFutureSight.push({ side: actorIsPlayer ? 'foe' : 'player', turnsLeft:2, dmg: fsDmg, moveName: move.name });
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Une force mystérieuse rôde autour de ${defender.name}...`);
+    setTimeout(callback, 900);
     return;
   }
   const { dmg, eff, crit } = computeDamage(actor, move, defender);
@@ -617,12 +665,64 @@ function endTurn(){
       bs.weather = null;
     }
   }
+  if(bs.pendingFutureSight && bs.pendingFutureSight.length){
+    bs.pendingFutureSight = bs.pendingFutureSight.filter(fs=>{
+      fs.turnsLeft--;
+      if(fs.turnsLeft<=0){
+        const target = fs.side==='player' ? bs.player[bs.pActive] : bs.foe[bs.fActive];
+        if(target.hp>0){
+          target.hp = Math.max(0, target.hp - fs.dmg);
+          logs.push(`La force psychique de ${fs.moveName} s'abat sur ${target.name} ! (${fs.dmg} dégâts)`);
+        }
+        return false;
+      }
+      return true;
+    });
+  }
   renderBattle();
   if(logs.length) setLog(logs.join(' '));
   if(p.hp<=0){ setTimeout(()=> handlePlayerFaint(), 700); return; }
   if(f.hp<=0){ setTimeout(()=> handleFoeFaint(), 700); return; }
+  if(p.chargingMove){
+    bs.locked = true;
+    setTimeout(()=> continueChargedAttack(), 600);
+    return;
+  }
   bs.locked = false;
   renderMoveGrid();
+}
+
+function continueChargedAttack(){
+  const bs = battleState;
+  const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
+  const pMove = p.chargingMove;
+  if(!pMove){ bs.locked = false; renderMoveGrid(); return; }
+  const fMove = chooseFoeMove(f, p);
+  const pSpeed = effectiveSpeed(p), fSpeed = effectiveSpeed(f);
+  const pPrio = pMove.priority||0, fPrio = fMove.priority||0;
+  let playerFirst;
+  if(pPrio!==fPrio){
+    playerFirst = pPrio>fPrio;
+  } else {
+    playerFirst = pSpeed>fSpeed || (pSpeed===fSpeed && Math.random()<0.5);
+  }
+  if(playerFirst){
+    runStep(p, pMove, f, true, ()=>{
+      if(checkFaintsAndHandle()) return;
+      runStep(f, fMove, p, false, ()=>{
+        if(checkFaintsAndHandle()) return;
+        endTurn();
+      });
+    });
+  } else {
+    runStep(f, fMove, p, false, ()=>{
+      if(checkFaintsAndHandle()) return;
+      runStep(p, pMove, f, true, ()=>{
+        if(checkFaintsAndHandle()) return;
+        endTurn();
+      });
+    });
+  }
 }
 
 function handleFoeFaint(){

@@ -25,7 +25,7 @@ function renderTeamGrid(){
         <div class="team-card-info">
           <div class="pname">${sp.name}</div>
           <div class="types-row" style="justify-content:flex-start;margin:3px 0;">
-            ${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}
+            ${sp.types.map(t=>typeTagHTML(t)).join('')}
           </div>
           ${ability ? `<div style="font-size:9px;color:var(--text-dim);margin-top:2px;">${ability}</div>` : ''}
         </div>
@@ -111,7 +111,7 @@ function openEditor(idx){
       <div class="editor-ident">
         <h3>${sp.name}</h3>
         <div class="types-row" style="justify-content:flex-start;margin-bottom:4px;">
-          ${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}
+          ${sp.types.map(t=>typeTagHTML(t)).join('')}
         </div>
         <div style="font-size:9px;color:var(--text-dim);">N°${DEX_NUMBERS[sp.name]||'?'} · ${line.stages.map(s=>s.name).join(' → ')}</div>
       </div>
@@ -229,7 +229,7 @@ function openEditor(idx){
     trigger.className='csel-trigger';
     const renderTrigger = (mv, mid) => {
       trigger.innerHTML = mv
-        ? `<span class="type-tag t-${mv.type}" style="font-size:8px;padding:2px 7px;">${mv.type}</span>
+        ? `${typeTagHTML(mv.type, {style:'font-size:8px;padding:2px 7px;'})}
            <span class="csel-name">${mv.name}</span>
            <span class="cat-chip cat-${mv.cat}">${mv.cat==='phys'?'Phys':mv.cat==='spec'?'Spéc':'Statut'}</span>
            ${mv.cat!=='status'?`<span class="csel-power">${mv.power}</span>`:''}
@@ -272,7 +272,7 @@ function openEditor(idx){
         const opt=document.createElement('div');
         opt.className='csel-opt'+(mid===currentId?' selected':'');
         opt.innerHTML=`
-          <span class="type-tag t-${mv.type}" style="font-size:8px;padding:2px 7px;flex-shrink:0;">${mv.type}</span>
+          ${typeTagHTML(mv.type, {style:'font-size:8px;padding:2px 7px;flex-shrink:0;'})}
           <span class="csel-opt-name">${mv.name}</span>
           <span class="cat-chip cat-${mv.cat}">${mv.cat==='phys'?'Phys':mv.cat==='spec'?'Spéc':'Statut'}</span>
           <span class="csel-opt-power">${mv.cat!=='status'?mv.power:'—'}</span>

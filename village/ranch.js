@@ -1,16 +1,28 @@
 /* ==== village/ranch.js (généré depuis index.html) ==== */
+let ranchChoices = null;
+let ranchRecruited = false;
 function renderRanchPanel(){
   const wrap = document.getElementById('villagePanelContent');
+  if(ranchRecruited){
+    wrap.innerHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
+        <div style="font-size:10px;color:var(--text-dim);">Le dresseur itinérant est reparti. Reviens après ta prochaine victoire de Boss pour de nouvelles recrues !</div>
+      </div>`;
+    return;
+  }
   wrap.innerHTML = `
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
       <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;text-align:center;">Un dresseur itinérant te propose 3 Pokémon sauvages. Tu ne peux en recruter qu'un seul !</div>
       <div id="ranchDraftCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;"></div>
       <div class="dex-rate" id="villageMsg" style="text-align:center;margin-top:10px;color:var(--good);"></div>
     </div>`;
-  const excluded = [...team.map(m=>m.lineId), ...pcBox.filter(x=>x).map(m=>m.lineId)];
-  const isFacile = difficulty==='facile';
-  const pool = isFacile ? buildFacileCandidates(excluded) : buildDraftCandidates(excluded);
-  const choices = weightedSampleCandidates(pool, 3);
+  if(!ranchChoices){
+    const excluded = [...team.map(m=>m.lineId), ...pcBox.filter(x=>x).map(m=>m.lineId)];
+    const isFacile = difficulty==='facile';
+    const pool = isFacile ? buildFacileCandidates(excluded) : buildDraftCandidates(excluded);
+    ranchChoices = weightedSampleCandidates(pool, 3);
+  }
+  const choices = ranchChoices;
   const cardsWrap = document.getElementById('ranchDraftCards');
   choices.forEach(choice=>{
     const line = lineOf(choice.lineId);
@@ -21,7 +33,7 @@ function renderRanchPanel(){
     card.innerHTML = `
       <div style="width:60px;height:60px;margin:0 auto 6px;">${getSpriteHTML(sp.name)}</div>
       <div style="font-size:10px;color:var(--text-main);margin-bottom:4px;">${sp.name}</div>
-      <div class="types-row" style="justify-content:center;">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
+      <div class="types-row" style="justify-content:center;">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
     `;
     card.onclick = ()=> renderRanchRecruit(choice, sp);
     cardsWrap.appendChild(card);
@@ -33,7 +45,7 @@ function renderRanchRecruit(choice, sp){
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
       <div style="width:70px;height:70px;margin:0 auto 8px;">${getSpriteHTML(sp.name)}</div>
       <div style="font-size:12px;color:var(--text-main);margin-bottom:4px;">${sp.name}</div>
-      <div class="types-row" style="justify-content:center;margin-bottom:12px;">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
+      <div class="types-row" style="justify-content:center;margin-bottom:12px;">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
       <div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">Où veux-tu l'envoyer ?</div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
         <button class="btn" id="ranchToTeamBtn">Ajouter à l'équipe</button>
@@ -51,6 +63,7 @@ function renderRanchRecruit(choice, sp){
   document.getElementById('ranchToPCBtn').onclick = ()=>{
     if(!pcHasSpace()) return;
     depositToPC(buildMember());
+    ranchRecruited = true;
     saveGame();
     setVillageMsg(`✓ ${sp.name} envoyé au PC !`);
     renderRanchPanel();
@@ -74,6 +87,7 @@ function renderRanchRecruit(choice, sp){
         } else {
           setVillageMsg(`✓ ${sp.name} rejoint l'équipe ! (PC plein, ${msp.name} a été relâché)`);
         }
+        ranchRecruited = true;
         saveGame();
         renderRanchPanel();
       };

@@ -55,7 +55,7 @@ function renderBagTargetList(key){
     btn.className = 'btn secondary';
     btn.disabled = !usable;
     btn.style.cssText = 'width:100%;text-align:left;padding:8px;margin-bottom:6px;display:flex;align-items:center;gap:8px;';
-    btn.innerHTML = `<span style="width:28px;height:28px;display:inline-block;">${getSpriteHTML(sp.name, m.unownForm)}</span><span style="font-size:10px;">${sp.name} — ${hp}/${maxHp} PV ${m.status?STATUS_ICON[m.status]:''}</span>`;
+    btn.innerHTML = `<span style="width:28px;height:28px;display:inline-block;">${getSpriteHTML(sp.name, m.unownForm)}</span><span style="font-size:10px;">${sp.name} — ${hp}/${maxHp} PV ${m.status?statusIconHTML(m.status,12):''}</span>`;
     btn.onclick = ()=>{
       if(item.heal) m.hp = Math.min(maxHp, hp + Math.round(maxHp*item.heal));
       if(item.cureStatus){ m.status = null; m.sleepCounter = 0; }

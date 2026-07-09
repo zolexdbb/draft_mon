@@ -159,7 +159,7 @@ function openTeamModal(){
       <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;margin-bottom:8px;">
         <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(sp.name, m.unownForm)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:10px;color:var(--text-main);">${i===0?'👑 ':''}${sp.name} ${m.status?STATUS_ICON[m.status]:''}</div>
+          <div style="font-size:10px;color:var(--text-main);">${i===0?'👑 ':''}${sp.name} ${m.status?statusIconHTML(m.status,12):''}</div>
           <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
           <div style="font-size:8px;color:var(--text-dim);">${hp}/${maxHp} PV</div>
           <div id="teamHeldSel${i}" style="margin-top:4px;max-width:180px;"></div>

@@ -1,5 +1,15 @@
 /* ==== combat/battle-ui.js (généré depuis index.html) ==== */
-function setLog(html){ document.getElementById('log').innerHTML = html; }
+function clearLog(){ document.getElementById('log').innerHTML = ''; }
+function setLog(html){
+  if(!html) return;
+  const el = document.getElementById('log');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = html;
+  el.appendChild(entry);
+  while(el.children.length > 60){ el.removeChild(el.firstChild); }
+  el.scrollTop = el.scrollHeight;
+}
 
 function renderBench(containerId, roster, activeIdx){
   const el = document.getElementById(containerId);
@@ -16,14 +26,14 @@ function renderCombatantBox(c, prefix){
   document.getElementById(prefix+'Box').classList.remove('faint-fade');
   document.getElementById(prefix+'Name').textContent = c.name;
   const typeTag = document.getElementById(prefix+'Type');
-  typeTag.innerHTML = c.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join(' ');
+  typeTag.innerHTML = c.types.map(t=>typeBadgeIconHTML(t)).join('');
 
   // Icône de statut bien visible sur le sprite
   const box = document.getElementById(prefix+'Box');
   let badge = box.querySelector('.status-icon-badge');
   if(c.status){
     if(!badge){ badge = document.createElement('div'); badge.className='status-icon-badge'; box.appendChild(badge); }
-    badge.textContent = STATUS_ICON[c.status];
+    badge.innerHTML = statusIconHTML(c.status, 18);
     badge.title = STATUS_LABEL[c.status];
   } else if(badge){
     badge.remove();
@@ -45,9 +55,9 @@ function renderCombatantBox(c, prefix){
     return `<span class="stat-badge ${cls}">${STAT_LABEL[stat]} ${sign}${stage}</span>`;
   }).join('');
   if(c.confuseCounter>0){
-    statBadgesEl.innerHTML += `<span class="stat-badge nerf">${STATUS_ICON['confusion']} Confus</span>`;
+    statBadgesEl.innerHTML += `<span class="stat-badge nerf">${statusIconHTML('confusion',10)} Confus</span>`;
   }
-  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.unownForm);
+  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.unownForm, prefix==='player' ? 'back' : 'front');
   const ratio = Math.max(c.hp,0)/c.maxHp;
   const fill = document.getElementById(prefix+'HpFill');
   fill.style.width = (ratio*100)+'%';
@@ -97,7 +107,7 @@ function renderMoveGrid(){
     const ppMax = basePP(mv);
     const noPP = ppCur!==null && ppCur<=0;
     btn.disabled = bs.locked || isDisabled || isLockedOut || noPP;
-    btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${TYPE_EMOJI[mv.type]||''} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?" · Bloqué par l'objet":''}</small>`;
+    btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?" · Bloqué par l'objet":''}</small>`;
     btn.onclick = ()=> playerAttack(idx);
     grid.appendChild(btn);
   });
@@ -120,7 +130,7 @@ function openManualSwitch(){
     const c = bs.player[i];
     const btn = document.createElement('button');
     btn.className='move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>typeTagHTML(t)).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
     btn.onclick = ()=> doVoluntarySwitch(i);
     sw.appendChild(btn);
   });
@@ -196,7 +206,7 @@ function showSwitchPrompt(aliveIdx){
     const c = bs.player[i];
     const btn = document.createElement('button');
     btn.className='move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>typeTagHTML(t)).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
     btn.onclick = ()=>{
       bs.pActive = i;
       resetBattleFields(c);
@@ -210,4 +220,8 @@ function showSwitchPrompt(aliveIdx){
     sw.appendChild(btn);
   });
 }
+
+document.getElementById('manualSwitchBtn').onclick = openManualSwitch;
+document.getElementById('cancelSwitchBtn').onclick = closeManualSwitch;
+document.getElementById('bagBtn').onclick = openBag;
 

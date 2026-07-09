@@ -3,18 +3,76 @@ const PATCH_NOTES = [
   {
     version: 'v0.4',
     title: 'v0.4 — Gen 3 Update',
-    items: [
-      "135 nouveaux Pokémon ajoutés (Pokédex complet 1 → 386)",
-      "20 nouveaux talents de Génération 3 (Fermeté, Garde Mystik, Cran, Crachin, Sécheresse, Sable Volant, Marque Ombre, Ventouse, Air Lock, Peau Dure, Turbo, Déguisement...)",
-      "45 nouvelles attaques de Génération 3 (Danse Draco, Feu Follet, Surchauffe, Calmesprit, Provoc, Souvenir, Sabotage...)",
-      "Restructuration des évolutions à embranchements façon Évoli (Chenipotte, Arakdo)",
-      "Immunités de type aux altérations de statut corrigées (Poison/Acier immunisés au poison, Feu à la brûlure, Glace au gel)",
-      "Correction du seuil de déclenchement de la Baie Oran",
-      "30 objets ajoutés avec sprites et effets officiels (Potions à paliers, anti-statuts, Baies, objets stratégiques comme Bandeau Choix, Orbe Vie, Veste de Combat...)",
-      "Pokéshop réorganisé en 3 onglets par catégorie",
-      "Nouveau système de PC (6 emplacements, accessible via le Pokécentre)",
-      "Boutons Sac et Équipe accessibles depuis la Tour et le Village",
-      "Le Ranch devient un mini-draft de recrutement (3 choix, 1 seul Pokémon gardé)"
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "135 nouveaux Pokémon ajoutés (Pokédex complet 1 → 386)",
+          "20 nouveaux talents de Génération 3 (Fermeté, Garde Mystik, Cran, Crachin, Sécheresse, Sable Volant, Marque Ombre, Ventouse, Air Lock, Peau Dure, Turbo, Déguisement...)",
+          "45 nouvelles attaques de Génération 3 (Danse Draco, Feu Follet, Surchauffe, Calmesprit, Provoc, Souvenir, Sabotage...)",
+          "Restructuration des évolutions à embranchements façon Évoli (Chenipotte, Arakdo)"
+        ]
+      },
+      {
+        icon: '🎒', label: 'Objets & Village',
+        items: [
+          "30 objets ajoutés avec sprites et effets officiels (Potions à paliers, anti-statuts, Baies, objets stratégiques comme Bandeau Choix, Orbe Vie, Veste de Combat...)",
+          "Pokéshop réorganisé en 3 onglets par catégorie",
+          "Nouveau système de PC (6 emplacements, accessible via le Pokécentre)",
+          "Boutons Sac et Équipe accessibles depuis la Tour et le Village",
+          "Le Ranch devient un mini-draft de recrutement (3 choix, 1 seul Pokémon gardé)"
+        ]
+      },
+      {
+        icon: '🐛', label: 'Corrections',
+        items: [
+          "Immunités de type aux altérations de statut corrigées (Poison/Acier immunisés au poison, Feu à la brûlure, Glace au gel)",
+          "Correction du seuil de déclenchement de la Baie Oran"
+        ]
+      }
+    ],
+    subVersions: [
+      {
+        version: 'v0.4.1',
+        title: 'v0.4.1 — Combat & Interface Update',
+        categories: [
+          {
+            icon: '🎵', label: 'Musique',
+            items: [
+              "Musiques d'ambiance différentes pour le Menu, le Village et les Combats",
+              "Bouton ⚙️ Paramètres avec réglage du volume"
+            ]
+          },
+          {
+            icon: '⚔️', label: 'Interface de combat',
+            items: [
+              "Suppression du cadre autour des combattants, sprite vu de dos pour ton Pokémon",
+              "Pastilles de type compactes (icône seule) au lieu des badges texte",
+              "Nouvelles icônes de statut (Poison, Brûlure, Paralysie, Sommeil, Confusion, Gel)",
+              "Historique de combat défilant sur plusieurs tours",
+              "Bannière du dresseur adverse mise en avant, avec liseré doré (Boss) ou violet (Mini-Boss)",
+              "Zone de terrain et zone d'actions clairement séparées visuellement"
+            ]
+          },
+          {
+            icon: '🌀', label: 'Mécaniques de combat',
+            items: [
+              "Animations d'attaque selon le type (icône dédiée, projectile pour les Spéciales, impact pour les Physiques)",
+              "Les capacités à charge (Lance-Soleil, Coud'Krâne, Coupe-Vent, Vol, Tunnel, Plongée) prennent réellement 2 tours, avec enchaînement automatique",
+              "Vol/Tunnel/Plongée rendent invulnérable pendant la charge, sauf face à Séisme, Ampleur, Lame du Vide, Tornade, Ouragan, Fatal-Foudre, Stratopercut, Surf et Siphon",
+              "Prescience frappe désormais 2 tours après son utilisation"
+            ]
+          },
+          {
+            icon: '🐛', label: 'Corrections',
+            items: [
+              "Correction de la fiabilité des sprites Pokémon et des icônes d'objets/baies/potions",
+              "Le Ranch ne se retire plus à l'infini en changeant d'onglet",
+              "Correction des boutons \"Changer de Pokémon\" et \"Sac\" qui ne répondaient plus en combat"
+            ]
+          }
+        ]
+      }
     ]
   },
   {
@@ -72,17 +130,35 @@ const PATCH_NOTES = [
   }
 ];
 const SPLASH_TEXTS = ["Gen 3 is here!!!"];
+function renderPatchNoteBody(v){
+  if(v.categories){
+    return v.categories.map(c => `
+      <div class="patchnotes-category">
+        <div class="patchnotes-category-label">${c.icon} ${c.label}</div>
+        <ul>${c.items.map(i=>`<li>${i}</li>`).join('')}</ul>
+      </div>`).join('');
+  }
+  return `<ul>${v.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+}
 function renderPatchNotes(){
-  return PATCH_NOTES.map(v => `
+  return PATCH_NOTES.map((v,idx) => {
+    const expanded = idx===0;
+    return `
     <div class="patchnotes-version">
-      <div class="patchnotes-version-title">${v.title}</div>
-      <ul>${v.items.map(i=>`<li>${i}</li>`).join('')}</ul>
-      ${(v.subVersions||[]).map(sv => `
-        <div class="patchnotes-version" style="margin-left:16px;margin-top:10px;padding-left:10px;border-left:2px solid var(--line);">
-          <div class="patchnotes-version-title" style="font-size:9px;color:var(--accent-dim,var(--text-dim));">${sv.title}</div>
-          <ul>${sv.items.map(i=>`<li>${i}</li>`).join('')}</ul>
-        </div>`).join('')}
-    </div>`).join('');
+      <div class="patchnotes-version-header">
+        <span class="patchnotes-chevron">${expanded?'▾':'▸'}</span>
+        <span class="patchnotes-version-title">${v.title}</span>
+      </div>
+      <div class="patchnotes-version-content"${expanded?'':' style="display:none;"'}>
+        ${renderPatchNoteBody(v)}
+        ${(v.subVersions||[]).map(sv => `
+          <div class="patchnotes-version" style="margin-left:16px;margin-top:10px;padding-left:10px;border-left:2px solid var(--line);">
+            <div class="patchnotes-version-title" style="font-size:9px;color:var(--accent-dim,var(--text-dim));">${sv.title}</div>
+            ${renderPatchNoteBody(sv)}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
 }
 function openPatchNotes(){
   const overlay = document.createElement('div');
@@ -98,6 +174,15 @@ function openPatchNotes(){
   const close = ()=> overlay.remove();
   document.getElementById('patchNotesCloseBtn').onclick = close;
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
+  overlay.querySelectorAll('.patchnotes-version-header').forEach(header=>{
+    header.onclick = ()=>{
+      const content = header.nextElementSibling;
+      const chevron = header.querySelector('.patchnotes-chevron');
+      const isHidden = content.style.display === 'none';
+      content.style.display = isHidden ? '' : 'none';
+      chevron.textContent = isHidden ? '▾' : '▸';
+    };
+  });
 }
 document.getElementById('splashTextBtn').textContent = SPLASH_TEXTS[Math.floor(Math.random()*SPLASH_TEXTS.length)];
 document.getElementById('splashTextBtn').onclick = openPatchNotes;

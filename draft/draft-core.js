@@ -144,7 +144,7 @@ function nextDraftRound(){
       <div class="emoji">${getSpriteHTML(sp.name)}</div>
       <div class="pname">${sp.name}</div>
       <div class="evoline">${evoline}</div>
-      <div class="types-row">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
+      <div class="types-row">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:6px 0;background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:6px;">
         <div style="text-align:center;font-size:10px;color:var(--text-dim);">PV<br><b style="color:var(--text-main);font-size:13px;">${sp.base.hp}</b></div>
         <div style="text-align:center;font-size:10px;color:var(--text-dim);">Atq<br><b style="color:var(--text-main);font-size:13px;">${sp.base.atk}</b></div>

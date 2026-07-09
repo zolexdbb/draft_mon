@@ -42,7 +42,7 @@ function renderDex(){
         <span class="rarity-badge ${rarity.css}">${rarity.label}</span>
         <div class="emoji">${getSpriteHTML(sp.name)}</div>
         <div class="pname">${sp.name}</div>
-        <div class="types-row">${sp.types.map(t=>`<span class="type-tag t-${t}">${t}</span>`).join('')}</div>
+        <div class="types-row">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
         <div class="stat-line">PV ${sp.base.hp} · Atq ${sp.base.atk} · Déf ${sp.base.def}</div>
         <div class="stat-line">AtqSp ${sp.base.spa} · DéfSp ${sp.base.spd} · Vit ${sp.base.spe}</div>
         <div class="dex-rate">${rateText}</div>

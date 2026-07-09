@@ -26,6 +26,7 @@ function pickSmartMoves(movepool, sp, floor){
 }
 
 function chooseFoeMove(foe, player){
+  if(foe.chargingMove) return foe.chargingMove;
   let moves = foe.disabledMove ? foe.moveObjs.filter(mv=>mv.name!==foe.disabledMove.name) : foe.moveObjs;
   if(foe.lockedMove) moves = foe.moveObjs.filter(mv=>mv.name===foe.lockedMove.name);
   if(moves.length===0) moves = foe.moveObjs;

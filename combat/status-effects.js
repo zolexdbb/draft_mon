@@ -1,6 +1,32 @@
 /* ==== combat/status-effects.js (généré depuis index.html) ==== */
 const STATUS_LABEL = { poison:'☠️ Empoisonné', brulure:'🔥 Brûlé', paralysie:'⚡ Paralysé', sommeil:'💤 Endormi', confusion:'💫 Confus', gel:'🧊 Gelé' };
 const STATUS_ICON = { poison:'☠️', brulure:'🔥', paralysie:'⚡', sommeil:'💤', confusion:'💫', gel:'🧊' };
+const STATUS_COLOR = { poison:'#A33EA1', brulure:'#EE8130', paralysie:'#F7D02C', sommeil:'#9199A1', confusion:'#F95587', gel:'#96D9D6' };
+function spiralPoints(turns, startR, endR, steps, cx, cy){
+  cx = cx||12; cy = cy||12; steps = steps||40;
+  const pts = [];
+  for(let i=0;i<=steps;i++){
+    const t = i/steps;
+    const angle = t*Math.PI*2*turns;
+    const r = startR + (endR-startR)*t;
+    pts.push((cx+Math.cos(angle)*r).toFixed(2)+','+(cy+Math.sin(angle)*r).toFixed(2));
+  }
+  return pts.join(' ');
+}
+const STATUS_ICON_PATH = {
+  poison: `<path d="M12 2C7.58 2 4 5.58 4 10c0 2.92 1.56 5.47 3.9 6.86.06.5.1 1.32.1 2.14v1c0 .55.45 1 1 1h1v-1.5h1V21h4v-1.5h1V20h1c.55 0 1-.45 1-1v-1c0-.82.04-1.64.1-2.14C18.44 15.47 20 12.92 20 10c0-4.42-3.58-8-8-8zm-2.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>`,
+  brulure: TYPE_ICON_PATH.feu,
+  paralysie: TYPE_ICON_PATH.electrik,
+  sommeil: `<text x="12" y="17" font-size="13" font-weight="900" text-anchor="middle" fill="currentColor" font-family="Arial, sans-serif">Zz</text>`,
+  confusion: `<polyline points="${spiralPoints(1.8,1,10)}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  gel: TYPE_ICON_PATH.glace
+};
+function statusIconHTML(status, size){
+  size = size || 16;
+  const color = STATUS_COLOR[status] || '#e8e0f0';
+  const path = STATUS_ICON_PATH[status] || '';
+  return `<span class="type-icon" style="width:${size}px;height:${size}px;color:${color};"><svg viewBox="0 0 24 24">${path}</svg></span>`;
+}
 
 /* =================== IA ADVERSAIRE =================== */
 /* =================== SYSTÈME DE PP =================== */
