@@ -297,6 +297,15 @@ const MOVES = {
   whirlpool:{pp:15,name:'Siphon',type:'eau',cat:'spec',power:35,accuracy:0.85,bypassInvuln:['dive'],desc:"Emprisonne la cible dans un tourbillon aquatique. Touche même les cibles qui plongent."},
   beatup:{pp:10,name:'Baston',type:'tenebres',cat:'phys',power:55,desc:"Toute l'équipe se relaie pour frapper la cible tour à tour."},
 
+  /* ---- BLOC 3 (Gen 4) : nouvelles capacités ---- */
+  aurasphere:{pp:20,name:'Aurasphère',type:'combat',cat:'spec',power:80,accuracy:1.0,desc:"Une onde d'énergie pure tirée du plus profond de soi. Ne rate jamais."},
+  closecombat:{pp:5,name:'Close Combat',type:'combat',cat:'phys',power:120,effect:{},desc:"Attaque de plein fouet sans se soucier de sa garde, au prix de ses défenses."},
+  focusblast:{pp:5,name:'Exploforce',type:'combat',cat:'spec',power:120,accuracy:0.7,secondaryBoost:{stat:'spd',stages:-1,chance:0.1},desc:"Concentre son énergie en une sphère dévastatrice. Peut réduire la Défense Spéciale."},
+  dracometeor:{pp:5,name:'Draco-Météore',type:'dragon',cat:'spec',power:130,accuracy:0.9,effect:{},desc:"Convoque une pluie de météores draconiques qui épuise le lanceur."},
+  dragonpulse:{pp:10,name:'Dracochoc',type:'dragon',cat:'spec',power:85,desc:"Libère une onde de choc depuis sa mâchoire grande ouverte."},
+  uturn:{pp:20,name:'Demi-Tour',type:'insecte',cat:'phys',power:70,effect:{selfSwitch:true},desc:"Frappe puis rebrousse chemin à toute vitesse, cédant sa place à un autre Pokémon."},
+  stealthrock:{pp:20,name:'Piège de Roc',type:'roche',cat:'status',power:0,target:'foe',effect:{},desc:"Dispose des pierres pointues flottantes autour du camp adverse."},
+
   /* ---- BLOC 2 (Gen 3) : nouvelles capacités ---- */
   stridoson:{pp:40,name:'Strido-Son',type:'acier',cat:'status',power:0,target:'foe',accuracy:0.85,effect:{foeBoost:[{stat:'spd',stages:-2}]},desc:"Un cri métallique perçant qui baisse fortement la Défense Spéciale adverse."},
   meteormash:{pp:10,name:'Poing Météor',type:'acier',cat:'phys',power:100,accuracy:0.85,secondarySelfBoost:{stat:'atk',stages:1,chance:0.2},desc:"Un poing d'acier propulsé telle une comète. Peut booster l'Attaque."},

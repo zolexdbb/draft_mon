@@ -1,7 +1,7 @@
 /* ==== draft/draft-core.js (généré depuis index.html) ==== */
-const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','jirachi','deoxys'];
-const PSEUDO_IDS = ['dratini','larvitar','bagon'];
-const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown','absol','relicanth','mawile','beldum'];
+const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','jirachi','deoxys','uxie','mesprit','azelf','dialga','palkia','heatran','regigigas','giratina','cresselia','phione','manaphy','darkrai','shaymin','arceus'];
+const PSEUDO_IDS = ['dratini','larvitar','bagon','gible'];
+const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown','absol','relicanth','mawile','beldum','riolu','spiritomb','rotom'];
 function lineWeight(line){
   if(LEGENDARY_IDS.includes(line.id)) return 0.5;  // Très rare : ~2× moins fréquent qu'avant
   if(PSEUDO_IDS.includes(line.id)) return 3;         // Pseudo-légendaire : rare

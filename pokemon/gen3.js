@@ -51,8 +51,10 @@ const LINES_GEN3 = [
 {id:'ralts',abilities:['Synchro','Calque'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Tarsal',types:['psy'],base:st(28,25,25,45,35,40)},
-  {name:'Kirlia',types:['psy'],base:st(38,35,35,65,55,50)},
-  {name:'Gardevoir',types:['psy'],base:st(68,65,65,125,115,80)}]},
+  {name:'Kirlia',types:['psy'],base:st(38,35,35,65,55,50)}], branches:[
+  {name:'Gardevoir',types:['psy'],base:st(68,65,65,125,115,80),abilities:['Synchro','Calque'],extraMoveIds:['moonlight']},
+  {name:'Gallame',types:['psy','combat'],base:st(68,125,65,65,115,80),abilities:['Impassible','Cœur Noble'],extraMoveIds:['karatechop','submission','crosschop','brickbreak','closecombat','vitalthrow','slash','nightslash']}
+ ]},
 {id:'surskit',abilities:['Glissade'],moveIds:['leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Arakdo',types:['insecte','eau'],base:st(40,30,32,50,52,65)},
@@ -84,7 +86,8 @@ const LINES_GEN3 = [
   {name:'Hariyama',types:['combat'],base:st(144,120,60,40,60,50)}]},
 {id:'nosepass',abilities:['Magnépiège','Fermeté'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Tarinor',types:['roche'],base:st(30,45,135,45,90,30)}]},
+  {name:'Tarinor',types:['roche'],base:st(30,45,135,45,90,30)},
+  {name:'Tarinorme',types:['roche','acier'],base:st(60,55,145,75,150,40),abilities:['Fermeté','Force Sable']}]},
 {id:'skitty',abilities:['Joli Sourire','Peau Miracle'],moveIds:['tackle','quickattack','headbutt','bite','stomp','doubleedge','bodyslam','facade','hypervoice','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip','sweetscent','charm'],
  stages:[
   {name:'Skitty',types:['normal'],base:st(50,45,45,35,35,50)},
@@ -122,7 +125,9 @@ const LINES_GEN3 = [
   {name:'Lumivole',types:['insecte'],base:st(65,47,55,73,75,85)}]},
 {id:'roselia',abilities:['Médic Nature','Point Poison'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','sludge','poisonsting','acid','sludgebomb','poisonjab','poisonfang','poisontail','acidarmor','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Rosélia',types:['plante','poison'],base:st(50,60,45,100,80,65)}]},
+  {name:'Rozbouton',types:['plante','poison'],base:st(40,30,35,50,70,55)},
+  {name:'Rosélia',types:['plante','poison'],base:st(50,60,45,100,80,65)},
+  {name:'Roserade',types:['plante','poison'],base:st(60,70,65,125,105,90)}]},
 {id:'gulpin',abilities:['Suintement','Glu'],moveIds:['sludge','poisonsting','acid','sludgebomb','poisonjab','poisonfang','poisontail','acidarmor','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Gloupti',types:['poison'],base:st(70,43,53,43,53,40)},
@@ -213,20 +218,24 @@ const LINES_GEN3 = [
 {id:'duskull',abilities:['Lévitation'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Skelénox',types:['fantome'],base:st(20,40,90,30,90,25)},
-  {name:'Téraclope',types:['fantome'],base:st(40,70,130,60,130,25)}]},
+  {name:'Téraclope',types:['fantome'],base:st(40,70,130,60,130,25)},
+  {name:'Noctunoir',types:['fantome'],base:st(45,100,135,65,135,45),abilities:['Pression','Fouille']}]},
 {id:'tropius',abilities:['Chlorophylle','Force Soleil'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
  stages:[
   {name:'Tropius',types:['plante','vol'],base:st(99,68,83,72,87,51)}]},
 {id:'chimecho',abilities:['Lévitation'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
+  {name:'Korillon',types:['psy'],base:st(45,30,50,65,50,45)},
   {name:'Éoko',types:['psy'],base:st(65,50,70,95,80,65)}]},
 {id:'absol',abilities:['Pression'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','thief','pursuit','knockoff','faketears','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
  stages:[
   {name:'Absol',types:['tenebres'],base:st(65,130,60,75,60,75)}]},
 {id:'snorunt',abilities:['Attention','Rideau Neige'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','aurorabeam','powdersnow','iciclespear','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Stalgamin',types:['glace'],base:st(50,50,50,50,50,50)},
-  {name:'Oniglali',types:['glace'],base:st(80,80,80,80,80,80)}]},
+  {name:'Stalgamin',types:['glace'],base:st(50,50,50,50,50,50)}], branches:[
+  {name:'Oniglali',types:['glace'],base:st(80,80,80,80,80,80),abilities:['Attention','Rideau Neige'],extraMoveIds:['crunch']},
+  {name:'Momartik',types:['glace','fantome'],base:st(70,80,70,80,70,110),abilities:['Rideau Neige','Corps Maudit'],extraMoveIds:['lick','shadowball','nightshade','shadowclaw','confuseray']}
+ ]},
 {id:'spheal',abilities:['Isograisse','Benêt'],moveIds:['icebeam','icepunch','blizzard','icefang','icywind','aurorabeam','powdersnow','iciclespear','watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Obalie',types:['glace','eau'],base:st(70,40,50,55,50,25)},
@@ -298,7 +307,7 @@ const DEX_NUMBERS_GEN3 = {
   'Grainipiot':273,'Pifeuil':274,'Tengalice':275,
   'Nirondelle':276,'Hélédelle':277,
   'Goélise':278,'Bekipan':279,
-  'Tarsal':280,'Kirlia':281,'Gardevoir':282,
+  'Tarsal':280,'Kirlia':281,'Gardevoir':282,'Gallame':475,
   'Arakdo':283,'Maskadra':284,
   'Balignon':285,'Chapignon':286,
   'Parécool':287,'Vigoroth':288,'Monaflèmit':289,
@@ -306,7 +315,7 @@ const DEX_NUMBERS_GEN3 = {
   'Chuchmur':293,'Ramboum':294,'Brouhabam':295,
   'Makuhita':296,'Hariyama':297,
   'Azurill':298,
-  'Tarinor':299,
+  'Tarinor':299,'Tarinorme':476,
   'Skitty':300,'Delcatty':301,
   'Ténéfix':302,
   'Mysdibule':303,
@@ -317,7 +326,7 @@ const DEX_NUMBERS_GEN3 = {
   'Négapi':312,
   'Muciole':313,
   'Lumivole':314,
-  'Rosélia':315,
+  'Rozbouton':406,'Rosélia':315,'Roserade':407,
   'Gloupti':316,'Avaltout':317,
   'Carvanha':318,'Sharpedo':319,
   'Wailmer':320,'Wailord':321,
@@ -342,12 +351,12 @@ const DEX_NUMBERS_GEN3 = {
   'Morphéo':351,
   'Kecleon':352,
   'Polichombr':353,'Branette':354,
-  'Skelénox':355,'Téraclope':356,
+  'Skelénox':355,'Téraclope':356,'Noctunoir':477,
   'Tropius':357,
-  'Éoko':358,
+  'Korillon':433,'Éoko':358,
   'Absol':359,
   'Wynaut':360,
-  'Stalgamin':361,'Oniglali':362,
+  'Stalgamin':361,'Oniglali':362,'Momartik':478,
   'Obalie':363,'Phogleur':364,'Kaimorse':365,
   'Coquiperl':366,'Serpang':367,'Rosabyss':368,
   'Relicanth':369,

@@ -1,6 +1,22 @@
 /* ==== ui/patch-notes.js (généré depuis index.html) ==== */
 const PATCH_NOTES = [
   {
+    version: 'v0.5',
+    title: 'v0.5 — Gen 4 Update',
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "107 nouveaux Pokémon ajoutés (Sinnoh, Pokédex complet 1 → 493)",
+          "18 lignées existantes reçoivent leur évolution ou pré-évolution de Génération 4 (Magnézone, Lucario, Tangrowth, Yanmega, Mamoswine, Weavile, Honchkiss, Roserade, Porygon-Z, Bébés Happiny/Mime Jr./Bonsly/Munchlax/Mantyke/Chingling...)",
+          "2 nouvelles évolutions pour Évoli : Phyllali et Givrali",
+          "7 nouvelles attaques de Génération 4 (Aurasphère, Close Combat, Exploforce, Draco-Météore, Dracochoc, Demi-Tour, Piège de Roc)",
+          "14 nouveaux Pokémon Légendaires/Fabuleux (le Trio du Lac, Dialga, Palkia, Heatran, Regigigas, Giratina, Cresselia, Phione, Manaphy, Darkrai, Shaymin, Arceus) et Carchacrok en pseudo-légendaire"
+        ]
+      }
+    ]
+  },
+  {
     version: 'v0.4',
     title: 'v0.4 — Gen 3 Update',
     categories: [
