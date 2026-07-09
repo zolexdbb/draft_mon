@@ -200,7 +200,7 @@ const PATCH_NOTES = [
     ]
   }
 ];
-const SPLASH_TEXTS = ["Gen 3 is here!!!"];
+const SPLASH_TEXTS = ["Gen 4 is here!!!"];
 function renderPatchNoteBody(v){
   if(v.categories){
     return v.categories.map(c => `
