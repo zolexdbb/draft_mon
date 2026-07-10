@@ -14,6 +14,62 @@ const PATCH_NOTES = [
           "14 nouveaux Pokémon Légendaires/Fabuleux (le Trio du Lac, Dialga, Palkia, Heatran, Regigigas, Giratina, Cresselia, Phione, Manaphy, Darkrai, Shaymin, Arceus) et Carchacrok en pseudo-légendaire"
         ]
       }
+    ],
+    subVersions: [
+      {
+        version: 'v0.5.1',
+        title: 'v0.5.1 — Progression & Rééquilibrage',
+        categories: [
+          {
+            icon: '🎫', label: 'Jetons de Tour',
+            items: [
+              "Nouvelle monnaie méta gagnée à la défaite selon l'étage atteint (taux différent par difficulté, pour éviter le hard farm en Facile)",
+              "Boutique de Boosts (accessible au menu) : déblocages permanents et globaux — Bourse de départ, Trousse de secours, Carte de fidélité, Draft assisté"
+            ]
+          },
+          {
+            icon: '🏥', label: 'Centre Pokémon',
+            items: [
+              "En mode Difficile, une halte de soin gratuite apparaît désormais après chaque Mini-Boss (en plus du Village après les Boss)"
+            ]
+          },
+          {
+            icon: '🎲', label: 'Événements aléatoires',
+            items: [
+              "25% de chance d'un événement après un étage normal, avec un texte lié à l'étage atteint",
+              "2 événements sûrs (Bourse oubliée, Source curative) et 6 événements risqués (Buisson suspect, Champignons étranges, Distributeur mystérieux, Passage instable, Marchand louche, Nid sauvage)",
+              "Chaque échec risqué coûte toujours de l'argent ou un objet ; en Difficile, s'ajoute un vrai statut aléatoire ou un Pokémon bloqué pour le combat suivant"
+            ]
+          },
+          {
+            icon: '⚔️', label: 'Rééquilibrage des dresseurs',
+            items: [
+              "Chaque Boss est désormais un vrai Maître de Type (équipe 100% du même type, circuit sans répétition sur les 17 types par run)",
+              "IA excellente pour les Boss : choisit toujours la meilleure attaque et le meilleur Pokémon de relève selon les types",
+              "Les légendaires sont désormais bien plus rares dans les équipes des dresseurs non-Boss (taux mesuré ~14% → ~1%)",
+              "Nouveau système de badges (un par type de Maître battu), suivi séparément par difficulté et affiché dans l'écran Score"
+            ]
+          },
+          {
+            icon: '🚫', label: 'Anti-boucle',
+            items: [
+              "Quitter vers le menu en plein combat verrouille et abandonne la run (même sanction qu'une défaite)",
+              "Une défaite supprime désormais la sauvegarde en cours, impossible de recharger pour retenter le même combat en boucle"
+            ]
+          },
+          {
+            icon: '🐛', label: 'Corrections',
+            items: [
+              "9 noms français erronés du Pokédex corrigés (dont Tyranocif, Granbull, Cadoizo, Lovdisc, Terhal) et le numéro de Zarbi restauré",
+              "203 capacités avaient une précision fausse (repli silencieux à 95%) : toutes corrigées à leur vraie valeur officielle",
+              "Surpuissance, Close Combat, Draco-Météore, Surchauffe et Psycho Boost n'affaiblissaient jamais réellement le lanceur : corrigé",
+              "Prescience touchait le Pokémon présent sur le terrain à la résolution au lieu de suivre sa cible d'origine : corrigé",
+              "Ténacité rendait le Pokémon immortel indéfiniment (l'effet n'était jamais réinitialisé) : corrigé",
+              "Le meilleur étage ne se rechargeait plus après un rafraîchissement de la page : corrigé"
+            ]
+          }
+        ]
+      }
     ]
   },
   {

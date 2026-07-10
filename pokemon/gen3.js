@@ -253,7 +253,7 @@ const LINES_GEN3 = [
   {name:'Relicanth',types:['eau','roche'],base:st(100,90,130,45,65,55)}]},
 {id:'luvdisc',abilities:['Glissade'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Paporeille',types:['eau'],base:st(43,30,55,40,65,97)}]},
+  {name:'Lovdisc',types:['eau'],base:st(43,30,55,40,65,97)}]},
 {id:'bagon',abilities:['Tête de Roc'],moveIds:['dragonbreath','dragonclaw','dragonrage','dragondance','twister','outrage','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
  stages:[
   {name:'Draby',types:['dragon'],base:st(45,75,60,40,30,50)},
@@ -261,7 +261,7 @@ const LINES_GEN3 = [
   {name:'Drattak',types:['dragon','vol'],base:st(95,135,80,110,80,100)}]},
 {id:'beldum',abilities:['Corps Sain'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Balbeuth',types:['acier','psy'],base:st(40,55,80,35,60,30)},
+  {name:'Terhal',types:['acier','psy'],base:st(40,55,80,35,60,30)},
   {name:'Métang',types:['acier','psy'],base:st(60,75,100,55,80,50)},
   {name:'Métalosse',types:['acier','psy'],base:st(80,135,130,95,90,70)}]},
 {id:'regirock',abilities:['Corps Sain','Fermeté'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
@@ -360,9 +360,9 @@ const DEX_NUMBERS_GEN3 = {
   'Obalie':363,'Phogleur':364,'Kaimorse':365,
   'Coquiperl':366,'Serpang':367,'Rosabyss':368,
   'Relicanth':369,
-  'Paporeille':370,
+  'Lovdisc':370,
   'Draby':371,'Drackhaus':372,'Drattak':373,
-  'Balbeuth':374,'Métang':375,'Métalosse':376,
+  'Terhal':374,'Métang':375,'Métalosse':376,
   'Regirock':377,
   'Regice':378,
   'Registeel':379,

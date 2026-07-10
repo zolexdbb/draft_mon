@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Draft Mon — Tour de Combat</title>
+<link rel="icon" type="image/png" href="assets/image/logo/Draft_mon_logo.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,9 +19,12 @@
   <div class="panel" id="screenMenu">
     <button class="menu-splash" id="splashTextBtn">Gen 3 is here!!!</button>
     <div class="tower-floor" style="padding:40px 20px;">
-      <div style="font-size:64px;margin:0 0 10px;">🗼</div>
+      <div style="margin:0 0 10px;">
+        <img src="assets/image/logo/Draft_mon_logo.png" alt="Logo Draft Mon" style="width:120px;height:auto;">
+      </div>
       <div class="floor-label" style="letter-spacing:6px;font-size:11px;color:var(--accent);margin-bottom:6px;">TOUR DE COMBAT</div>
-      <button class="btn secondary" id="scoreBtn" style="margin-bottom:24px;padding:8px 16px;font-size:10px;">🏆 Score</button>
+      <button class="btn secondary" id="scoreBtn" style="margin-bottom:6px;padding:8px 16px;font-size:10px;">🏆 Score</button>
+      <div id="menuTokensBadge" style="font-size:9px;color:var(--text-dim);margin-bottom:24px;">🎫 0 Jetons de Tour</div>
       <div style="border:1px solid var(--line);border-radius:2px;padding:18px 24px;margin:0 auto 28px;max-width:360px;background:rgba(0,0,0,.3);">
         <div class="floor-label" style="font-size:9px;letter-spacing:3px;margin-bottom:12px;color:var(--text-dim);">▸ COMMENT JOUER ◂</div>
         <div style="font-size:10px;color:var(--text-dim);line-height:1.8;text-align:left;">
@@ -33,6 +37,7 @@
         <button class="btn" id="menuPlayBtn">▶ Nouvelle partie</button>
         <button class="btn secondary hidden" id="menuContinueBtn">💾 Continuer</button>
         <button class="btn secondary" id="menuDexBtn">📖 Pokédex</button>
+        <button class="btn secondary" id="menuBoostsBtn">🎫 Boosts</button>
         <button class="btn secondary" id="menuPatchNotesBtn">📋 Notes de MàJ</button>
       </div>
     </div>
@@ -63,6 +68,7 @@
     </div>
     <div class="draft-team-strip" id="draftTeamStrip"></div>
     <div class="sub" id="draftSub">Choisis un Pokémon pour ton équipe (1/6)</div>
+    <div id="draftRerollWrap" style="text-align:center;margin-bottom:6px;"></div>
     <div class="draft-cards" id="draftCards"></div>
   </div>
 
@@ -97,6 +103,7 @@
     <div style="text-align:center;margin-bottom:16px;">
       <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);">🏘️ VILLAGE</div>
       <div class="dex-rate" id="villageReward" style="color:var(--good);margin-top:6px;"></div>
+      <div class="dex-rate" id="villageBadge" style="color:var(--accent);margin-top:4px;"></div>
       <div class="dex-rate" id="villageMoney" style="margin-top:4px;">💰 0</div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:640px;margin:0 auto 20px;">
@@ -108,6 +115,37 @@
     <div id="villagePanelContent" style="max-width:640px;margin:0 auto 20px;"></div>
     <div style="text-align:center;">
       <button class="btn" id="villageContinueBtn">▶ Continuer vers la Tour</button>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="screenMiniCenter">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);">🏥 CENTRE POKÉMON</div>
+      <div class="dex-rate" id="miniCenterReward" style="color:var(--good);margin-top:6px;"></div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:18px;text-align:center;max-width:420px;margin:0 auto 20px;">
+      <div style="font-size:24px;margin-bottom:8px;">🏥</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.6;">Une halte rapide avant de repartir affronter la Tour. Soigne entièrement les PV et les altérations d'état de toute ton équipe. C'est gratuit !</div>
+      <button class="btn" id="miniCenterHealBtn">Soigner l'équipe</button>
+      <div class="dex-rate" id="miniCenterMsg" style="margin-top:10px;color:var(--good);"></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn" id="miniCenterContinueBtn">▶ Continuer vers la Tour</button>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="screenEvent">
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);" id="eventTitle">❓ ÉVÉNEMENT</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:18px;text-align:center;max-width:440px;margin:0 auto 20px;">
+      <div style="font-size:24px;margin-bottom:8px;" id="eventEmoji">❓</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.6;" id="eventFlavor"></div>
+      <div id="eventActions" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+      <div class="dex-rate" id="eventOutcome" style="margin-top:12px;color:var(--good);"></div>
+    </div>
+    <div style="text-align:center;">
+      <button class="btn hidden" id="eventContinueBtn">▶ Continuer vers la Tour</button>
     </div>
   </div>
 
@@ -155,6 +193,7 @@
       <div class="floor-label" id="endLabel">GAME OVER</div>
       <div class="floor-num" id="endFloor">1</div>
       <div class="floor-label">étages franchis</div>
+      <div class="floor-label" id="endTokensLabel" style="margin-top:10px;color:var(--accent);font-size:10px;"></div>
       <div style="margin-top:18px;">
         <button class="btn" id="restartBtn">Recommencer un draft</button>
       </div>
@@ -168,6 +207,7 @@
 <script src="core/natures.js"></script>
 <script src="core/stats.js"></script>
 <script src="core/state.js"></script>
+<script src="meta/rewards.js"></script>
 <script src="items/items.js"></script>
 <script src="moves/moves.js"></script>
 <script src="pokemon/gen1.js"></script>
@@ -182,6 +222,7 @@
 <script src="draft/draft-classic.js"></script>
 <script src="draft/draft-facile.js"></script>
 <script src="combat/tower.js"></script>
+<script src="combat/tower-events.js"></script>
 <script src="combat/pp-system.js"></script>
 <script src="combat/damage-calc.js"></script>
 <script src="combat/status-effects.js"></script>

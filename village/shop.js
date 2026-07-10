@@ -22,8 +22,10 @@ function renderPokeshopPanel(){
     tabs.appendChild(btn);
   });
   const list = document.getElementById('shopList');
+  const discount = metaShopDiscount();
   Object.entries(ITEMS).filter(([k,it])=>it.category===shopCategory).forEach(([key, item])=>{
     const owned = bag[key]||0;
+    const price = Math.round(item.price * (1 - discount));
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;';
     row.innerHTML = `
@@ -32,7 +34,7 @@ function renderPokeshopPanel(){
         <div style="font-size:11px;color:var(--text-main);"><b>${item.name}</b> <span style="color:var(--text-dim);">(possédé : ${owned})</span></div>
         <div style="font-size:9px;color:var(--text-dim);line-height:1.4;">${item.desc}</div>
       </div>
-      <button class="btn secondary buyBtn" data-key="${key}" style="padding:6px 10px;font-size:10px;white-space:nowrap;">${item.price} 💰</button>
+      <button class="btn secondary buyBtn" data-key="${key}" style="padding:6px 10px;font-size:10px;white-space:nowrap;">${price} 💰${discount>0?` <span style="text-decoration:line-through;opacity:.5;font-size:8px;">${item.price}</span>`:''}</button>
     `;
     list.appendChild(row);
   });
@@ -40,8 +42,9 @@ function renderPokeshopPanel(){
     btn.onclick = ()=>{
       const key = btn.dataset.key;
       const item = ITEMS[key];
-      if(money < item.price){ setVillageMsg("Pas assez d'argent !"); return; }
-      money -= item.price;
+      const price = Math.round(item.price * (1 - metaShopDiscount()));
+      if(money < price){ setVillageMsg("Pas assez d'argent !"); return; }
+      money -= price;
       bag[key] = (bag[key]||0)+1;
       refreshVillageMoney();
       saveGame();

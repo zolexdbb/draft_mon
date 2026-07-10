@@ -69,7 +69,7 @@ const LINES_GEN2 = [
   {name:'Capidextre',types:['normal'],base:st(75,100,66,60,66,115),abilities:['Technicien','Ramassage']}]},
 {id:'sunkern',abilities:['Chlorophylle','Force Soleil'],moveIds:['sunnyday','vinewhip','megadrain','gigadrain','solarbeam','sleeppowder','growl','leer','harden','amnesia','recover','protect','endure','safeguard','doubleteam','focusenergy','cottonspore','synthesis','stunspore','petaldance','spore'],
  stages:[
-  {name:'Tournegrain',types:['plante'],base:st(30,30,30,30,30,30)},
+  {name:'Tournegrin',types:['plante'],base:st(30,30,30,30,30,30)},
   {name:'Héliatronc',types:['plante'],base:st(75,75,55,105,85,30)}]},
 {id:'yanma',abilities:['Œil Composé','Turbo'],moveIds:['leechlife','bugbite','gust','wingattack','airslash','drillpeck','quickattack','swift','agility','growl','leer','recover','protect','endure','safeguard','doubleteam','focusenergy','furycutter','stringshot','spiderweb'],
  stages:[
@@ -97,7 +97,7 @@ const LINES_GEN2 = [
 {id:'pineco',abilities:['Fermeté','Envelocape'],moveIds:['tackle','headbutt','ironhead','irondefense','bodyslam','doubleedge','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','metalclaw','irontail','furycutter','stringshot','spiderweb'],
  stages:[
   {name:'Kokiabo',types:['insecte'],base:st(50,65,90,35,35,15)},
-  {name:'Sécorang',types:['insecte','acier'],base:st(75,90,140,60,60,40)}]},
+  {name:'Foretress',types:['insecte','acier'],base:st(75,90,140,60,60,40)}]},
 {id:'dunsparce',abilities:['Sérénité','Fuite'],moveIds:['tackle','headbutt','bite','furyattack','bodyslam','doubleedge','swift','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','extremespeed','slam'],
  stages:[
   {name:'Insolourdo',types:['normal'],base:st(100,70,70,65,65,45)}]},
@@ -108,7 +108,7 @@ const LINES_GEN2 = [
 {id:'snubbull',abilities:['Intimidation','Phobique'],moveIds:['tackle','bite','hyperfang','headbutt','bodyslam','doubleedge','swordsdance','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','slam','sweetscent','charm','scaryface'],
  stages:[
   {name:'Snubbull',types:['normal'],base:st(60,80,50,40,40,30)},
-  {name:'Grimbull',types:['normal'],base:st(90,120,75,60,60,45)}]},
+  {name:'Granbull',types:['normal'],base:st(90,120,75,60,60,45)}]},
 {id:'qwilfish',abilities:['Point Poison','Glissade'],moveIds:['watergun','surf','bubblebeam','sludge','poisonsting','sludgebomb','poisonjab','acid','waterfall','toxic','growl','leer','harden','recover','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','acidarmor','poisongas','poisonpowder','smog'],
  stages:[
   {name:'Qwilfish',types:['eau','poison'],base:st(65,95,75,55,55,85)}]},
@@ -144,7 +144,7 @@ const LINES_GEN2 = [
   {name:'Octillery',types:['eau'],base:st(75,105,75,105,75,45)}]},
 {id:'delibird',abilities:['Esprit Vital','Agitation'],moveIds:['icebeam','icywind','icefang','gust','wingattack','peck','quickattack','swift','growl','leer','recover','protect','endure','safeguard','doubleteam','focusenergy','present','fly','skyattack','mirrormove','aurorabeam','powdersnow','mist','haze'],
  stages:[
-  {name:'Delibird',types:['glace','vol'],base:st(45,55,45,65,45,75)}]},
+  {name:'Cadoizo',types:['glace','vol'],base:st(45,55,45,65,45,75)}]},
 {id:'mantine',abilities:['Glissade','Absorbe-Eau'],moveIds:['watergun','surf','bubblebeam','gust','wingattack','airslash','hurricane','harden','growl','leer','amnesia','recover','protect','endure','safeguard','doubleteam','focusenergy','tailwhip','fly','skyattack','mirrormove','whirlpool','clamp','octazooka','withdraw'],
  stages:[
   {name:'Babimanta',types:['eau','vol'],base:st(45,20,50,60,120,50)},
@@ -171,7 +171,7 @@ const LINES_GEN2 = [
   {name:'Debugant',types:['combat'],base:st(35,35,35,35,35,35)}], branches:[
   {name:'Kicklee',types:['combat'],base:st(50,120,53,35,110,87),abilities:['Échauffement','Téméraire'],extraMoveIds:['highjumpkick','submission','crosschop','rockslide']},
   {name:'Tygnon',types:['combat'],base:st(50,105,79,35,110,76),abilities:['Regard Vif','Poing de Fer'],extraMoveIds:['firepunch','icepunch','thunderpunch','submission']},
-  {name:'Kicklang',types:['combat'],base:st(50,95,95,35,110,70),abilities:['Intimidation','Technicien'],extraMoveIds:['crosschop','brickbreak','submission']}
+  {name:'Kapoera',types:['combat'],base:st(50,95,95,35,110,70),abilities:['Intimidation','Technicien'],extraMoveIds:['crosschop','brickbreak','submission']}
  ]},
 {id:'smoochum',abilities:['Benêt','Prédiction'],moveIds:['icebeam','icepunch','icefang','confusion','psychic','psybeam','sing','doubleslap','growl','leer','amnesia','recover','protect','endure','safeguard','doubleteam','focusenergy','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave','aurorabeam','powdersnow','mist','haze'],
  stages:[
@@ -192,7 +192,7 @@ const LINES_GEN2 = [
  stages:[
   {name:'Embrylex',types:['roche','sol'],base:st(50,64,50,45,50,41)},
   {name:'Ymphect',types:['roche','sol'],base:st(70,84,70,65,70,51)},
-  {name:'Séracrawl',types:['roche','tenebres'],base:st(100,134,110,95,100,61)}]},
+  {name:'Tyranocif',types:['roche','tenebres'],base:st(100,134,110,95,100,61)}]},
 {id:'lugia',abilities:['Pression','Fermeté'],moveIds:['confusion','psychic','psybeam','extrasensory','gust','wingattack','airslash','hurricane','hyperbeam','recover','growl','leer','harden','amnesia','strength','protect','endure','safeguard','doubleteam','focusenergy','fly','skyattack','mirrormove','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
   {name:'Lugia',types:['psy','vol'],base:st(106,90,130,90,154,110)}]},
@@ -225,17 +225,18 @@ const DEX_NUMBERS_GEN2 = {
   'Manzaï':438,'Simularbre':185,
   'Granivol':187,'Floravol':188,'Cotovol':189,
   'Capumain':190,'Capidextre':424,
-  'Tournegrain':191,'Héliatronc':192,
+  'Tournegrin':191,'Héliatronc':192,
   'Yanma':193,'Yanmega':469,
   'Axoloto':194,'Maraiste':195,
   'Cornèbre':198,'Corboss':430,
   'Feuforêve':200,'Magirêve':429,
+  'Zarbi':201,
   'Qulbutoké':202,
   'Girafarig':203,
-  'Kokiabo':204,'Sécorang':205,
+  'Kokiabo':204,'Foretress':205,
   'Insolourdo':206,
   'Scorplane':207,'Scorvol':472,
-  'Snubbull':209,'Grimbull':210,
+  'Snubbull':209,'Granbull':210,
   'Qwilfish':211,
   'Caratroc':213,
   'Scarhino':214,
@@ -245,7 +246,7 @@ const DEX_NUMBERS_GEN2 = {
   'Marcacrin':220,'Cochignon':221,'Mammochon':473,
   'Corayon':222,
   'Rémoraid':223,'Octillery':224,
-  'Delibird':225,
+  'Cadoizo':225,
   'Babimanta':458,'Démanta':226,
   'Airmure':227,
   'Malosse':228,'Démolosse':229,
@@ -253,12 +254,12 @@ const DEX_NUMBERS_GEN2 = {
   'Cerfrousse':234,
   'Queulorior':235,
   'Debugant':236,
-  'Kicklang':237,
+  'Kapoera':237,
   'Écrémeuh':241,
   'Raikou':243,
   'Entei':244,
   'Suicune':245,
-  'Embrylex':246,'Ymphect':247,'Séracrawl':248,
+  'Embrylex':246,'Ymphect':247,'Tyranocif':248,
   'Lugia':249,
   'Ho-Oh':250,
   'Celebi':251,

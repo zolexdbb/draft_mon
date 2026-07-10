@@ -1,10 +1,24 @@
 /* ==== ui/screens.js (généré depuis index.html) ==== */
-function gameOver(){
+// Une défaite (ou un abandon) supprime la sauvegarde en cours : impossible de recharger
+// la partie d'avant pour retenter le même combat en boucle.
+function gameOver(reason){
+  const earned = tokensForRun(towerFloor, difficulty);
+  towerTokens += earned;
+  saveMetaProgress();
+  deleteSlot(currentSlot);
+  battleState = null;
   document.getElementById('screenBattle').classList.add('hidden');
   document.getElementById('screenEnd').classList.remove('hidden');
-  document.getElementById('endLabel').textContent = 'DÉFAITE';
+  document.getElementById('endLabel').textContent = reason || 'DÉFAITE';
   document.getElementById('endFloor').textContent = towerFloor;
+  document.getElementById('endTokensLabel').textContent = earned>0 ? `+${earned} 🎫 Jetons de Tour gagnés !` : '';
 }
+// Quitter vers le menu en plein combat verrouille et abandonne ce combat (même sanction qu'une défaite),
+// pour empêcher de fuir un combat qui tourne mal sans conséquence.
+function forfeitBattle(){
+  gameOver('ABANDON');
+}
+document.getElementById('battleHomeBtn').onclick = forfeitBattle;
 
 document.getElementById('restartBtn').onclick = ()=>{
   document.getElementById('screenEnd').classList.add('hidden');
@@ -14,7 +28,7 @@ document.getElementById('restartBtn').onclick = ()=>{
 
 /* =================== MENU & POKÉDEX =================== */
 function showScreen(id){
-  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenVillage','screenBattle','screenEnd'].forEach(s=>{
+  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenVillage','screenMiniCenter','screenEvent','screenBattle','screenEnd'].forEach(s=>{
     document.getElementById(s).classList.toggle('hidden', s!==id);
   });
   if(id==='screenMenu') refreshMenuUI();
@@ -111,12 +125,29 @@ document.getElementById('menuDexBtn').onclick = ()=>{
   renderDex();
 };
 document.getElementById('dexBackBtn').onclick = ()=> showScreen('screenMenu');
-document.getElementById('battleHomeBtn').onclick = ()=> showScreen('screenMenu');
 document.getElementById('draftHomeBtn').onclick = ()=> showScreen('screenMenu');
 document.getElementById('builderHomeBtn').onclick = ()=> showScreen('screenMenu');
 
 function refreshMenuUI(){
   document.getElementById('menuContinueBtn').classList.toggle('hidden', !hasSave());
+  document.getElementById('menuTokensBadge').textContent = `🎫 ${towerTokens} Jetons de Tour`;
+}
+function scoreDiffRowHTML(label, floor, diffKey){
+  const owned = badges[diffKey] || [];
+  const badgeIcons = ALL_TYPES.map(t=> owned.includes(t)
+    ? `<span title="${typeDisplayName(t)}" style="opacity:1;">${TYPE_EMOJI[t]}</span>`
+    : `<span title="${typeDisplayName(t)}" style="opacity:.2;">${TYPE_EMOJI[t]}</span>`
+  ).join('');
+  return `
+    <div style="padding:8px 12px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span>${label}</span><b style="color:var(--accent);">Étage ${floor}</b>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+        <span style="font-size:9px;color:var(--text-dim);">🎖️ Badges (${owned.length}/${ALL_TYPES.length})</span>
+      </div>
+      <div style="font-size:13px;letter-spacing:2px;margin-top:4px;text-align:left;">${badgeIcons}</div>
+    </div>`;
 }
 function openScoreModal(){
   const overlay = document.createElement('div');
@@ -126,15 +157,9 @@ function openScoreModal(){
       <button class="patchnotes-close" id="scoreCloseBtn">✕</button>
       <h2>◆ MEILLEURS ÉTAGES ◆</h2>
       <div style="display:flex;flex-direction:column;gap:10px;font-size:11px;color:var(--text-main);">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;">
-          <span>😊 Facile</span><b style="color:var(--accent);">Étage ${bestFloorFacile}</b>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;">
-          <span>⚔️ Normal</span><b style="color:var(--accent);">Étage ${bestFloorNormal}</b>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;">
-          <span>💀 Difficile</span><b style="color:var(--accent);">Étage ${bestFloorDifficile}</b>
-        </div>
+        ${scoreDiffRowHTML('😊 Facile', bestFloorFacile, 'facile')}
+        ${scoreDiffRowHTML('⚔️ Normal', bestFloorNormal, 'normal')}
+        ${scoreDiffRowHTML('💀 Difficile', bestFloorDifficile, 'difficile')}
       </div>
     </div>`;
   document.body.appendChild(overlay);

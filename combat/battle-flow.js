@@ -19,7 +19,7 @@ function startBattle(){
     const sp = speciesOf(m);
     const maxHp = m.computedStats.hp;
     const hardMode = difficulty==='difficile';
-    const hp = (hardMode && typeof m.hp==='number') ? m.hp : maxHp;
+    const hp = m.eventBlocked ? 0 : ((hardMode && typeof m.hp==='number') ? m.hp : maxHp);
     const status = hardMode ? (m.status||null) : null;
     const sleepCounter = hardMode ? (m.sleepCounter||0) : 0;
     return {
@@ -30,6 +30,7 @@ function startBattle(){
       stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status, sleepCounter, confuseCounter:0, flinched:false, protectChain:0
     };
   });
+  team.forEach(m=>{ m.eventBlocked = false; }); // le blocage d'un event ne dure qu'un seul combat
 
   // En difficile, si toute l'équipe est déjà K.O. avant même le combat, c'est la défaite
   const aliveIdx = playerRoster.findIndex(c=>c.hp>0);
@@ -78,7 +79,7 @@ function doVoluntarySwitch(i){
   setLog(`Tu rappelles ton Pokémon et envoies ${incoming.name} !${switchMsg}${intimidateMsg}`);
   setTimeout(()=>{
     const f = bs.foe[bs.fActive];
-    const fMove = chooseFoeMove(f, bs.player[bs.pActive]);
+    const fMove = chooseFoeMove(f, bs.player[bs.pActive], bs.trainer && bs.trainer.boss);
     runStep(f, fMove, bs.player[bs.pActive], false, ()=>{
       if(checkFaintsAndHandle()) return;
       endTurn();
@@ -98,7 +99,7 @@ function useBagPotion(i){
   setLog(`Tu utilises une Potion sur ${c.name} ! Il récupère ${heal} PV.`);
   setTimeout(()=>{
     const f = bs.foe[bs.fActive];
-    const fMove = chooseFoeMove(f, bs.player[bs.pActive]);
+    const fMove = chooseFoeMove(f, bs.player[bs.pActive], bs.trainer && bs.trainer.boss);
     runStep(f, fMove, bs.player[bs.pActive], false, ()=>{
       if(checkFaintsAndHandle()) return;
       endTurn();
@@ -410,7 +411,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const { dmg: fsDmg } = computeDamage(actor, move, defender);
     const bs = battleState;
     bs.pendingFutureSight = bs.pendingFutureSight || [];
-    bs.pendingFutureSight.push({ side: actorIsPlayer ? 'foe' : 'player', turnsLeft:2, dmg: fsDmg, moveName: move.name });
+    bs.pendingFutureSight.push({ target: defender, turnsLeft:2, dmg: fsDmg, moveName: move.name });
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Une force mystérieuse rôde autour de ${defender.name}...`);
     setTimeout(callback, 900);
@@ -480,6 +481,11 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(move.secondarySelfBoost && Math.random()<move.secondarySelfBoost.chance){
     let blogs = [];
     applyStatBoost(actor, [{stat:move.secondarySelfBoost.stat, stages:move.secondarySelfBoost.stages}], blogs);
+    msg += ' ' + blogs.join(' ');
+  }
+  if(move.selfBoost){
+    let blogs = [];
+    applyStatBoost(actor, move.selfBoost, blogs);
     msg += ' ' + blogs.join(' ');
   }
   if(move.flinch && defender.hp>0 && defender.ability!=='Attention' && Math.random()<move.flinch){
@@ -569,7 +575,7 @@ function playerAttack(moveIdx){
   const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
   const pMove = moveIdx===-1 ? STRUGGLE_MOVE : p.moves[moveIdx];
   if(moveIdx>=0 && p.ppCur && p.ppCur[moveIdx]>0) p.ppCur[moveIdx]--;
-  const fMove = chooseFoeMove(f, p);
+  const fMove = chooseFoeMove(f, p, bs.trainer && bs.trainer.boss);
   const pSpeed = effectiveSpeed(p), fSpeed = effectiveSpeed(f);
   const pPrio = pMove.priority||0, fPrio = fMove.priority||0;
   let playerFirst;
@@ -621,6 +627,7 @@ function endTurn(){
     c.lastPhysDamage = 0;
     c.lastSpecDamage = 0;
     c.protected = false;
+    c.enduring = false;
     if(c.mistTurns>0){
       c.mistTurns--;
       if(c.mistTurns===0) logs.push(`La Brume protégeant ${c.name} se dissipe.`);
@@ -669,10 +676,12 @@ function endTurn(){
     bs.pendingFutureSight = bs.pendingFutureSight.filter(fs=>{
       fs.turnsLeft--;
       if(fs.turnsLeft<=0){
-        const target = fs.side==='player' ? bs.player[bs.pActive] : bs.foe[bs.fActive];
+        const target = fs.target;
         if(target.hp>0){
           target.hp = Math.max(0, target.hp - fs.dmg);
           logs.push(`La force psychique de ${fs.moveName} s'abat sur ${target.name} ! (${fs.dmg} dégâts)`);
+        } else {
+          logs.push(`La force psychique de ${fs.moveName} ne trouve plus sa cible...`);
         }
         return false;
       }
@@ -697,7 +706,7 @@ function continueChargedAttack(){
   const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
   const pMove = p.chargingMove;
   if(!pMove){ bs.locked = false; renderMoveGrid(); return; }
-  const fMove = chooseFoeMove(f, p);
+  const fMove = chooseFoeMove(f, p, bs.trainer && bs.trainer.boss);
   const pSpeed = effectiveSpeed(p), fSpeed = effectiveSpeed(f);
   const pPrio = pMove.priority||0, fPrio = fMove.priority||0;
   let playerFirst;
@@ -729,7 +738,7 @@ function handleFoeFaint(){
   const bs = battleState;
   document.getElementById('foeBox').classList.add('faint-fade');
   setLog(`<b>${bs.foe[bs.fActive].name} est K.O. !</b>`);
-  const nextIdx = bs.foe.findIndex(c=>c.hp>0);
+  const nextIdx = (bs.trainer && bs.trainer.boss) ? bestFoeSwitchIdx(bs.foe, bs.player[bs.pActive]) : bs.foe.findIndex(c=>c.hp>0);
   if(nextIdx===-1){ setTimeout(()=> floorCleared(), 900); return; }
   bs.fActive = nextIdx;
   resetBattleFields(bs.foe[nextIdx]);

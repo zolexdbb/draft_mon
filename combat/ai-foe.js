@@ -25,7 +25,19 @@ function pickSmartMoves(movepool, sp, floor){
   return finalMoves.slice(0,4);
 }
 
-function chooseFoeMove(foe, player){
+// IA de Maître de Type : au KO, envoie le meilleur contre plutôt que le premier en vie.
+function bestFoeSwitchIdx(foeTeam, player){
+  const alive = foeTeam.map((c,i)=>({c,i})).filter(x=>x.c.hp>0);
+  if(alive.length===0) return -1;
+  const scored = alive.map(({c,i})=>{
+    const offense = Math.max(...c.types.map(t=>getMult(t, player.types)));
+    const defense = Math.max(...player.types.map(t=>getMult(t, c.types)));
+    return { i, score: offense - defense*0.5 };
+  });
+  return scored.reduce((best,s)=> s.score>best.score ? s : best).i;
+}
+
+function chooseFoeMove(foe, player, excellent){
   if(foe.chargingMove) return foe.chargingMove;
   let moves = foe.disabledMove ? foe.moveObjs.filter(mv=>mv.name!==foe.disabledMove.name) : foe.moveObjs;
   if(foe.lockedMove) moves = foe.moveObjs.filter(mv=>mv.name===foe.lockedMove.name);
@@ -103,6 +115,9 @@ function chooseFoeMove(foe, player){
   let chosen;
   if(valid.length === 0){
     chosen = rand(moves);
+  } else if(excellent){
+    // IA de Maître de Type : prend toujours le meilleur coup, jamais de choix sous-optimal.
+    chosen = valid.reduce((best,s)=> s.score>best.score ? s : best).mv;
   } else {
     // Sélection pondérée (pas toujours le meilleur, mais biaisé)
     const total = valid.reduce((a,s)=>a+s.score,0);

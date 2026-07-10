@@ -1,6 +1,10 @@
 /* ==== village/village-core.js (généré depuis index.html) ==== */
-function renderVillage(reward){
+function renderVillage(reward, newBadgeType){
   document.getElementById('villageReward').textContent = reward ? `+${reward} 💰 gagnés en battant le Boss !` : '';
+  const badgeEl = document.getElementById('villageBadge');
+  if(badgeEl){
+    badgeEl.innerHTML = newBadgeType ? `🎖️ Nouveau Badge obtenu : ${TYPE_EMOJI[newBadgeType]} ${typeDisplayName(newBadgeType)} !` : '';
+  }
   document.getElementById('villageMoney').textContent = `💰 ${money}`;
   document.getElementById('villagePanelContent').innerHTML = '';
   ranchChoices = null;

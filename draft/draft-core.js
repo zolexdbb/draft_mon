@@ -77,9 +77,12 @@ function defaultMember(lineId, initialStage){
 function initDraft(){
   draftRound = 0;
   team = [];
-  money = 100;
+  money = 100 + metaStartMoneyBonus();
   bag = {};
+  metaStartItems().forEach(key=>{ bag[key] = (bag[key]||0)+1; });
+  rerollsLeft = metaFreeRerolls();
   pcBox = [null,null,null,null,null,null];
+  bossTypesUsed = [];
   nextDraftRound();
 }
 function renderDraftProgress(){
@@ -121,6 +124,14 @@ function nextDraftRound(){
   renderDraftProgress();
   renderDraftTeamStrip();
   document.getElementById('draftSub').textContent = `Choisis un Pokémon pour ton équipe (${draftRound+1}/6)`;
+  const rerollWrap = document.getElementById('draftRerollWrap');
+  if(rerollWrap){
+    rerollWrap.innerHTML = rerollsLeft>0
+      ? `<button class="btn secondary" id="draftRerollBtn" style="padding:6px 12px;font-size:9px;">🔄 Reroll gratuit (${rerollsLeft} restant${rerollsLeft>1?'s':''})</button>`
+      : '';
+    const rb = document.getElementById('draftRerollBtn');
+    if(rb) rb.onclick = ()=>{ rerollsLeft--; nextDraftRound(); };
+  }
   const wrap = document.getElementById('draftCards');
   wrap.innerHTML='';
   currentChoices.forEach(choice=>{

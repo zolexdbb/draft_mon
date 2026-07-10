@@ -20,3 +20,20 @@ function renderPokecentrePanel(){
   document.getElementById('openPCBtn').onclick = renderPCPanel;
 }
 
+/* Halte rapide après un Mini-Boss en mode Difficile : uniquement le soin, pas d'accès Pokéshop/Ranch. */
+function renderMiniCenter(reward){
+  document.getElementById('miniCenterReward').textContent = reward ? `+${reward} 💰 gagnés contre le Mini-Boss !` : '';
+  document.getElementById('miniCenterMsg').textContent = '';
+  saveGame();
+}
+document.getElementById('miniCenterHealBtn').onclick = ()=>{
+  team.forEach(m=>{ m.hp = m.computedStats.hp; m.status=null; m.sleepCounter=0; });
+  saveGame();
+  document.getElementById('miniCenterMsg').textContent = "✓ Ton équipe est en pleine forme !";
+};
+document.getElementById('miniCenterContinueBtn').onclick = ()=>{
+  document.getElementById('screenMiniCenter').classList.add('hidden');
+  document.getElementById('screenTower').classList.remove('hidden');
+  renderTower();
+};
+

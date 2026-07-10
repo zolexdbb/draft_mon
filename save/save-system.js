@@ -7,6 +7,26 @@ const BEST_FLOOR_DIFFICILE_KEY = 'draftArenaBestFloorDifficile';
 function bestFloorKeyFor(diff){
   return diff==='difficile' ? BEST_FLOOR_DIFFICILE_KEY : (diff==='facile' ? BEST_FLOOR_FACILE_KEY : BEST_FLOOR_NORMAL_KEY);
 }
+(function loadBestFloors(){
+  try {
+    bestFloorFacile = parseInt(localStorage.getItem(BEST_FLOOR_FACILE_KEY), 10) || 1;
+    bestFloorNormal = parseInt(localStorage.getItem(BEST_FLOOR_NORMAL_KEY), 10) || 1;
+    bestFloorDifficile = parseInt(localStorage.getItem(BEST_FLOOR_DIFFICILE_KEY), 10) || 1;
+  } catch(e){}
+})();
+const BADGES_FACILE_KEY = 'draftArenaBadgesFacile';
+const BADGES_NORMAL_KEY = 'draftArenaBadgesNormal';
+const BADGES_DIFFICILE_KEY = 'draftArenaBadgesDifficile';
+function badgeKeyFor(diff){
+  return diff==='difficile' ? BADGES_DIFFICILE_KEY : (diff==='facile' ? BADGES_FACILE_KEY : BADGES_NORMAL_KEY);
+}
+(function loadBadges(){
+  try {
+    badges.facile = JSON.parse(localStorage.getItem(BADGES_FACILE_KEY)) || [];
+    badges.normal = JSON.parse(localStorage.getItem(BADGES_NORMAL_KEY)) || [];
+    badges.difficile = JSON.parse(localStorage.getItem(BADGES_DIFFICILE_KEY)) || [];
+  } catch(e){}
+})();
 function currentBestFloor(){
   return difficulty==='difficile' ? bestFloorDifficile : (difficulty==='facile' ? bestFloorFacile : bestFloorNormal);
 }

@@ -16,7 +16,7 @@ const TRAINER_ARCHETYPES = [
   {title:'Cycliste',       emoji:'🚴', theme:null,       minFloor:1, dialogue:"La vitesse, c'est ma spécialité !"},
   {title:'Scientifique',   emoji:'🔬', theme:null,       minFloor:2, dialogue:"J'ai étudié mes Pokémon à la loupe..."},
   {title:'Pompier',        emoji:'🔥', theme:'feu',      minFloor:2, dialogue:"Mon équipe va tout réduire en cendres !"},
-  {title:'Géologue',       emoji:'⛏️',  theme:'roche',    minFloor:2, dialogue:"Mes Pokémon sont solides comme la roche !"},
+  {title:'Géologue',       emoji:'⛏️',  theme:'roche',   minFloor:2, dialogue:"Mes Pokémon sont solides comme la roche !"},
   {title:'Électricien',    emoji:'⚡', theme:'electrik', minFloor:2, dialogue:"Tiens bon face à mon voltage !"},
   {title:'Chasseuse',      emoji:'🏹', theme:null,       minFloor:3, dialogue:"Je traque les dresseurs faibles !"},
   {title:'Dresseuse Psy',  emoji:'🔮', theme:'psy',      minFloor:3, dialogue:"Je lis dans tes pensées… tu vas perdre."},
@@ -24,12 +24,51 @@ const TRAINER_ARCHETYPES = [
   {title:'Glaciologiste',  emoji:'🧊', theme:'glace',    minFloor:4, dialogue:"Le froid ralentit tes réflexes..."},
   {title:'Empoisonneur',   emoji:'☠️', theme:'poison',   minFloor:4, dialogue:"Mon venin est lent... mais mortel."},
   {title:'Vétéran',        emoji:'🎖️', theme:null,       minFloor:5, dialogue:"J'ai traversé cent tours de combat. Et toi ?"},
-  {title:'Maître Dragon',  emoji:'🐲', theme:'dragon',   minFloor:5, dialogue:"Les dragons obéissent à ma volonté !"},
-  {title:'Élite',          emoji:'👑', theme:null,       minFloor:6, dialogue:"Seuls les meilleurs arrivent jusqu'à moi."},
+  {title:'Élite',          emoji:'⭐', theme:null,       minFloor:6, dialogue:"Seuls les meilleurs arrivent jusqu'à moi."},
 ];
 const TRAINER_FIRST_NAMES = ['Théo','Lucie','Marc','Sarah','Hugo','Emma','Léo','Chloé','Nathan','Lina','Maxime','Inès','Paul','Camille','Yanis','Manon','Romain','Jade','Kévin','Alicia'];
 
+// ---- Maîtres de Type (boss) : un circuit sans répétition des 17 types par run ----
+const ALL_TYPES = Object.keys(TYPE_EMOJI);
+function typeDisplayName(type){ return type.charAt(0).toUpperCase()+type.slice(1); }
+function pickBossType(){
+  let available = ALL_TYPES.filter(t => !bossTypesUsed.includes(t));
+  if(available.length===0){ bossTypesUsed = []; available = ALL_TYPES; }
+  const type = rand(available);
+  bossTypesUsed.push(type);
+  return type;
+}
+const TYPE_MASTER_DIALOGUE = {
+  normal:   "La simplicité est ma plus grande force !",
+  feu:      "Laisse-moi t'embraser de passion !",
+  eau:      "Mon équipe déferle comme une vague !",
+  plante:   "Mes racines sont profondément ancrées dans la victoire !",
+  electrik: "Prépare-toi à un choc électrisant !",
+  vol:      "Je plane loin au-dessus de ta portée !",
+  poison:   "Un seul contact, et c'est terminé pour toi !",
+  sol:      "Je te ferai mordre la poussière !",
+  insecte:  "Mon armée grouillante ne connaît pas la pitié !",
+  combat:   "Seule la force brute compte ici !",
+  glace:    "Je vais te geler sur place !",
+  psy:      "J'ai déjà prévu ta défaite...",
+  fantome:  "Tes pires cauchemars vont se réaliser !",
+  roche:    "Solide comme le roc, inébranlable !",
+  dragon:   "Les dragons obéissent à ma volonté !",
+  acier:    "Mon armure est impénétrable !",
+  tenebres: "L'obscurité ne pardonne à personne !",
+};
+
 function generateTrainer(floor){
+  const boss = isBossFloor(floor), miniBoss = isMiniBossFloor(floor);
+  if(boss){
+    const type = pickBossType();
+    const name = rand(TRAINER_FIRST_NAMES);
+    return {
+      name: `👑 MAÎTRE ${typeDisplayName(type).toUpperCase()} ${name}`,
+      emoji: TYPE_EMOJI[type], theme: type, dialogue: TYPE_MASTER_DIALOGUE[type],
+      boss: true, miniBoss: false, masterType: type
+    };
+  }
   const available = TRAINER_ARCHETYPES.filter(a => floor >= a.minFloor);
   // Aux étages élevés, favoriser les archétypes avancés
   let pool;
@@ -40,9 +79,8 @@ function generateTrainer(floor){
   if(pool.length === 0) pool = available;
   const archetype = rand(pool);
   const name = rand(TRAINER_FIRST_NAMES);
-  const boss = isBossFloor(floor), miniBoss = isMiniBossFloor(floor);
-  const prefix = boss ? '👑 BOSS ' : (miniBoss ? '⭐ Mini-Boss ' : '');
-  return { name:`${prefix}${archetype.title} ${name}`, emoji:archetype.emoji, theme:archetype.theme, dialogue:archetype.dialogue, boss, miniBoss };
+  const prefix = miniBoss ? '⭐ Mini-Boss ' : '';
+  return { name:`${prefix}${archetype.title} ${name}`, emoji:archetype.emoji, theme:archetype.theme, dialogue:archetype.dialogue, boss:false, miniBoss };
 }
 
 /* =================== SAUVEGARDE =================== */
@@ -62,7 +100,23 @@ function renderTower(reward){
 }
 document.getElementById('fightBtn').onclick = ()=>{ startBattle(); };
 
-function generateEnemyTeam(floor, trainerTheme){
+// Échantillonnage pondéré par lignée (réutilise lineWeight du draft : les légendaires
+// deviennent aussi rares dans les équipes adverses que dans le draft du joueur).
+function weightedSampleLines(lines, n){
+  let pool = lines.map(l=>({l, w: lineWeight(l)}));
+  const result = [];
+  for(let k=0;k<n && pool.length>0;k++){
+    const total = pool.reduce((a,p)=>a+p.w,0);
+    let r = Math.random()*total;
+    let idx=0;
+    for(;idx<pool.length-1;idx++){ r-=pool[idx].w; if(r<=0) break; }
+    result.push(pool[idx].l);
+    pool.splice(idx,1);
+  }
+  return result;
+}
+
+function generateEnemyTeam(floor, trainerTheme, isBoss){
   const sizes = [3,3,4,4,5,6];
   let size = sizes[Math.min(floor-1, sizes.length-1)];
   let strength = Math.min(1, 0.3 + floor*0.1);
@@ -71,24 +125,34 @@ function generateEnemyTeam(floor, trainerTheme){
 
   // Construire le pool en fonction du thème du dresseur
   let linePool;
-  if(trainerTheme){
+  if(isBoss){
+    // Maître de Type : équipe 100% du type (rareté légendaire toujours atténuée par le poids du draft)
+    const themed = LINES.filter(l =>
+      l.stages.some(s => s.types.includes(trainerTheme)) ||
+      (l.branches && l.branches.some(b => b.types.includes(trainerTheme)))
+    );
+    linePool = weightedSampleLines(themed, size);
+    if(linePool.length < size){
+      const extra = shuffle(LINES.filter(l => !linePool.includes(l))).slice(0, size - linePool.length);
+      linePool = [...linePool, ...extra];
+    }
+  } else if(trainerTheme){
     const themed = LINES.filter(l =>
       l.stages.some(s => s.types.includes(trainerTheme)) ||
       (l.branches && l.branches.some(b => b.types.includes(trainerTheme)))
     );
     // Si assez de Pokémon thématiques : 70% du thème, 30% random
     const themeCount = Math.ceil(size * 0.7);
-    const randCount = size - themeCount;
-    const themedPicked = shuffle(themed).slice(0, Math.min(themeCount, themed.length));
+    const themedPicked = weightedSampleLines(themed, Math.min(themeCount, themed.length));
     const otherPool = LINES.filter(l => !themedPicked.includes(l));
-    const randPicked = shuffle(otherPool).slice(0, Math.max(0, size - themedPicked.length));
+    const randPicked = weightedSampleLines(otherPool, Math.max(0, size - themedPicked.length));
     linePool = [...themedPicked, ...randPicked].slice(0, size);
     if(linePool.length < size){
       const extra = shuffle(LINES.filter(l => !linePool.includes(l))).slice(0, size - linePool.length);
       linePool = [...linePool, ...extra];
     }
   } else {
-    linePool = shuffle(LINES).slice(0, size);
+    linePool = weightedSampleLines(LINES, size);
   }
 
   return linePool.map(line=>{
@@ -133,9 +197,18 @@ function generateEnemyTeam(floor, trainerTheme){
   });
 }
 
+function awardBadge(type){
+  if(!badges[difficulty]) badges[difficulty] = [];
+  const isNew = !badges[difficulty].includes(type);
+  if(isNew) badges[difficulty].push(type);
+  try { localStorage.setItem(badgeKeyFor(difficulty), JSON.stringify(badges[difficulty])); } catch(e){}
+  return isNew;
+}
 function floorCleared(){
   const clearedFloor = towerFloor;
   const wasBoss = battleState.trainer && battleState.trainer.boss;
+  const wasMiniBoss = battleState.trainer && battleState.trainer.miniBoss;
+  const bossMasterType = battleState.trainer && battleState.trainer.masterType;
   battleState.player.forEach((c,i)=>{
     if(difficulty!=='difficile'){
       c.hp = c.maxHp; c.status=null; c.sleepCounter=0; c.confuseCounter=0;
@@ -152,12 +225,17 @@ function floorCleared(){
   towerFloor++;
   document.getElementById('screenBattle').classList.add('hidden');
   if(wasBoss){
+    const newBadge = bossMasterType ? awardBadge(bossMasterType) : false;
     document.getElementById('screenVillage').classList.remove('hidden');
-    renderVillage(reward);
+    renderVillage(reward, newBadge ? bossMasterType : null);
+  } else if(wasMiniBoss && difficulty==='difficile'){
+    document.getElementById('screenMiniCenter').classList.remove('hidden');
+    renderMiniCenter(reward);
+  } else if(maybeTriggerTowerEvent(reward)){
+    // renderTowerEvent() already handled the screen switch.
   } else {
     document.getElementById('screenTower').classList.remove('hidden');
     renderTower(reward);
   }
 }
 
-/* =================== VILLAGE =================== */
