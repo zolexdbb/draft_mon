@@ -2,8 +2,9 @@
 function lineOf(id){ return LINES.find(l=>l.id===id); }
 function speciesOf(member){
   const line = lineOf(member.lineId);
-  if(line.branches && member.branch!==undefined && member.branch!==null) return line.branches[member.branch];
-  return line.stages[member.stage];
+  const base = (line.branches && member.branch!==undefined && member.branch!==null) ? line.branches[member.branch] : line.stages[member.stage];
+  if(base.forms && member.heldItem && base.forms[member.heldItem]) return base.forms[member.heldItem];
+  return base;
 }
 function abilitiesFor(member){
   const line = lineOf(member.lineId);

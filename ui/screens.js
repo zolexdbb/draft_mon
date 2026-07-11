@@ -126,12 +126,29 @@ function openSlotModal(mode){
   });
 }
 
-document.getElementById('menuPlayBtn').onclick = ()=>{
-  openSlotModal('new');
-};
-document.getElementById('menuContinueBtn').onclick = ()=>{
-  openSlotModal('load');
-};
+function openPlayMenu(){
+  const overlay = document.createElement('div');
+  overlay.className = 'patchnotes-overlay';
+  const canLoad = hasSave();
+  overlay.innerHTML = `
+    <div class="patchnotes-modal" style="max-width:320px;text-align:center;position:relative;">
+      <button class="patchnotes-close" id="playMenuCloseBtn">✕</button>
+      <h2>◆ JOUER ◆</h2>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn" id="playMenuNewBtn">▶ Nouvelle partie</button>
+        <button class="btn secondary" id="playMenuLoadBtn" ${canLoad?'':'disabled'}>💾 Charger une partie</button>
+        <button class="btn secondary" id="playMenuBoostsBtn">🎫 Boosts</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const close = ()=> overlay.remove();
+  document.getElementById('playMenuCloseBtn').onclick = close;
+  overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
+  document.getElementById('playMenuNewBtn').onclick = ()=>{ close(); openSlotModal('new'); };
+  document.getElementById('playMenuLoadBtn').onclick = ()=>{ if(canLoad){ close(); openSlotModal('load'); } };
+  document.getElementById('playMenuBoostsBtn').onclick = ()=>{ close(); openBoostsModal(); };
+}
+document.getElementById('menuPlayBtn').onclick = openPlayMenu;
 document.getElementById('menuDexBtn').onclick = ()=>{
   showScreen('screenDex');
   renderDex();
@@ -141,7 +158,6 @@ document.getElementById('draftHomeBtn').onclick = ()=> showScreen('screenMenu');
 document.getElementById('builderHomeBtn').onclick = ()=> showScreen('screenMenu');
 
 function refreshMenuUI(){
-  document.getElementById('menuContinueBtn').classList.toggle('hidden', !hasSave());
   document.getElementById('menuTokensBadge').textContent = `🎫 ${towerTokens} Jetons de Tour`;
 }
 function scoreDiffRowHTML(label, floor, diffKey){
@@ -234,6 +250,11 @@ function openTeamModal(){
         if(m.heldItem){ bag[m.heldItem] = (bag[m.heldItem]||0)+1; }
         if(val){ bag[val] = Math.max(0,(bag[val]||0)-1); m.heldItem = val; }
         else { m.heldItem = null; }
+        // Un objet de forme (Orbe Platiné, Gracidée, Plaques...) change le type/stats/talent : on recalcule.
+        const sp = speciesOf(m);
+        m.computedStats = calcStats(sp.base, m.ivs, m.evs, m.nature);
+        const validAbilities = sp.abilities || lineOf(m.lineId).abilities;
+        if(!validAbilities.includes(m.ability)) m.ability = validAbilities[0];
         saveGame();
         close();
         openTeamModal();

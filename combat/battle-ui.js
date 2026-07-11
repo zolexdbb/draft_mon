@@ -57,7 +57,7 @@ function renderCombatantBox(c, prefix){
   if(c.confuseCounter>0){
     statBadgesEl.innerHTML += `<span class="stat-badge nerf">${statusIconHTML('confusion',10)} Confus</span>`;
   }
-  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.unownForm, prefix==='player' ? 'back' : 'front');
+  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.unownForm, prefix==='player' ? 'back' : 'front', true);
   const ratio = Math.max(c.hp,0)/c.maxHp;
   const fill = document.getElementById(prefix+'HpFill');
   fill.style.width = (ratio*100)+'%';

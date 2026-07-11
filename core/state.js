@@ -17,6 +17,7 @@ let bestFloorDifficile = 1;
 let bossTypesUsed = [];
 let badges = { facile:[], normal:[], difficile:[] };
 let battleInProgress = false;
+let merchantPresent = false;
 let pcSelectedTeamIdx = null;
 let shopCategory = 'potion';
 let dexFilters = { search:'', type:'', rarity:'' };

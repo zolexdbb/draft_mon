@@ -33,7 +33,32 @@ const ITEMS = {
   boutonFuite:    { name:'Bouton Fuite',       sprite:ITEM_SPRITE('eject-button'),  price:300, kind:'held', category:'strat', desc:"Objet tenu : force le porteur à switcher dès qu'il subit une attaque." },
   herbeMental:    { name:'Herbe Mental',       sprite:ITEM_SPRITE('mental-herb'),   price:250, kind:'held', category:'strat', desc:"Objet tenu : soigne les effets de Provoc et Entrave. Se consomme après usage." },
   reste:          { name:'Reste',              sprite:ITEM_SPRITE('leftovers'),     price:200, kind:'held', category:'strat', desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
-  ceintureForce:  { name:'Ceinture Force',     sprite:ITEM_SPRITE('focus-sash'),    price:250, kind:'held', category:'strat', desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." }
+  ceintureForce:  { name:'Ceinture Force',     sprite:ITEM_SPRITE('focus-sash'),    price:250, kind:'held', category:'strat', desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." },
+  // ---- Objets de forme (tenus, vendus uniquement par le Marchand Itinérant) ----
+  orbePlatine:    { name:'Orbe Platiné',      sprite:ITEM_SPRITE('griseous-orb'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Giratina en Forme Originelle." },
+  gracidee:       { name:'Gracidée',          sprite:ITEM_SPRITE('gracidea'),     price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Shaymin en Forme Ciel." },
+  miroirSacre:    { name:'Miroir Sacré',      sprite:ITEM_SPRITE('reveal-glass'), price:2000, kind:'held', category:'forme', formItem:true, emoji:'🪞', desc:"Objet tenu : fait passer Boréas, Fulguris ou Démétéros en Forme Totémique." },
+  appareilChauffe:  { name:'Four à Micro-ondes', sprite:ITEM_SPRITE('heat-rotom'), price:1500, kind:'held', category:'forme', formItem:true, emoji:'🔥', desc:"Objet tenu : fait passer Motisma en Motisma Chauffe (Électrik/Feu)." },
+  appareilLavage:   { name:'Machine à Laver',    sprite:ITEM_SPRITE('wash-rotom'), price:1500, kind:'held', category:'forme', formItem:true, emoji:'💧', desc:"Objet tenu : fait passer Motisma en Motisma Lavage (Électrik/Eau)." },
+  appareilFrigo:    { name:'Réfrigérateur',      sprite:ITEM_SPRITE('frost-rotom'),price:1500, kind:'held', category:'forme', formItem:true, emoji:'🧊', desc:"Objet tenu : fait passer Motisma en Motisma Frigo (Électrik/Glace)." },
+  appareilVentilo:  { name:'Ventilateur',        sprite:ITEM_SPRITE('fan-rotom'),  price:1500, kind:'held', category:'forme', formItem:true, emoji:'🪭', desc:"Objet tenu : fait passer Motisma en Motisma Ventilateur (Électrik/Vol)." },
+  appareilTondeuse: { name:'Tondeuse à Gazon',   sprite:ITEM_SPRITE('mow-rotom'),  price:1500, kind:'held', category:'forme', formItem:true, emoji:'🌿', desc:"Objet tenu : fait passer Motisma en Motisma Tondeuse (Électrik/Plante)." },
+  plaqueFlamme:   { name:'Plaque Flamme',    sprite:ITEM_SPRITE('flame-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Feu." },
+  plaqueHydro:    { name:'Plaque Hydro',     sprite:ITEM_SPRITE('splash-plate'), price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Eau." },
+  plaqueHerbe:    { name:'Plaque Herbe',     sprite:ITEM_SPRITE('meadow-plate'), price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Plante." },
+  plaqueVolt:     { name:'Plaque Volt',      sprite:ITEM_SPRITE('zap-plate'),    price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Électrik." },
+  plaqueCiel:     { name:'Plaque Ciel',      sprite:ITEM_SPRITE('sky-plate'),    price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Vol." },
+  plaqueToxicite: { name:'Plaque Toxicité',  sprite:ITEM_SPRITE('toxic-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Poison." },
+  plaqueTerre:    { name:'Plaque Terre',     sprite:ITEM_SPRITE('earth-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Sol." },
+  plaqueInsecte:  { name:'Plaque Insecte',   sprite:ITEM_SPRITE('insect-plate'), price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Insecte." },
+  plaquePoing:    { name:'Plaque Poing',     sprite:ITEM_SPRITE('fist-plate'),   price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Combat." },
+  plaqueGlace:    { name:'Plaque Glace',     sprite:ITEM_SPRITE('icicle-plate'), price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Glace." },
+  plaqueEsprit:   { name:'Plaque Esprit',    sprite:ITEM_SPRITE('mind-plate'),   price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Psy." },
+  plaqueFantome:  { name:'Plaque Fantôme',   sprite:ITEM_SPRITE('spooky-plate'), price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Fantôme." },
+  plaqueRoc:      { name:'Plaque Roc',       sprite:ITEM_SPRITE('stone-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Roche." },
+  plaqueDraco:    { name:'Plaque Draco',     sprite:ITEM_SPRITE('draco-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Dragon." },
+  plaqueFer:      { name:'Plaque Fer',       sprite:ITEM_SPRITE('iron-plate'),   price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Acier." },
+  plaqueOmbre:    { name:'Plaque Ombre',     sprite:ITEM_SPRITE('dread-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Ténèbres." }
 };
 const ITEM_SPRITE_SOURCES = [
   slug => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/items/${slug}.png`,

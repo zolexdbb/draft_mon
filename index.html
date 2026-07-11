@@ -22,23 +22,21 @@
       <div style="margin:0 0 10px;">
         <img src="assets/image/logo/Draft_mon_logo.png" alt="Logo Draft Mon" style="width:120px;height:auto;">
       </div>
-      <div class="floor-label" style="letter-spacing:6px;font-size:11px;color:var(--accent);margin-bottom:6px;">TOUR DE COMBAT</div>
-      <button class="btn secondary" id="scoreBtn" style="margin-bottom:6px;padding:8px 16px;font-size:10px;">🏆 Score</button>
-      <div id="menuTokensBadge" style="font-size:9px;color:var(--text-dim);margin-bottom:24px;">🎫 0 Jetons de Tour</div>
-      <div style="border:1px solid var(--line);border-radius:2px;padding:18px 24px;margin:0 auto 28px;max-width:360px;background:rgba(0,0,0,.3);">
-        <div class="floor-label" style="font-size:9px;letter-spacing:3px;margin-bottom:12px;color:var(--text-dim);">▸ COMMENT JOUER ◂</div>
-        <div style="font-size:10px;color:var(--text-dim);line-height:1.8;text-align:left;">
+      <div class="floor-label" style="letter-spacing:6px;font-size:14px;color:var(--accent);margin-bottom:8px;">TOUR DE COMBAT</div>
+      <button class="btn secondary" id="scoreBtn" style="margin-bottom:8px;padding:9px 18px;font-size:13px;">🏆 Score</button>
+      <div id="menuTokensBadge" style="font-size:12px;color:var(--text-dim);margin-bottom:26px;">🎫 0 Jetons de Tour</div>
+      <div style="border:1px solid var(--line);border-radius:2px;padding:18px 24px;margin:0 auto 28px;max-width:400px;background:rgba(0,0,0,.3);">
+        <div class="floor-label" style="font-size:12px;letter-spacing:3px;margin-bottom:12px;color:var(--text-dim);">▸ COMMENT JOUER ◂</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.8;text-align:left;">
           1. Drafts 6 Pokémon parmi les offres<br>
           2. Configure stats, nature et attaques<br>
           3. Affronte la Tour de Combat !
         </div>
       </div>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        <button class="btn" id="menuPlayBtn">▶ Nouvelle partie</button>
-        <button class="btn secondary hidden" id="menuContinueBtn">💾 Continuer</button>
-        <button class="btn secondary" id="menuDexBtn">📖 Pokédex</button>
-        <button class="btn secondary" id="menuBoostsBtn">🎫 Boosts</button>
-        <button class="btn secondary" id="menuPatchNotesBtn">📋 Notes de MàJ</button>
+        <button class="btn" id="menuPlayBtn" style="font-size:14px;padding:12px 26px;">▶ Jouer</button>
+        <button class="btn secondary" id="menuDexBtn" style="font-size:14px;padding:12px 26px;">📖 Pokédex</button>
+        <button class="btn secondary" id="menuPatchNotesBtn" style="font-size:14px;padding:12px 26px;">📋 Notes de MàJ</button>
       </div>
     </div>
   </div>
@@ -111,6 +109,7 @@
       <button class="btn secondary" id="villagePokeshopBtn" style="padding:16px 10px;font-size:11px;">🛒<br>Pokéshop</button>
       <button class="btn secondary" id="villageRanchBtn" style="padding:16px 10px;font-size:11px;">🏡<br>Ranch</button>
       <button class="btn secondary" id="villageTeamBtn" style="padding:16px 10px;font-size:11px;">👥<br>Équipe</button>
+      <button class="btn secondary hidden" id="villageMerchantBtn" style="padding:16px 10px;font-size:11px;">🧙<br>Marchand</button>
     </div>
     <div id="villagePanelContent" style="max-width:640px;margin:0 auto 20px;"></div>
     <div style="text-align:center;">
@@ -236,6 +235,7 @@
 <script src="village/pc-storage.js"></script>
 <script src="village/shop.js"></script>
 <script src="village/ranch.js"></script>
+<script src="village/merchant.js"></script>
 <script src="save/save-system.js"></script>
 <script src="ui/editor.js"></script>
 <script src="ui/dropdowns.js"></script>

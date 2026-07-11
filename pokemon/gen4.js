@@ -127,7 +127,13 @@ const LINES_GEN4 = [
   {name:'Blizzaroi',types:['plante','glace'],base:st(90,92,75,92,85,60)}]},
 {id:'rotom',abilities:['Lévitation'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','thunderwave','charge','shockwave','lick','shadowball','nightshade','shadowclaw','confuseray','astonish','bodyslam','swordsdance','agility','harden','amnesia','recover','protect','endure','safeguard'],
  stages:[
-  {name:'Motisma',types:['electrik','fantome'],base:st(50,50,77,95,77,91)}]},
+  {name:'Motisma',types:['electrik','fantome'],base:st(50,50,77,95,77,91),forms:{
+    appareilChauffe:{name:'Motisma Chauffe',types:['electrik','feu'],base:st(50,65,107,105,107,86),abilities:['Lévitation']},
+    appareilLavage:{name:'Motisma Lavage',types:['electrik','eau'],base:st(50,65,107,105,107,86),abilities:['Lévitation']},
+    appareilFrigo:{name:'Motisma Frigo',types:['electrik','glace'],base:st(50,65,107,105,107,86),abilities:['Lévitation']},
+    appareilVentilo:{name:'Motisma Ventilateur',types:['electrik','vol'],base:st(50,65,107,105,107,86),abilities:['Lévitation']},
+    appareilTondeuse:{name:'Motisma Tondeuse',types:['electrik','plante'],base:st(50,65,107,105,107,86),abilities:['Lévitation']}
+  }}]},
 {id:'uxie',abilities:['Lévitation'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','amnesia','irondefense','bodyslam','swordsdance','agility','harden','growl','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Créhelf',types:['psy'],base:st(75,75,130,75,130,95)}]},
@@ -137,10 +143,10 @@ const LINES_GEN4 = [
 {id:'azelf',abilities:['Lévitation'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','futuresight','aurasphere','swift','uturn','bodyslam','doubleedge','swordsdance','agility','harden','growl','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Créfadet',types:['psy'],base:st(75,125,70,125,70,115)}]},
-{id:'dialga',abilities:['Pression','Télépathe'],moveIds:['dragonbreath','dragonclaw','outrage','dracometeor','dragonpulse','flashcannon','ironhead','irondefense','steelwing','metronome','hyperbeam','bodyslam','doubleedge','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
+{id:'dialga',abilities:['Pression'],moveIds:['dragonbreath','dragonclaw','outrage','dracometeor','dragonpulse','flashcannon','ironhead','irondefense','steelwing','metronome','hyperbeam','bodyslam','doubleedge','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Dialga',types:['acier','dragon'],base:st(100,120,120,150,100,90)}]},
-{id:'palkia',abilities:['Pression','Télépathe'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','dragonbreath','dragonclaw','outrage','dracometeor','dragonpulse','bodyslam','doubleedge','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
+{id:'palkia',abilities:['Pression'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','dragonbreath','dragonclaw','outrage','dracometeor','dragonpulse','bodyslam','doubleedge','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Palkia',types:['eau','dragon'],base:st(90,120,100,150,120,100)}]},
 {id:'heatran',abilities:['Torche','Corps Ardent'],moveIds:['ember','flamethrower','fireblast','firepunch','flamewheel','willowisp','heatwave','overheat','flashcannon','ironhead','irondefense','steelwing','earthquake','magnitude','bodyslam','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
@@ -149,9 +155,11 @@ const LINES_GEN4 = [
 {id:'regigigas',abilities:['Début Calme'],moveIds:['tackle','hyperbeam','bodyslam','doubleedge','stomp','headbutt','bite','crunch','rockslide','earthquake','icepunch','firepunch','thunderpunch','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Regigigas',types:['normal'],base:st(110,160,110,80,110,100)}]},
-{id:'giratina',abilities:['Pression','Télépathe'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','dragonbreath','dragonclaw','outrage','dracometeor','dragonpulse','hyperbeam','bodyslam','doubleedge','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
+{id:'giratina',abilities:['Lévitation'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','dragonbreath','dragonclaw','outrage','dracometeor','dragonpulse','hyperbeam','bodyslam','doubleedge','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Giratina',types:['fantome','dragon'],base:st(150,100,120,100,120,90)}]},
+  {name:'Giratina',types:['fantome','dragon'],base:st(150,100,120,100,120,90),forms:{
+    orbePlatine:{name:'Giratina (Origine)',types:['fantome','dragon'],base:st(150,120,100,120,100,90),abilities:['Lévitation']}
+  }}]},
 {id:'cresselia',abilities:['Lévitation'],moveIds:['confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','moonlight','icebeam','icywind','bodyslam','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Cresselia',types:['psy'],base:st(120,70,110,75,120,85)}]},
@@ -166,10 +174,29 @@ const LINES_GEN4 = [
   {name:'Darkrai',types:['tenebres'],base:st(70,90,90,135,90,125)}]},
 {id:'shaymin',abilities:['Médic Nature'],moveIds:['vinewhip','razorleaf','solarbeam','megadrain','gigadrain','leafblade','magicalleaf','needlearm','ingrain','synthesis','bulletseed','mudshot','bodyslam','swordsdance','agility','growl','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Shaymin',types:['plante'],base:st(100,100,100,100,100,100)}]},
+  {name:'Shaymin',types:['plante'],base:st(100,100,100,100,100,100),forms:{
+    gracidee:{name:'Shaymin (Ciel)',types:['plante','vol'],base:st(100,103,75,120,75,127),abilities:['Sérénité']}
+  }}]},
 {id:'arceus',abilities:['Multi-Type'],moveIds:['tackle','hyperbeam','bodyslam','doubleedge','triattack','swift','earthquake','icebeam','flamethrower','thunderbolt','surf','psychic','shadowball','dragonclaw','closecombat','flashcannon','sludgebomb','crunch','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard','recover'],
  stages:[
-  {name:'Arceus',types:['normal'],base:st(120,120,120,120,120,120)}]}
+  {name:'Arceus',types:['normal'],base:st(120,120,120,120,120,120),forms:{
+    plaqueFlamme:{name:'Arceus (Feu)',types:['feu'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueHydro:{name:'Arceus (Eau)',types:['eau'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueHerbe:{name:'Arceus (Plante)',types:['plante'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueVolt:{name:'Arceus (Électrik)',types:['electrik'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueCiel:{name:'Arceus (Vol)',types:['vol'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueToxicite:{name:'Arceus (Poison)',types:['poison'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueTerre:{name:'Arceus (Sol)',types:['sol'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueInsecte:{name:'Arceus (Insecte)',types:['insecte'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaquePoing:{name:'Arceus (Combat)',types:['combat'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueGlace:{name:'Arceus (Glace)',types:['glace'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueEsprit:{name:'Arceus (Psy)',types:['psy'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueFantome:{name:'Arceus (Fantôme)',types:['fantome'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueRoc:{name:'Arceus (Roche)',types:['roche'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueDraco:{name:'Arceus (Dragon)',types:['dragon'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueFer:{name:'Arceus (Acier)',types:['acier'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']},
+    plaqueOmbre:{name:'Arceus (Ténèbres)',types:['tenebres'],base:st(120,120,120,120,120,120),abilities:['Multi-Type']}
+  }}]}
 ];
 const DEX_NUMBERS_GEN4 = {
   'Tortipouss':387,'Boskara':388,'Torterra':389,

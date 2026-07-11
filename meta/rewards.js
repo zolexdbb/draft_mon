@@ -98,4 +98,3 @@ function renderBoostsList(){
     };
   });
 }
-document.getElementById('menuBoostsBtn').onclick = openBoostsModal;

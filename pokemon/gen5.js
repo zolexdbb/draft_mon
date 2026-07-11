@@ -295,10 +295,14 @@ const LINES_GEN5 = [
   {name:'Viridium',types:['plante','combat'],base:st(91,90,72,90,129,108)}]},
 {id:'tornadus',abilities:['Farceur'],moveIds:['gust','wingattack','drillpeck','airslash','aircutter','aerialace','bounce','hurricane','skyattack','focusblast','darkpulse','crunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Boréas',types:['vol'],base:st(79,115,70,125,80,111)}]},
+  {name:'Boréas',types:['vol'],base:st(79,115,70,125,80,111),forms:{
+    miroirSacre:{name:'Boréas (Totémique)',types:['vol'],base:st(79,100,80,110,90,121),abilities:['Régé-Force']}
+  }}]},
 {id:'thundurus',abilities:['Farceur'],moveIds:['thundershock','thunderbolt','thunder','thunderpunch','discharge','thunderwave','gust','wingattack','airslash','hurricane','focusblast','darkpulse','crunch','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Fulguris',types:['electrik','vol'],base:st(79,115,70,125,80,111)}]},
+  {name:'Fulguris',types:['electrik','vol'],base:st(79,115,70,125,80,111),forms:{
+    miroirSacre:{name:'Fulguris (Totémique)',types:['electrik','vol'],base:st(79,105,70,145,80,101),abilities:['Absorbe-Volt']}
+  }}]},
 {id:'reshiram',abilities:['Turbo Brasier'],moveIds:['dragonbreath','dragonclaw','dragonrage','outrage','dragonpulse','ember','flamethrower','fireblast','firepunch','heatwave','overheat','blastburn','sacredfire','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Reshiram',types:['dragon','feu'],base:st(100,120,100,150,120,90)}]},
@@ -307,7 +311,9 @@ const LINES_GEN5 = [
   {name:'Zekrom',types:['dragon','electrik'],base:st(100,150,120,120,100,90)}]},
 {id:'landorus',abilities:['Force Sable'],moveIds:['dig','earthquake','mudshot','sandtomb','rockslide','gust','wingattack','airslash','hurricane','focusblast','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Démétéros',types:['sol','vol'],base:st(89,125,90,115,80,101)}]},
+  {name:'Démétéros',types:['sol','vol'],base:st(89,125,90,115,80,101),forms:{
+    miroirSacre:{name:'Démétéros (Totémique)',types:['sol','vol'],base:st(89,145,90,105,80,91),abilities:['Intimidation']}
+  }}]},
 {id:'kyurem',abilities:['Pression'],moveIds:['dragonbreath','dragonclaw','dragonrage','outrage','dragonpulse','icebeam','icepunch','icywind','blizzard','iciclespear','sheercold','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Kyurem',types:['dragon','glace'],base:st(125,130,90,130,90,95)}]},

@@ -14,6 +14,48 @@ const PATCH_NOTES = [
           "Toutes les nouvelles lignées réutilisent le stock existant d'attaques : aucune nouvelle capacité n'a été nécessaire"
         ]
       }
+    ],
+    subVersions: [
+      {
+        version: 'v0.6.1',
+        title: 'v0.6.1 — Formes alternatives & Marchand',
+        categories: [
+          {
+            icon: '🔮', label: 'Objets de forme',
+            items: [
+              "Nouveaux objets tenus exclusifs : Orbe Platiné (Giratina → Forme Originelle), Gracidée (Shaymin → Forme Ciel), Miroir Sacré (Boréas, Fulguris ou Démétéros → Forme Totémique) et 5 appareils pour Motisma (Chauffe, Lavage, Frigo, Ventilateur, Tondeuse)",
+              "16 Plaques pour Arceus, chacune changeant son type selon la Plaque équipée",
+              "Équiper ou retirer un objet de forme recalcule immédiatement le type, les stats et le talent du Pokémon concerné"
+            ]
+          },
+          {
+            icon: '🧙', label: 'Marchand Itinérant',
+            items: [
+              "Nouveau PNJ au Village : 20% de chance d'apparaître à chaque visite, il vend exclusivement les objets de forme"
+            ]
+          },
+          {
+            icon: '🎬', label: 'Combat',
+            items: [
+              "Les Pokémon en combat affichent désormais leur sprite animé (style Noir & Blanc) au lieu du sprite statique, avec repli automatique vers le sprite statique si l'animation n'est pas disponible"
+            ]
+          },
+          {
+            icon: '🖥️', label: 'Interface',
+            items: [
+              "Le menu principal fusionne Nouvelle partie / Continuer / Boosts dans un seul bouton ▶ Jouer",
+              "Textes agrandis sur l'écran d'accueil et les Notes de mise à jour pour une meilleure lisibilité"
+            ]
+          },
+          {
+            icon: '🐛', label: 'Corrections',
+            items: [
+              "Dialga et Palkia n'ont jamais eu Télépathe comme second talent dans les jeux officiels : corrigé, ils n'ont désormais que Pression",
+              "Giratina n'a en réalité qu'un seul talent officiel, Lévitation (au lieu de Pression + Télépathe) : corrigé"
+            ]
+          }
+        ]
+      }
     ]
   },
   {

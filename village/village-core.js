@@ -9,6 +9,8 @@ function renderVillage(reward, newBadgeType){
   document.getElementById('villagePanelContent').innerHTML = '';
   ranchChoices = null;
   ranchRecruited = false;
+  merchantPresent = Math.random() < MERCHANT_SPAWN_RATE;
+  document.getElementById('villageMerchantBtn').classList.toggle('hidden', !merchantPresent);
   saveGame();
 }
 function setVillageMsg(text){
