@@ -209,6 +209,7 @@ function floorCleared(){
   const wasBoss = battleState.trainer && battleState.trainer.boss;
   const wasMiniBoss = battleState.trainer && battleState.trainer.miniBoss;
   const bossMasterType = battleState.trainer && battleState.trainer.masterType;
+  battleInProgress = false;
   battleState.player.forEach((c,i)=>{
     if(difficulty!=='difficile'){
       c.hp = c.maxHp; c.status=null; c.sleepCounter=0; c.confuseCounter=0;

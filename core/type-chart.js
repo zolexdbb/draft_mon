@@ -54,6 +54,12 @@ function typeBadgeIconHTML(type, size){
   const color = TYPE_COLOR[type] || '#666';
   return `<span class="type-badge-icon" style="width:${size}px;height:${size}px;background:${color};">${typeIconHTML(type, Math.round(size*0.62))}</span>`;
 }
+// Pièce grise gravée du symbole de type, pour les badges de Maître (obtenue = pleine couleur, non obtenue = grisée).
+function typeCoinHTML(type, owned, size){
+  size = size || 22;
+  const iconColor = owned ? (TYPE_COLOR[type] || '#e8e0f0') : '#77777d';
+  return `<span class="type-badge-icon" style="width:${size}px;height:${size}px;background:linear-gradient(160deg,#b9bcc4,#787c86);border:1px solid #55585f;opacity:${owned?1:.35};">${typeIconHTML(type, Math.round(size*0.62), iconColor)}</span>`;
+}
 function typeTagHTML(type, opts){
   opts = opts || {};
   const cls = 'type-tag t-'+type+(opts.cls ? ' '+opts.cls : '');

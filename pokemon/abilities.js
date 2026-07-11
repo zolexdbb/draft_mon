@@ -1,5 +1,20 @@
 /* ==== pokemon/abilities.js (généré depuis index.html) ==== */
 const ABILITY_DESC = {
+  /* ---- BLOC 1 (Gen 5) : talents manquants ---- */
+  'Victorieux':"Augmente de 10% la précision des capacités du porteur (et de ses alliés en Combat Duo/Multi).",
+  'Contestation':"Inverse les changements de statistiques subis.",
+  'Luminescence':"Augmente le taux de rencontre de Pokémon sauvages et empêche la baisse de précision.",
+  'Armure Rouillée':"Baisse la Défense mais augmente fortement la Vitesse si touché par une capacité physique.",
+  'Cœur Soin':"Peut soigner l'altération de statut d'un allié voisin en Combat Duo/Trio ; sans effet en Combat Solo.",
+  'Mode Zen':"Change de forme et de statistiques quand les PV passent sous la moitié.",
+  'Défaitiste':"Diminue de moitié l'Attaque et l'Attaque Spéciale quand les PV passent sous la moitié.",
+  'Illusion':"Se fait passer pour le dernier Pokémon de l'équipe jusqu'à subir des dégâts.",
+  'Garde Magik':"Empêche de subir des dégâts autres que ceux des attaques directes.",
+  'Herbivore':"Immunise contre les capacités Plante et booste l'Attaque Spéciale si touché.",
+  'Épine de Fer':"Blesse l'attaquant au contact.",
+  'Moins':"Augmente l'Attaque Spéciale si un allié possède le talent Plus.",
+  'Turbo Brasier':"Ignore les talents défensifs de l'adversaire.",
+  'Téra-Voltage':"Ignore les talents défensifs de l'adversaire.",
   'Engrais':"Renforce les attaques Plante quand les PV sont bas.",
   'Chlorophylle':"Double la Vitesse sous un soleil intense.",
   'Brasier':"Renforce les attaques Feu quand les PV sont bas.",

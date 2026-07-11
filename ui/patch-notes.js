@@ -1,6 +1,22 @@
 /* ==== ui/patch-notes.js (généré depuis index.html) ==== */
 const PATCH_NOTES = [
   {
+    version: 'v0.6',
+    title: 'v0.6 — Gen 5 Update',
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "156 nouveaux Pokémon ajoutés (Unova, Pokédex complet 1 → 649)",
+          "19 nouveaux talents de Génération 5 ajoutés avec leurs vraies descriptions officielles (Victorieux, Contestation, Mode Zen, Illusion, Garde Magik, Défaitiste, Herbivore, Épine de Fer, Turbo Brasier, Téra-Voltage...)",
+          "13 nouveaux Pokémon Légendaires/Fabuleux (Victini, Cobalion, Terrakion, Virizion, Tornadus, Thundurus, Reshiram, Zekrom, Landorus, Kyurem, Keldeo, Meloetta, Genesect) et 2 nouvelles lignées pseudo-légendaires (Coupenotte/Tranchodon, Solochi/Trioxhydre)",
+          "5 nouveaux Pokémon Rares (Zorua/Zoroark, Larvesta/Volcarona, Druddigon, Tirtouga/Carracosta, Archen/Archeops)",
+          "Toutes les nouvelles lignées réutilisent le stock existant d'attaques : aucune nouvelle capacité n'a été nécessaire"
+        ]
+      }
+    ]
+  },
+  {
     version: 'v0.5',
     title: 'v0.5 — Gen 4 Update',
     categories: [
@@ -53,8 +69,14 @@ const PATCH_NOTES = [
           {
             icon: '🚫', label: 'Anti-boucle',
             items: [
-              "Quitter vers le menu en plein combat verrouille et abandonne la run (même sanction qu'une défaite)",
+              "Quitter vers le menu en plein combat met le combat en pause (même dresseur, mêmes PV) au lieu de l'abandonner : tout reprend exactement où on l'a laissé au retour",
               "Une défaite supprime désormais la sauvegarde en cours, impossible de recharger pour retenter le même combat en boucle"
+            ]
+          },
+          {
+            icon: '🎖️', label: 'Badges',
+            items: [
+              "Les badges utilisent maintenant les vraies icônes de type sur une pièce grise, au lieu d'émojis"
             ]
           },
           {
@@ -65,6 +87,7 @@ const PATCH_NOTES = [
               "Surpuissance, Close Combat, Draco-Météore, Surchauffe et Psycho Boost n'affaiblissaient jamais réellement le lanceur : corrigé",
               "Prescience touchait le Pokémon présent sur le terrain à la résolution au lieu de suivre sa cible d'origine : corrigé",
               "Ténacité rendait le Pokémon immortel indéfiniment (l'effet n'était jamais réinitialisé) : corrigé",
+              "Les Maîtres de Type n'avaient en réalité jamais une équipe 100% du même type en jeu (paramètre manquant à l'appel) : corrigé",
               "Le meilleur étage ne se rechargeait plus après un rafraîchissement de la page : corrigé"
             ]
           }
@@ -256,7 +279,7 @@ const PATCH_NOTES = [
     ]
   }
 ];
-const SPLASH_TEXTS = ["Gen 4 is here!!!"];
+const SPLASH_TEXTS = ["Gen 5 est disponible !"];
 function renderPatchNoteBody(v){
   if(v.categories){
     return v.categories.map(c => `

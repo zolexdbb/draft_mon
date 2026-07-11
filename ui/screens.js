@@ -1,24 +1,27 @@
 /* ==== ui/screens.js (généré depuis index.html) ==== */
-// Une défaite (ou un abandon) supprime la sauvegarde en cours : impossible de recharger
-// la partie d'avant pour retenter le même combat en boucle.
-function gameOver(reason){
+// Une défaite supprime la sauvegarde en cours : impossible de recharger la partie d'avant
+// pour retenter le même combat en boucle.
+function gameOver(){
   const earned = tokensForRun(towerFloor, difficulty);
   towerTokens += earned;
   saveMetaProgress();
   deleteSlot(currentSlot);
   battleState = null;
+  battleInProgress = false;
   document.getElementById('screenBattle').classList.add('hidden');
   document.getElementById('screenEnd').classList.remove('hidden');
-  document.getElementById('endLabel').textContent = reason || 'DÉFAITE';
+  document.getElementById('endLabel').textContent = 'DÉFAITE';
   document.getElementById('endFloor').textContent = towerFloor;
   document.getElementById('endTokensLabel').textContent = earned>0 ? `+${earned} 🎫 Jetons de Tour gagnés !` : '';
 }
-// Quitter vers le menu en plein combat verrouille et abandonne ce combat (même sanction qu'une défaite),
-// pour empêcher de fuir un combat qui tourne mal sans conséquence.
-function forfeitBattle(){
-  gameOver('ABANDON');
+// Quitter vers le menu en plein combat met juste le combat en pause : le combat (même dresseur,
+// mêmes PV) reprend exactement où on l'a laissé au retour, rien n'est perdu ni réinitialisé.
+function pauseBattleToMenu(){
+  if(battleState) battleState.locked = false;
+  saveGame();
+  showScreen('screenMenu');
 }
-document.getElementById('battleHomeBtn').onclick = forfeitBattle;
+document.getElementById('battleHomeBtn').onclick = pauseBattleToMenu;
 
 document.getElementById('restartBtn').onclick = ()=>{
   document.getElementById('screenEnd').classList.add('hidden');
@@ -42,7 +45,8 @@ function slotSummaryHTML(slot){
   const diffLabel = info.difficulty==='facile' ? '😊 Facile' : (info.difficulty==='difficile' ? '💀 Difficile' : '⚔️ Normal');
   let dateLabel = '';
   try { if(info.savedAt) dateLabel = new Date(info.savedAt).toLocaleDateString('fr-FR'); } catch(e){}
-  return `<div style="font-size:9px;color:var(--text-main);">Étage ${info.floor} · ${diffLabel} · ${info.teamCount} Pokémon${dateLabel?' · '+dateLabel:''}</div>`;
+  const battleLabel = info.battleInProgress ? ' · ⚔️ Combat en pause' : '';
+  return `<div style="font-size:9px;color:var(--text-main);">Étage ${info.floor} · ${diffLabel} · ${info.teamCount} Pokémon${dateLabel?' · '+dateLabel:''}${battleLabel}</div>`;
 }
 function openSlotModal(mode){
   const overlay = document.createElement('div');
@@ -82,8 +86,16 @@ function openSlotModal(mode){
         if(!info) return;
         if(loadGame(slot)){
           close();
-          showScreen('screenTower');
-          renderTower();
+          if(battleInProgress && battleState){
+            showScreen('screenBattle');
+            renderTrainerBanner(battleState.trainer);
+            clearLog();
+            setLog(`<b>Étage ${towerFloor}</b> — reprise du combat en cours contre ${battleState.trainer.name} !`);
+            renderBattle();
+          } else {
+            showScreen('screenTower');
+            renderTower();
+          }
         }
       } else {
         const proceed = ()=>{
@@ -134,10 +146,7 @@ function refreshMenuUI(){
 }
 function scoreDiffRowHTML(label, floor, diffKey){
   const owned = badges[diffKey] || [];
-  const badgeIcons = ALL_TYPES.map(t=> owned.includes(t)
-    ? `<span title="${typeDisplayName(t)}" style="opacity:1;">${TYPE_EMOJI[t]}</span>`
-    : `<span title="${typeDisplayName(t)}" style="opacity:.2;">${TYPE_EMOJI[t]}</span>`
-  ).join('');
+  const badgeIcons = ALL_TYPES.map(t=> typeCoinHTML(t, owned.includes(t), 20)).join(' ');
   return `
     <div style="padding:8px 12px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -146,7 +155,7 @@ function scoreDiffRowHTML(label, floor, diffKey){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
         <span style="font-size:9px;color:var(--text-dim);">🎖️ Badges (${owned.length}/${ALL_TYPES.length})</span>
       </div>
-      <div style="font-size:13px;letter-spacing:2px;margin-top:4px;text-align:left;">${badgeIcons}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">${badgeIcons}</div>
     </div>`;
 }
 function openScoreModal(){

@@ -12,9 +12,19 @@ function resetBattleFields(c){
   c.chargingMove = null;
   c.invulnType = null;
 }
+function renderTrainerBanner(trainer){
+  const bannerEl = document.getElementById('trainerBanner');
+  bannerEl.className = 'trainer-banner' + (trainer.boss?' boss':(trainer.miniBoss?' miniboss':''));
+  bannerEl.innerHTML = `
+    <div class="trainer-avatar">${trainer.emoji}</div>
+    <div class="trainer-info">
+      <div class="trainer-name">${trainer.name}</div>
+      <div class="trainer-quote">"${trainer.dialogue}"</div>
+    </div>`;
+}
 function startBattle(){
   const trainer = generateTrainer(towerFloor);
-  const enemyTeam = generateEnemyTeam(towerFloor, trainer.theme);
+  const enemyTeam = generateEnemyTeam(towerFloor, trainer.theme, trainer.boss);
   const playerRoster = team.map(m=>{
     const sp = speciesOf(m);
     const maxHp = m.computedStats.hp;
@@ -41,16 +51,10 @@ function startBattle(){
   }
 
   battleState = { player: playerRoster, foe: enemyTeam, pActive: aliveIdx, fActive: 0, locked:false, trainer, weather:null };
+  battleInProgress = true;
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenBattle').classList.remove('hidden');
-  const bannerEl = document.getElementById('trainerBanner');
-  bannerEl.className = 'trainer-banner' + (trainer.boss?' boss':(trainer.miniBoss?' miniboss':''));
-  bannerEl.innerHTML = `
-    <div class="trainer-avatar">${trainer.emoji}</div>
-    <div class="trainer-info">
-      <div class="trainer-name">${trainer.name}</div>
-      <div class="trainer-quote">"${trainer.dialogue}"</div>
-    </div>`;
+  renderTrainerBanner(trainer);
   clearLog();
   const pLead = playerRoster[aliveIdx], fLead = enemyTeam[0];
   const intimMsg = triggerIntimidate(fLead, pLead) + triggerIntimidate(pLead, fLead) + triggerSwitchInAbilities(fLead, pLead) + triggerSwitchInAbilities(pLead, fLead);
@@ -222,6 +226,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     acc = move.accuracy!==undefined ? move.accuracy : 0.95;
     acc *= accuracyStageMultiplier(actor.stages.acc);
     if(move.cat!=='status') acc /= accuracyStageMultiplier(defender.stages.eva||0);
+    if(actor.ability==='Victorieux') acc *= 1.1;
   }
   const weatherNow = battleState ? battleState.weather : null;
   if(weatherNow && move.cat!=='status'){

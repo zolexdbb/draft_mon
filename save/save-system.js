@@ -40,7 +40,10 @@ function updateBestFloor(floor){
 }
 function saveGame(){
   try {
-    localStorage.setItem(slotKey(currentSlot), JSON.stringify({ team, towerFloor, difficulty, money, bag, pcBox, savedAt: Date.now() }));
+    localStorage.setItem(slotKey(currentSlot), JSON.stringify({
+      team, towerFloor, difficulty, money, bag, pcBox, savedAt: Date.now(),
+      battleInProgress, battleState: battleInProgress ? battleState : null
+    }));
   } catch(e){ console.error('Sauvegarde impossible', e); }
 }
 function loadGame(slot){
@@ -67,6 +70,9 @@ function loadGame(slot){
       }
     });
     currentSlot = slot;
+    battleInProgress = !!data.battleInProgress;
+    battleState = battleInProgress ? (data.battleState || null) : null;
+    if(battleState) battleState.locked = false;
     return true;
   } catch(e){ console.error('Chargement impossible', e); return false; }
 }
@@ -79,7 +85,8 @@ function getSlotInfo(slot){
       floor: data.towerFloor || 1,
       difficulty: data.difficulty || 'facile',
       teamCount: (data.team||[]).length,
-      savedAt: data.savedAt || null
+      savedAt: data.savedAt || null,
+      battleInProgress: !!data.battleInProgress
     };
   } catch(e){ return null; }
 }
