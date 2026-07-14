@@ -185,43 +185,51 @@ function applyStatusEffect(user, target, move, logs){
       logs.push(`${target.name} résiste grâce à Ventouse !`);
     } else {
     const bs = battleState;
-    const isTargetPlayer = (target===bs.player[bs.pActive]);
-    const roster = isTargetPlayer ? bs.player : bs.foe;
-    const activeKey = isTargetPlayer ? 'pActive' : 'fActive';
-    const aliveIdx = roster.map((c,i)=> (c.hp>0 && i!==bs[activeKey]) ? i : -1).filter(i=>i>=0);
-    if(aliveIdx.length>0){
-      const newIdx = rand(aliveIdx);
-      bs[activeKey] = newIdx;
-      resetBattleFields(roster[newIdx]);
-      logs.push(`${target.name} est rappelé de force ! ${roster[newIdx].name} entre sur le terrain !`);
-      const opponent = isTargetPlayer ? bs.foe[bs.fActive] : bs.player[bs.pActive];
-      const intimMsg = triggerIntimidate(roster[newIdx], opponent) + triggerSwitchInAbilities(roster[newIdx], opponent);
-      if(intimMsg) logs.push(intimMsg.trim());
-    } else {
-      logs.push(`${target.name} n'a personne pour le remplacer !`);
+    const loc = locateActiveSlot(target);
+    if(loc){
+      const roster = loc.side==='player' ? bs.player : bs.foe;
+      const usedIdx = loc.side==='player' ? [bs.pActive, bs.pActive2] : [bs.fActive, bs.fActive2];
+      const aliveIdx = roster.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
+      if(aliveIdx.length>0){
+        const newIdx = rand(aliveIdx);
+        const entering = setActiveSlot(loc.side, loc.slot, newIdx);
+        resetBattleFields(entering);
+        logs.push(`${target.name} est rappelé de force ! ${entering.name} entre sur le terrain !`);
+        const opponent = loc.side==='player' ? aliveFoeCombatants()[0] : alivePlayerCombatants()[0];
+        if(opponent){
+          const intimMsg = triggerIntimidate(entering, opponent) + triggerSwitchInAbilities(entering, opponent);
+          if(intimMsg) logs.push(intimMsg.trim());
+        }
+      } else {
+        logs.push(`${target.name} n'a personne pour le remplacer !`);
+      }
     }
     }
   }
   if(eff.selfSwitch && battleState){
     const bs = battleState;
-    const isUserPlayer = (user===bs.player[bs.pActive]);
-    const roster = isUserPlayer ? bs.player : bs.foe;
-    const activeKey = isUserPlayer ? 'pActive' : 'fActive';
-    const aliveIdx = roster.map((c,i)=> (c.hp>0 && i!==bs[activeKey]) ? i : -1).filter(i=>i>=0);
-    if(aliveIdx.length>0){
-      const newIdx = rand(aliveIdx);
-      const savedStages = eff.batonPass ? {...user.stages} : null;
-      bs[activeKey] = newIdx;
-      resetBattleFields(roster[newIdx]);
-      if(savedStages){ roster[newIdx].stages = savedStages; }
-      logs.push(eff.batonPass
-        ? `${user.name} passe le relais ! ${roster[newIdx].name} entre sur le terrain en gardant les changements de statistiques !`
-        : `${user.name} se téléporte hors du combat ! ${roster[newIdx].name} entre sur le terrain !`);
-      const opponent = isUserPlayer ? bs.foe[bs.fActive] : bs.player[bs.pActive];
-      const intimMsg = triggerIntimidate(roster[newIdx], opponent) + triggerSwitchInAbilities(roster[newIdx], opponent);
-      if(intimMsg) logs.push(intimMsg.trim());
-    } else {
-      logs.push(`${user.name} n'a personne pour le remplacer, ça échoue !`);
+    const loc = locateActiveSlot(user);
+    if(loc){
+      const roster = loc.side==='player' ? bs.player : bs.foe;
+      const usedIdx = loc.side==='player' ? [bs.pActive, bs.pActive2] : [bs.fActive, bs.fActive2];
+      const aliveIdx = roster.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
+      if(aliveIdx.length>0){
+        const newIdx = rand(aliveIdx);
+        const savedStages = eff.batonPass ? {...user.stages} : null;
+        const entering = setActiveSlot(loc.side, loc.slot, newIdx);
+        resetBattleFields(entering);
+        if(savedStages){ entering.stages = savedStages; }
+        logs.push(eff.batonPass
+          ? `${user.name} passe le relais ! ${entering.name} entre sur le terrain en gardant les changements de statistiques !`
+          : `${user.name} se téléporte hors du combat ! ${entering.name} entre sur le terrain !`);
+        const opponent = loc.side==='player' ? aliveFoeCombatants()[0] : alivePlayerCombatants()[0];
+        if(opponent){
+          const intimMsg = triggerIntimidate(entering, opponent) + triggerSwitchInAbilities(entering, opponent);
+          if(intimMsg) logs.push(intimMsg.trim());
+        }
+      } else {
+        logs.push(`${user.name} n'a personne pour le remplacer, ça échoue !`);
+      }
     }
   }
   if(eff.mimic){

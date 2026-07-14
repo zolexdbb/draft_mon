@@ -161,22 +161,39 @@
         <div class="bench" id="foeBench"></div>
       </div>
       <div class="vsfield">
-        <div class="combatant foe" id="foeBox">
-          <div class="sprite" id="foeSprite">❔</div>
-          <div class="name-row"><b id="foeName">—</b><span class="type-badges-row" id="foeType"></span></div>
-          <div class="hpbar-track"><div class="hpbar-fill" id="foeHpFill"></div></div>
-          <div class="hp-text" id="foeHpText">PV</div>
+        <div class="combatant-row">
+          <div class="combatant foe" id="foeBox">
+            <div class="sprite" id="foeSprite">❔</div>
+            <div class="name-row"><b id="foeName">—</b><span class="type-badges-row" id="foeType"></span></div>
+            <div class="hpbar-track"><div class="hpbar-fill" id="foeHpFill"></div></div>
+            <div class="hp-text" id="foeHpText">PV</div>
+          </div>
+          <div class="combatant foe hidden" id="foe2Box">
+            <div class="sprite" id="foe2Sprite">❔</div>
+            <div class="name-row"><b id="foe2Name">—</b><span class="type-badges-row" id="foe2Type"></span></div>
+            <div class="hpbar-track"><div class="hpbar-fill" id="foe2HpFill"></div></div>
+            <div class="hp-text" id="foe2HpText">PV</div>
+          </div>
         </div>
-        <div class="combatant you" id="playerBox">
-          <div class="sprite" id="playerSprite">❔</div>
-          <div class="name-row"><b id="playerName">—</b><span class="type-badges-row" id="playerType"></span></div>
-          <div class="hpbar-track"><div class="hpbar-fill" id="playerHpFill"></div></div>
-          <div class="hp-text" id="playerHpText">PV</div>
+        <div class="combatant-row">
+          <div class="combatant you" id="playerBox">
+            <div class="sprite" id="playerSprite">❔</div>
+            <div class="name-row"><b id="playerName">—</b><span class="type-badges-row" id="playerType"></span></div>
+            <div class="hpbar-track"><div class="hpbar-fill" id="playerHpFill"></div></div>
+            <div class="hp-text" id="playerHpText">PV</div>
+          </div>
+          <div class="combatant you hidden" id="player2Box">
+            <div class="sprite" id="player2Sprite">❔</div>
+            <div class="name-row"><b id="player2Name">—</b><span class="type-badges-row" id="player2Type"></span></div>
+            <div class="hpbar-track"><div class="hpbar-fill" id="player2HpFill"></div></div>
+            <div class="hp-text" id="player2HpText">PV</div>
+          </div>
         </div>
       </div>
       <div class="log" id="log"></div>
     </div>
     <div class="battle-controls">
+      <div class="moves-header hidden" id="movesHeader"></div>
       <div class="moves" id="movesGrid"></div>
       <div class="switch-grid hidden" id="switchGrid"></div>
       <div style="text-align:center;margin-top:10px;">
@@ -244,5 +261,6 @@
 <script src="ui/bag-modal.js"></script>
 <script src="ui/dex-viewer.js"></script>
 <script src="ui/patch-notes.js"></script>
+<script src="ui/dev-mode.js"></script>
 </body>
 </html>

@@ -26,8 +26,9 @@ function pickSmartMoves(movepool, sp, floor){
 }
 
 // IA de Maître de Type : au KO, envoie le meilleur contre plutôt que le premier en vie.
-function bestFoeSwitchIdx(foeTeam, player){
-  const alive = foeTeam.map((c,i)=>({c,i})).filter(x=>x.c.hp>0);
+function bestFoeSwitchIdx(foeTeam, player, excludeIdxs){
+  excludeIdxs = excludeIdxs || [];
+  const alive = foeTeam.map((c,i)=>({c,i})).filter(x=>x.c.hp>0 && !excludeIdxs.includes(x.i));
   if(alive.length===0) return -1;
   const scored = alive.map(({c,i})=>{
     const offense = Math.max(...c.types.map(t=>getMult(t, player.types)));
@@ -37,8 +38,69 @@ function bestFoeSwitchIdx(foeTeam, player){
   return scored.reduce((best,s)=> s.score>best.score ? s : best).i;
 }
 
-function chooseFoeMove(foe, player, excellent){
-  if(foe.chargingMove) return foe.chargingMove;
+// Score un coup contre une cible précise (utilisé pour choisir la meilleure paire coup/cible
+// en combat double, où l'IA a le choix entre 1 ou 2 adversaires vivants).
+function scoreFoeMoveVsTarget(foe, mv, target){
+  if(mv.fixedDamage){ return getMult(mv.type, target.types)>0 ? 8 : 0; }
+
+  if(mv.cat === 'status'){
+    const eff = mv.effect||{};
+    const hpRatioFoe = foe.hp / foe.maxHp;
+    // Soigner : priorité haute si PV < 40%
+    if(eff.heal){
+      return hpRatioFoe < 0.4 ? 50 - hpRatioFoe*80 : (hpRatioFoe < 0.7 ? 8 : 1);
+    }
+    // Statut adverse : utile seulement si la cible n'en a pas et qu'elle a encore beaucoup de PV
+    if(eff.status){
+      const hpRatioTarget = target.hp / target.maxHp;
+      if(eff.status === 'confusion'){
+        return target.confuseCounter > 0 ? 1 : (hpRatioTarget > 0.4 ? 12 : 4);
+      }
+      return target.status ? 1 : (hpRatioTarget > 0.3 ? 16 : 3);
+    }
+    // Boost perso : bon seulement si boost faible et PV corrects
+    if(eff.selfBoost){
+      const stat = eff.selfBoost[0].stat;
+      const cur = foe.stages[stat]||0;
+      return cur >= 3 ? 1 : (hpRatioFoe > 0.5 ? 14 : 3);
+    }
+    // Débuff adverse
+    if(eff.foeBoost){
+      const stat = eff.foeBoost[0].stat;
+      const cur = target.stages[stat]||0;
+      return cur <= -3 ? 1 : 10;
+    }
+    return 1;
+  }
+
+  // Attaque offensive
+  const eff = getMult(mv.type, target.types);
+  if(eff === 0) return 0;
+
+  // Efficacité de type = levier principal
+  let score = 10 * eff;
+
+  // STAB
+  if(foe.types.includes(mv.type)) score *= 1.4;
+
+  // Préférer le bon stat d'attaque
+  const foeAtkEff = foe.stats.atk * statMultiplier(foe.stages.atk||0);
+  const foeSpaEff = foe.stats.spa * statMultiplier(foe.stages.spa||0);
+  const isPhys = mv.cat === 'phys';
+  if(isPhys && foeAtkEff > foeSpaEff*1.2) score *= 1.3;
+  if(!isPhys && foeSpaEff > foeAtkEff*1.2) score *= 1.3;
+
+  // Pondérer par la puissance
+  score *= (mv.power / 55);
+
+  // Éviter les attaques à recul si PV bas
+  if(mv.recoil && (foe.hp/foe.maxHp) < 0.3) score *= 0.4;
+
+  return score;
+}
+
+// possibleTargets : 1 cible en solo, jusqu'à 2 en combat double. Retourne {move, target}.
+function chooseFoeMove(foe, possibleTargets, excellent){
   let moves = foe.disabledMove ? foe.moveObjs.filter(mv=>mv.name!==foe.disabledMove.name) : foe.moveObjs;
   if(foe.lockedMove) moves = foe.moveObjs.filter(mv=>mv.name===foe.lockedMove.name);
   if(moves.length===0) moves = foe.moveObjs;
@@ -46,90 +108,41 @@ function chooseFoeMove(foe, player, excellent){
   if(foe.ppCur){
     const withPP = moves.filter(mv => (foe.ppCur[foe.moveObjs.indexOf(mv)]||0) > 0);
     if(withPP.length > 0) moves = withPP;
-    else return STRUGGLE_MOVE;
+    else return { move: STRUGGLE_MOVE, target: possibleTargets[0] };
   }
-  const hpRatioFoe = foe.hp / foe.maxHp;
-  const hpRatioPlayer = player.hp / player.maxHp;
-  const foeAtkEff = foe.stats.atk * statMultiplier(foe.stages.atk||0);
-  const foeSpaEff = foe.stats.spa * statMultiplier(foe.stages.spa||0);
+  if(foe.chargingMove){
+    moves = moves.filter(mv=>mv===foe.chargingMove);
+    if(moves.length===0) moves = [foe.chargingMove];
+  }
 
-  const scored = moves.map(mv => {
-    let score = 1;
-
-    if(mv.fixedDamage){ return {mv, score: getMult(mv.type, player.types)>0 ? 8 : 0}; }
-
-    if(mv.cat === 'status'){
-      const eff = mv.effect||{};
-      // Soigner : priorité haute si PV < 40%
-      if(eff.heal){
-        score = hpRatioFoe < 0.4 ? 50 - hpRatioFoe*80 : (hpRatioFoe < 0.7 ? 8 : 1);
-      }
-      // Statut adverse : utile seulement si l'adversaire n'en a pas et qu'il a encore beaucoup de PV
-      else if(eff.status){
-        if(eff.status === 'confusion'){
-          score = player.confuseCounter > 0 ? 1 : (hpRatioPlayer > 0.4 ? 12 : 4);
-        } else {
-          score = player.status ? 1 : (hpRatioPlayer > 0.3 ? 16 : 3);
-        }
-      }
-      // Boost perso : bon seulement si boost faible et PV corrects
-      else if(eff.selfBoost){
-        const stat = eff.selfBoost[0].stat;
-        const cur = foe.stages[stat]||0;
-        score = cur >= 3 ? 1 : (hpRatioFoe > 0.5 ? 14 : 3);
-      }
-      // Débuff adverse
-      else if(eff.foeBoost){
-        const stat = eff.foeBoost[0].stat;
-        const cur = player.stages[stat]||0;
-        score = cur <= -3 ? 1 : 10;
-      }
-      return {mv, score};
+  const scored = [];
+  moves.forEach(mv=>{
+    if(mv.target==='self'){
+      scored.push({ mv, target: possibleTargets[0], score: scoreFoeMoveVsTarget(foe, mv, possibleTargets[0]) });
+    } else {
+      possibleTargets.forEach(t=> scored.push({ mv, target: t, score: scoreFoeMoveVsTarget(foe, mv, t) }));
     }
-
-    // Attaque offensive
-    const eff = getMult(mv.type, player.types);
-    if(eff === 0) return {mv, score:0};
-
-    // Efficacité de type = levier principal
-    score = 10 * eff;
-
-    // STAB
-    if(foe.types.includes(mv.type)) score *= 1.4;
-
-    // Préférer le bon stat d'attaque
-    const isPhys = mv.cat === 'phys';
-    if(isPhys && foeAtkEff > foeSpaEff*1.2) score *= 1.3;
-    if(!isPhys && foeSpaEff > foeAtkEff*1.2) score *= 1.3;
-
-    // Pondérer par la puissance
-    score *= (mv.power / 55);
-
-    // Éviter les attaques à recul si PV bas
-    if(mv.recoil && hpRatioFoe < 0.3) score *= 0.4;
-
-    return {mv, score};
   });
 
   const valid = scored.filter(s => s.score > 0);
   let chosen;
   if(valid.length === 0){
-    chosen = rand(moves);
+    chosen = { mv: rand(moves), target: possibleTargets[0] };
   } else if(excellent){
     // IA de Maître de Type : prend toujours le meilleur coup, jamais de choix sous-optimal.
-    chosen = valid.reduce((best,s)=> s.score>best.score ? s : best).mv;
+    chosen = valid.reduce((best,s)=> s.score>best.score ? s : best);
   } else {
     // Sélection pondérée (pas toujours le meilleur, mais biaisé)
     const total = valid.reduce((a,s)=>a+s.score,0);
     let r = Math.random()*total;
-    chosen = valid[valid.length-1].mv;
-    for(const s of valid){ r-=s.score; if(r<=0){ chosen = s.mv; break; } }
+    chosen = valid[valid.length-1];
+    for(const s of valid){ r-=s.score; if(r<=0){ chosen = s; break; } }
   }
   if(foe.ppCur){
-    const idx = foe.moveObjs.indexOf(chosen);
+    const idx = foe.moveObjs.indexOf(chosen.mv);
     if(idx>=0 && foe.ppCur[idx]>0) foe.ppCur[idx]--;
   }
-  return chosen;
+  return { move: chosen.mv, target: chosen.target };
 }
 
 /* =================== BATTLE =================== */

@@ -436,9 +436,14 @@ select option{
 .pokeball-icon.fainted{ filter:grayscale(1); opacity:.3; }
 .pokeball-icon.active{ box-shadow:0 0 0 2px var(--accent), 0 0 8px rgba(232,200,74,.6); }
 
+.combatant-row{ display:flex; gap:10px; }
+.combatant-row:first-child{ justify-content:flex-end; }
+.combatant-row:last-child{ justify-content:flex-start; }
+.is-double-battle .combatant-row{ justify-content:center; }
 .combatant{ width:100%; max-width:320px; padding:6px 4px; position:relative; background:none; border:none; box-shadow:none; }
-.combatant.foe{ align-self:flex-end; }
-.combatant.you{ align-self:flex-start; }
+.is-double-battle .combatant{ max-width:170px; }
+.is-double-battle .sprite{ width:76px; height:76px; }
+.is-double-battle .name-row{ font-size:11px; }
 .name-row{ display:flex; align-items:center; gap:8px; justify-content:space-between; font-size:13px; margin-bottom:6px; text-shadow:0 1px 3px rgba(0,0,0,.8); }
 .type-badges-row{ display:inline-flex; gap:5px; }
 .type-badge-icon{ display:inline-flex; align-items:center; justify-content:center; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,.5); flex-shrink:0; }
@@ -530,10 +535,14 @@ select option{
 }
 .trainer-banner.boss{ border-left-color:#e8c84a; background:linear-gradient(135deg, rgba(232,200,74,.16), transparent); }
 .trainer-banner.miniboss{ border-left-color:#a98ff3; background:linear-gradient(135deg, rgba(169,143,243,.14), transparent); }
+.trainer-banner.twin-banner{ gap:0; }
+.trainer-info-pair{ display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
+.trainer-info-pair + .trainer-info-pair{ margin-left:14px; padding-left:14px; border-left:1px solid var(--line); }
 .trainer-avatar{ font-size:32px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
 .trainer-info{ min-width:0; }
 .trainer-name{ font-family:'Press Start 2P', monospace; font-size:11px; color:var(--accent); letter-spacing:.5px; margin-bottom:5px; line-height:1.4; }
 .trainer-quote{ font-size:10px; color:var(--text-dim); font-style:italic; }
+.moves-header{ font-size:11px; color:var(--text-dim); text-align:center; margin-bottom:8px; letter-spacing:.3px; }
 
 .battle-field{
   background:rgba(0,0,0,.18); border:1px solid var(--line); border-radius:6px; padding:12px 12px 4px;
@@ -614,6 +623,10 @@ body{padding:8px;}
 .combatant{max-width:100%;padding:14px;}
 .sprite{width:100px;height:100px;font-size:56px;}
 .name-row{font-size:14px;}
+.is-double-battle .combatant-row{flex-wrap:wrap;justify-content:center;}
+.is-double-battle .combatant{max-width:150px;padding:8px;}
+.is-double-battle .sprite{width:64px;height:64px;font-size:36px;}
+.trainer-info-pair + .trainer-info-pair{margin-left:8px;padding-left:8px;}
 .hpbar-track{height:14px;}
 .btn{width:100%;padding:14px 12px;font-size:14px;min-height:48px;}
 .editor-actions{flex-direction:column;}

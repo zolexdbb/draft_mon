@@ -47,6 +47,7 @@ function renderDex(){
         <div class="stat-line">AtqSp ${sp.base.spa} · DéfSp ${sp.base.spd} · Vit ${sp.base.spe}</div>
         <div class="dex-rate">${rateText}</div>
       `;
+      if(sp.name===DEV_TRIGGER_NAME) card.onclick = handleDevTriggerClick;
       grid.appendChild(card);
       count++;
     });

@@ -18,10 +18,8 @@ function rollCrit(attacker, defender){
 }
 function weatherNullified(){
   if(!battleState) return false;
-  const p = battleState.player[battleState.pActive];
-  const f = battleState.foe[battleState.fActive];
-  const check = c => c && (c.ability==='Air Lock' || c.ability==='Ciel Gris');
-  return check(p) || check(f);
+  const check = c => c.ability==='Air Lock' || c.ability==='Ciel Gris';
+  return [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(check);
 }
 function computeDamage(attacker, move, defender){
   if(move.fixedDamage){

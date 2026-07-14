@@ -10,8 +10,7 @@ const PATCH_NOTES = [
           "156 nouveaux Pokémon ajoutés (Unova, Pokédex complet 1 → 649)",
           "19 nouveaux talents de Génération 5 ajoutés avec leurs vraies descriptions officielles (Victorieux, Contestation, Mode Zen, Illusion, Garde Magik, Défaitiste, Herbivore, Épine de Fer, Turbo Brasier, Téra-Voltage...)",
           "13 nouveaux Pokémon Légendaires/Fabuleux (Victini, Cobalion, Terrakion, Virizion, Tornadus, Thundurus, Reshiram, Zekrom, Landorus, Kyurem, Keldeo, Meloetta, Genesect) et 2 nouvelles lignées pseudo-légendaires (Coupenotte/Tranchodon, Solochi/Trioxhydre)",
-          "5 nouveaux Pokémon Rares (Zorua/Zoroark, Larvesta/Volcarona, Druddigon, Tirtouga/Carracosta, Archen/Archeops)",
-          "Toutes les nouvelles lignées réutilisent le stock existant d'attaques : aucune nouvelle capacité n'a été nécessaire"
+          "5 nouveaux Pokémon Rares (Zorua/Zoroark, Larvesta/Volcarona, Druddigon, Tirtouga/Carracosta, Archen/Archeops)"
         ]
       }
     ],
@@ -50,8 +49,21 @@ const PATCH_NOTES = [
           {
             icon: '🐛', label: 'Corrections',
             items: [
-              "Dialga et Palkia n'ont jamais eu Télépathe comme second talent dans les jeux officiels : corrigé, ils n'ont désormais que Pression",
-              "Giratina n'a en réalité qu'un seul talent officiel, Lévitation (au lieu de Pression + Télépathe) : corrigé"
+              "Dialga et Palkia ne possèdent plus Télépathe",
+              "Giratina a maintenant Lévitation comme seul talent"
+            ]
+          }
+        ]
+      },
+      {
+        version: 'v0.6.2',
+        title: 'v0.6.2 — Combats de jumeaux',
+        categories: [
+          {
+            icon: '👯', label: 'Combat double',
+            items: [
+              "Sur les étages normaux (ni Mini-Boss, ni Boss), petite chance (~12%) de tomber sur un duo de jumeaux et de devoir les affronter en vrai combat double : 2 Pokémon actifs simultanément de chaque côté",
+              "Récompense en argent légèrement supérieure à un combat normal pour compenser la difficulté accrue"
             ]
           }
         ]

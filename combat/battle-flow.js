@@ -10,10 +10,23 @@ function resetBattleFields(c){
   c.lockedMove = null;
   c.protectChain = 0;
   c.chargingMove = null;
+  c.chargingTarget = null;
   c.invulnType = null;
 }
-function renderTrainerBanner(trainer){
+function renderTrainerBanner(trainer, trainer2){
   const bannerEl = document.getElementById('trainerBanner');
+  if(trainer2){
+    bannerEl.className = 'trainer-banner twin-banner';
+    bannerEl.innerHTML = [trainer, trainer2].map(t => `
+      <div class="trainer-info-pair">
+        <div class="trainer-avatar">${t.emoji}</div>
+        <div class="trainer-info">
+          <div class="trainer-name">${t.name}</div>
+          <div class="trainer-quote">"${t.dialogue}"</div>
+        </div>
+      </div>`).join('');
+    return;
+  }
   bannerEl.className = 'trainer-banner' + (trainer.boss?' boss':(trainer.miniBoss?' miniboss':''));
   bannerEl.innerHTML = `
     <div class="trainer-avatar">${trainer.emoji}</div>
@@ -22,9 +35,66 @@ function renderTrainerBanner(trainer){
       <div class="trainer-quote">"${trainer.dialogue}"</div>
     </div>`;
 }
+
+/* =================== Combat double : slots et helpers =================== */
+function playerSlotIdx(slot){
+  const bs = battleState;
+  return slot==='B' ? bs.pActive2 : bs.pActive;
+}
+function alivePlayerCombatants(){
+  const bs = battleState;
+  const list = [];
+  if(bs.pActive!=null && bs.player[bs.pActive] && bs.player[bs.pActive].hp>0) list.push(bs.player[bs.pActive]);
+  if(bs.isDouble && bs.pActive2!=null && bs.player[bs.pActive2] && bs.player[bs.pActive2].hp>0) list.push(bs.player[bs.pActive2]);
+  return list;
+}
+function aliveFoeCombatants(){
+  const bs = battleState;
+  const list = [];
+  if(bs.fActive!=null && bs.foe[bs.fActive] && bs.foe[bs.fActive].hp>0) list.push(bs.foe[bs.fActive]);
+  if(bs.isDouble && bs.fActive2!=null && bs.foe[bs.fActive2] && bs.foe[bs.fActive2].hp>0) list.push(bs.foe[bs.fActive2]);
+  return list;
+}
+function allFainted(team){ return team.every(c=>c.hp<=0); }
+// Localise un combattant actif sur le terrain (utilisé par les effets de switch forcé/Bouton Fuite).
+function locateActiveSlot(combatant){
+  const bs = battleState;
+  if(!bs) return null;
+  if(combatant===bs.player[bs.pActive]) return {side:'player', slot:'A'};
+  if(bs.isDouble && bs.pActive2!=null && combatant===bs.player[bs.pActive2]) return {side:'player', slot:'B'};
+  if(combatant===bs.foe[bs.fActive]) return {side:'foe', slot:'A'};
+  if(bs.isDouble && bs.fActive2!=null && combatant===bs.foe[bs.fActive2]) return {side:'foe', slot:'B'};
+  return null;
+}
+function setActiveSlot(side, slot, newIdx){
+  const bs = battleState;
+  if(side==='player'){ if(slot==='A') bs.pActive=newIdx; else bs.pActive2=newIdx; return bs.player[newIdx]; }
+  if(slot==='A') bs.fActive=newIdx; else bs.fActive2=newIdx; return bs.foe[newIdx];
+}
+// Id de la boîte DOM (#playerBox/#player2Box/#foeBox/#foe2Box) occupée par un combattant actif.
+function boxIdFor(combatant){
+  const loc = locateActiveSlot(combatant);
+  if(!loc) return 'foeBox';
+  if(loc.side==='player') return loc.slot==='A' ? 'playerBox' : 'player2Box';
+  return loc.slot==='A' ? 'foeBox' : 'foe2Box';
+}
+
 function startBattle(){
-  const trainer = generateTrainer(towerFloor);
-  const enemyTeam = generateEnemyTeam(towerFloor, trainer.theme, trainer.boss);
+  let isDouble, trainer, trainer2, enemyTeam;
+  if(typeof devEncounterOverride!=='undefined' && devEncounterOverride){
+    ({ trainer, trainer2, isDouble, enemyTeam } = devEncounterOverride);
+    devEncounterOverride = null;
+  } else if(isTwinFloor(towerFloor)){
+    isDouble = true;
+    const twins = generateTwinTrainers(towerFloor);
+    trainer = twins[0]; trainer2 = twins[1];
+    enemyTeam = [...generateEnemyTeam(towerFloor, trainer.theme, false, 3), ...generateEnemyTeam(towerFloor, trainer2.theme, false, 3)];
+  } else {
+    isDouble = false;
+    trainer = generateTrainer(towerFloor);
+    trainer2 = null;
+    enemyTeam = generateEnemyTeam(towerFloor, trainer.theme, trainer.boss);
+  }
   const playerRoster = team.map(m=>{
     const sp = speciesOf(m);
     const maxHp = m.computedStats.hp;
@@ -43,29 +113,149 @@ function startBattle(){
   team.forEach(m=>{ m.eventBlocked = false; }); // le blocage d'un event ne dure qu'un seul combat
 
   // En difficile, si toute l'équipe est déjà K.O. avant même le combat, c'est la défaite
-  const aliveIdx = playerRoster.findIndex(c=>c.hp>0);
-  if(aliveIdx===-1){
+  const aliveIdxs = playerRoster.map((c,i)=>c.hp>0?i:-1).filter(i=>i>=0);
+  if(aliveIdxs.length===0){
     document.getElementById('screenTower').classList.add('hidden');
     gameOver();
     return;
   }
 
-  battleState = { player: playerRoster, foe: enemyTeam, pActive: aliveIdx, fActive: 0, locked:false, trainer, weather:null };
+  battleState = {
+    player: playerRoster, foe: enemyTeam,
+    pActive: aliveIdxs[0], pActive2: (isDouble && aliveIdxs.length>1) ? aliveIdxs[1] : null,
+    fActive: 0, fActive2: (isDouble && enemyTeam.length>1) ? 1 : null,
+    locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null,
+    pendingActions: [], selectingSlot: 'A'
+  };
   battleInProgress = true;
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenBattle').classList.remove('hidden');
-  renderTrainerBanner(trainer);
+  renderTrainerBanner(trainer, trainer2);
   clearLog();
-  const pLead = playerRoster[aliveIdx], fLead = enemyTeam[0];
-  const intimMsg = triggerIntimidate(fLead, pLead) + triggerIntimidate(pLead, fLead) + triggerSwitchInAbilities(fLead, pLead) + triggerSwitchInAbilities(pLead, fLead);
-  setLog(`<b>Étage ${towerFloor}</b> — l'adversaire envoie ${enemyTeam[0].name} !${intimMsg}`);
+  const bs = battleState;
+  const pLead = playerRoster[bs.pActive], fLead = enemyTeam[0];
+  let intimMsg = triggerIntimidate(fLead, pLead) + triggerIntimidate(pLead, fLead) + triggerSwitchInAbilities(fLead, pLead) + triggerSwitchInAbilities(pLead, fLead);
+  let introName = fLead.name;
+  if(bs.isDouble && bs.pActive2!=null){
+    const pLead2 = playerRoster[bs.pActive2], fLead2 = enemyTeam[1];
+    intimMsg += triggerIntimidate(fLead2, pLead2) + triggerIntimidate(pLead2, fLead2) + triggerSwitchInAbilities(fLead2, pLead2) + triggerSwitchInAbilities(pLead2, fLead2);
+    introName = `${fLead.name} et ${enemyTeam[1].name}`;
+  } else if(bs.isDouble){
+    introName = `${fLead.name} et ${enemyTeam[1].name}`;
+  }
+  setLog(`<b>Étage ${towerFloor}</b> — l'adversaire envoie ${introName} !${intimMsg}`);
   renderBattle();
+  beginPlayerTurn();
 }
 
-function doVoluntarySwitch(i){
+/* =================== Tour de jeu (solo et double, moteur unifié) =================== */
+function beginPlayerTurn(){
   const bs = battleState;
-  const leaving = bs.player[bs.pActive];
+  bs.pendingActions = [];
+  bs.locked = false;
+  startSlotSelection('A');
+}
+function startSlotSelection(slot){
+  const bs = battleState;
+  const idx = playerSlotIdx(slot);
+  if(idx==null || bs.player[idx].hp<=0){
+    advanceAfterSlot(slot);
+    return;
+  }
+  const p = bs.player[idx];
+  if(p.chargingMove){
+    // Un coup à charge se relance automatiquement au tour suivant, sans repasser par le choix du joueur.
+    const target = (p.chargingTarget && p.chargingTarget.hp>0) ? p.chargingTarget : aliveFoeCombatants()[0];
+    bs.pendingActions.push({ actor:p, move:p.chargingMove, target, isPlayer:true, slot });
+    advanceAfterSlot(slot);
+    return;
+  }
+  bs.selectingSlot = slot;
+  bs.locked = false;
+  renderMoveGrid();
+}
+function advanceAfterSlot(slot){
+  const bs = battleState;
+  const bIdx = playerSlotIdx('B');
+  if(slot==='A' && bs.isDouble && bIdx!=null && bs.player[bIdx].hp>0){
+    startSlotSelection('B');
+  } else {
+    finalizeTurn();
+  }
+}
+function finalizeTurn(){
+  const bs = battleState;
+  bs.locked = true;
+  const targets = alivePlayerCombatants();
+  const foes = aliveFoeCombatants();
+  const excellent = !!((bs.trainer && bs.trainer.boss) || (bs.trainer2 && bs.trainer2.boss));
+  const foeActions = foes.map(f=>{
+    const { move, target } = chooseFoeMove(f, targets, excellent);
+    return { actor:f, move, target, isPlayer:false };
+  });
+  resolveTurn([...bs.pendingActions, ...foeActions]);
+}
+
+// Point d'entrée appelé par l'UI quand le joueur choisit une attaque pour le slot en cours de sélection.
+// targetIdx : index dans bs.foe (optionnel — auto-résolu s'il n'y a qu'un seul ennemi vivant).
+function playerAttack(moveIdx, targetIdx){
+  const bs = battleState;
+  if(bs.locked) return;
+  const slot = bs.selectingSlot || 'A';
+  const activeIdx = playerSlotIdx(slot);
+  const p = bs.player[activeIdx];
+  const move = moveIdx===-1 ? STRUGGLE_MOVE : p.moves[moveIdx];
+  if(moveIdx>=0 && p.ppCur && p.ppCur[moveIdx]>0) p.ppCur[moveIdx]--;
+  let target;
+  if(move.target!=='self' && targetIdx!=null && bs.foe[targetIdx] && bs.foe[targetIdx].hp>0){
+    target = bs.foe[targetIdx];
+  } else {
+    target = aliveFoeCombatants()[0] || null;
+  }
+  bs.pendingActions.push({ actor:p, move, target, isPlayer:true, slot });
+  bs.locked = true;
+  advanceAfterSlot(slot);
+}
+
+function resolveTurn(actions){
+  const bs = battleState;
+  bs.locked = true;
+  const sorted = [...actions].sort((a,b)=>{
+    const pa = a.move.priority||0, pb = b.move.priority||0;
+    if(pa!==pb) return pb-pa;
+    const sa = effectiveSpeed(a.actor), sb = effectiveSpeed(b.actor);
+    if(sa!==sb) return sb-sa;
+    return Math.random()<0.5 ? -1 : 1;
+  });
+  runQueue(sorted, 0);
+}
+function runQueue(queue, i){
+  const bs = battleState;
+  if(i>=queue.length || allFainted(bs.foe) || allFainted(bs.player)){ afterResolveTurn(); return; }
+  const action = queue[i];
+  if(action.actor.hp<=0){ runQueue(queue, i+1); return; }
+  let target = action.target;
+  if(target && target.hp<=0 && action.move.target!=='self'){
+    const replacement = action.isPlayer ? aliveFoeCombatants().find(c=>c!==target) : alivePlayerCombatants().find(c=>c!==target);
+    if(replacement) target = replacement;
+    else { runQueue(queue, i+1); return; }
+  }
+  runStep(action.actor, action.move, target, action.isPlayer, ()=>{
+    if(allFainted(bs.foe) || allFainted(bs.player)){ afterResolveTurn(); return; }
+    runQueue(queue, i+1);
+  });
+}
+function afterResolveTurn(){
+  endTurn();
+}
+
+function doVoluntarySwitch(i, slot){
+  slot = slot || battleState.selectingSlot || 'A';
+  const bs = battleState;
+  const activeIdx = playerSlotIdx(slot);
+  const leaving = bs.player[activeIdx];
   leaving.chargingMove = null;
+  leaving.chargingTarget = null;
   leaving.invulnType = null;
   let switchMsg = '';
   if(leaving.ability==='Régé-Force' && leaving.hp>0){
@@ -73,26 +263,21 @@ function doVoluntarySwitch(i){
     leaving.hp = Math.min(leaving.maxHp, leaving.hp+heal);
     switchMsg = ` ${leaving.name} récupère des PV grâce à Régénération !`;
   }
-  bs.pActive = i;
+  if(slot==='A') bs.pActive = i; else bs.pActive2 = i;
   resetBattleFields(bs.player[i]);
   bs.locked = true;
   closeManualSwitch();
   renderBattle();
   const incoming = bs.player[i];
-  const intimidateMsg = triggerIntimidate(incoming, bs.foe[bs.fActive]) + triggerSwitchInAbilities(incoming, bs.foe[bs.fActive]);
+  const opponent = aliveFoeCombatants()[0];
+  const intimidateMsg = opponent ? (triggerIntimidate(incoming, opponent) + triggerSwitchInAbilities(incoming, opponent)) : '';
   setLog(`Tu rappelles ton Pokémon et envoies ${incoming.name} !${switchMsg}${intimidateMsg}`);
-  setTimeout(()=>{
-    const f = bs.foe[bs.fActive];
-    const fMove = chooseFoeMove(f, bs.player[bs.pActive], bs.trainer && bs.trainer.boss);
-    runStep(f, fMove, bs.player[bs.pActive], false, ()=>{
-      if(checkFaintsAndHandle()) return;
-      endTurn();
-    });
-  }, 1000);
+  setTimeout(()=> advanceAfterSlot(slot), 1000);
 }
 
 function useBagPotion(i){
   const bs = battleState;
+  const slot = bs.selectingSlot || 'A';
   const c = bs.player[i];
   const heal = Math.max(1, Math.round(c.maxHp*0.5));
   c.hp = Math.min(c.maxHp, c.hp+heal);
@@ -101,14 +286,7 @@ function useBagPotion(i){
   bs.locked = true;
   renderBattle();
   setLog(`Tu utilises une Potion sur ${c.name} ! Il récupère ${heal} PV.`);
-  setTimeout(()=>{
-    const f = bs.foe[bs.fActive];
-    const fMove = chooseFoeMove(f, bs.player[bs.pActive], bs.trainer && bs.trainer.boss);
-    runStep(f, fMove, bs.player[bs.pActive], false, ()=>{
-      if(checkFaintsAndHandle()) return;
-      endTurn();
-    });
-  }, 1000);
+  setTimeout(()=> advanceAfterSlot(slot), 1000);
 }
 
 function checkStatusBeforeMove(battler, logs, move){
@@ -153,13 +331,6 @@ function checkStatusBeforeMove(battler, logs, move){
     }
   }
   return true;
-}
-function checkFaintsAndHandle(){
-  const bs = battleState;
-  const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
-  if(f.hp<=0){ setTimeout(()=> handleFoeFaint(), 700); return true; }
-  if(p.hp<=0){ setTimeout(()=> handlePlayerFaint(), 700); return true; }
-  return false;
 }
 
 function runStep(actor, move, defender, actorIsPlayer, callback){
@@ -206,6 +377,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       const skipCharge = move.sunSkip && weatherNow0 && weatherNow0.type==='soleil';
       if(!skipCharge){
         actor.chargingMove = move;
+        actor.chargingTarget = defender;
         if(move.semiInvuln) actor.invulnType = move.semiInvuln;
         renderBattle();
         setLog(`<b>${actor.name}</b> ${move.chargeMsg||'se prépare à attaquer'} !`);
@@ -214,6 +386,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       }
     } else {
       actor.chargingMove = null;
+      actor.chargingTarget = null;
       actor.invulnType = null;
     }
   }
@@ -243,7 +416,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       return;
     }
   }
-  lungeBox(actorIsPlayer ? 'playerBox' : 'foeBox');
+  lungeBox(boxIdFor(actor));
   playMoveFx(move, actorIsPlayer);
   if(Math.random() > acc){
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais rate son coup !`);
@@ -268,7 +441,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     }
     defender.hp = Math.max(0, defender.hp-cdmg);
     renderBattle();
-    shakeBox(actorIsPlayer?'foeBox':'playerBox');
+    shakeBox(boxIdFor(defender), false);
     setLog(`<b>${actor.name}</b> utilise ${move.name} et renvoie ${cdmg} dégâts en représailles !`);
     setTimeout(callback, 1000);
     return;
@@ -283,7 +456,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     }
     defender.hp = Math.max(0, defender.hp-mdmg);
     renderBattle();
-    shakeBox(actorIsPlayer?'foeBox':'playerBox');
+    shakeBox(boxIdFor(defender), false);
     setLog(`<b>${actor.name}</b> utilise ${move.name} et renvoie ${mdmg} dégâts en représailles !`);
     setTimeout(callback, 1000);
     return;
@@ -303,7 +476,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     }
     applyStatusEffect(actor, defender, move, logs);
     renderBattle();
-    if(move.target==='foe') shakeBox(actorIsPlayer ? 'foeBox' : 'playerBox');
+    if(move.target==='foe') shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${logs.join(' ')}`);
     setTimeout(callback, 900);
     return;
@@ -344,7 +517,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     }
     defender.hp = 0;
     renderBattle();
-    shakeBox(actorIsPlayer?'foeBox':'playerBox', true);
+    shakeBox(boxIdFor(defender), true);
     flashScreen('crit');
     setLog(`<b>${actor.name}</b> utilise ${move.name} !${thawMsg} Coup K.O. direct sur ${defender.name} !`);
     setTimeout(callback, 1000);
@@ -366,7 +539,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const hdmg = Math.max(1, Math.ceil(defender.hp/2));
     defender.hp = Math.max(0, defender.hp-hdmg);
     renderBattle();
-    shakeBox(actorIsPlayer?'foeBox':'playerBox');
+    shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} perd la moitié de ses PV actuels (${hdmg} dégâts) !`);
     setTimeout(callback, 1000);
     return;
@@ -381,7 +554,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const edmg = defender.hp - actor.hp;
     defender.hp = actor.hp;
     renderBattle();
-    shakeBox(actorIsPlayer?'foeBox':'playerBox');
+    shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} tombe au même niveau de PV (${edmg} dégâts) !`);
     setTimeout(callback, 1000);
     return;
@@ -390,7 +563,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const pdmg = Math.max(1, Math.round(10 + Math.random()*40));
     defender.hp = Math.max(0, defender.hp-pdmg);
     renderBattle();
-    shakeBox(actorIsPlayer?'foeBox':'playerBox');
+    shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Une décharge d'intensité aléatoire inflige ${pdmg} dégâts !`);
     setTimeout(callback, 1000);
     return;
@@ -407,7 +580,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const pdmg = Math.max(1, Math.round(20 + Math.random()*40));
     defender.hp = Math.max(0, defender.hp-pdmg);
     renderBattle();
-    shakeBox(actorIsPlayer?'foeBox':'playerBox');
+    shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> offre un Cadeau piégé ! ${defender.name} subit ${pdmg} dégâts !`);
     setTimeout(callback, 1000);
     return;
@@ -550,85 +723,65 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   }
   let ejectMsg = '';
   if(defender.heldItem==='boutonFuite' && defender.hp>0 && battleState){
-    const bs = battleState;
-    const isDefPlayer = (defender===bs.player[bs.pActive]);
-    const roster = isDefPlayer ? bs.player : bs.foe;
-    const activeKey = isDefPlayer ? 'pActive' : 'fActive';
-    const aliveIdx = roster.map((c,i)=> (c.hp>0 && i!==bs[activeKey]) ? i : -1).filter(i=>i>=0);
-    if(aliveIdx.length>0 && !defender.trapped){
-      const newIdx = rand(aliveIdx);
-      bs[activeKey] = newIdx;
-      resetBattleFields(roster[newIdx]);
-      ejectMsg = ` ${defender.name} est éjecté grâce à son Bouton Fuite ! ${roster[newIdx].name} entre sur le terrain !`;
-      const opponent = isDefPlayer ? bs.foe[bs.fActive] : bs.player[bs.pActive];
-      ejectMsg += triggerIntimidate(roster[newIdx], opponent) + triggerSwitchInAbilities(roster[newIdx], opponent);
+    const loc = locateActiveSlot(defender);
+    if(loc){
+      const bs = battleState;
+      const roster = loc.side==='player' ? bs.player : bs.foe;
+      const usedIdx = loc.side==='player' ? [bs.pActive, bs.pActive2] : [bs.fActive, bs.fActive2];
+      const aliveIdx = roster.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
+      if(aliveIdx.length>0 && !defender.trapped){
+        const newIdx = rand(aliveIdx);
+        const entering = setActiveSlot(loc.side, loc.slot, newIdx);
+        resetBattleFields(entering);
+        ejectMsg = ` ${defender.name} est éjecté grâce à son Bouton Fuite ! ${entering.name} entre sur le terrain !`;
+        const opponent = loc.side==='player' ? aliveFoeCombatants()[0] : alivePlayerCombatants()[0];
+        if(opponent) ejectMsg += triggerIntimidate(entering, opponent) + triggerSwitchInAbilities(entering, opponent);
+      }
     }
   }
   msg += ejectMsg;
   renderBattle();
-  shakeBox(actorIsPlayer?'foeBox':'playerBox', crit);
+  shakeBox(boxIdFor(defender), crit);
   if(crit) flashScreen('crit');
   else if(eff>1) flashScreen('superfx');
   setLog(msg);
   setTimeout(callback, 1000);
 }
 
-function playerAttack(moveIdx){
-  const bs = battleState;
-  if(bs.locked) return;
-  bs.locked = true;
-  const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
-  const pMove = moveIdx===-1 ? STRUGGLE_MOVE : p.moves[moveIdx];
-  if(moveIdx>=0 && p.ppCur && p.ppCur[moveIdx]>0) p.ppCur[moveIdx]--;
-  const fMove = chooseFoeMove(f, p, bs.trainer && bs.trainer.boss);
-  const pSpeed = effectiveSpeed(p), fSpeed = effectiveSpeed(f);
-  const pPrio = pMove.priority||0, fPrio = fMove.priority||0;
-  let playerFirst;
-  if(pPrio!==fPrio){
-    playerFirst = pPrio>fPrio;
-  } else {
-    playerFirst = pSpeed>fSpeed || (pSpeed===fSpeed && Math.random()<0.5);
-  }
-
-  if(playerFirst){
-    runStep(p, pMove, f, true, ()=>{
-      if(checkFaintsAndHandle()) return;
-      runStep(f, fMove, p, false, ()=>{
-        if(checkFaintsAndHandle()) return;
-        endTurn();
-      });
-    });
-  } else {
-    runStep(f, fMove, p, false, ()=>{
-      if(checkFaintsAndHandle()) return;
-      runStep(p, pMove, f, true, ()=>{
-        if(checkFaintsAndHandle()) return;
-        endTurn();
-      });
-    });
-  }
-}
-
+/* =================== Fin de tour, K.O. et remplacements =================== */
 function endTurn(){
   const bs = battleState;
-  const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
+  const playerCombatants = alivePlayerCombatants();
+  const foeCombatants = aliveFoeCombatants();
+  const all = [...playerCombatants, ...foeCombatants];
   let logs = [];
-  endOfTurnStatus(p, logs);
-  endOfTurnStatus(f, logs);
-  [[p,f],[f,p]].forEach(([c,opp])=>{
-    if(c.hp>0 && c.seeded && opp.hp>0){
+  all.forEach(c=> endOfTurnStatus(c, logs));
+  playerCombatants.forEach(c=>{
+    if(c.hp>0 && c.seeded && foeCombatants.length){
+      const opp = foeCombatants[0];
       const sdmg = Math.max(1, Math.round(c.maxHp/8));
       c.hp = Math.max(0, c.hp-sdmg);
       opp.hp = Math.min(opp.maxHp, opp.hp+sdmg);
       logs.push(`${c.name} perd des PV à cause de Vampigraine, ${opp.name} récupère !`);
     }
+  });
+  foeCombatants.forEach(c=>{
+    if(c.hp>0 && c.seeded && playerCombatants.length){
+      const opp = playerCombatants[0];
+      const sdmg = Math.max(1, Math.round(c.maxHp/8));
+      c.hp = Math.max(0, c.hp-sdmg);
+      opp.hp = Math.min(opp.maxHp, opp.hp+sdmg);
+      logs.push(`${c.name} perd des PV à cause de Vampigraine, ${opp.name} récupère !`);
+    }
+  });
+  all.forEach(c=>{
     if(c.hp>0 && c.ingrained && c.hp<c.maxHp){
       const idmg = Math.max(1, Math.round(c.maxHp/16));
       c.hp = Math.min(c.maxHp, c.hp+idmg);
       logs.push(`${c.name} récupère des PV grâce à ses racines !`);
     }
   });
-  [p, f].forEach(c=>{
+  all.forEach(c=>{
     c.lastPhysDamage = 0;
     c.lastSpecDamage = 0;
     c.protected = false;
@@ -695,74 +848,93 @@ function endTurn(){
   }
   renderBattle();
   if(logs.length) setLog(logs.join(' '));
-  if(p.hp<=0){ setTimeout(()=> handlePlayerFaint(), 700); return; }
-  if(f.hp<=0){ setTimeout(()=> handleFoeFaint(), 700); return; }
-  if(p.chargingMove){
-    bs.locked = true;
-    setTimeout(()=> continueChargedAttack(), 600);
+  handleFaintsAndAdvance();
+}
+
+function handleFaintsAndAdvance(){
+  const bs = battleState;
+  if(allFainted(bs.player)){ setTimeout(()=> gameOver(), 700); return; }
+  if(allFainted(bs.foe)){ setTimeout(()=> floorCleared(), 900); return; }
+
+  const foeFaintedSlots = [];
+  if(bs.fActive!=null && bs.foe[bs.fActive].hp<=0) foeFaintedSlots.push('A');
+  if(bs.isDouble && bs.fActive2!=null && bs.foe[bs.fActive2].hp<=0) foeFaintedSlots.push('B');
+  if(foeFaintedSlots.length){
+    replaceFoeSlot(foeFaintedSlots[0], ()=> handleFaintsAndAdvance());
     return;
   }
-  bs.locked = false;
-  renderMoveGrid();
+
+  const playerFaintedSlots = [];
+  if(bs.pActive!=null && bs.player[bs.pActive].hp<=0) playerFaintedSlots.push('A');
+  if(bs.isDouble && bs.pActive2!=null && bs.player[bs.pActive2].hp<=0) playerFaintedSlots.push('B');
+  if(playerFaintedSlots.length){
+    const slot = playerFaintedSlots[0];
+    document.getElementById(slot==='A' ? 'playerBox' : 'player2Box').classList.add('faint-fade');
+    setLog(`<b>${bs.player[playerSlotIdx(slot)].name} est K.O. !</b>`);
+    const usedIdx = [bs.pActive, bs.pActive2].filter(x=>x!=null);
+    const aliveIdx = bs.player.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
+    setTimeout(()=> showSwitchPrompt(aliveIdx, slot), 700);
+    return;
+  }
+
+  beginPlayerTurn();
 }
 
-function continueChargedAttack(){
+function replaceFoeSlot(slot, callback){
   const bs = battleState;
-  const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
-  const pMove = p.chargingMove;
-  if(!pMove){ bs.locked = false; renderMoveGrid(); return; }
-  const fMove = chooseFoeMove(f, p, bs.trainer && bs.trainer.boss);
-  const pSpeed = effectiveSpeed(p), fSpeed = effectiveSpeed(f);
-  const pPrio = pMove.priority||0, fPrio = fMove.priority||0;
-  let playerFirst;
-  if(pPrio!==fPrio){
-    playerFirst = pPrio>fPrio;
-  } else {
-    playerFirst = pSpeed>fSpeed || (pSpeed===fSpeed && Math.random()<0.5);
+  const idx = slot==='A' ? bs.fActive : bs.fActive2;
+  document.getElementById(slot==='A' ? 'foeBox' : 'foe2Box').classList.add('faint-fade');
+  setLog(`<b>${bs.foe[idx].name} est K.O. !</b>`);
+  const usedIdx = [bs.fActive, bs.fActive2].filter(x=>x!=null);
+  const excellent = !!((bs.trainer && bs.trainer.boss) || (bs.trainer2 && bs.trainer2.boss));
+  const refPlayer = alivePlayerCombatants()[0];
+  const nextIdx = excellent
+    ? bestFoeSwitchIdx(bs.foe, refPlayer, usedIdx)
+    : bs.foe.findIndex((c,i)=> c.hp>0 && !usedIdx.includes(i));
+  if(nextIdx===-1){
+    if(slot==='A') bs.fActive = null; else bs.fActive2 = null;
+    setTimeout(callback, 300);
+    return;
   }
-  if(playerFirst){
-    runStep(p, pMove, f, true, ()=>{
-      if(checkFaintsAndHandle()) return;
-      runStep(f, fMove, p, false, ()=>{
-        if(checkFaintsAndHandle()) return;
-        endTurn();
-      });
-    });
-  } else {
-    runStep(f, fMove, p, false, ()=>{
-      if(checkFaintsAndHandle()) return;
-      runStep(p, pMove, f, true, ()=>{
-        if(checkFaintsAndHandle()) return;
-        endTurn();
-      });
-    });
-  }
-}
-
-function handleFoeFaint(){
-  const bs = battleState;
-  document.getElementById('foeBox').classList.add('faint-fade');
-  setLog(`<b>${bs.foe[bs.fActive].name} est K.O. !</b>`);
-  const nextIdx = (bs.trainer && bs.trainer.boss) ? bestFoeSwitchIdx(bs.foe, bs.player[bs.pActive]) : bs.foe.findIndex(c=>c.hp>0);
-  if(nextIdx===-1){ setTimeout(()=> floorCleared(), 900); return; }
-  bs.fActive = nextIdx;
+  setActiveSlot('foe', slot, nextIdx);
   resetBattleFields(bs.foe[nextIdx]);
   setTimeout(()=>{
-    const newFoe = bs.foe[bs.fActive];
-    const p = bs.player[bs.pActive];
-    const intimMsg = triggerIntimidate(newFoe, p) + triggerSwitchInAbilities(newFoe, p);
+    const newFoe = bs.foe[nextIdx];
+    const p = alivePlayerCombatants()[0];
+    const intimMsg = p ? (triggerIntimidate(newFoe, p) + triggerSwitchInAbilities(newFoe, p)) : '';
     setLog(`L'adversaire envoie ${newFoe.name} !${intimMsg}`);
-    bs.locked = false;
     renderBattle();
+    callback();
   }, 900);
 }
 
-function handlePlayerFaint(){
+function showSwitchPrompt(aliveIdx, slot){
+  slot = slot || 'A';
   const bs = battleState;
-  document.getElementById('playerBox').classList.add('faint-fade');
-  setLog(`<b>${bs.player[bs.pActive].name} est K.O. !</b>`);
-  const aliveIdx = bs.player.map((c,i)=>c.hp>0?i:-1).filter(i=>i>=0);
-  if(aliveIdx.length===0){ setTimeout(()=> gameOver(), 900); return; }
-  setTimeout(()=> showSwitchPrompt(aliveIdx), 700);
+  document.getElementById('movesGrid').classList.add('hidden');
+  document.getElementById('movesHeader').classList.add('hidden');
+  document.getElementById('manualSwitchBtn').classList.add('hidden');
+  document.getElementById('bagBtn').classList.add('hidden');
+  document.getElementById('cancelSwitchBtn').classList.add('hidden');
+  const sw = document.getElementById('switchGrid');
+  sw.classList.remove('hidden');
+  sw.innerHTML='';
+  setLog(`Choisis ton prochain Pokémon !`);
+  aliveIdx.forEach(i=>{
+    const c = bs.player[i];
+    const btn = document.createElement('button');
+    btn.className = 'move-btn';
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>typeTagHTML(t)).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
+    btn.onclick = ()=>{
+      if(slot==='A') bs.pActive = i; else bs.pActive2 = i;
+      resetBattleFields(c);
+      sw.classList.add('hidden');
+      renderBattle();
+      const opponent = aliveFoeCombatants()[0];
+      const intimMsg = opponent ? (triggerIntimidate(c, opponent) + triggerSwitchInAbilities(c, opponent)) : '';
+      setLog(`Tu envoies ${c.name} !${intimMsg}`);
+      handleFaintsAndAdvance();
+    };
+    sw.appendChild(btn);
+  });
 }
-

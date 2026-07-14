@@ -1,10 +1,16 @@
 /* ==== combat/tower.js (généré depuis index.html) ==== */
 function isBossFloor(floor){ return floor%10===0; }
 function isMiniBossFloor(floor){ return floor%5===0 && !isBossFloor(floor); }
-function moneyReward(floor){
+// À tirer une seule fois par entrée en combat (comme generateTrainer/generateEnemyTeam) :
+// ~12% de chance sur un étage normal de tomber sur un duo de jumeaux en combat double.
+function isTwinFloor(floor){
+  return !isBossFloor(floor) && !isMiniBossFloor(floor) && Math.random() < 0.12;
+}
+function moneyReward(floor, isTwin){
   let base = 20 + floor*8;
   if(isBossFloor(floor)) base *= 3;
   else if(isMiniBossFloor(floor)) base *= 1.75;
+  else if(isTwin) base *= 1.3;
   return Math.round(base);
 }
 
@@ -58,6 +64,17 @@ const TYPE_MASTER_DIALOGUE = {
   tenebres: "L'obscurité ne pardonne à personne !",
 };
 
+// Aux étages élevés, favoriser les archétypes avancés (partagé par generateTrainer et generateTwinTrainers)
+function trainerArchetypePool(floor){
+  const available = TRAINER_ARCHETYPES.filter(a => floor >= a.minFloor);
+  let pool;
+  if(floor >= 7) pool = available.filter(a => a.minFloor >= 5);
+  else if(floor >= 5) pool = available.filter(a => a.minFloor >= 3);
+  else if(floor >= 3) pool = available.filter(a => a.minFloor >= 2);
+  else pool = available.filter(a => a.minFloor === 1);
+  if(pool.length === 0) pool = available;
+  return pool;
+}
 function generateTrainer(floor){
   const boss = isBossFloor(floor), miniBoss = isMiniBossFloor(floor);
   if(boss){
@@ -69,18 +86,22 @@ function generateTrainer(floor){
       boss: true, miniBoss: false, masterType: type
     };
   }
-  const available = TRAINER_ARCHETYPES.filter(a => floor >= a.minFloor);
-  // Aux étages élevés, favoriser les archétypes avancés
-  let pool;
-  if(floor >= 7) pool = available.filter(a => a.minFloor >= 5);
-  else if(floor >= 5) pool = available.filter(a => a.minFloor >= 3);
-  else if(floor >= 3) pool = available.filter(a => a.minFloor >= 2);
-  else pool = available.filter(a => a.minFloor === 1);
-  if(pool.length === 0) pool = available;
-  const archetype = rand(pool);
+  const archetype = rand(trainerArchetypePool(floor));
   const name = rand(TRAINER_FIRST_NAMES);
   const prefix = miniBoss ? '⭐ Mini-Boss ' : '';
   return { name:`${prefix}${archetype.title} ${name}`, emoji:archetype.emoji, theme:archetype.theme, dialogue:archetype.dialogue, boss:false, miniBoss };
+}
+// Duo de jumeaux pour un combat double : même archétype (même thème), deux prénoms distincts.
+function generateTwinTrainers(floor){
+  const archetype = rand(trainerArchetypePool(floor));
+  let n1 = rand(TRAINER_FIRST_NAMES);
+  let n2 = rand(TRAINER_FIRST_NAMES);
+  while(n2===n1 && TRAINER_FIRST_NAMES.length>1) n2 = rand(TRAINER_FIRST_NAMES);
+  const base = { emoji:archetype.emoji, theme:archetype.theme, dialogue:archetype.dialogue, boss:false, miniBoss:false };
+  return [
+    { ...base, name:`👯 Jumeau ${archetype.title} ${n1}` },
+    { ...base, name:`👯 Jumelle ${archetype.title} ${n2}` }
+  ];
 }
 
 /* =================== SAUVEGARDE =================== */
@@ -116,12 +137,13 @@ function weightedSampleLines(lines, n){
   return result;
 }
 
-function generateEnemyTeam(floor, trainerTheme, isBoss){
+function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
   const sizes = [3,3,4,4,5,6];
   let size = sizes[Math.min(floor-1, sizes.length-1)];
   let strength = Math.min(1, 0.3 + floor*0.1);
   if(isBossFloor(floor)){ size = Math.min(6, size+1); strength = Math.min(1, strength+0.25); }
   else if(isMiniBossFloor(floor)){ strength = Math.min(1, strength+0.12); }
+  if(maxSize) size = Math.min(size, maxSize);
 
   // Construire le pool en fonction du thème du dresseur
   let linePool;
@@ -208,6 +230,7 @@ function floorCleared(){
   const clearedFloor = towerFloor;
   const wasBoss = battleState.trainer && battleState.trainer.boss;
   const wasMiniBoss = battleState.trainer && battleState.trainer.miniBoss;
+  const wasTwin = !!battleState.isDouble;
   const bossMasterType = battleState.trainer && battleState.trainer.masterType;
   battleInProgress = false;
   battleState.player.forEach((c,i)=>{
@@ -221,7 +244,7 @@ function floorCleared(){
       if(c.itemUsed) m.heldItem = null;
     }
   });
-  const reward = moneyReward(clearedFloor);
+  const reward = moneyReward(clearedFloor, wasTwin);
   money += reward;
   towerFloor++;
   document.getElementById('screenBattle').classList.add('hidden');
