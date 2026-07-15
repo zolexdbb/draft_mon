@@ -9,6 +9,7 @@ function accuracyStageMultiplier(stage){
 const CRIT_CHANCE = 1/16;
 function rollCrit(attacker, defender){
   if(defender.ability==='Coque Armure' || defender.ability==='Armurbaston') return false;
+  if(attacker.ability==='Sans Pitié' && defender.status==='poison') return true;
   let chance = CRIT_CHANCE;
   if(attacker.ability==='Sniper') chance *= 1; // Sniper renforce les dégâts, pas la fréquence
   if(defender.ability==='Écaille Spéciale') chance *= 4;
@@ -20,6 +21,23 @@ function weatherNullified(){
   if(!battleState) return false;
   const check = c => c.ability==='Air Lock' || c.ability==='Ciel Gris';
   return [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(check);
+}
+// Comme getMult, mais gère les coups à double type (Plaquage Volant), les exceptions
+// d'efficacité forcée (Cristallisation vs Eau) et le contournement d'immunité (Mille Flèches).
+function moveEffectiveness(move, defTypes){
+  const atkTypes = move.type2 ? [move.type, move.type2] : [move.type];
+  let eff = 1;
+  defTypes.forEach(dt=>{
+    if(move.superEffectiveVs===dt){ eff *= 2; return; }
+    let v = 1;
+    atkTypes.forEach(t=>{
+      const chart = TYPE_CHART[t];
+      v *= (chart && chart[dt]!==undefined) ? chart[dt] : 1;
+    });
+    if(move.bypassTypeImmunity && v===0) v = 1;
+    eff *= v;
+  });
+  return eff;
 }
 function computeDamage(attacker, move, defender){
   if(move.fixedDamage){
@@ -33,11 +51,13 @@ function computeDamage(attacker, move, defender){
   // Sur un coup critique, les baisses d'Attaque et les hausses de Défense adverses sont ignorées
   if(crit){ atkStage = Math.max(0, atkStage); defStage = Math.min(0, defStage); }
   const atkStat = atkBase * statMultiplier(atkStage) * (attacker.heldItem==='bandeauChoix' && move.cat==='phys' ? 1.5 : (attacker.heldItem==='lunettesChoix' && move.cat==='spec' ? 1.5 : 1));
-  const defStat = defBase * statMultiplier(defStage) * (defender.heldItem==='vesteCombat' && move.cat==='spec' ? 1.5 : 1);
+  const terrainNow = battleState ? battleState.terrain : null;
+  const defStat = defBase * statMultiplier(defStage) * (defender.heldItem==='vesteCombat' && move.cat==='spec' ? 1.5 : 1) * (defender.ability==='Robe Feuillue' && terrainNow && terrainNow.type==='grassy' ? 1.5 : 1);
   const atkTypes = attacker.transformedTypes || attacker.types;
   const defTypes = defender.transformedTypes || defender.types;
-  const stab = atkTypes.includes(move.type) ? (attacker.ability==='Adaptabilité' ? 2 : 1.5) : 1;
-  const eff = getMult(move.type, defTypes);
+  const hasStab = atkTypes.includes(move.type) || (move.type2 && atkTypes.includes(move.type2));
+  const stab = hasStab ? (attacker.ability==='Adaptabilité' ? 2 : 1.5) : 1;
+  const eff = moveEffectiveness(move, defTypes);
   const variance = 0.85 + Math.random()*0.3;
   const burnPenalty = (attacker.status==='brulure' && move.cat==='phys' && attacker.ability!=='Cran') ? 0.5 : 1;
   const critMult = crit ? (attacker.ability==='Sniper' ? 2.25 : 1.5) : 1;
@@ -60,6 +80,17 @@ function computeDamage(attacker, move, defender){
   if(defender.reflectTurns>0 && move.cat==='phys') abilityMult *= 0.5;
   if(defender.lightScreenTurns>0 && move.cat==='spec') abilityMult *= 0.5;
   if(attacker.heldItem==='orbeVie' && move.power>0) abilityMult *= 1.3;
+  if(defender.ability==='Fourrure' && move.cat==='phys') abilityMult *= 0.5;
+  if(attacker.ability==='Mâchouille' && move.bite) abilityMult *= 1.5;
+  if(attacker.ability==='Méga-Lanceur' && move.pulse) abilityMult *= 1.5;
+  if(attacker.ability==='Griffe Solide' && move.cat==='phys') abilityMult *= 1.3;
+  // Auras de champ : boostent (ou, avec Rupture Aura présente, réduisent) les capacités du type correspondant
+  if(battleState){
+    const fieldMons = [...alivePlayerCombatants(), ...aliveFoeCombatants()];
+    const auraBreak = fieldMons.some(c=>c.ability==='Rupture Aura');
+    if(move.type==='tenebres' && fieldMons.some(c=>c.ability==='Aura Sombre')) abilityMult *= auraBreak ? 0.75 : 1.33;
+    if(move.type==='fee' && fieldMons.some(c=>c.ability==='Aura Féérique')) abilityMult *= auraBreak ? 0.75 : 1.33;
+  }
 
   // Météo
   let weatherMult = 1;
@@ -72,6 +103,16 @@ function computeDamage(attacker, move, defender){
       if(move.type==='feu') weatherMult *= 1.5;
       else if(move.type==='eau') weatherMult *= 0.5;
     }
+  }
+
+  // Terrain
+  let terrainMult = 1;
+  const terrain = battleState ? battleState.terrain : null;
+  if(terrain){
+    if(terrain.type==='grassy' && move.type==='plante') terrainMult *= 1.3;
+    else if(terrain.type==='electric' && move.type==='electrik') terrainMult *= 1.3;
+    else if(terrain.type==='psychic' && move.type==='psy') terrainMult *= 1.3;
+    else if(terrain.type==='misty' && move.type==='dragon') terrainMult *= 0.5;
   }
 
   let effectivePower = move.power;
@@ -88,7 +129,7 @@ function computeDamage(attacker, move, defender){
     effectivePower = 30 + Math.floor(Math.random()*61); // entre 30 et 90
   }
   const base = ((2*LEVEL/5+2) * effectivePower * (atkStat/defStat)) / 50 + 2;
-  const dmg = Math.max(1, Math.round(base * stab * eff * variance * burnPenalty * critMult * abilityMult * weatherMult));
+  const dmg = Math.max(1, Math.round(base * stab * eff * variance * burnPenalty * critMult * abilityMult * weatherMult * terrainMult));
   return { dmg, eff, crit };
 }
 

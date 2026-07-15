@@ -12,6 +12,9 @@ function resetBattleFields(c){
   c.chargingMove = null;
   c.chargingTarget = null;
   c.invulnType = null;
+  c.trapped = false;
+  c.infested = false;
+  c.punishOnContact = false;
 }
 function renderTrainerBanner(trainer, trainer2){
   const bannerEl = document.getElementById('trainerBanner');
@@ -124,7 +127,7 @@ function startBattle(){
     player: playerRoster, foe: enemyTeam,
     pActive: aliveIdxs[0], pActive2: (isDouble && aliveIdxs.length>1) ? aliveIdxs[1] : null,
     fActive: 0, fActive2: (isDouble && enemyTeam.length>1) ? 1 : null,
-    locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null,
+    locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null, terrain:null,
     pendingActions: [], selectingSlot: 'A'
   };
   battleInProgress = true;
@@ -217,11 +220,16 @@ function playerAttack(moveIdx, targetIdx){
   advanceAfterSlot(slot);
 }
 
+function effectivePriority(actor, move){
+  let p = move.priority||0;
+  if(actor.ability==='Ailes Cyclone' && move.type==='vol') p += 1;
+  return p;
+}
 function resolveTurn(actions){
   const bs = battleState;
   bs.locked = true;
   const sorted = [...actions].sort((a,b)=>{
-    const pa = a.move.priority||0, pb = b.move.priority||0;
+    const pa = effectivePriority(a.actor, a.move), pb = effectivePriority(b.actor, b.move);
     if(pa!==pb) return pb-pa;
     const sa = effectiveSpeed(a.actor), sb = effectiveSpeed(b.actor);
     if(sa!==sb) return sb-sa;
@@ -349,6 +357,15 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
+  if(actor.ability==='Voix Aquatique' && move.sound){
+    move = { ...move, type:'eau' };
+  }
+  if(actor.ability==='Protéen' && !move.metronome && !move.mirrorMove){
+    const newTypes = move.type2 ? [move.type, move.type2] : [move.type];
+    const current = actor.transformedTypes || actor.types;
+    const already = current.length===newTypes.length && newTypes.every(t=>current.includes(t));
+    if(!already) actor.transformedTypes = newTypes;
+  }
   if(move.metronome){
     const pool = Object.values(MOVES).filter(m=>!m.metronome && !m.mirrorMove && !m.mimic && m.name!=='Struggle');
     const picked = rand(pool);
@@ -369,6 +386,16 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   actor.lastMoveUsed = move;
   if(actor.heldItem && ITEMS[actor.heldItem] && ITEMS[actor.heldItem].choiceLock && !actor.lockedMove){
     actor.lockedMove = move;
+  }
+  if(move.requiresAteBerry && !actor.ateBerry){
+    setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
+    setTimeout(callback, 900);
+    return;
+  }
+  if(move.priority>0 && move.target!=='self' && battleState && battleState.terrain && battleState.terrain.type==='psychic'){
+    setLog(`<b>${actor.name}</b> utilise ${move.name}... mais le Terrain Psychique bloque les attaques prioritaires !`);
+    setTimeout(callback, 900);
+    return;
   }
   if(move.charge){
     const isReleasing = actor.chargingMove === move;
@@ -426,8 +453,14 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   }
   actor.guaranteedHit = false;
   if(defender.protected && move.cat!=='status'){
+    let punishMsg = '';
+    if(defender.punishOnContact && move.cat==='phys'){
+      const rdmg = Math.max(1, Math.round(actor.maxHp/8));
+      actor.hp = Math.max(0, actor.hp-rdmg);
+      punishMsg = ` ${actor.name} est blessé au contact (${rdmg} dégâts) !`;
+    }
     renderBattle();
-    setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} se protège de l'attaque !`);
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} se protège de l'attaque !${punishMsg}`);
     setTimeout(callback, 900);
     return;
   }
@@ -462,6 +495,12 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     return;
   }
   if(move.cat==='status'){
+    if(move.requiresStatus && defender.status!==move.requiresStatus){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
+      setTimeout(callback, 900);
+      return;
+    }
     if(actor.tauntTurns>0){
       renderBattle();
       setLog(`<b>${actor.name}</b> est provoqué et ne peut pas utiliser ${move.name} !`);
@@ -490,9 +529,15 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 1000);
     return;
   }
-  if(defender.ability==='Lévitation' && move.type==='sol'){
+  if(defender.ability==='Lévitation' && move.type==='sol' && !move.bypassTypeImmunity){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Lévitation) !`);
+    setTimeout(callback, 900);
+    return;
+  }
+  if(defender.ability==='Anti-Bombe' && move.ballBomb){
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Anti-Bombe protège totalement ${defender.name} !`);
     setTimeout(callback, 900);
     return;
   }
@@ -595,6 +640,34 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
+  if(move.multiHit){
+    if(defender.ability==='Garde Mystik'){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name} ! Garde Mystik protège ${defender.name} !`);
+      setTimeout(callback, 900);
+      return;
+    }
+    const { min, max } = move.multiHit;
+    const hits = min + Math.floor(Math.random()*(max-min+1));
+    let total = 0, actualHits = 0, lastCrit = false;
+    for(let i=0;i<hits;i++){
+      if(defender.hp<=0) break;
+      const { dmg: hdmg, crit: hcrit } = computeDamage(actor, move, defender);
+      const applied = Math.min(hdmg, defender.hp);
+      defender.hp -= applied;
+      total += applied;
+      actualHits++;
+      lastCrit = lastCrit || hcrit;
+    }
+    if(move.cat==='phys') defender.lastPhysDamage = total;
+    if(move.cat==='spec') defender.lastSpecDamage = total;
+    renderBattle();
+    shakeBox(boxIdFor(defender), lastCrit);
+    if(lastCrit) flashScreen('crit');
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Touché ${actualHits} fois pour un total de ${total} dégâts !`);
+    setTimeout(callback, 1000);
+    return;
+  }
   const { dmg, eff, crit } = computeDamage(actor, move, defender);
   let actualDmg = dmg;
   let sashSaved = false;
@@ -614,11 +687,22 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     actualDmg = defender.hp - 1;
     enduredMsg = ` ${defender.name} tient bon grâce à Ténacité !`;
   }
+  if(move.holdBack) actualDmg = Math.min(actualDmg, defender.hp - 1);
   defender.hp = Math.max(0, defender.hp-actualDmg);
   if(move.cat==='phys') defender.lastPhysDamage = actualDmg;
   if(move.cat==='spec') defender.lastSpecDamage = actualDmg;
   let msg = `<b>${actor.name}</b> ${actorIsPlayer?'utilise':'riposte avec'} ${move.name} !${crit?' <b>Coup critique !</b>':''}${effLabel(eff)} (${actualDmg} dégâts)${thawMsg}${enduredMsg}${wonderGuardMsg}`;
   if(sashSaved){ msg += ` ${defender.name} tient bon grâce à sa Ceinture Force !`; }
+  if(move.boostOnKO && defender.hp<=0){
+    let klogs = [];
+    applyStatBoost(actor, [move.boostOnKO], klogs);
+    msg += ' ' + klogs.join(' ');
+  }
+  if(move.trap && defender.hp>0){
+    defender.trapped = true;
+    if(move.trapDamage) defender.infested = true;
+    msg += ` ${defender.name} est piégé !`;
+  }
   if(move.drain){
     const h=Math.max(1,Math.round(actualDmg*move.drain));
     if(defender.ability==='Suintement'){
@@ -653,6 +737,9 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     } else {
       let blogs = [];
       applyStatBoost(defender, [{stat:move.secondaryBoost.stat, stages:move.secondaryBoost.stages}], blogs);
+      if(defender.ability==='Compétiteur' && move.secondaryBoost.stages<0){
+        applyStatBoost(defender, [{stat:'spa',stages:2}], blogs);
+      }
       msg += ' ' + blogs.join(' ');
     }
   }
@@ -682,12 +769,27 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     defender.transformedTypes = [move.type];
     msg += ` ${defender.name} devient de type ${move.type} grâce à Déguisement !`;
   }
-  // Talents de contact du défenseur (déclenchés par une attaque physique)
-  if(move.cat==='phys' && defender.hp>0 && actor.hp>0){
+  if(defender.ability==='Stoïcisme' && defender.hp>0 && actualDmg>0){
+    let slogs2 = [];
+    applyStatBoost(defender, [{stat:'def',stages:1}], slogs2);
+    msg += ' ' + slogs2.join(' ');
+  }
+  // Talents de contact du défenseur (déclenchés par une attaque physique, sauf si l'attaquant a Sans Contact)
+  if(move.cat==='phys' && defender.hp>0 && actor.hp>0 && actor.ability!=='Sans Contact'){
     if(defender.ability==='Peau Dure'){
       const rdmg = Math.max(1, Math.round(actor.maxHp/8));
       actor.hp = Math.max(0, actor.hp-rdmg);
       msg += ` ${actor.name} est blessé par Peau Dure (${rdmg} dégâts) !`;
+    }
+    if(defender.ability==='Point Gluant'){
+      let glogs = [];
+      applyStatBoost(actor, [{stat:'spe',stages:-1}], glogs);
+      msg += ' ' + glogs.join(' ');
+    }
+    if(defender.ability==='Pickpocket' && !defender.heldItem && actor.heldItem){
+      defender.heldItem = actor.heldItem;
+      actor.heldItem = null;
+      msg += ` ${defender.name} dérobe l'objet de ${actor.name} grâce à Pickpocket !`;
     }
     if(!actor.status){
       if(defender.ability==='Statik' && Math.random()<0.3){
@@ -715,11 +817,24 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(defender.heldItem && !defender.itemUsed && defender.hp>0){
     const heldItem = ITEMS[defender.heldItem];
     if(heldItem && heldItem.berryHeal && defender.hp <= Math.floor(defender.maxHp*0.5)){
-      const heal = Math.max(1, Math.round(defender.maxHp*heldItem.berryHeal));
+      let heal = Math.max(1, Math.round(defender.maxHp*heldItem.berryHeal));
+      if(defender.ability==='Bajoues') heal = Math.round(heal*1.67);
       defender.hp = Math.min(defender.maxHp, defender.hp+heal);
       defender.itemUsed = true;
+      defender.ateBerry = true;
       msg += ` ${defender.name} mange sa ${heldItem.name} et récupère des PV !`;
     }
+  }
+  if(actor.ability==='Magicien' && !actor.heldItem && defender.heldItem && defender.hp>0 && actualDmg>0){
+    actor.heldItem = defender.heldItem;
+    defender.heldItem = null;
+    msg += ` ${actor.name} dérobe l'objet de ${defender.name} grâce à Magicien !`;
+  }
+  if(actor.ability==='Lien Parental' && !move.multiHit && !move.fixedDamage && !move.ohko && move.power>0 && defender.hp>0){
+    const second = computeDamage(actor, { ...move, power: Math.round(move.power*0.5) }, defender);
+    const applied2 = Math.min(second.dmg, defender.hp);
+    defender.hp -= applied2;
+    msg += ` Lien Parental permet une seconde frappe (${applied2} dégâts) !`;
   }
   let ejectMsg = '';
   if(defender.heldItem==='boutonFuite' && defender.hp>0 && battleState){
@@ -780,11 +895,17 @@ function endTurn(){
       c.hp = Math.min(c.maxHp, c.hp+idmg);
       logs.push(`${c.name} récupère des PV grâce à ses racines !`);
     }
+    if(c.hp>0 && c.infested){
+      const wdmg = Math.max(1, Math.round(c.maxHp/8));
+      c.hp = Math.max(0, c.hp-wdmg);
+      logs.push(`${c.name} souffre de l'infestation !`);
+    }
   });
   all.forEach(c=>{
     c.lastPhysDamage = 0;
     c.lastSpecDamage = 0;
     c.protected = false;
+    c.punishOnContact = false;
     c.enduring = false;
     if(c.mistTurns>0){
       c.mistTurns--;
@@ -828,6 +949,22 @@ function endTurn(){
     if(bs.weather.turns<=0){
       logs.push(`${WEATHER_LABEL[bs.weather.type]} se dissipe.`);
       bs.weather = null;
+    }
+  }
+  if(bs.terrain){
+    if(bs.terrain.type==='grassy'){
+      all.forEach(c=>{
+        if(c.hp>0 && c.hp<c.maxHp){
+          const heal = Math.max(1, Math.round(c.maxHp/16));
+          c.hp = Math.min(c.maxHp, c.hp+heal);
+          logs.push(`${c.name} récupère des PV grâce à la Zone Herbue !`);
+        }
+      });
+    }
+    bs.terrain.turns--;
+    if(bs.terrain.turns<=0){
+      logs.push(`${TERRAIN_LABEL[bs.terrain.type]} se dissipe.`);
+      bs.terrain = null;
     }
   }
   if(bs.pendingFutureSight && bs.pendingFutureSight.length){

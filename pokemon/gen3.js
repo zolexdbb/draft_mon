@@ -52,7 +52,9 @@ const LINES_GEN3 = [
  stages:[
   {name:'Tarsal',types:['psy'],base:st(28,25,25,45,35,40)},
   {name:'Kirlia',types:['psy'],base:st(38,35,35,65,55,50)}], branches:[
-  {name:'Gardevoir',types:['psy'],base:st(68,65,65,125,115,80),abilities:['Synchro','Calque'],extraMoveIds:['moonlight']},
+  {name:'Gardevoir',types:['psy','fee'],base:st(68,65,65,125,115,80),abilities:['Synchro','Calque'],extraMoveIds:['moonlight','moonblast','dazzlinggleam','drainingkiss'],forms:{
+    gardevoirite:{name:'Méga-Gardevoir',types:['psy','fee'],base:st(68,85,65,165,135,100),abilities:['Aura Féérique']}
+  }},
   {name:'Gallame',types:['psy','combat'],base:st(68,125,65,65,115,80),abilities:['Impassible','Cœur Noble'],extraMoveIds:['karatechop','submission','crosschop','brickbreak','closecombat','vitalthrow','slash','nightslash']}
  ]},
 {id:'surskit',abilities:['Glissade'],moveIds:['leechlife','pinmissile','megahorn','bugbite','furycutter','signalbeam','silverwind','watergun','hydropump','surf','bubblebeam','aquatail','waterpulse','muddywater','dive','whirlpool','gust','wingattack','drillpeck','hurricane','airslash','aircutter','aerialace','bounce','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
@@ -95,9 +97,9 @@ const LINES_GEN3 = [
 {id:'sableye',abilities:['Regard Vif','Insomnia'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','thief','pursuit','knockoff','faketears','lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Ténéfix',types:['tenebres','fantome'],base:st(50,75,75,65,65,50)}]},
-{id:'mawile',abilities:['Hyper Cutter','Intimidation'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+{id:'mawile',abilities:['Hyper Cutter','Intimidation'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','playrough','moonblast','babydolleyes','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
-  {name:'Mysdibule',types:['acier'],base:st(50,85,85,55,55,50)}]},
+  {name:'Mysdibule',types:['acier','fee'],base:st(50,85,85,55,55,50)}]},
 {id:'aron',abilities:['Fermeté','Tête de Roc'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','tailwhip'],
  stages:[
   {name:'Galekid',types:['acier','roche'],base:st(50,70,100,40,40,30)},
@@ -259,11 +261,13 @@ const LINES_GEN3 = [
   {name:'Draby',types:['dragon'],base:st(45,75,60,40,30,50)},
   {name:'Drackhaus',types:['dragon'],base:st(65,95,100,60,50,50)},
   {name:'Drattak',types:['dragon','vol'],base:st(95,135,80,110,80,100)}]},
-{id:'beldum',abilities:['Corps Sain'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
+{id:'beldum',abilities:['Corps Sain'],moveIds:['ironhead','steelwing','irondefense','flashcannon','metalclaw','irontail','meteormash','autotomize','shiftgear','confusion','psychic','psybeam','zenheadbutt','extrasensory','calmmind','cosmicpower','futuresight','lightscreen','reflect','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Terhal',types:['acier','psy'],base:st(40,55,80,35,60,30)},
   {name:'Métang',types:['acier','psy'],base:st(60,75,100,55,80,50)},
-  {name:'Métalosse',types:['acier','psy'],base:st(80,135,130,95,90,70)}]},
+  {name:'Métalosse',types:['acier','psy'],base:st(80,135,130,95,90,70),forms:{
+    metagrossite:{name:'Méga-Métalosse',types:['acier','psy'],base:st(80,145,150,105,110,110),abilities:['Griffe Solide']}
+  }}]},
 {id:'regirock',abilities:['Corps Sain','Fermeté'],moveIds:['rockthrow','rockslide','stoneedge','rockblast','rocktomb','ancientpower','bodyslam','doubleedge','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Regirock',types:['roche'],base:st(80,100,200,50,100,50)}]},

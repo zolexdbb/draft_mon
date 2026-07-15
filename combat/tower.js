@@ -36,7 +36,8 @@ const TRAINER_FIRST_NAMES = ['Théo','Lucie','Marc','Sarah','Hugo','Emma','Léo'
 
 // ---- Maîtres de Type (boss) : un circuit sans répétition des 17 types par run ----
 const ALL_TYPES = Object.keys(TYPE_EMOJI);
-function typeDisplayName(type){ return type.charAt(0).toUpperCase()+type.slice(1); }
+const TYPE_DISPLAY_OVERRIDE = { fee:'Fée' };
+function typeDisplayName(type){ return TYPE_DISPLAY_OVERRIDE[type] || (type.charAt(0).toUpperCase()+type.slice(1)); }
 function pickBossType(){
   let available = ALL_TYPES.filter(t => !bossTypesUsed.includes(t));
   if(available.length===0){ bossTypesUsed = []; available = ALL_TYPES; }
@@ -62,6 +63,7 @@ const TYPE_MASTER_DIALOGUE = {
   dragon:   "Les dragons obéissent à ma volonté !",
   acier:    "Mon armure est impénétrable !",
   tenebres: "L'obscurité ne pardonne à personne !",
+  fee:      "Mon charme aura ta perte !",
 };
 
 // Aux étages élevés, favoriser les archétypes avancés (partagé par generateTrainer et generateTwinTrainers)

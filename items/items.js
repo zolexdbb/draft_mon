@@ -58,7 +58,20 @@ const ITEMS = {
   plaqueRoc:      { name:'Plaque Roc',       sprite:ITEM_SPRITE('stone-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Roche." },
   plaqueDraco:    { name:'Plaque Draco',     sprite:ITEM_SPRITE('draco-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Dragon." },
   plaqueFer:      { name:'Plaque Fer',       sprite:ITEM_SPRITE('iron-plate'),   price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Acier." },
-  plaqueOmbre:    { name:'Plaque Ombre',     sprite:ITEM_SPRITE('dread-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Ténèbres." }
+  plaqueOmbre:    { name:'Plaque Ombre',     sprite:ITEM_SPRITE('dread-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Ténèbres." },
+  // ---- Pierres Méga (tenues, vendues uniquement par le Marchand Itinérant) ----
+  charizarditeX:  { name:'Dracaufeurite X',  sprite:ITEM_SPRITE('charizardite-x'), price:3000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Dracaufeu en Méga-Dracaufeu X (Feu/Dragon)." },
+  charizarditeY:  { name:'Dracaufeurite Y',  sprite:ITEM_SPRITE('charizardite-y'), price:3000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Dracaufeu en Méga-Dracaufeu Y (Feu/Vol)." },
+  blastoisite:    { name:'Tortankite',       sprite:ITEM_SPRITE('blastoisinite'), price:3000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Tortank en Méga-Tortank." },
+  venusaurite:    { name:'Florizarrite',     sprite:ITEM_SPRITE('venusaurite'), price:3000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Florizarre en Méga-Florizarre." },
+  mewtwonitey:    { name:'Mewtwoïte Y',      sprite:ITEM_SPRITE('mewtwonite-y'), price:3500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Mewtwo en Méga-Mewtwo Y." },
+  gyaradosite:    { name:'Léviatorite',      sprite:ITEM_SPRITE('gyaradosite'), price:2800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Léviator en Méga-Léviator (Eau/Ténèbres)." },
+  lucarionite:    { name:'Lucarionite',      sprite:ITEM_SPRITE('lucarionite'), price:2800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Lucario en Méga-Lucario." },
+  garchompite:    { name:'Carchacrokite',    sprite:ITEM_SPRITE('garchompite'), price:2800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Carchacrok en Méga-Carchacrok." },
+  metagrossite:   { name:'Métalossite',      sprite:ITEM_SPRITE('metagrossite'), price:2800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Métalosse en Méga-Métalosse." },
+  scizorite:      { name:'Cizayoxite',       sprite:ITEM_SPRITE('scizorite'), price:2500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Cizayox en Méga-Cizayox." },
+  kangaskhanite:  { name:'Kangourexite',     sprite:ITEM_SPRITE('kangaskhanite'), price:2500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Kangourex en Méga-Kangourex." },
+  gardevoirite:   { name:'Gardevoirite',     sprite:ITEM_SPRITE('gardevoirite'), price:2800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Gardevoir en Méga-Gardevoir." }
 };
 const ITEM_SPRITE_SOURCES = [
   slug => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/items/${slug}.png`,

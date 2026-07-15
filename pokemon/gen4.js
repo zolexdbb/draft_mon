@@ -93,15 +93,19 @@ const LINES_GEN4 = [
 {id:'spiritomb',abilities:['Pression','Infiltration'],moveIds:['lick','shadowball','nightshade','shadowclaw','confuseray','astonish','shadowpunch','curse','nightmare','darkpulse','suckerpunch','nightslash','crunch','bodyslam','doubleedge','swordsdance','agility','harden','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Spiritomb',types:['fantome','tenebres'],base:st(50,92,108,92,108,35)}]},
-{id:'gible',abilities:['Voile Sable','Peau Dure'],moveIds:['dragonbreath','dragonclaw','dragonrage','outrage','dracometeor','dragonpulse','earthquake','dig','bonemerang','mudshot','magnitude','stoneedge','rockslide','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard'],
+{id:'gible',abilities:['Voile Sable','Peau Dure'],moveIds:['dragonbreath','dragonclaw','dragonrage','outrage','dracometeor','dragonpulse','dragonhammer','earthquake','dig','bonemerang','mudshot','magnitude','thousandarrows','stoneedge','rockslide','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Griknot',types:['dragon','sol'],base:st(58,70,45,40,45,42)},
   {name:'Carmache',types:['dragon','sol'],base:st(68,90,65,50,55,82)},
-  {name:'Carchacrok',types:['dragon','sol'],base:st(108,130,95,80,85,102),abilities:['Voile Sable','Force Sable']}]},
+  {name:'Carchacrok',types:['dragon','sol'],base:st(108,130,95,80,85,102),abilities:['Voile Sable','Force Sable'],forms:{
+    garchompite:{name:'Méga-Carchacrok',types:['dragon','sol'],base:st(108,170,115,120,95,92),abilities:['Force Sable']}
+  }}]},
 {id:'riolu',abilities:['Impassible','Attention'],moveIds:['karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','bulkup','superpower','skyuppercut','machpunch','rocksmash','closecombat','aurasphere','vitalthrow','ironhead','flashcannon','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Riolu',types:['combat'],base:st(40,70,40,35,40,60)},
-  {name:'Lucario',types:['combat','acier'],base:st(70,110,70,115,70,90)}]},
+  {name:'Lucario',types:['combat','acier'],base:st(70,110,70,115,70,90),forms:{
+    lucarionite:{name:'Méga-Lucario',types:['combat','acier'],base:st(70,145,88,140,70,112),abilities:['Adaptabilité']}
+  }}]},
 {id:'hippopotas',abilities:['Sable Volant','Force Sable'],moveIds:['dig','earthquake','bonemerang','mudshot','magnitude','sandtomb','sandattack','tackle','stomp','bite','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard'],
  stages:[
   {name:'Hippopotas',types:['sol'],base:st(68,72,78,38,42,32)},

@@ -35,11 +35,11 @@ const LINES_GEN2 = [
  stages:[
   {name:'Loupio',types:['eau','electrik'],base:st(75,38,38,56,56,67)},
   {name:'Lanturn',types:['eau','electrik'],base:st(125,58,58,76,76,67)}]},
-{id:'togepi',abilities:['Agitation','Sérénité'],moveIds:['tackle','swift','bodyslam','extrasensory','toxic','sleeppowder','sing','growl','leer','harden','amnesia','recover','protect','endure','safeguard','doubleteam','focusenergy','sweetscent','charm','metronome','mimic'],
+{id:'togepi',abilities:['Agitation','Sérénité'],moveIds:['tackle','swift','bodyslam','extrasensory','toxic','sleeppowder','sing','moonblast','dazzlinggleam','disarmingvoice','babydolleyes','aromaticmist','growl','leer','harden','amnesia','recover','protect','endure','safeguard','doubleteam','focusenergy','sweetscent','charm','metronome','mimic'],
  stages:[
-  {name:'Togepi',types:['normal'],base:st(35,20,65,40,65,20)},
-  {name:'Togetic',types:['normal','vol'],base:st(55,40,85,80,105,40)},
-  {name:'Togekiss',types:['normal','vol'],base:st(85,50,95,120,115,80)}]},
+  {name:'Togepi',types:['fee'],base:st(35,20,65,40,65,20)},
+  {name:'Togetic',types:['fee','vol'],base:st(55,40,85,80,105,40)},
+  {name:'Togekiss',types:['fee','vol'],base:st(85,50,95,120,115,80)}]},
 {id:'natu',abilities:['Synchro','Matinal'],moveIds:['confusion','psychic','psybeam','extrasensory','peck','wingattack','swordsdance','agility','growl','leer','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
   {name:'Natu',types:['psy','vol'],base:st(40,50,45,70,45,70)},
@@ -49,11 +49,11 @@ const LINES_GEN2 = [
   {name:'Wattouat',types:['electrik'],base:st(55,40,40,65,45,35)},
   {name:'Lainergie',types:['electrik'],base:st(70,55,55,80,60,45)},
   {name:'Pharamp',types:['electrik'],base:st(90,75,85,115,90,55)}]},
-{id:'marill',abilities:['Isograisse','Coloforce'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','tackle','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','tailwhip','whirlpool','clamp','octazooka','withdraw'],
+{id:'marill',abilities:['Isograisse','Coloforce'],moveIds:['watergun','hydropump','surf','bubblebeam','aquatail','bodyslam','doubleedge','tackle','playrough','dazzlinggleam','disarmingvoice','fairywind','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','tailwhip','whirlpool','clamp','octazooka','withdraw'],
  stages:[
-  {name:'Azurill',types:['normal'],base:st(50,20,40,20,40,20)},
-  {name:'Marill',types:['eau'],base:st(70,20,50,20,50,40)},
-  {name:'Azumarill',types:['eau'],base:st(100,50,80,50,80,50)}]},
+  {name:'Azurill',types:['normal','fee'],base:st(50,20,40,20,40,20)},
+  {name:'Marill',types:['eau','fee'],base:st(70,20,50,20,50,40)},
+  {name:'Azumarill',types:['eau','fee'],base:st(100,50,80,50,80,50)}]},
 {id:'sudowoodo',abilities:['Tête de Roc','Fermeté'],moveIds:['rockthrow','rockslide','stoneedge','tackle','headbutt','doubleedge','bodyslam','swordsdance','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','rollout','ancientpower'],
  stages:[
   {name:'Manzaï',types:['roche'],base:st(50,80,95,10,45,10)},
@@ -105,10 +105,10 @@ const LINES_GEN2 = [
  stages:[
   {name:'Scorplane',types:['sol','vol'],base:st(65,75,105,35,65,85)},
   {name:'Scorvol',types:['sol','vol'],base:st(75,95,125,45,75,95),abilities:['Hyper Cutter','Soin Poison']}]},
-{id:'snubbull',abilities:['Intimidation','Phobique'],moveIds:['tackle','bite','hyperfang','headbutt','bodyslam','doubleedge','swordsdance','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','slam','sweetscent','charm','scaryface'],
+{id:'snubbull',abilities:['Intimidation','Phobique'],moveIds:['tackle','bite','hyperfang','headbutt','bodyslam','doubleedge','playrough','moonblast','dazzlinggleam','swordsdance','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','slam','sweetscent','charm','scaryface'],
  stages:[
-  {name:'Snubbull',types:['normal'],base:st(60,80,50,40,40,30)},
-  {name:'Granbull',types:['normal'],base:st(90,120,75,60,60,45)}]},
+  {name:'Snubbull',types:['fee'],base:st(60,80,50,40,40,30)},
+  {name:'Granbull',types:['fee'],base:st(90,120,75,60,60,45)}]},
 {id:'qwilfish',abilities:['Point Poison','Glissade'],moveIds:['watergun','surf','bubblebeam','sludge','poisonsting','sludgebomb','poisonjab','acid','waterfall','toxic','growl','leer','harden','recover','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','acidarmor','poisongas','poisonpowder','smog'],
  stages:[
   {name:'Qwilfish',types:['eau','poison'],base:st(65,95,75,55,55,85)}]},
@@ -149,7 +149,7 @@ const LINES_GEN2 = [
  stages:[
   {name:'Babimanta',types:['eau','vol'],base:st(45,20,50,60,120,50)},
   {name:'Démanta',types:['eau','vol'],base:st(65,40,70,80,140,70)}]},
-{id:'skarmory',abilities:['Regard Vif','Fermeté'],moveIds:['steelwing','ironhead','irondefense','flashcannon','gust','wingattack','airslash','peck','slash','swordsdance','agility','growl','leer','protect','endure','safeguard','doubleteam','focusenergy','fly','skyattack','mirrormove','metalclaw','irontail'],
+{id:'skarmory',abilities:['Regard Vif','Fermeté'],moveIds:['steelwing','ironhead','irondefense','flashcannon','autotomize','gust','wingattack','airslash','peck','slash','swordsdance','agility','growl','leer','protect','endure','safeguard','doubleteam','focusenergy','fly','skyattack','mirrormove','metalclaw','irontail'],
  stages:[
   {name:'Airmure',types:['acier','vol'],base:st(65,80,140,40,70,70)}]},
 {id:'houndour',abilities:['Matinal','Torche'],moveIds:['crunch','darkpulse','suckerpunch','nightslash','feintattack','ember','flamethrower','fireblast','firepunch','bite','swordsdance','agility','growl','leer','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','extremespeed','thief','pursuit','beatup','sacredfire','flamewheel','firespin'],

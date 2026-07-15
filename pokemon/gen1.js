@@ -4,17 +4,24 @@ const LINES_GEN1 = [
  stages:[
   {name:'Bulbizarre',types:['plante','poison'],base:st(45,49,49,65,65,45)},
   {name:'Herbizarre',types:['plante','poison'],base:st(60,62,63,80,80,60)},
-  {name:'Florizarre',types:['plante','poison'],base:st(80,82,83,100,100,80)}]},
+  {name:'Florizarre',types:['plante','poison'],base:st(80,82,83,100,100,80),forms:{
+    venusaurite:{name:'Méga-Florizarre',types:['plante','poison'],base:st(80,100,123,122,120,80),abilities:['Isograisse']}
+  }}]},
 {id:'charmander',abilities:['Brasier','Force Soleil'],moveIds:['scratch','ember','flamethrower','fireblast','firepunch','slash','bite','bodyslam','doubleedge','dragonrage','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','rage','sacredfire','flamewheel','firespin'],
  stages:[
   {name:'Salamèche',types:['feu'],base:st(39,52,43,60,50,65)},
   {name:'Reptincel',types:['feu'],base:st(58,64,58,80,65,80)},
-  {name:'Dracaufeu',types:['feu','vol'],base:st(78,84,78,109,85,100)}]},
+  {name:'Dracaufeu',types:['feu','vol'],base:st(78,84,78,109,85,100),forms:{
+    charizarditeX:{name:'Méga-Dracaufeu X',types:['feu','dragon'],base:st(78,130,111,130,85,100),abilities:['Griffe Solide']},
+    charizarditeY:{name:'Méga-Dracaufeu Y',types:['feu','vol'],base:st(78,104,78,159,115,100),abilities:['Sécheresse']}
+  }}]},
 {id:'squirtle',abilities:['Torrent','Cuvette'],moveIds:['raindance','tackle','bubble','watergun','surf','hydropump','bubblebeam','waterfall','icebeam','bite','bodyslam','doubleedge','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','withdraw','whirlpool','clamp','octazooka'],
  stages:[
   {name:'Carapuce',types:['eau'],base:st(44,48,65,50,64,43)},
   {name:'Carabaffe',types:['eau'],base:st(59,63,80,65,80,58)},
-  {name:'Tortank',types:['eau'],base:st(79,83,100,85,105,78)}]},
+  {name:'Tortank',types:['eau'],base:st(79,83,100,85,105,78),forms:{
+    blastoisite:{name:'Méga-Tortank',types:['eau'],base:st(79,103,120,135,115,78),abilities:['Méga-Lanceur']}
+  }}]},
 {id:'caterpie',abilities:['Écran Poudre','Fuite'],moveIds:['tackle','leechlife','bugbite','pinmissile','megahorn','bodyslam','harden','growl','amnesia','toxic','sleeppowder','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','stringshot','spiderweb'],
  stages:[
   {name:'Chenipan',types:['insecte'],base:st(45,30,35,20,20,45)},
@@ -42,7 +49,7 @@ const LINES_GEN1 = [
  stages:[
   {name:'Abo',types:['poison'],base:st(35,60,44,40,54,55)},
   {name:'Arbok',types:['poison'],base:st(60,85,69,65,79,80)}]},
-{id:'pikachu',abilities:['Statik','Paratonnerre'],moveIds:['tackle','quickattack','thundershock','thunderbolt','thunder','thunderpunch','bodyslam','doubleedge','agility','swordsdance','growl','leer','harden','amnesia','thunderwave','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','spark','zapcannon'],
+{id:'pikachu',abilities:['Statik','Paratonnerre'],moveIds:['tackle','quickattack','thundershock','thunderbolt','thunder','thunderpunch','parabolicharge','electricterrain','bodyslam','doubleedge','agility','swordsdance','growl','leer','harden','amnesia','thunderwave','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','spark','zapcannon'],
  stages:[
   {name:'Pichu',types:['electrik'],base:st(20,40,15,35,35,60)},
   {name:'Pikachu',types:['electrik'],base:st(35,55,40,50,50,90)},
@@ -61,20 +68,20 @@ const LINES_GEN1 = [
   {name:'Nidoran♂',types:['poison'],base:st(46,57,40,40,40,50)},
   {name:'Nidorino',types:['poison'],base:st(61,72,57,55,55,65)},
   {name:'Nidoking',types:['poison','sol'],base:st(81,92,77,85,75,85)}]},
-{id:'clefairy',abilities:['Joli Sourire','Médic Nature'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','sweetscent','charm','metronome','mimic','minimize'],
+{id:'clefairy',abilities:['Joli Sourire','Médic Nature'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','moonblast','playrough','dazzlinggleam','disarmingvoice','babydolleyes','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','sweetscent','charm','metronome','mimic','minimize'],
  stages:[
-  {name:'Mélo',types:['normal'],base:st(50,25,28,45,55,15)},
-  {name:'Mélofée',types:['normal'],base:st(70,45,48,60,65,35)},
-  {name:'Mélodelfe',types:['normal'],base:st(95,70,73,95,90,60)}]},
+  {name:'Mélo',types:['fee'],base:st(50,25,28,45,55,15)},
+  {name:'Mélofée',types:['fee'],base:st(70,45,48,60,65,35)},
+  {name:'Mélodelfe',types:['fee'],base:st(95,70,73,95,90,60)}]},
 {id:'vulpix',abilities:['Torche','Sécheresse'],moveIds:['tackle','ember','flamethrower','fireblast','quickattack','bite','bodyslam','confuseray','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','sacredfire','flamewheel','firespin'],
  stages:[
   {name:'Goupix',types:['feu'],base:st(38,41,40,50,65,65)},
   {name:'Feunard',types:['feu'],base:st(73,76,75,81,100,100)}]},
-{id:'jigglypuff',abilities:['Joli Sourire','Battant'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','sweetscent','charm','metronome','mimic','minimize'],
+{id:'jigglypuff',abilities:['Joli Sourire','Battant'],moveIds:['tackle','doubleslap','sing','bodyslam','doubleedge','hyperbeam','psychic','psybeam','swift','moonblast','playrough','dazzlinggleam','disarmingvoice','babydolleyes','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','sweetscent','charm','metronome','mimic','minimize'],
  stages:[
-  {name:'Toudoudou',types:['normal'],base:st(90,30,15,40,20,15)},
-  {name:'Rondoudou',types:['normal'],base:st(115,45,20,45,25,20)},
-  {name:'Grodoudou',types:['normal'],base:st(140,70,45,75,50,45)}]},
+  {name:'Toudoudou',types:['fee'],base:st(90,30,15,40,20,15)},
+  {name:'Rondoudou',types:['fee'],base:st(115,45,20,45,25,20)},
+  {name:'Grodoudou',types:['fee'],base:st(140,70,45,75,50,45)}]},
 {id:'zubat',abilities:['Attention','Infiltration'],moveIds:['tackle','leechlife','bite','gust','wingattack','poisonsting','acid','sludge','confuseray','swordsdance','agility','growl','leer','harden','amnesia','toxic','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','fly','skyattack','mirrormove','acidarmor','poisongas','poisonpowder','smog'],
  stages:[
   {name:'Nosferapti',types:['poison','vol'],base:st(40,45,35,30,40,55)},
@@ -127,7 +134,7 @@ const LINES_GEN1 = [
   {name:'Abra',types:['psy'],base:st(25,20,15,105,55,90)},
   {name:'Kadabra',types:['psy'],base:st(40,35,30,120,70,105)},
   {name:'Alakazam',types:['psy'],base:st(55,50,45,135,95,120)}]},
-{id:'machop',abilities:['Cran','Annule Garde'],moveIds:['tackle','karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','bodyslam','rockslide','earthquake','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','rage','slam','lowkick','counter','detect','machpunch','rocksmash','dynamicpunch','reversal','seismictoss','jumpkick'],
+{id:'machop',abilities:['Cran','Annule Garde'],moveIds:['tackle','karatechop','submission','highjumpkick','doublekick','crosschop','brickbreak','poweruppunch','flyingpress','bodyslam','rockslide','earthquake','swordsdance','agility','growl','leer','harden','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','rage','slam','lowkick','counter','detect','machpunch','rocksmash','dynamicpunch','reversal','seismictoss','jumpkick'],
  stages:[
   {name:'Machoc',types:['combat'],base:st(70,80,50,35,35,35)},
   {name:'Machopeur',types:['combat'],base:st(80,100,70,50,60,45)},
@@ -185,7 +192,7 @@ const LINES_GEN1 = [
   {name:'Fantominus',types:['fantome','poison'],base:st(30,35,30,100,35,80)},
   {name:'Spectrum',types:['fantome','poison'],base:st(45,50,45,115,55,95)},
   {name:'Ectoplasma',types:['fantome','poison'],base:st(60,65,60,130,75,110)}]},
-{id:'onix',abilities:['Tête de Roc','Fermeté'],moveIds:['tackle','rockthrow','rockslide','stoneedge','earthquake','dig','bonemerang','ironhead','irondefense','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','metalclaw','irontail','mudslap','magnitude','boneclub','bonerush','sandattack','rollout','ancientpower'],
+{id:'onix',abilities:['Tête de Roc','Fermeté'],moveIds:['tackle','rockthrow','rockslide','stoneedge','diamondstorm','earthquake','dig','bonemerang','thousandarrows','ironhead','irondefense','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','metalclaw','irontail','mudslap','magnitude','boneclub','bonerush','sandattack','rollout','ancientpower'],
  stages:[
   {name:'Onix',types:['roche','sol'],base:st(35,45,160,30,45,70)},
   {name:'Steelix',types:['roche','acier'],base:st(75,85,200,55,65,30)}]},
@@ -233,7 +240,9 @@ const LINES_GEN1 = [
   {name:'Bouldeneu',types:['plante'],base:st(100,100,125,110,50,50)}]},
 {id:'kangaskhan',abilities:['Matinal','Audacieux'],moveIds:['tackle','bite','stomp','bodyslam','doubleedge','hyperbeam','slash','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','extremespeed','slam','megapunch'],
  stages:[
-  {name:'Kangourex',types:['normal'],base:st(105,95,80,40,80,90)}]},
+  {name:'Kangourex',types:['normal'],base:st(105,95,80,40,80,90),forms:{
+    kangaskhanite:{name:'Méga-Kangourex',types:['normal'],base:st(105,125,100,60,100,100),abilities:['Lien Parental']}
+  }}]},
 {id:'horsea',abilities:['Glissade','Sniper'],moveIds:['bubble','watergun','surf','hydropump','bubblebeam','waterfall','dragonbreath','dragonclaw','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','twister','outrage'],
  stages:[
   {name:'Hypotrempe',types:['eau'],base:st(30,40,70,70,25,60)},
@@ -247,14 +256,16 @@ const LINES_GEN1 = [
  stages:[
   {name:'Stari',types:['eau'],base:st(30,45,55,70,55,85)},
   {name:'Staross',types:['eau','psy'],base:st(60,75,85,100,85,115)}]},
-{id:'mrmime',abilities:['Anti-Bruit','Filtre'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','barrier','meditate','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
+{id:'mrmime',abilities:['Anti-Bruit','Filtre'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','barrier','meditate','dazzlinggleam','disarmingvoice','babydolleyes','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
-  {name:'Mime Jr.',types:['psy'],base:st(20,25,45,70,90,60)},
-  {name:'M. Mime',types:['psy'],base:st(40,45,65,100,120,90)}]},
+  {name:'Mime Jr.',types:['psy','fee'],base:st(20,25,45,70,90,60)},
+  {name:'M. Mime',types:['psy','fee'],base:st(40,45,65,100,120,90)}]},
 {id:'scyther',abilities:['Essaim','Technicien'],moveIds:['tackle','leechlife','bugbite','pinmissile','megahorn','slash','quickattack','wingattack','ironhead','steelwing','agility','swordsdance','harden','growl','leer','amnesia','toxic','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','extremespeed','fly','skyattack','mirrormove','metalclaw','irontail','furycutter','stringshot','spiderweb'],
  stages:[
   {name:'Insécateur',types:['insecte','vol'],base:st(70,110,80,55,80,105)},
-  {name:'Cizayox',types:['insecte','acier'],base:st(70,130,100,55,80,65)}]},
+  {name:'Cizayox',types:['insecte','acier'],base:st(70,130,100,55,80,65),forms:{
+    scizorite:{name:'Méga-Cizayox',types:['insecte','acier'],base:st(70,150,140,65,100,75),abilities:['Technicien']}
+  }}]},
 {id:'jynx',abilities:['Benêt','Prédiction'],moveIds:['tackle','doubleslap','sing','icebeam','icepunch','blizzard','psychic','psybeam','confusion','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave','aurorabeam','powdersnow','mist','haze'],
  stages:[
   {name:'Lippouti',types:['glace','psy'],base:st(45,30,15,85,65,65)},
@@ -278,8 +289,10 @@ const LINES_GEN1 = [
 {id:'magikarp',abilities:['Glissade','Phobique'],moveIds:['tackle','watergun','bubble','surf','hydropump','waterfall','bodyslam','doubleedge','bite','hyperbeam','agility','swordsdance','harden','growl','leer','amnesia','dragonrage','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','tailwhip','whirlpool','clamp','octazooka','withdraw'],
  stages:[
   {name:'Magicarpe',types:['eau'],base:st(20,10,55,15,20,80)},
-  {name:'Léviator',types:['eau','vol'],base:st(95,125,79,60,100,81)}]},
-{id:'lapras',abilities:['Absorbe-Eau','Coque Armure'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','icebeam','icepunch','blizzard','bodyslam','sing','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','aurorabeam','powdersnow','mist','haze'],
+  {name:'Léviator',types:['eau','vol'],base:st(95,125,79,60,100,81),forms:{
+    gyaradosite:{name:'Méga-Léviator',types:['eau','tenebres'],base:st(95,155,109,70,130,81),abilities:['Brise Moule']}
+  }}]},
+{id:'lapras',abilities:['Absorbe-Eau','Coque Armure'],moveIds:['tackle','watergun','surf','hydropump','bubblebeam','icebeam','icepunch','blizzard','freezedry','bodyslam','sing','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','whirlpool','clamp','octazooka','withdraw','aurorabeam','powdersnow','mist','haze'],
  stages:[
   {name:'Lokhlass',types:['eau','glace'],base:st(130,85,80,85,95,60)}]},
 {id:'eevee',abilities:['Fuite','Adaptabilité'],moveIds:['tackle','quickattack','bite','bodyslam','doubleedge','swift','swordsdance','agility','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','sweetscent','charm'],
@@ -313,7 +326,7 @@ const LINES_GEN1 = [
  stages:[
   {name:'Goinfrex',types:['normal'],base:st(135,85,40,40,85,5),abilities:['Ramassage','Isograisse']},
   {name:'Ronflex',types:['normal'],base:st(160,110,65,65,110,30)}]},
-{id:'articuno',abilities:['Pression','Rideau Neige'],moveIds:['hail','tackle','peck','gust','icebeam','icepunch','blizzard','icefang','wingattack','agility','swordsdance','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','extremespeed','fly','skyattack','mirrormove','aurorabeam','powdersnow','mist','haze'],
+{id:'articuno',abilities:['Pression','Rideau Neige'],moveIds:['hail','tackle','peck','gust','icebeam','icepunch','blizzard','freezedry','icefang','wingattack','agility','swordsdance','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','extremespeed','fly','skyattack','mirrormove','aurorabeam','powdersnow','mist','haze'],
  stages:[
   {name:'Artikodin',types:['glace','vol'],base:st(90,85,100,95,125,85)}]},
 {id:'zapdos',abilities:['Pression','Paratonnerre'],moveIds:['tackle','thundershock','thunderbolt','thunder','thunderpunch','drillpeck','agility','thunderwave','swordsdance','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','extremespeed','fly','skyattack','mirrormove','spark','zapcannon'],
@@ -322,14 +335,16 @@ const LINES_GEN1 = [
 {id:'moltres',abilities:['Pression','Corps Ardent'],moveIds:['tackle','ember','flamethrower','fireblast','firepunch','wingattack','drillpeck','agility','swordsdance','harden','growl','leer','amnesia','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','extremespeed','fly','skyattack','mirrormove','sacredfire','flamewheel','firespin'],
  stages:[
   {name:'Sulfura',types:['feu','vol'],base:st(90,100,90,125,85,90)}]},
-{id:'dratini',abilities:['Mue','Écaille Spéciale'],moveIds:['tackle','bodyslam','surf','agility','bite','swordsdance','harden','growl','leer','amnesia','recover','strength','dragonrage','dragonbreath','dragonclaw','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','slam','twister','outrage'],
+{id:'dratini',abilities:['Mue','Écaille Spéciale'],moveIds:['tackle','bodyslam','surf','agility','bite','swordsdance','harden','growl','leer','amnesia','recover','strength','dragonrage','dragonbreath','dragonclaw','dragonhammer','protect','endure','safeguard','return','doubleteam','focusenergy','tailwhip','slam','twister','outrage'],
  stages:[
   {name:'Minidraco',types:['dragon'],base:st(41,64,45,50,50,50)},
   {name:'Draco',types:['dragon'],base:st(61,84,65,70,70,70)},
   {name:'Dracolosse',types:['dragon','vol'],base:st(91,134,95,100,100,80)}]},
 {id:'mewtwo',abilities:['Pression','Trouble-Fête'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','hyperbeam','thunderbolt','icebeam','blizzard','thunder','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','tailwhip','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
-  {name:'Mewtwo',types:['psy'],base:st(106,110,90,154,90,130)}]},
+  {name:'Mewtwo',types:['psy'],base:st(106,110,90,154,90,130),forms:{
+    mewtwonitey:{name:'Méga-Mewtwo Y',types:['psy'],base:st(106,150,70,194,120,140),abilities:['Insomnia']}
+  }}]},
 {id:'mew',abilities:['Synchro'],moveIds:['tackle','confusion','psychic','psybeam','extrasensory','shadowball','swift','hyperbeam','thunderbolt','icebeam','blizzard','thunder','flamethrower','surf','earthquake','bodyslam','swordsdance','agility','harden','growl','leer','amnesia','confuseray','recover','strength','protect','endure','safeguard','doubleteam','focusenergy','tailwhip','extremespeed','lightscreen','reflect','futuresight','mirrorcoat','dreameater','hypnosis','teleport','kinesis','psywave'],
  stages:[
   {name:'Mew',types:['psy'],base:st(100,100,100,100,100,100)}]},

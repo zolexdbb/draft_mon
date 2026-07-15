@@ -86,6 +86,14 @@ function inflictStatus(target, status, logs){
     logs.push(`${target.name} est protégé par Rune Protect !`);
     return;
   }
+  if(battleState && battleState.terrain && battleState.terrain.type==='misty'){
+    logs.push(`La Zone Brumeuse empêche ${target.name} d'avoir un problème de statut !`);
+    return;
+  }
+  if(status==='sommeil' && battleState && battleState.terrain && battleState.terrain.type==='electric'){
+    logs.push(`La Zone Électrique empêche ${target.name} de s'endormir !`);
+    return;
+  }
   if(status==='gel' && (target.ability==='Armumagma' || types.includes('glace'))){
     logs.push(`${target.name} ne peut pas être gelé !`);
     return;
@@ -104,6 +112,14 @@ function inflictStatus(target, status, logs){
   if(status==='sommeil' && (target.ability==='Insomnia' || target.ability==='Esprit Vital')){
     logs.push(`${target.name} ne peut pas s'endormir grâce à son talent !`);
     return;
+  }
+  if(status==='sommeil' && battleState){
+    const loc = locateActiveSlot(target);
+    const allies = loc && loc.side==='player' ? alivePlayerCombatants() : (loc ? aliveFoeCombatants() : []);
+    if(allies.some(c=>c.ability==='Voile Sucré')){
+      logs.push(`${target.name} est protégé par Voile Sucré et ne peut pas s'endormir !`);
+      return;
+    }
   }
   if(status==='poison' && (target.ability==='Vaccin' || types.includes('poison') || types.includes('acier'))){
     logs.push(`${target.name} est immunisé contre le poison !`);
@@ -133,6 +149,7 @@ function healPercent(target, frac, logs){
   logs.push(`${target.name} récupère ${target.hp-before} PV !`);
 }
 const WEATHER_LABEL = { pluie:'🌧️ Pluie', soleil:'☀️ Soleil intense', sable:'🌪️ Tempête de sable', grele:'🌨️ Grêle' };
+const TERRAIN_LABEL = { grassy:'🌱 Zone Herbue', electric:'⚡ Zone Électrique', misty:'✨ Zone Brumeuse', psychic:'🔮 Zone Psychique' };
 function applyStatusEffect(user, target, move, logs){
   const eff = move.effect||{};
   if(eff.selfBoost) applyStatBoost(user, eff.selfBoost, logs);
@@ -143,6 +160,9 @@ function applyStatusEffect(user, target, move, logs){
       logs.push(`La Brume protège ${target.name} de la baisse de statistiques !`);
     } else {
       applyStatBoost(target, eff.foeBoost, logs);
+      if(target.ability==='Compétiteur' && eff.foeBoost.some(b=>b.stages<0)){
+        applyStatBoost(target, [{stat:'spa',stages:2}], logs);
+      }
     }
   }
   if(eff.status) inflictStatus(target, eff.status, logs);
@@ -273,6 +293,7 @@ function applyStatusEffect(user, target, move, logs){
     const successChance = Math.pow(1/3, chain);
     if(Math.random() < successChance){
       user.protected = true;
+      user.punishOnContact = !!move.punishContact;
       user.protectChain = chain + 1;
       logs.push(`${user.name} se met à l'abri !`);
     } else {
@@ -295,6 +316,24 @@ function applyStatusEffect(user, target, move, logs){
   if(eff.lockOn){
     user.guaranteedHit = true;
     logs.push(`${user.name} vise soigneusement ${target.name}, son prochain coup ne pourra pas rater !`);
+  }
+  if(eff.teamProtect && battleState){
+    const loc = locateActiveSlot(user);
+    const allies = loc && loc.side==='player' ? alivePlayerCombatants() : aliveFoeCombatants();
+    allies.forEach(c=>{ c.protected = true; });
+    logs.push(`${user.name} protège son équipe des attaques ce tour-ci !`);
+  }
+  if(eff.invertStages){
+    Object.keys(target.stages).forEach(k=>{ target.stages[k] = -target.stages[k]; });
+    logs.push(`Les changements de statistiques de ${target.name} sont inversés !`);
+  }
+  if(eff.terrain && battleState){
+    battleState.terrain = { type: eff.terrain, turns: 5 };
+    logs.push(`${TERRAIN_LABEL[eff.terrain]} s'installe sur le terrain !`);
+  }
+  if(eff.trapField && battleState){
+    [...alivePlayerCombatants(), ...aliveFoeCombatants()].forEach(c=>{ c.trapped = true; });
+    logs.push("Personne ne peut plus fuir le combat !");
   }
   if(eff.safeguard){
     user.safeguardTurns = 5;
@@ -369,7 +408,9 @@ function applyStatusEffect(user, target, move, logs){
     logs.push(`${user.name} plante ses racines dans le sol !`);
   }
   if(eff.tauntBlock){
-    if(target.heldItem==='herbeMental' && !target.itemUsed){
+    if(target.ability==='Voile Aromatique'){
+      logs.push(`${target.name} est protégé par Voile Aromatique !`);
+    } else if(target.heldItem==='herbeMental' && !target.itemUsed){
       target.itemUsed = true;
       logs.push(`${target.name} mange son Herbe Mental et résiste à Provoc !`);
     } else {

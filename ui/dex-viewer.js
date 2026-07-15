@@ -65,7 +65,7 @@ const DEX_TYPE_OPTIONS = [
   {value:'poison', label:'Poison'},{value:'sol', label:'Sol'},{value:'insecte', label:'Insecte'},
   {value:'combat', label:'Combat'},{value:'glace', label:'Glace'},{value:'psy', label:'Psy'},
   {value:'fantome', label:'Fantôme'},{value:'roche', label:'Roche'},{value:'dragon', label:'Dragon'},
-  {value:'acier', label:'Acier'},{value:'tenebres', label:'Ténèbres'}
+  {value:'acier', label:'Acier'},{value:'tenebres', label:'Ténèbres'},{value:'fee', label:'Fée'}
 ];
 const DEX_RARITY_OPTIONS = [
   {value:'', label:'Toutes raretés'},

@@ -164,7 +164,31 @@ const ABILITY_DESC = {
   'Impudence':"Booste l'Attaque après avoir mis K.O. un adversaire.",
   'Cœur de Coq':"Empêche la réduction de la Défense du porteur.",
   'Tension':"Empêche les Pokémon adverses de manger leur Baie.",
-  'Pickpocket':"Vole l'objet tenu de l'attaquant après avoir subi une capacité de contact."
+  'Pickpocket':"Vole l'objet tenu de l'attaquant après avoir subi une capacité de contact.",
+
+  /* ---- Gen 6 : talents ---- */
+  'Protéen':"Change le type du porteur pour correspondre à celui de la capacité qu'il s'apprête à utiliser.",
+  'Fourrure':"Réduit de moitié les dégâts des capacités physiques.",
+  'Magicien':"Dérobe l'objet tenu de la cible après l'avoir touchée, si le porteur n'en a pas.",
+  'Anti-Bombe':"Immunise contre les capacités à base de bombes ou de boulets (Ball'Ombre, Bombe Toxik...).",
+  'Compétiteur':"Augmente fortement l'Attaque Spéciale quand une statistique est réduite par l'adversaire.",
+  'Mâchouille':"Booste fortement la puissance des capacités de morsure.",
+  'Méga-Lanceur':"Booste fortement la puissance des capacités à onde ou aura (Dracochoc, Vibrobscur...).",
+  'Griffe Solide':"Booste la puissance des capacités de contact.",
+  'Lien Parental':"Permet de frapper une seconde fois avec une puissance réduite.",
+  'Voile Sucré':"Empêche le porteur et ses alliés de s'endormir.",
+  'Ailes Cyclone':"Augmente la priorité des capacités de type Vol.",
+  'Robe Feuillue':"Augmente la Défense sous Zone Herbue.",
+  'Aura Sombre':"Booste la puissance des capacités Ténèbres de tous les combattants sur le terrain.",
+  'Aura Féérique':"Booste la puissance des capacités Fée de tous les combattants sur le terrain.",
+  'Rupture Aura':"Inverse l'effet d'Aura Sombre et Aura Féérique, réduisant la puissance concernée au lieu de l'augmenter.",
+  'Voile Aromatique':"Protège le porteur (et ses alliés) contre Provoc et les effets mentaux similaires.",
+  'Bajoues':"Récupère bien plus de PV en mangeant une Baie.",
+  'Stoïcisme':"Augmente la Défense chaque fois que le porteur subit une attaque.",
+  'Point Gluant':"Réduit la Vitesse de l'attaquant au contact.",
+  'Sans Contact':"Les capacités du porteur ne sont jamais considérées comme des capacités de contact.",
+  'Sans Pitié':"Les capacités du porteur sont toujours des coups critiques contre une cible empoisonnée.",
+  'Voix Aquatique':"Transforme toutes les capacités sonores du porteur en capacités de type Eau."
 };
 
 /* =================== DRESSEURS THÉMATIQUES =================== */

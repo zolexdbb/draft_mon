@@ -2,13 +2,13 @@
 const TYPE_EMOJI = {
   normal:'⭐',feu:'🔥',eau:'💧',plante:'🌿',electrik:'⚡',vol:'🪶',poison:'☠️',sol:'⛰️',
   insecte:'🐛',combat:'🥊',glace:'🧊',psy:'🔮',fantome:'👻',roche:'🪨',dragon:'🐲',
-  acier:'⚙️',tenebres:'🌑'
+  acier:'⚙️',tenebres:'🌑',fee:'🧚'
 };
 const TYPE_COLOR = {
   normal:'#9199A1', feu:'#EE8130', eau:'#6390F0', plante:'#7AC74C', electrik:'#F7D02C',
   vol:'#A98FF3', poison:'#A33EA1', sol:'#E2BF65', insecte:'#A6B91A', combat:'#C22E28',
   glace:'#96D9D6', psy:'#F95587', fantome:'#735797', roche:'#B6A136', dragon:'#6F35FC',
-  acier:'#B7B7CE', tenebres:'#5A5465'
+  acier:'#B7B7CE', tenebres:'#5A5465', fee:'#EE99AC'
 };
 function starPoints(spikes, outerR, innerR, cx, cy){
   cx = cx||12; cy = cy||12;
@@ -39,7 +39,8 @@ const TYPE_ICON_PATH = {
   roche: `<polygon points="4,16 7,8 12,4 17,7 20,15 16,20 8,20"/>`,
   dragon: `<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3.2" fill="rgba(255,255,255,.55)"/>`,
   acier: `<polygon points="12,2 22,12 12,22 2,12"/>`,
-  tenebres: `<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/>`
+  tenebres: `<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/>`,
+  fee: `<path d="M12 20.5S3 15 3 9a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 6-9 11.5-9 11.5z"/>`
 };
 function svgIcon(type){
   return `<svg viewBox="0 0 24 24">${TYPE_ICON_PATH[type] || TYPE_ICON_PATH.normal}</svg>`;
@@ -73,17 +74,18 @@ const TYPE_CHART = {
   electrik:{eau:2,vol:2,electrik:.5,plante:.5,dragon:.5,sol:0},
   plante:{eau:2,sol:2,roche:2,feu:.5,plante:.5,vol:.5,poison:.5,insecte:.5,dragon:.5,acier:.5},
   glace:{plante:2,sol:2,vol:2,dragon:2,feu:.5,eau:.5,glace:.5,acier:.5},
-  combat:{normal:2,glace:2,roche:2,poison:.5,vol:.5,psy:.5,insecte:.5,fantome:0,acier:2,tenebres:2},
-  poison:{plante:2,poison:.5,sol:.5,roche:.5,fantome:.5,acier:0},
+  combat:{normal:2,glace:2,roche:2,poison:.5,vol:.5,psy:.5,insecte:.5,fantome:0,acier:2,tenebres:2,fee:.5},
+  poison:{plante:2,poison:.5,sol:.5,roche:.5,fantome:.5,acier:0,fee:2},
   sol:{feu:2,electrik:2,poison:2,roche:2,plante:.5,insecte:.5,vol:0,acier:2},
   vol:{plante:2,insecte:2,combat:2,electrik:.5,roche:.5,acier:.5},
   psy:{combat:2,poison:2,psy:.5,acier:.5,tenebres:0},
-  insecte:{plante:2,psy:2,tenebres:2,feu:.5,combat:.5,poison:.5,vol:.5,fantome:.5,acier:.5},
+  insecte:{plante:2,psy:2,tenebres:2,feu:.5,combat:.5,poison:.5,vol:.5,fantome:.5,acier:.5,fee:.5},
   roche:{feu:2,glace:2,vol:2,insecte:2,combat:.5,sol:.5,acier:.5},
   fantome:{psy:2,fantome:2,normal:0,tenebres:.5,acier:.5},
-  dragon:{dragon:2,acier:.5},
-  acier:{glace:2,roche:2,feu:.5,eau:.5,electrik:.5,acier:.5},
-  tenebres:{psy:2,fantome:2,combat:.5,tenebres:.5}
+  dragon:{dragon:2,acier:.5,fee:0},
+  acier:{glace:2,roche:2,feu:.5,eau:.5,electrik:.5,acier:.5,fee:2},
+  tenebres:{psy:2,fantome:2,combat:.5,tenebres:.5,fee:.5},
+  fee:{combat:2,dragon:2,tenebres:2,feu:.5,poison:.5,acier:.5}
 };
 function getMult(atkType, defTypes){
   let m = 1;

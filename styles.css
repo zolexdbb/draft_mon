@@ -178,6 +178,7 @@ body{
 .t-dragon  { background:#6F35FC; color:#fff; }
 .t-acier   { background:#B7B7CE; color:#1a1000; }
 .t-tenebres{ background:#5A5465; color:#fff; }
+.t-fee     { background:#EE99AC; color:#1a1000; }
 .stat-line{ font-size:10px; color:var(--text-dim); }
 .sprite-fallback{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; font-weight:bold; color:var(--text-dim); }
 
@@ -442,15 +443,22 @@ select option{
 .is-double-battle .combatant-row{ justify-content:center; }
 .combatant{ width:100%; max-width:320px; padding:6px 4px; position:relative; background:none; border:none; box-shadow:none; }
 .is-double-battle .combatant{ max-width:170px; }
-.is-double-battle .sprite{ width:76px; height:76px; }
+.is-double-battle .sprite{ width:66px; height:66px; font-size:36px; }
+.is-double-battle .combatant.you .sprite{ width:98px; height:98px; font-size:54px; }
 .is-double-battle .name-row{ font-size:11px; }
-.name-row{ display:flex; align-items:center; gap:8px; justify-content:space-between; font-size:13px; margin-bottom:6px; text-shadow:0 1px 3px rgba(0,0,0,.8); }
+.name-row{ display:flex; align-items:center; gap:8px; justify-content:space-between; font-size:13px; margin-bottom:6px; text-shadow:0 1px 3px rgba(0,0,0,.8); position:relative; z-index:2; }
 .type-badges-row{ display:inline-flex; gap:5px; }
 .type-badge-icon{ display:inline-flex; align-items:center; justify-content:center; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,.5); flex-shrink:0; }
-.hpbar-track{ height:12px; background:#0b0b10; border:1px solid var(--line); border-radius:2px; overflow:hidden;}
+.hpbar-track{ height:12px; background:#0b0b10; border:1px solid var(--line); border-radius:2px; overflow:hidden; position:relative; z-index:2; }
 .hpbar-fill{ height:100%; width:100%; background:var(--good); transition:width .5s ease;}
-.hp-text{ font-size:10px; color:var(--text-dim); margin-top:3px; text-align:right;}
-.sprite{ width:120px; height:120px; margin:8px auto 0; display:flex; align-items:center; justify-content:center; font-size:64px; filter:drop-shadow(0 8px 10px rgba(0,0,0,.5)); }
+.hp-text{ font-size:10px; color:var(--text-dim); margin-top:3px; text-align:right; position:relative; z-index:2; }
+/* z-index bas volontaire : les sprites surdimensionnés (gabarits géants, voir POKEMON_SCALE)
+   débordent de leur boîte et doivent passer derrière la barre de vie / le journal de combat
+   plutôt que de les recouvrir, pour un effet d'immersion (créature imposante en arrière-plan). */
+.sprite{ width:104px; height:104px; margin:8px auto 0; display:flex; align-items:center; justify-content:center; font-size:56px; filter:drop-shadow(0 8px 10px rgba(0,0,0,.5)); position:relative; z-index:1; }
+/* Sprite du joueur (vu de dos) volontairement plus grand : on se sent juste derrière son Pokémon,
+   face à l'adversaire plus loin sur le terrain — composition classique des jeux Pokémon. */
+.combatant.you .sprite{ width:172px; height:172px; font-size:92px; margin-top:0; }
 .shake{ animation:shake .35s; }
 @keyframes shake{ 10%,90%{transform:translateX(-2px);} 20%,80%{transform:translateX(4px);} 30%,50%,70%{transform:translateX(-8px);} 40%,60%{transform:translateX(8px);} }
 .crit-shake{ animation:critShake .45s; }
@@ -521,7 +529,7 @@ select option{
 .stat-badge.nerf{ background:rgba(255,93,93,.18); color:var(--low); border:1px solid var(--low); }
 
 .status-icon-badge{
-  position:absolute; top:2px; right:2px; font-size:20px; line-height:1;
+  position:absolute; top:2px; right:2px; font-size:20px; line-height:1; z-index:4;
   background:var(--bg-panel); border-radius:50%; width:30px; height:30px;
   display:flex; align-items:center; justify-content:center;
   box-shadow:0 2px 6px rgba(0,0,0,.5); border:2px solid var(--low);
@@ -562,6 +570,7 @@ select option{
   margin:0 0 10px; background:#0b0b10; border:1px solid var(--line-bright); border-radius:3px; padding:8px 12px;
   font-size:12px; color:var(--text-main); line-height:1.5; box-shadow:inset 0 2px 6px rgba(0,0,0,.5); letter-spacing:.3px;
   max-height:150px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;
+  position:relative; z-index:3;
 }
 .log b{ color:inherit; }
 .log-entry{ padding-bottom:6px; border-bottom:1px solid rgba(255,255,255,.05); color:var(--text-dim); opacity:.7; }
@@ -621,11 +630,13 @@ body{padding:8px;}
 .poke-card .emoji{font-size:64px;width:88px;height:88px;}
 .team-card .emoji,.dex-card .emoji{font-size:48px;width:72px;height:72px;}
 .combatant{max-width:100%;padding:14px;}
-.sprite{width:100px;height:100px;font-size:56px;}
+.sprite{width:90px;height:90px;font-size:50px;}
+.combatant.you .sprite{width:142px;height:142px;font-size:78px;}
 .name-row{font-size:14px;}
 .is-double-battle .combatant-row{flex-wrap:wrap;justify-content:center;}
 .is-double-battle .combatant{max-width:150px;padding:8px;}
-.is-double-battle .sprite{width:64px;height:64px;font-size:36px;}
+.is-double-battle .sprite{width:58px;height:58px;font-size:32px;}
+.is-double-battle .combatant.you .sprite{width:84px;height:84px;font-size:46px;}
 .trainer-info-pair + .trainer-info-pair{margin-left:8px;padding-left:8px;}
 .hpbar-track{height:14px;}
 .btn{width:100%;padding:14px 12px;font-size:14px;min-height:48px;}
@@ -642,6 +653,7 @@ input,select{font-size:14px;min-height:44px;}
 .floor-num{font-size:34px!important;}
 .ev-grid,.iv-grid,.base-stats-box{grid-template-columns:1fr;}
 .poke-card .emoji{font-size:56px;width:76px;height:76px;}
-.sprite{width:84px;height:84px;font-size:46px;}
+.sprite{width:76px;height:76px;font-size:42px;}
+.combatant.you .sprite{width:118px;height:118px;font-size:64px;}
 }
 

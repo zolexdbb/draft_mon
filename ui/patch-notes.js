@@ -1,6 +1,42 @@
 /* ==== ui/patch-notes.js (généré depuis index.html) ==== */
 const PATCH_NOTES = [
   {
+    version: 'v0.7',
+    title: 'v0.7 — Gen 6 Update',
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "72 nouveaux Pokémon ajoutés (Kalos, Pokédex complet 1 → 721)",
+          "Nouveau type Fée, avec le retypage rétroactif officiel de 8 lignées existantes (Mélofée, Rondoudou, Marill, Grodoudou, Togépi, M. Mime, Tarsal/Kirlia/Gardevoir, Mysdibule)",
+          "6 nouveaux Pokémon Légendaires/Fabuleux (Xerneas, Yveltal, Zygarde, Diancie, Hoopa, Volcanion) et une nouvelle lignée pseudo-légendaire (Mucuscule/Colimucus/Muplodocus)",
+          "Movepool enrichi pour de nombreuses lignées existantes avec les nouvelles attaques de Génération 6 pertinentes selon leur thème"
+        ]
+      },
+      {
+        icon: '⚔️', label: 'Capacités & Talents',
+        items: [
+          "48 nouvelles attaques de Génération 6 (Coup Lune, Éclat Insolite, Ronde Trompeuse, Bourrasque Fée, Poing Machine, Diamantron, Douille Électrique, Bang Sonique, Plaquage Volant, Ascension Draco...), avec leurs vraies mécaniques (multi-frappes, dégâts bi-type, pièges, terrains, altérations de stats inversées...)",
+          "23 nouveaux talents de Génération 6 avec leurs effets réellement codés en combat (Protéen, Fourrure, Mâchouille, Aura Sombre/Féérique, Lien Parental, Poigne Magique, Bajoues, Sans Contact...)",
+          "4 nouveaux Terrains de combat (Herbu, Électrifié, Brumeux, Psychique), chacun avec ses propres effets"
+        ]
+      },
+      {
+        icon: '💎', label: 'Méga-Évolution',
+        items: [
+          "12 Méga-Évolutions ajoutées via de nouveaux objets tenus exclusifs (Florizarre, Dracaufeu X et Y, Tortank, Kangourex, Léviator, Mewtwo Y, Cizayox, Gardevoir, Carchacrok, Lucario, Métalosse), disponibles chez le Marchand Itinérant"
+        ]
+      },
+      {
+        icon: '🎬', label: 'Combat',
+        items: [
+          "Le sprite du Pokémon du joueur est désormais plus grand que celui de l'adversaire, pour renforcer l'impression d'être derrière son propre Pokémon",
+          "Les Pokémon affichent maintenant une taille de sprite variable selon leur gabarit réel (les plus imposants comme Onix ou Wailord paraissent nettement plus grands que les plus petits comme Statitik ou Flabébé)"
+        ]
+      }
+    ]
+  },
+  {
     version: 'v0.6',
     title: 'v0.6 — Gen 5 Update',
     categories: [
@@ -333,7 +369,7 @@ const PATCH_NOTES = [
     ]
   }
 ];
-const SPLASH_TEXTS = ["Gen 5 est disponible !"];
+const SPLASH_TEXTS = ["Gen 6 est disponible !"];
 function renderPatchNoteBody(v){
   if(v.categories){
     return v.categories.map(c => `
