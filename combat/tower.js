@@ -65,6 +65,26 @@ const TYPE_MASTER_DIALOGUE = {
   tenebres: "L'obscurité ne pardonne à personne !",
   fee:      "Mon charme aura ta perte !",
 };
+// Sprites de dresseur (CDN Pokémon Showdown, https://play.pokemonshowdown.com/sprites/trainers/<nom>.png)
+// associés à chaque type de Maître de Type. Un type sans entrée retombe sur l'emoji.
+const TYPE_MASTER_SPRITE = {
+  normal:'norman', feu:'flannery', eau:'misty', plante:'erika', electrik:'wattson',
+  vol:'falkner', poison:'koga', sol:'clay', insecte:'bugsy', combat:'chuck',
+  glace:'candice', psy:'sabrina', fantome:'morty', roche:'brock', dragon:'lance',
+  acier:'jasmine', tenebres:'karen', fee:'valerie'
+};
+function handleTrainerSpriteError(img){
+  const span = document.createElement('span');
+  span.textContent = img.dataset.fallbackEmoji || '❓';
+  span.className = 'trainer-avatar-fallback';
+  img.replaceWith(span);
+}
+function getTrainerAvatarHTML(trainer){
+  const spriteName = trainer.masterType && TYPE_MASTER_SPRITE[trainer.masterType];
+  if(!spriteName) return trainer.emoji;
+  const url = `https://play.pokemonshowdown.com/sprites/trainers/${spriteName}.png`;
+  return `<img src="${url}" alt="${trainer.name}" class="trainer-sprite-img" data-fallback-emoji="${trainer.emoji}" onerror="handleTrainerSpriteError(this)">`;
+}
 
 // Aux étages élevés, favoriser les archétypes avancés (partagé par generateTrainer et generateTwinTrainers)
 function trainerArchetypePool(floor){
@@ -119,6 +139,7 @@ function renderTower(reward){
   if(rewardEl){
     rewardEl.textContent = reward ? `+${reward} 💰 gagnés au combat précédent !` : '';
   }
+  renderDevTowerPanel();
   saveGame();
 }
 document.getElementById('fightBtn').onclick = ()=>{ startBattle(); };
@@ -194,6 +215,22 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
         branch = themeBranch >= 0 ? themeBranch : Math.floor(Math.random()*line.branches.length);
       } else {
         branch = Math.floor(Math.random()*line.branches.length);
+      }
+    }
+    if(isBoss && trainerTheme){
+      // Maître de Type : l'équipe doit être 100% du type — si le tirage stage/branch normal
+      // (indépendant du type) n'a pas produit une forme du bon type, on impose la forme la plus
+      // évoluée qui correspond (la lignée a forcément une forme valide, filtrée dans `themed` ci-dessus).
+      const stageMatches = line.stages[stage].types.includes(trainerTheme);
+      const branchMatches = branch!==null && line.branches[branch].types.includes(trainerTheme);
+      if(!stageMatches && !branchMatches){
+        const matchingBranchIdx = line.branches ? line.branches.findIndex(b=>b.types.includes(trainerTheme)) : -1;
+        if(matchingBranchIdx>=0){
+          branch = matchingBranchIdx;
+        } else {
+          const matchingStageIdx = line.stages.reduce((best,s,i)=> s.types.includes(trainerTheme) ? i : best, -1);
+          if(matchingStageIdx>=0){ stage = matchingStageIdx; branch = null; }
+        }
       }
     }
     const sp = branch!==null ? line.branches[branch] : line.stages[stage];

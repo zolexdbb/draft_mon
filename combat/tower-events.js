@@ -167,7 +167,7 @@ const TOWER_EVENTS = [
             const line = lineOf(choice.lineId);
             const hasBranch = choice.branch!==undefined && choice.branch!==null;
             const sp = hasBranch ? line.branches[choice.branch] : line.stages[choice.stage];
-            const member = difficulty==='facile' ? autoBuildMember(choice.lineId, choice.stage, choice.branch) : defaultMember(choice.lineId, choice.stage);
+            const member = difficulty==='facile' ? autoBuildMember(choice.lineId, choice.stage, choice.branch) : defaultMember(choice.lineId, choice.stage, choice.branch);
             depositToPC(member);
             return `${sp.name} rejoint discrètement ton PC !`;
           }
@@ -187,6 +187,17 @@ function maybeTriggerTowerEvent(reward){
   if(Math.random() >= TOWER_EVENT_CHANCE) return false;
   pendingFloorReward = reward;
   currentTowerEvent = rand(TOWER_EVENTS);
+  document.getElementById('screenTower').classList.add('hidden');
+  document.getElementById('screenEvent').classList.remove('hidden');
+  renderTowerEvent();
+  return true;
+}
+// Déclenchement manuel (mode développeur) : même écran, mais event choisi par id plutôt que tiré au sort.
+function triggerTowerEventById(id){
+  const ev = TOWER_EVENTS.find(e=>e.id===id);
+  if(!ev) return false;
+  pendingFloorReward = 0;
+  currentTowerEvent = ev;
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenEvent').classList.remove('hidden');
   renderTowerEvent();

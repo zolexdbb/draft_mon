@@ -22,7 +22,7 @@ function renderTrainerBanner(trainer, trainer2){
     bannerEl.className = 'trainer-banner twin-banner';
     bannerEl.innerHTML = [trainer, trainer2].map(t => `
       <div class="trainer-info-pair">
-        <div class="trainer-avatar">${t.emoji}</div>
+        <div class="trainer-avatar">${getTrainerAvatarHTML(t)}</div>
         <div class="trainer-info">
           <div class="trainer-name">${t.name}</div>
           <div class="trainer-quote">"${t.dialogue}"</div>
@@ -32,7 +32,7 @@ function renderTrainerBanner(trainer, trainer2){
   }
   bannerEl.className = 'trainer-banner' + (trainer.boss?' boss':(trainer.miniBoss?' miniboss':''));
   bannerEl.innerHTML = `
-    <div class="trainer-avatar">${trainer.emoji}</div>
+    <div class="trainer-avatar">${getTrainerAvatarHTML(trainer)}</div>
     <div class="trainer-info">
       <div class="trainer-name">${trainer.name}</div>
       <div class="trainer-quote">"${trainer.dialogue}"</div>
@@ -513,6 +513,21 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       setTimeout(callback, 900);
       return;
     }
+    if(move.yawn){
+      if(defender.status){
+        renderBattle();
+        setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça n'a aucun effet, ${defender.name} a déjà un problème de statut !`);
+        setTimeout(callback, 900);
+        return;
+      }
+      const bs = battleState;
+      bs.pendingYawn = (bs.pendingYawn || []).filter(p=>p.target!==defender);
+      bs.pendingYawn.push({ target: defender, turnsLeft: 1 });
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} baîlle...`);
+      setTimeout(callback, 900);
+      return;
+    }
     applyStatusEffect(actor, defender, move, logs);
     renderBattle();
     if(move.target==='foe') shakeBox(boxIdFor(defender));
@@ -978,6 +993,16 @@ function endTurn(){
         } else {
           logs.push(`La force psychique de ${fs.moveName} ne trouve plus sa cible...`);
         }
+        return false;
+      }
+      return true;
+    });
+  }
+  if(bs.pendingYawn && bs.pendingYawn.length){
+    bs.pendingYawn = bs.pendingYawn.filter(p=>{
+      p.turnsLeft--;
+      if(p.turnsLeft<=0){
+        if(p.target.hp>0) inflictStatus(p.target, 'sommeil', logs);
         return false;
       }
       return true;

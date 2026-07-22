@@ -345,7 +345,7 @@ const MOVES = {
   wish:{pp:10,name:'Voeu',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Fait un voeu qui restaure les PV du lanceur."},
   assist:{pp:20,name:'Assistance',type:'normal',cat:'status',power:0,target:'self',metronome:true,effect:{},desc:"Invoque au hasard une capacité connue par l'équipe."},
   recycle:{pp:10,name:'Recyclage',type:'normal',cat:'status',power:0,target:'self',effect:{recycle:true},desc:"Récupère un objet tenu déjà consommé."},
-  yawn:{pp:10,name:'Bâillement',type:'normal',cat:'status',power:0,accuracy:1,target:'foe',effect:{status:'sommeil'},desc:"Donne sérieusement envie de dormir à la cible."},
+  yawn:{pp:10,name:'Bâillement',type:'normal',cat:'status',power:0,accuracy:1,target:'foe',yawn:true,effect:{status:'sommeil'},desc:"Donne sérieusement envie de dormir à la cible. N'endort qu'à la fin du tour suivant."},
   refresh:{pp:20,name:'Régénération',type:'normal',cat:'status',power:0,target:'self',effect:{cureStatus:true},desc:"Soigne le lanceur de tout problème de statut."},
   camouflage:{pp:20,name:'Camouflage',type:'normal',cat:'status',power:0,target:'self',effect:{},desc:"Change de type en fonction du terrain environnant."},
   teeterdance:{pp:20,name:'Danse-Folle',type:'normal',cat:'status',power:0,accuracy:1,target:'foe',effect:{dualConfuse:true},desc:"Une danse étourdissante qui rend tout le monde confus."},

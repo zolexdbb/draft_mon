@@ -34,6 +34,50 @@ const PATCH_NOTES = [
           "Les Pokémon affichent maintenant une taille de sprite variable selon leur gabarit réel (les plus imposants comme Onix ou Wailord paraissent nettement plus grands que les plus petits comme Statitik ou Flabébé)"
         ]
       }
+    ],
+    subVersions: [
+      {
+        version: 'v0.7.1',
+        title: 'v0.7.1 — Village vivant & Corrections',
+        categories: [
+          {
+            icon: '🏘️', label: 'Village',
+            items: [
+              "Le Village devient une vraie carte interactive : bâtiments illustrés (Pokécentre, Pokéshop, Ranch, Équipe, Marchand) positionnés sur une scène animée avec ciel, nuages et végétation",
+              "1 à 2 Pokémon de l'équipe se promènent désormais sur la carte, avec leur sprite animé"
+            ]
+          },
+          {
+            icon: '👑', label: 'Dresseurs',
+            items: [
+              "Chaque Maître de Type affiche maintenant un vrai sprite de dresseur officiel associé à son type, au lieu d'un simple emoji"
+            ]
+          },
+          {
+            icon: '🎵', label: 'Musique',
+            items: [
+              "La musique se lance désormais de façon fiable dès la toute première interaction, quel que soit l'endroit cliqué",
+              "Chaque ambiance (Menu, Village, Combat) peut désormais contenir plusieurs pistes jouées aléatoirement en playlist, sans jamais répéter deux fois de suite le même morceau",
+              "Les combats contre un Maître de Type peuvent désormais avoir leur propre musique dédiée selon le type affronté"
+            ]
+          },
+          {
+            icon: '🖥️', label: 'Interface',
+            items: [
+              "Les listes de sélection de type et de rareté du Pokédex affichent désormais des pastilles colorées au lieu de texte brut",
+              "La sélection de nature affiche la statistique boostée en vert et celle réduite en rouge",
+              "Ajout d'un second filtre de type dans le Pokédex, pour rechercher un double-type précis (ex : Feu + Vol)"
+            ]
+          },
+          {
+            icon: '🐛', label: 'Corrections',
+            items: [
+              "Les équipes des Maîtres de Type n'étaient en réalité pas toujours 100% du bon type (un stade ou une forme différente de la lignée pouvait apparaître) : corrigé",
+              "Bâillement endormait instantanément la cible au lieu d'agir avec un tour de délai comme dans les vrais jeux : corrigé"
+            ]
+          }
+        ]
+      }
     ]
   },
   {

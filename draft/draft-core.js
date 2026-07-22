@@ -58,11 +58,12 @@ function movepoolForStage(line, stageIdx){
 /* =================== SPRITES 2D =================== */
 // Numéros nationaux, utilisés pour pointer vers le dépôt public de sprites PokéAPI.
 // Lien direct vers des images existantes (pas de génération) ; si l'image ne charge pas, on retombe sur l'emoji.
-function defaultMember(lineId, initialStage){
+function defaultMember(lineId, initialStage, branch){
   const line = lineOf(lineId);
-  const sp = line.stages[initialStage||0];
+  const hasBranch = branch!==undefined && branch!==null;
+  const sp = hasBranch ? line.branches[branch] : line.stages[initialStage||0];
   return {
-    lineId, stage: initialStage||0, branch: null,
+    lineId, stage: initialStage||0, branch: hasBranch ? branch : null,
     nature: NATURES[0],
     ivs:{hp:31,atk:31,def:31,spa:31,spd:31,spe:31},
     evs:{hp:0,atk:0,def:0,spa:0,spd:0,spe:0},

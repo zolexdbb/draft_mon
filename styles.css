@@ -547,6 +547,9 @@ select option{
 .trainer-info-pair{ display:flex; align-items:center; gap:12px; flex:1; min-width:0; }
 .trainer-info-pair + .trainer-info-pair{ margin-left:14px; padding-left:14px; border-left:1px solid var(--line); }
 .trainer-avatar{ font-size:32px; line-height:1; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
+.trainer-avatar img.trainer-sprite-img{ width:56px; height:56px; object-fit:contain; image-rendering:pixelated; display:block; }
+.trainer-banner.boss .trainer-avatar img.trainer-sprite-img{ width:72px; height:72px; }
+.trainer-banner.miniboss .trainer-avatar img.trainer-sprite-img{ width:64px; height:64px; }
 .trainer-info{ min-width:0; }
 .trainer-name{ font-family:'Press Start 2P', monospace; font-size:11px; color:var(--accent); letter-spacing:.5px; margin-bottom:5px; line-height:1.4; }
 .trainer-quote{ font-size:10px; color:var(--text-dim); font-style:italic; }
@@ -589,6 +592,94 @@ select option{
 
 
 .dex-card{ background:var(--bg-card); border:2px solid var(--line); border-radius:4px; padding:12px; text-align:center; }
+.dex-card.selected{ border-color:var(--accent); box-shadow:0 0 0 2px rgba(232,200,74,.35) inset; }
+
+/* ===== Mode développeur : sélection d'équipe dans le Dex ===== */
+.dev-dex-select-bar{
+  position:sticky; top:96px; z-index:9; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  background:linear-gradient(135deg, rgba(232,200,74,.14), rgba(0,0,0,.3)); border:1px solid var(--accent);
+  border-radius:4px; padding:10px 14px; margin-bottom:14px;
+}
+.dev-dex-select-info{ font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.5px; flex-shrink:0; }
+.dev-dex-select-chips{ display:flex; gap:6px; flex-wrap:wrap; flex:1; min-width:120px; }
+.dev-dex-select-actions{ display:flex; gap:8px; flex-shrink:0; }
+.dev-dex-select-actions .btn{ width:auto; }
+
+/* ===== Mode développeur : panneau permanent de la Tour ===== */
+.dev-tower-panel{
+  margin-top:20px; border:1px dashed var(--accent); border-radius:4px; overflow:hidden;
+  background:rgba(232,200,74,.04);
+}
+.dev-tower-panel-header{
+  font-size:10px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.5px;
+  padding:10px 14px; cursor:pointer; user-select:none;
+}
+.dev-tower-panel-header:hover{ background:rgba(232,200,74,.08); }
+.dev-tower-panel-body{ padding:0 14px 14px; display:flex; flex-direction:column; gap:10px; }
+.dev-tower-row{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.dev-tower-row label{ font-size:10px; color:var(--text-dim); flex-shrink:0; }
+.dev-tower-row input[type="number"]{ width:70px; padding:6px; background:#0b0b10; border:1px solid var(--line); border-radius:3px; color:var(--text-main); font-size:12px; }
+.dev-tower-row select{ padding:6px; background:#0b0b10; border:1px solid var(--line); border-radius:3px; color:var(--text-main); font-size:12px; }
+
+/* ===== Carte interactive du Village ===== */
+.village-map{
+  position:relative; width:100%; max-width:640px; aspect-ratio:600/260; margin:0 auto 20px;
+  border:2px solid var(--line); border-radius:6px; overflow:hidden;
+  background:linear-gradient(180deg, #274162 0%, #2e4a3a 42%, #223a20 100%);
+  box-shadow:0 0 0 1px var(--stone1), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.village-sky{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.village-cloud{
+  position:absolute; width:54px; height:16px; background:rgba(255,255,255,.28); border-radius:20px;
+  filter:blur(.3px);
+}
+.village-cloud::before,.village-cloud::after{ content:''; position:absolute; background:inherit; border-radius:50%; }
+.village-cloud::before{ width:26px; height:26px; top:-12px; left:6px; }
+.village-cloud::after{ width:20px; height:20px; top:-8px; left:28px; }
+@keyframes village-drift{ from{ transform:translateX(-90px); } to{ transform:translateX(680px); } }
+.vc1{ top:10%; animation:village-drift 28s linear infinite; }
+.vc2{ top:18%; animation:village-drift 36s linear infinite; animation-delay:-11s; }
+.vc3{ top:6%; animation:village-drift 42s linear infinite; animation-delay:-24s; }
+.village-ground-svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.village-ground-svg .sway{ animation:village-sway 3.6s ease-in-out infinite; }
+@keyframes village-sway{ 0%,100%{ transform:rotate(-2.5deg); } 50%{ transform:rotate(2.5deg); } }
+.village-roamers{ position:absolute; inset:0; pointer-events:none; }
+.village-roamer{
+  position:absolute; width:36px; height:36px;
+  animation-name:village-roam; animation-timing-function:ease-in-out; animation-iteration-count:infinite;
+}
+.village-roamer img,.village-roamer .sprite-fallback{ width:100%; height:100%; object-fit:contain; image-rendering:pixelated; }
+@keyframes village-roam{
+  0%{ transform:translateX(0) scaleX(1); }
+  45%{ transform:translateX(64px) scaleX(1); }
+  50%{ transform:translateX(64px) scaleX(-1); }
+  95%{ transform:translateX(0) scaleX(-1); }
+  100%{ transform:translateX(0) scaleX(1); }
+}
+.village-building{
+  position:absolute; left:var(--vb-x); top:var(--vb-y); transform:translate(-50%,-100%);
+  background:none; border:none; padding:0; margin:0; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  transition:transform .15s;
+}
+.village-building .vb-icon{
+  display:block; line-height:1; filter:drop-shadow(0 3px 3px rgba(0,0,0,.55));
+  transition:filter .15s;
+}
+.village-building .vb-icon svg{ width:42px; height:36px; display:block; }
+.village-building .vb-label{
+  font-size:9px; font-family:'Press Start 2P', monospace; color:var(--text-main);
+  background:rgba(14,14,20,.8); border:1px solid var(--line); padding:3px 7px; border-radius:3px;
+  white-space:nowrap; opacity:0; transform:translateY(-3px); pointer-events:none;
+  transition:opacity .15s, transform .15s;
+}
+.village-building:hover,.village-building:focus-visible{ transform:translate(-50%,-100%) scale(1.1); }
+.village-building:hover .vb-icon,.village-building:focus-visible .vb-icon{
+  filter:drop-shadow(0 0 8px var(--accent)) drop-shadow(0 3px 3px rgba(0,0,0,.55));
+}
+.village-building:hover .vb-label,.village-building:focus-visible .vb-label{ opacity:1; transform:translateY(0); }
+.village-building.hidden{ display:none !important; }
+
 .rarity-badge{
   font-size:8px; padding:3px 9px; border-radius:3px; letter-spacing:.8px;
   text-transform:uppercase; display:inline-block; margin-bottom:6px;
@@ -619,6 +710,10 @@ select option{
 @media (max-width:768px){
 body{padding:8px;}
 .panel{padding:12px;}
+.village-map{aspect-ratio:600/320;}
+.village-building .vb-icon svg{width:30px;height:26px;}
+.village-building .vb-label{font-size:7px;padding:2px 5px;}
+.village-roamer{width:26px;height:26px;}
 .site-header{margin-bottom:12px;}
 .site-header::before,.site-header::after{display:none;}
 .draft-cards,#dexGrid{grid-template-columns:1fr;gap:12px;}
@@ -638,6 +733,8 @@ body{padding:8px;}
 .is-double-battle .sprite{width:58px;height:58px;font-size:32px;}
 .is-double-battle .combatant.you .sprite{width:84px;height:84px;font-size:46px;}
 .trainer-info-pair + .trainer-info-pair{margin-left:8px;padding-left:8px;}
+.trainer-avatar img.trainer-sprite-img{width:44px;height:44px;}
+.trainer-banner.boss .trainer-avatar img.trainer-sprite-img{width:52px;height:52px;}
 .hpbar-track{height:14px;}
 .btn{width:100%;padding:14px 12px;font-size:14px;min-height:48px;}
 .editor-actions{flex-direction:column;}

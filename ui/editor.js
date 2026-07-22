@@ -328,7 +328,13 @@ function openEditor(idx){
   buildAllMoveSlots();
 
   document.getElementById('natureSelect').appendChild(createCustomSelect({
-    options: NATURES.map(n=>({value:n.name, label:n.name+(n.plus?` (+${STAT_LABEL[n.plus]}/-${STAT_LABEL[n.minus]})`:'')})),
+    options: NATURES.map(n=>{
+      const label = n.name+(n.plus?` (+${STAT_LABEL[n.plus]}/-${STAT_LABEL[n.minus]})`:'');
+      const html = n.plus
+        ? `${n.name} <span style="color:var(--good);font-weight:700;">+${STAT_LABEL[n.plus]}</span> <span style="color:var(--low);font-weight:700;">-${STAT_LABEL[n.minus]}</span>`
+        : `${n.name} <span style="color:var(--text-dim);">(neutre)</span>`;
+      return {value:n.name, label, html};
+    }),
     value: m.nature.name,
     onChange: (val)=>{
       m.nature = NATURES.find(n=>n.name===val);

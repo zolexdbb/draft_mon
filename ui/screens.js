@@ -153,7 +153,10 @@ document.getElementById('menuDexBtn').onclick = ()=>{
   showScreen('screenDex');
   renderDex();
 };
-document.getElementById('dexBackBtn').onclick = ()=> showScreen('screenMenu');
+document.getElementById('dexBackBtn').onclick = ()=>{
+  if(typeof devDexSelectMode!=='undefined' && devDexSelectMode) exitDevDexSelectMode();
+  showScreen('screenMenu');
+};
 document.getElementById('draftHomeBtn').onclick = ()=> showScreen('screenMenu');
 document.getElementById('builderHomeBtn').onclick = ()=> showScreen('screenMenu');
 

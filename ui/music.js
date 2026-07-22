@@ -1,8 +1,17 @@
 /* ==== ui/music.js ==== */
+// Chaque clé pointe vers une liste de pistes (playlist). Une seule piste = boucle simple.
+// Plusieurs pistes = lecture aléatoire (sans répéter deux fois de suite la même) avant de reboucler.
 const MUSIC_TRACKS = {
-  menu: 'assets/audio/menu.mp3',
-  village: 'assets/audio/village.mp3',
-  battle: 'assets/audio/battle.mp3'
+  menu: ['assets/audio/menu.mp3'],
+  village: ['assets/audio/village.mp3'],
+  battle: ['assets/audio/battle.mp3']
+};
+// Musique dédiée par type pour les Maîtres de Type rencontrés en combat (étages boss de la tour).
+// Ajoutez une entrée par type (ex: feu: ['assets/audio/battle_feu.mp3']) pour lui donner sa propre
+// musique ou playlist ; les types sans entrée utilisent la playlist "battle" par défaut.
+const TYPE_MUSIC = {
+  // feu: ['assets/audio/battle_feu.mp3'],
+  // eau: ['assets/audio/battle_eau.mp3'],
 };
 const SCREEN_MUSIC = {
   screenMenu: 'menu', screenDex: 'menu', screenEnd: 'menu',
@@ -15,10 +24,14 @@ let musicVolume = parseFloat(localStorage.getItem('draftArenaMusicVolume'));
 if(isNaN(musicVolume)) musicVolume = 0.4;
 let musicUnlocked = false;
 let currentTrackKey = null;
+let playlistState = null; // { key, order:[idx...], pos }
 
 const musicAudioA = new Audio();
 const musicAudioB = new Audio();
-[musicAudioA, musicAudioB].forEach(a=>{ a.loop = true; a.volume = 0; a.preload = 'auto'; });
+[musicAudioA, musicAudioB].forEach(a=>{
+  a.volume = 0; a.preload = 'auto';
+  a.addEventListener('ended', ()=>{ if(a === activeMusicAudio) advancePlaylist(); });
+});
 let activeMusicAudio = musicAudioA;
 
 function fadeAudioTo(audio, targetVolume, duration){
@@ -32,12 +45,42 @@ function fadeAudioTo(audio, targetVolume, duration){
   requestAnimationFrame(step);
 }
 
-function playMusicTrack(key){
-  if(!key || key === currentTrackKey || !MUSIC_TRACKS[key]) return;
-  currentTrackKey = key;
+function shuffledOrder(n){
+  const arr = Array.from({length:n}, (_,i)=>i);
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// Résout la clé effective d'une capacité vers sa liste de pistes (gère le préfixe "battle:<type>").
+function resolveTrackList(key){
+  if(!key) return [];
+  if(key.startsWith('battle:')){
+    const type = key.slice('battle:'.length);
+    const list = TYPE_MUSIC[type];
+    return (list && list.length) ? list : MUSIC_TRACKS.battle;
+  }
+  return MUSIC_TRACKS[key] || [];
+}
+
+// Détermine la clé musicale à jouer pour un panneau donné (le combat peut avoir une musique
+// spécifique selon le Maître de Type affronté).
+function getEffectiveMusicKey(panelId){
+  if(panelId === 'screenBattle'){
+    const trainer = (typeof battleState !== 'undefined' && battleState) ? battleState.trainer : null;
+    const masterType = trainer && trainer.masterType;
+    if(masterType && TYPE_MUSIC[masterType] && TYPE_MUSIC[masterType].length) return 'battle:' + masterType;
+  }
+  return SCREEN_MUSIC[panelId];
+}
+
+function playTrackFile(src, shouldLoop){
   const incoming = activeMusicAudio === musicAudioA ? musicAudioB : musicAudioA;
   const outgoing = activeMusicAudio;
-  incoming.src = MUSIC_TRACKS[key];
+  incoming.loop = shouldLoop;
+  incoming.src = src;
   incoming.currentTime = 0;
   incoming.volume = 0;
   incoming.play().catch(()=>{});
@@ -47,11 +90,37 @@ function playMusicTrack(key){
   activeMusicAudio = incoming;
 }
 
+function advancePlaylist(){
+  if(!playlistState) return;
+  const tracks = resolveTrackList(playlistState.key);
+  if(tracks.length <= 1) return; // piste unique : la boucle native s'en charge
+  playlistState.pos++;
+  if(playlistState.pos >= playlistState.order.length){
+    let newOrder = shuffledOrder(tracks.length);
+    const lastIdx = playlistState.order[playlistState.order.length - 1];
+    if(newOrder.length > 1 && newOrder[0] === lastIdx){
+      [newOrder[0], newOrder[1]] = [newOrder[1], newOrder[0]];
+    }
+    playlistState.order = newOrder;
+    playlistState.pos = 0;
+  }
+  playTrackFile(tracks[playlistState.order[playlistState.pos]], false);
+}
+
+function playMusicKey(key){
+  if(!key || key === currentTrackKey) return;
+  const tracks = resolveTrackList(key);
+  if(!tracks.length) return;
+  currentTrackKey = key;
+  playlistState = { key, order: shuffledOrder(tracks.length), pos: 0 };
+  playTrackFile(tracks[playlistState.order[0]], tracks.length <= 1);
+}
+
 function updateMusicForActiveScreen(){
   const panels = document.querySelectorAll('.panel');
   for(const p of panels){
     if(!p.classList.contains('hidden')){
-      playMusicTrack(SCREEN_MUSIC[p.id]);
+      playMusicKey(getEffectiveMusicKey(p.id));
       return;
     }
   }
@@ -93,9 +162,11 @@ function openMusicSettingsModal(){
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
   document.getElementById('musicVolumeSlider').oninput = (e)=> setMusicVolume(parseInt(e.target.value)/100);
 }
-document.addEventListener('click', unlockMusic, { once:true });
-document.addEventListener('keydown', unlockMusic, { once:true });
-document.addEventListener('touchstart', unlockMusic, { once:true });
+// capture:true : garantit que le déverrouillage se déclenche dès la toute première interaction,
+// même si un gestionnaire descendant (dropdown, éditeur...) appelle stopPropagation() en phase bulle.
+window.addEventListener('pointerdown', unlockMusic, { once:true, capture:true });
+window.addEventListener('keydown', unlockMusic, { once:true, capture:true });
+window.addEventListener('touchstart', unlockMusic, { once:true, capture:true });
 
 const musicScreenObserver = new MutationObserver(updateMusicForActiveScreen);
 document.querySelectorAll('.panel').forEach(p=>{

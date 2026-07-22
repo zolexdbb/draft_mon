@@ -12,7 +12,7 @@ function createCustomSelect({options, value, placeholder, onChange}){
   const renderTrigger = (val)=>{
     const opt = options.find(o=>o.value===val);
     trigger.innerHTML = opt
-      ? `<span class="csel-name">${opt.label}</span><span class="csel-arrow">▾</span>`
+      ? `<span class="csel-name">${opt.html!==undefined ? opt.html : opt.label}</span><span class="csel-arrow">▾</span>`
       : `<span class="csel-name csel-empty">${placeholder||'— Choisir —'}</span><span class="csel-arrow">▾</span>`;
   };
   renderTrigger(value);
@@ -20,7 +20,7 @@ function createCustomSelect({options, value, placeholder, onChange}){
   options.forEach(opt=>{
     const el = document.createElement('div');
     el.className = 'csel-opt' + (opt.value===value ? ' selected' : '');
-    el.innerHTML = `<span class="csel-opt-name">${opt.label}</span>`;
+    el.innerHTML = `<span class="csel-opt-name">${opt.html!==undefined ? opt.html : opt.label}</span>`;
     el.onclick = ()=>{
       value = opt.value;
       renderTrigger(value);

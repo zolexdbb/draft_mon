@@ -14,13 +14,14 @@ function renderDex(){
 
   LINES.forEach(line=>{
     const allStages = [
-      ...line.stages.map((sp,i)=>({sp,stageIdx:i,isBranch:false})),
-      ...(line.branches ? line.branches.map(sp=>({sp,stageIdx:null,isBranch:true})) : [])
+      ...line.stages.map((sp,i)=>({sp,stageIdx:i,isBranch:false,branchIdx:null})),
+      ...(line.branches ? line.branches.map((sp,bi)=>({sp,stageIdx:null,isBranch:true,branchIdx:bi})) : [])
     ];
-    allStages.forEach(({sp, stageIdx, isBranch})=>{
+    allStages.forEach(({sp, stageIdx, isBranch, branchIdx})=>{
       // Filtres
       if(dexFilters.search && !sp.name.toLowerCase().includes(dexFilters.search.toLowerCase())) return;
       if(dexFilters.type && !sp.types.includes(dexFilters.type)) return;
+      if(dexFilters.type2 && !sp.types.includes(dexFilters.type2)) return;
       if(dexFilters.rarity){
         const key = isBranch ? 'evo' : rarityKey(line, stageIdx);
         if(key !== dexFilters.rarity) return;
@@ -47,7 +48,13 @@ function renderDex(){
         <div class="stat-line">AtqSp ${sp.base.spa} · DéfSp ${sp.base.spd} · Vit ${sp.base.spe}</div>
         <div class="dex-rate">${rateText}</div>
       `;
-      if(sp.name===DEV_TRIGGER_NAME) card.onclick = handleDevTriggerClick;
+      if(typeof devDexSelectMode!=='undefined' && devDexSelectMode){
+        const entry = { lineId: line.id, stage: isBranch ? line.stages.length-1 : stageIdx, branch: isBranch ? branchIdx : null };
+        if(devDexSelectionHas(entry)) card.classList.add('selected');
+        card.onclick = ()=> toggleDevDexSelection(entry);
+      } else if(sp.name===DEV_TRIGGER_NAME){
+        card.onclick = handleDevTriggerClick;
+      }
       grid.appendChild(card);
       count++;
     });
@@ -58,6 +65,14 @@ function renderDex(){
 
 document.getElementById('dexSearch').oninput = (e)=>{ dexFilters.search = e.target.value; renderDex(); };
 
+// Pastille colorée réutilisant exactement le style des tags de type déjà affichés sur les cartes du Dex.
+function typeOptionHTML(type, label){
+  return `<span class="type-tag t-${type}">${typeIconHTML(type, 11)}${label}</span>`;
+}
+// Pastille colorée réutilisant exactement le style des badges de rareté déjà affichés sur les cartes du Dex.
+function rarityOptionHTML(css, label){
+  return `<span class="rarity-badge ${css}">${label}</span>`;
+}
 const DEX_TYPE_OPTIONS = [
   {value:'', label:'Tous les types'},
   {value:'normal', label:'Normal'},{value:'feu', label:'Feu'},{value:'eau', label:'Eau'},
@@ -66,18 +81,28 @@ const DEX_TYPE_OPTIONS = [
   {value:'combat', label:'Combat'},{value:'glace', label:'Glace'},{value:'psy', label:'Psy'},
   {value:'fantome', label:'Fantôme'},{value:'roche', label:'Roche'},{value:'dragon', label:'Dragon'},
   {value:'acier', label:'Acier'},{value:'tenebres', label:'Ténèbres'},{value:'fee', label:'Fée'}
-];
+].map(o=> o.value ? {...o, html: typeOptionHTML(o.value, o.label)} : o);
+const DEX_TYPE_OPTIONS_2 = DEX_TYPE_OPTIONS.map(o=> o.value ? o : {...o, label:'2ème type (optionnel)'});
 const DEX_RARITY_OPTIONS = [
   {value:'', label:'Toutes raretés'},
-  {value:'commun', label:'Commun'},{value:'evo', label:'Évolution'},{value:'rare', label:'Rare'},
-  {value:'pseudo', label:'Pseudo-légendaire'},{value:'legendaire', label:'Légendaire'}
-];
+  {value:'commun', label:'Commun', css:'rarity-commun'},{value:'evo', label:'Évolution', css:'rarity-evo'},
+  {value:'rare', label:'Rare', css:'rarity-rare'},{value:'pseudo', label:'Pseudo-légendaire', css:'rarity-pseudo'},
+  {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'}
+].map(o=> o.value ? {...o, html: rarityOptionHTML(o.css, o.label)} : o);
 function renderDexTypeFilter(){
   const c = document.getElementById('dexTypeFilter');
   c.innerHTML = '';
   c.appendChild(createCustomSelect({
     options: DEX_TYPE_OPTIONS, value: dexFilters.type,
     onChange: (val)=>{ dexFilters.type = val; renderDex(); }
+  }));
+}
+function renderDexTypeFilter2(){
+  const c = document.getElementById('dexTypeFilter2');
+  c.innerHTML = '';
+  c.appendChild(createCustomSelect({
+    options: DEX_TYPE_OPTIONS_2, value: dexFilters.type2,
+    onChange: (val)=>{ dexFilters.type2 = val; renderDex(); }
   }));
 }
 function renderDexRarityFilter(){
@@ -89,11 +114,13 @@ function renderDexRarityFilter(){
   }));
 }
 renderDexTypeFilter();
+renderDexTypeFilter2();
 renderDexRarityFilter();
 document.getElementById('dexResetFilter').onclick = ()=>{
-  dexFilters = {search:'', type:'', rarity:''};
+  dexFilters = {search:'', type:'', type2:'', rarity:''};
   document.getElementById('dexSearch').value = '';
   renderDexTypeFilter();
+  renderDexTypeFilter2();
   renderDexRarityFilter();
   renderDex();
 };

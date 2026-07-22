@@ -1,5 +1,7 @@
 /* ==== ui/dev-mode.js ==== */
 // Mode développeur caché : cliquer 7 fois sur Lockpin dans le Dex, puis entrer le code.
+// Flux : code → choix de la difficulté → sélection libre de l'équipe dans le Dex →
+// team building (identique au jeu normal, selon la difficulté) → panneau dev dans la Tour.
 const DEV_MODE_KEY = 'draftArenaDevMode';
 const DEV_TRIGGER_NAME = 'Lockpin';
 const DEV_TRIGGER_CLICKS = 7;
@@ -19,7 +21,7 @@ function handleDevTriggerClick(){
   devClickTimer = setTimeout(()=>{ devClickCount = 0; }, 2500);
   if(devClickCount >= DEV_TRIGGER_CLICKS){
     devClickCount = 0;
-    if(devModeUnlocked) openDevMenu();
+    if(devModeUnlocked) startDevFlow();
     else openDevCodePrompt();
   }
 }
@@ -48,7 +50,7 @@ function openDevCodePrompt(){
       devModeUnlocked = true;
       try { localStorage.setItem(DEV_MODE_KEY, '1'); } catch(e){}
       close();
-      openDevMenu();
+      startDevFlow();
     } else {
       document.getElementById('devCodeError').textContent = 'Code incorrect.';
       input.value = '';
@@ -59,43 +61,81 @@ function openDevCodePrompt(){
   input.onkeydown = (e)=>{ if(e.key==='Enter') submit(); };
 }
 
-/* =================== Section Équipe : roster libre → vrai écran de config =================== */
-let devSelectedTeam = [];
-function devSpeciesFor(c){ return lineOf(c.lineId).stages[c.stage]; }
-function renderDevTeamSlots(){
-  const wrap = document.getElementById('devTeamSlots');
-  document.getElementById('devTeamCount').textContent = devSelectedTeam.length;
-  wrap.innerHTML = devSelectedTeam.map((c,i)=>{
-    const sp = devSpeciesFor(c);
-    return `<span class="type-tag" data-idx="${i}" style="cursor:pointer;">${sp.name} ✕</span>`;
-  }).join('') || '<span style="font-size:9px;color:var(--text-dim);">Aucun Pokémon sélectionné</span>';
-  wrap.querySelectorAll('[data-idx]').forEach(el=>{
-    el.onclick = ()=>{ devSelectedTeam.splice(parseInt(el.dataset.idx,10),1); renderDevTeamSlots(); renderDevPokeList(document.getElementById('devPokeSearch').value); };
-  });
+/* =================== Étapes 2-3 : difficulté, puis sélection libre via le Dex =================== */
+let devDexSelectMode = false;
+let devDexSelection = [];
+
+function devDexEntryKey(c){ return (c.branch!==null && c.branch!==undefined) ? `${c.lineId}:b${c.branch}` : `${c.lineId}:s${c.stage}`; }
+function devDexSelectionHas(entry){
+  const key = devDexEntryKey(entry);
+  return devDexSelection.some(c=> devDexEntryKey(c)===key);
 }
-function renderDevPokeList(search){
-  const list = document.getElementById('devPokeList');
-  const q = search.trim().toLowerCase();
-  const full = devSelectedTeam.length>=6;
-  const matches = ALL_CANDIDATES.filter(c=>{
-    const sp = devSpeciesFor(c);
-    return !q || sp.name.toLowerCase().includes(q);
-  }).slice(0, 60);
-  list.innerHTML = matches.map((c,i)=>{
-    const sp = devSpeciesFor(c);
-    return `<button class="move-btn" data-i="${i}" style="text-align:left;padding:6px 10px;font-size:11px;" ${full?'disabled':''}>${sp.name} <small>${sp.types.join(' / ')}</small></button>`;
-  }).join('');
-  list.querySelectorAll('button').forEach((btn,i)=>{
-    btn.onclick = ()=>{
-      if(devSelectedTeam.length>=6) return;
-      devSelectedTeam.push(matches[i]);
-      renderDevTeamSlots();
-      renderDevPokeList(document.getElementById('devPokeSearch').value);
-    };
-  });
+function toggleDevDexSelection(entry){
+  const key = devDexEntryKey(entry);
+  const idx = devDexSelection.findIndex(c=> devDexEntryKey(c)===key);
+  if(idx>=0){
+    devDexSelection.splice(idx,1);
+  } else {
+    if(devDexSelection.length>=6) return;
+    devDexSelection.push(entry);
+  }
+  renderDex();
+  renderDevDexSelectionBar();
 }
 
-/* =================== Section Combat : dresseur choisi manuellement =================== */
+function startDevFlow(){
+  openDifficultyChoice(enterDevDexSelectMode);
+}
+
+function enterDevDexSelectMode(){
+  devDexSelectMode = true;
+  devDexSelection = [];
+  showScreen('screenDex');
+  renderDex();
+  renderDevDexSelectionBar();
+}
+function exitDevDexSelectMode(){
+  devDexSelectMode = false;
+  devDexSelection = [];
+  const bar = document.getElementById('devDexSelectBar');
+  if(bar) bar.classList.add('hidden');
+}
+
+function devDexSpeciesFor(c){
+  const line = lineOf(c.lineId);
+  return (c.branch!==null && c.branch!==undefined) ? line.branches[c.branch] : line.stages[c.stage];
+}
+function renderDevDexSelectionBar(){
+  const bar = document.getElementById('devDexSelectBar');
+  if(!bar) return;
+  bar.classList.toggle('hidden', !devDexSelectMode);
+  document.getElementById('devDexSelectCount').textContent = devDexSelection.length;
+  const chips = document.getElementById('devDexSelectChips');
+  chips.innerHTML = devDexSelection.map((c,i)=> `<span class="type-tag" data-idx="${i}" style="cursor:pointer;">${devDexSpeciesFor(c).name} ✕</span>`).join('')
+    || '<span style="font-size:9px;color:var(--text-dim);">Aucun Pokémon sélectionné</span>';
+  chips.querySelectorAll('[data-idx]').forEach(el=>{
+    el.onclick = ()=> toggleDevDexSelection(devDexSelection[parseInt(el.dataset.idx,10)]);
+  });
+  document.getElementById('devDexConfirmBtn').disabled = devDexSelection.length===0;
+}
+
+// Même branchement que nextDraftRound() (draft/draft-core.js) en fin de draft normal :
+// Facile → build auto direct vers la Tour, Normal/Difficile → éditeur manuel.
+function finalizeDevTeam(){
+  if(devDexSelection.length===0) return;
+  team = devDexSelection.map(c=>
+    difficulty==='facile' ? autoBuildMember(c.lineId, c.stage, c.branch) : defaultMember(c.lineId, c.stage, c.branch)
+  );
+  exitDevDexSelectMode();
+  document.getElementById('screenDex').classList.add('hidden');
+  if(difficulty==='facile') finalizeTeamAndGoToTower();
+  else showBuilder();
+}
+
+document.getElementById('devDexCancelBtn').onclick = ()=>{ exitDevDexSelectMode(); renderDex(); };
+document.getElementById('devDexConfirmBtn').onclick = finalizeDevTeam;
+
+/* =================== Étape 5 : panneau dev permanent de la Tour =================== */
 function buildDevEncounter(kind, forcedType){
   const floor = towerFloor;
   if(kind==='boss'){
@@ -133,105 +173,43 @@ function devEnsureTeamStats(){
   });
 }
 
-/* =================== Menu principal =================== */
-function openDevMenu(){
-  devSelectedTeam = [];
-  const overlay = document.createElement('div');
-  overlay.className = 'patchnotes-overlay';
-  overlay.innerHTML = `
-    <div class="patchnotes-modal" style="max-width:560px;position:relative;">
-      <button class="patchnotes-close" id="devMenuCloseBtn">✕</button>
-      <h2>◆ MODE DÉVELOPPEUR ◆</h2>
-
-      <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">🧬 Équipe libre (<span id="devTeamCount">0</span>/6)</div>
-      <div style="font-size:9px;color:var(--text-dim);margin-bottom:8px;">Choisis n'importe quel Pokémon, puis configure-le comme dans une partie normale (nature, EV/IV, attaques).</div>
-      <div id="devTeamSlots" style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;min-height:22px;"></div>
-      <input type="text" id="devPokeSearch" placeholder="Rechercher un Pokémon..." style="width:100%;padding:8px;margin-bottom:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;color:var(--text-main);font-size:12px;box-sizing:border-box;">
-      <div id="devPokeList" style="display:flex;flex-direction:column;gap:4px;max-height:170px;overflow-y:auto;margin-bottom:8px;"></div>
-      <button class="btn secondary" id="devConfigureTeamBtn" style="width:100%;margin-bottom:16px;">Configurer cette équipe (${team.length} actuellement en jeu)</button>
-
-      <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">⚔️ Combat</div>
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
-        <label style="font-size:10px;color:var(--text-dim);">Étage :</label>
-        <input type="number" id="devFloorInput" value="${towerFloor||1}" min="1" max="999" style="width:70px;padding:6px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;color:var(--text-main);font-size:12px;">
-        <label style="font-size:10px;color:var(--text-dim);margin-left:6px;">Difficulté :</label>
-        <select id="devDifficultySelect" style="padding:6px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;color:var(--text-main);font-size:12px;">
-          <option value="facile">😊 Facile</option>
-          <option value="normal">⚔️ Normal</option>
-          <option value="difficile">💀 Difficile</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
-        <label style="font-size:10px;color:var(--text-dim);">Dresseur :</label>
-        <select id="devTrainerKindSelect" style="padding:6px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;color:var(--text-main);font-size:12px;">
-          <option value="normal">Normal</option>
-          <option value="miniboss">⭐ Mini-Boss</option>
-          <option value="boss">👑 Maître de Type</option>
-          <option value="twin">👯 Jumeaux (combat double)</option>
-        </select>
-        <select id="devBossTypeSelect" style="padding:6px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;color:var(--text-main);font-size:12px;" disabled>
-          ${ALL_TYPES.map(t=>`<option value="${t}">${typeDisplayName(t)}</option>`).join('')}
-        </select>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:16px;">
-        <button class="btn secondary" id="devGoTowerBtn" style="flex:1;">Aller à la Tour</button>
-        <button class="btn" id="devFightBtn" style="flex:1;">⚔️ Combattre maintenant</button>
-      </div>
-
-      <div style="font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">🏘️ Village</div>
-      <button class="btn secondary" id="devGoVillageBtn" style="width:100%;margin-bottom:10px;">Aller au Village</button>
-
-      <div id="devMenuError" style="font-size:9px;color:var(--low);min-height:14px;text-align:center;"></div>
-    </div>`;
-  document.body.appendChild(overlay);
-  const close = ()=> overlay.remove();
-  document.getElementById('devMenuCloseBtn').onclick = close;
-  overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
-  const errEl = document.getElementById('devMenuError');
-
-  document.getElementById('devDifficultySelect').value = difficulty;
-  renderDevPokeList('');
-  renderDevTeamSlots();
-  document.getElementById('devPokeSearch').oninput = (e)=> renderDevPokeList(e.target.value);
-
-  document.getElementById('devConfigureTeamBtn').onclick = ()=>{
-    if(devSelectedTeam.length===0){ errEl.textContent = "Choisis au moins un Pokémon."; return; }
-    team = devSelectedTeam.map(c=> defaultMember(c.lineId, c.stage));
-    close();
-    showBuilder();
-  };
-
-  document.getElementById('devTrainerKindSelect').onchange = (e)=>{
-    document.getElementById('devBossTypeSelect').disabled = e.target.value!=='boss';
-  };
-
-  const applyFloorAndDifficulty = ()=>{
-    towerFloor = Math.max(1, parseInt(document.getElementById('devFloorInput').value,10) || 1);
-    difficulty = document.getElementById('devDifficultySelect').value;
-  };
-
-  document.getElementById('devGoTowerBtn').onclick = ()=>{
-    if(team.length===0){ errEl.textContent = "Aucune équipe en jeu : configure-en une d'abord."; return; }
-    applyFloorAndDifficulty();
-    showScreen('screenTower');
-    renderTower();
-    close();
-  };
-
-  document.getElementById('devFightBtn').onclick = ()=>{
-    if(team.length===0){ errEl.textContent = "Aucune équipe en jeu : configure-en une d'abord."; return; }
-    applyFloorAndDifficulty();
-    devEnsureTeamStats();
-    const kind = document.getElementById('devTrainerKindSelect').value;
-    const forcedType = document.getElementById('devBossTypeSelect').value;
-    devEncounterOverride = buildDevEncounter(kind, forcedType);
-    close();
-    startBattle();
-  };
-
-  document.getElementById('devGoVillageBtn').onclick = ()=>{
-    close();
-    showScreen('screenVillage');
-    renderVillage();
-  };
+let devTowerPanelInitialized = false;
+function renderDevTowerPanel(){
+  const panel = document.getElementById('devTowerPanel');
+  if(!panel) return;
+  if(!devModeUnlocked){ panel.classList.add('hidden'); return; }
+  panel.classList.remove('hidden');
+  document.getElementById('devTowerFloorInput').value = towerFloor||1;
+  if(!devTowerPanelInitialized){
+    document.getElementById('devTowerEventSelect').innerHTML = TOWER_EVENTS.map(e=>`<option value="${e.id}">${e.emoji} ${e.id}</option>`).join('');
+    document.getElementById('devTowerBossTypeSelect').innerHTML = ALL_TYPES.map(t=>`<option value="${t}">${typeDisplayName(t)}</option>`).join('');
+    devTowerPanelInitialized = true;
+  }
 }
+
+document.getElementById('devTowerToggleBtn').onclick = ()=>{
+  document.getElementById('devTowerPanelBody').classList.toggle('hidden');
+};
+document.getElementById('devTowerFloorApplyBtn').onclick = ()=>{
+  towerFloor = Math.max(1, parseInt(document.getElementById('devTowerFloorInput').value,10) || 1);
+  renderTower();
+};
+document.getElementById('devTowerVillageBtn').onclick = ()=>{
+  showScreen('screenVillage');
+  renderVillage();
+};
+document.getElementById('devTowerEventTriggerBtn').onclick = ()=>{
+  const id = document.getElementById('devTowerEventSelect').value;
+  triggerTowerEventById(id);
+};
+document.getElementById('devTowerKindSelect').onchange = (e)=>{
+  document.getElementById('devTowerBossTypeSelect').disabled = e.target.value!=='boss';
+};
+document.getElementById('devTowerFightBtn').onclick = ()=>{
+  if(team.length===0) return;
+  devEnsureTeamStats();
+  const kind = document.getElementById('devTowerKindSelect').value;
+  const forcedType = document.getElementById('devTowerBossTypeSelect').value;
+  devEncounterOverride = buildDevEncounter(kind, forcedType);
+  startBattle();
+};

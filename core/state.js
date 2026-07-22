@@ -20,5 +20,5 @@ let battleInProgress = false;
 let merchantPresent = false;
 let pcSelectedTeamIdx = null;
 let shopCategory = 'potion';
-let dexFilters = { search:'', type:'', rarity:'' };
+let dexFilters = { search:'', type:'', type2:'', rarity:'' };
 
