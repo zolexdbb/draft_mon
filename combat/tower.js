@@ -68,10 +68,10 @@ const TYPE_MASTER_DIALOGUE = {
 // Sprites de dresseur (CDN Pokémon Showdown, https://play.pokemonshowdown.com/sprites/trainers/<nom>.png)
 // associés à chaque type de Maître de Type. Un type sans entrée retombe sur l'emoji.
 const TYPE_MASTER_SPRITE = {
-  normal:'norman', feu:'flannery', eau:'misty', plante:'erika', electrik:'wattson',
-  vol:'falkner', poison:'koga', sol:'clay', insecte:'bugsy', combat:'chuck',
-  glace:'candice', psy:'sabrina', fantome:'morty', roche:'brock', dragon:'lance',
-  acier:'jasmine', tenebres:'karen', fee:'valerie'
+  normal:'larry', feu:'flannery', eau:'misty', plante:'erika', electrik:'iono',
+  vol:'kahili', poison:'koga', sol:'rika', insecte:'katy', combat:'bea',
+  glace:'candice', psy:'sabrina', fantome:'phoebe', roche:'brock', dragon:'lance',
+  acier:'steven', tenebres:'karen', fee:'jacinthe'
 };
 function handleTrainerSpriteError(img){
   const span = document.createElement('span');
@@ -209,7 +209,6 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
     }
     let branch = null;
     if(line.branches && Math.random() < Math.min(0.85, 0.15 + floor*0.13)){
-      // Si thème : préférer la branche du bon type
       if(trainerTheme){
         const themeBranch = line.branches.findIndex(b => b.types.includes(trainerTheme));
         branch = themeBranch >= 0 ? themeBranch : Math.floor(Math.random()*line.branches.length);
@@ -218,9 +217,6 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
       }
     }
     if(isBoss && trainerTheme){
-      // Maître de Type : l'équipe doit être 100% du type — si le tirage stage/branch normal
-      // (indépendant du type) n'a pas produit une forme du bon type, on impose la forme la plus
-      // évoluée qui correspond (la lignée a forcément une forme valide, filtrée dans `themed` ci-dessus).
       const stageMatches = line.stages[stage].types.includes(trainerTheme);
       const branchMatches = branch!==null && line.branches[branch].types.includes(trainerTheme);
       if(!stageMatches && !branchMatches){
@@ -246,7 +242,6 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
     const nature = rand(NATURES.filter(n=>n.plus));
     const stats = calcStats(sp.base, ivs, evs, nature);
     const movepool = movepoolFor({lineId:id, stage, branch});
-    // L'IA aux étages élevés prend les meilleures attaques (pas random)
     const moveIds = floor >= 4
       ? pickSmartMoves(movepool, sp, floor)
       : shuffle(movepool).slice(0,4);

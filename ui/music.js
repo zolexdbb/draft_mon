@@ -2,16 +2,33 @@
 // Chaque clé pointe vers une liste de pistes (playlist). Une seule piste = boucle simple.
 // Plusieurs pistes = lecture aléatoire (sans répéter deux fois de suite la même) avant de reboucler.
 const MUSIC_TRACKS = {
-  menu: ['assets/audio/menu.mp3'],
-  village: ['assets/audio/village.mp3'],
-  battle: ['assets/audio/battle.mp3']
+  menu: ['assets/audio/menu/menu.mp3'],
+  village: ['assets/audio/village/village.mp3'],
+  battle: ['assets/audio/battle/battle.mp3']
 };
 // Musique dédiée par type pour les Maîtres de Type rencontrés en combat (étages boss de la tour).
-// Ajoutez une entrée par type (ex: feu: ['assets/audio/battle_feu.mp3']) pour lui donner sa propre
-// musique ou playlist ; les types sans entrée utilisent la playlist "battle" par défaut.
+// Placez les OST de dresseurs dans assets/audio/dresseur/ et ajoutez une entrée par type
+// (ex: feu: ['assets/audio/dresseur/feu.mp3']) pour lui donner sa propre musique ou playlist ;
+// les types sans entrée utilisent la playlist "battle" par défaut.
 const TYPE_MUSIC = {
-  // feu: ['assets/audio/battle_feu.mp3'],
-  // eau: ['assets/audio/battle_eau.mp3'],
+  normal:   ['assets/audio/dresseur/Larry.mp3'],
+  feu:      ['assets/audio/dresseur/flannery.mp3'],
+  eau:      ['assets/audio/dresseur/Misty.mp3'],
+  plante:   ['assets/audio/dresseur/Erika.mp3'],
+  electrik: ['assets/audio/dresseur/Iono.mp3'],
+  vol:      ['assets/audio/dresseur/Kahili.mp3'],
+  poison:   ['assets/audio/dresseur/Koga.mp3'],
+  sol:      ['assets/audio/dresseur/Rika.mp3'],
+  insecte:  ['assets/audio/dresseur/katy.mp3'],
+  combat:   ['assets/audio/dresseur/bea.mp3'],
+  glace:    ['assets/audio/dresseur/Candice.mp3'],
+  psy:      ['assets/audio/dresseur/Sabrina.mp3'],
+  fantome:  ['assets/audio/dresseur/Phoebe.mp3'],
+  roche:    ['assets/audio/dresseur/Brock.mp3'],
+  dragon:   ['assets/audio/dresseur/Lance.mp3'],
+  acier:    ['assets/audio/dresseur/Steven.mp3'],
+  tenebres: ['assets/audio/dresseur/Karen.mp3'],
+  fee:      ['assets/audio/dresseur/Jacinthe.mp3'],
 };
 const SCREEN_MUSIC = {
   screenMenu: 'menu', screenDex: 'menu', screenEnd: 'menu',
