@@ -38,7 +38,7 @@ function autoBuildMember(lineId, stage, branch){
     ability: abilities[0],
     moves:[null,null,null,null],
     heldItem: null,
-    unownForm: sp.name==='Zarbi' ? pickRandomZarbiForm() : null
+    unownForm: pickFormSprite(sp.name)
   };
   const movepool = movepoolFor(member);
   member.moves = pickSmartMoves(movepool, sp, 5);

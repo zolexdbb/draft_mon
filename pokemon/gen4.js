@@ -15,7 +15,7 @@ const LINES_GEN4 = [
   {name:'Tiplouf',types:['eau'],base:st(53,51,53,61,56,40)},
   {name:'Prinplouf',types:['eau'],base:st(64,66,68,81,76,50)},
   {name:'Pingoléon',types:['eau','acier'],base:st(84,86,88,111,101,60)}]},
-{id:'starly',abilities:['Regard Vif','Téméraire'],moveIds:['growl','peck','tackle','quickattack','gust','wingattack','doubleteam','featherdance','whirlwind','aerialace','takedown','agility','airslash','brickbreak','bulkup','protect','swift','endure','fly','hyperbeam','knockoff','doubleedge','heatwave','hurricane','uturn','outrage','focusblast','facade','torment','swagger','razorwind','skullbash','sunnyday','raindance','sleeptalk','rest','astonish','furyattack','sandattack','uproar','thief','aircutter'],
+{id:'starly',abilities:['Regard Vif','Téméraire'],moveIds:['growl','peck','tackle','quickattack','gust','wingattack','doubleteam','featherdance','whirlwind','aerialace','takedown','agility','airslash','brickbreak','bulkup','protect','swift','endure','fly','hyperbeam','knockoff','doubleedge','heatwave','hurricane','uturn','outrage','focusblast','facade','torment','swagger','razorwind','skullbash','sunnyday','raindance','sleeptalk','rest','astonish','furyattack','sandattack','uproar','thief','aircutter','beakblast','floatyfall'],
  stages:[
   {name:'Étourmi',types:['normal','vol'],base:st(40,55,30,30,30,60)},
   {name:'Étourvol',types:['normal','vol'],base:st(55,75,50,40,40,80)},
@@ -28,7 +28,7 @@ const LINES_GEN4 = [
  stages:[
   {name:'Crikzik',types:['insecte'],base:st(37,25,41,25,41,25)},
   {name:'Mélokrik',types:['insecte'],base:st(77,85,51,55,51,65),abilities:['Essaim','Technicien']}]},
-{id:'shinx',abilities:['Rivalité','Intimidation'],moveIds:['charge','electricterrain','leer','tackle','thundershock','bite','spark','thunderwave','crunch','discharge','swagger','babydolleyes','doublekick','howl','nightslash','quickattack','shockwave','takedown','faketears','agility','protect','icefang','confuseray','thief','facade','swift','endure','sunnyday','raindance','bodyslam','sleeptalk','lightscreen','rest','eerieimpulse','thunderbolt','playrough','hyperbeam','thunder','doubleedge'],
+{id:'shinx',abilities:['Rivalité','Intimidation'],moveIds:['charge','electricterrain','leer','tackle','thundershock','bite','spark','thunderwave','crunch','discharge','swagger','babydolleyes','doublekick','howl','nightslash','quickattack','shockwave','takedown','faketears','agility','protect','icefang','confuseray','thief','facade','swift','endure','sunnyday','raindance','bodyslam','sleeptalk','lightscreen','rest','eerieimpulse','thunderbolt','playrough','hyperbeam','thunder','doubleedge','plasmafists','zingzap'],
  stages:[
   {name:'Lixy',types:['electrik'],base:st(45,65,34,40,34,45)},
   {name:'Luxio',types:['electrik'],base:st(60,85,49,60,49,60)},

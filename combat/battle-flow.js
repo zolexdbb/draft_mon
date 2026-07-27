@@ -15,6 +15,10 @@ function resetBattleFields(c){
   c.trapped = false;
   c.infested = false;
   c.punishOnContact = false;
+  c.forcedMove = null;
+  c.disguiseBroken = false;
+  c.schoolBroken = false;
+  c.shieldsBroken = false;
 }
 function renderTrainerBanner(trainer, trainer2){
   const bannerEl = document.getElementById('trainerBanner');
@@ -128,7 +132,7 @@ function startBattle(){
     pActive: aliveIdxs[0], pActive2: (isDouble && aliveIdxs.length>1) ? aliveIdxs[1] : null,
     fActive: 0, fActive2: (isDouble && enemyTeam.length>1) ? 1 : null,
     locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null, terrain:null,
-    pendingActions: [], selectingSlot: 'A'
+    pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false
   };
   battleInProgress = true;
   document.getElementById('screenTower').classList.add('hidden');
@@ -207,7 +211,12 @@ function playerAttack(moveIdx, targetIdx){
   const slot = bs.selectingSlot || 'A';
   const activeIdx = playerSlotIdx(slot);
   const p = bs.player[activeIdx];
-  const move = moveIdx===-1 ? STRUGGLE_MOVE : p.moves[moveIdx];
+  let move = moveIdx===-1 ? STRUGGLE_MOVE : p.moves[moveIdx];
+  if(bs.declaringZMove && moveIdx>=0 && eligibleZMoveIndexes(p).includes(moveIdx)){
+    move = buildZMove(move);
+    bs.zMoveUsed = true;
+  }
+  bs.declaringZMove = false;
   if(moveIdx>=0 && p.ppCur && p.ppCur[moveIdx]>0) p.ppCur[moveIdx]--;
   let target;
   if(move.target!=='self' && targetIdx!=null && bs.foe[targetIdx] && bs.foe[targetIdx].hp>0){
@@ -357,8 +366,24 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
+  if(actor.forcedMove){
+    const forced = actor.forcedMove;
+    actor.forcedMove = null;
+    if(forced.name!==move.name){
+      setLog(`<b>${actor.name}</b> est forcé de réutiliser ${forced.name} !`);
+      setTimeout(()=> runStep(actor, forced, defender, actorIsPlayer, callback), 900);
+      return;
+    }
+  }
   if(actor.ability==='Voix Aquatique' && move.sound){
     move = { ...move, type:'eau' };
+  }
+  if(move.typeFromUser){
+    const userType = (actor.transformedTypes || actor.types)[0];
+    move = { ...move, type: userType };
+  }
+  if(move.categoryFromHigherStat){
+    move = { ...move, cat: actor.stats.spa > actor.stats.atk ? 'spec' : 'phys' };
   }
   if(actor.ability==='Protéen' && !move.metronome && !move.mirrorMove){
     const newTypes = move.type2 ? [move.type, move.type2] : [move.type];
@@ -384,10 +409,16 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     return;
   }
   actor.lastMoveUsed = move;
+  actor.lastMoveTarget = defender;
   if(actor.heldItem && ITEMS[actor.heldItem] && ITEMS[actor.heldItem].choiceLock && !actor.lockedMove){
     actor.lockedMove = move;
   }
   if(move.requiresAteBerry && !actor.ateBerry){
+    setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
+    setTimeout(callback, 900);
+    return;
+  }
+  if(move.requiresWeather && (!battleState || !battleState.weather || battleState.weather.type!==move.requiresWeather)){
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
     setTimeout(callback, 900);
     return;
@@ -688,7 +719,11 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   let sashSaved = false;
   let enduredMsg = '';
   let wonderGuardMsg = '';
-  if(defender.ability==='Garde Mystik' && eff<=1 && move.power>0){
+  if(defender.ability==='Fantaisie' && !defender.disguiseBroken && move.power>0){
+    actualDmg = 0;
+    defender.disguiseBroken = true;
+    wonderGuardMsg = ` Le déguisement de ${defender.name} se brise à sa place !`;
+  } else if(defender.ability==='Garde Mystik' && eff<=1 && move.power>0){
     actualDmg = 0;
     wonderGuardMsg = ` Garde Mystik protège ${defender.name} !`;
   } else if(defender.heldItem==='ceintureForce' && !defender.itemUsed && defender.hp===defender.maxHp && dmg>=defender.hp){
@@ -712,6 +747,26 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     let klogs = [];
     applyStatBoost(actor, [move.boostOnKO], klogs);
     msg += ' ' + klogs.join(' ');
+  }
+  if(actor.ability==='Éclosion' && defender.hp<=0){
+    const statKeys = ['atk','def','spa','spd','spe'];
+    let bestStat = statKeys[0];
+    statKeys.forEach(k=>{ if(actor.stats[k] > actor.stats[bestStat]) bestStat = k; });
+    let klogs = [];
+    applyStatBoost(actor, [{stat:bestStat, stages:1}], klogs);
+    msg += ' ' + klogs.join(' ');
+  }
+  if(defender.ability==='Banc de Poissons' && !defender.schoolBroken && defender.hp>0 && defender.hp<=defender.maxHp*0.25){
+    defender.schoolBroken = true;
+    let klogs = [];
+    applyStatBoost(defender, [{stat:'atk',stages:-2},{stat:'def',stages:-2},{stat:'spa',stages:-2},{stat:'spd',stages:-2}], klogs);
+    msg += ` ${defender.name} se disperse, perdant sa formation Banc de Poissons !`;
+  }
+  if(defender.ability==='Corps Blindé' && !defender.shieldsBroken && defender.hp>0 && defender.hp<=defender.maxHp*0.5){
+    defender.shieldsBroken = true;
+    let klogs = [];
+    applyStatBoost(defender, [{stat:'def',stages:-2},{stat:'spd',stages:-2},{stat:'spe',stages:2}], klogs);
+    msg += ` La coque de ${defender.name} se brise, révélant son Noyau !`;
   }
   if(move.trap && defender.hp>0){
     defender.trapped = true;

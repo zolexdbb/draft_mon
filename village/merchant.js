@@ -6,7 +6,10 @@ const MERCHANT_GROUPS = [
   { label: 'Motisma', keys: ['appareilChauffe','appareilLavage','appareilFrigo','appareilVentilo','appareilTondeuse'] },
   { label: 'Boréas / Fulguris / Démétéros', keys: ['miroirSacre'] },
   { label: 'Arceus', keys: ['plaqueFlamme','plaqueHydro','plaqueHerbe','plaqueVolt','plaqueCiel','plaqueToxicite','plaqueTerre','plaqueInsecte','plaquePoing','plaqueGlace','plaqueEsprit','plaqueFantome','plaqueRoc','plaqueDraco','plaqueFer','plaqueOmbre'] },
-  { label: 'Pierres Méga', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite'] }
+  { label: 'Pierres Méga', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite'] },
+  { label: 'Cristaux Z', keys: ['zCrystalNormal','zCrystalCombat','zCrystalVol','zCrystalPoison','zCrystalSol','zCrystalRoche','zCrystalInsecte','zCrystalFantome','zCrystalAcier','zCrystalFeu','zCrystalEau','zCrystalPlante','zCrystalElectrik','zCrystalPsy','zCrystalGlace','zCrystalDragon','zCrystalTenebres','zCrystalFee'] },
+  { label: 'Necrozma', keys: ['prismeCouchant','prismeAurore','ultranecrozium'] },
+  { label: 'Mémoires (Silvallié)', keys: ['memoireCombat','memoireVol','memoirePoison','memoireSol','memoireRoche','memoireInsecte','memoireFantome','memoireAcier','memoireFeu','memoireEau','memoirePlante','memoireElectrik','memoirePsy','memoireGlace','memoireDragon','memoireTenebres','memoireFee'] }
 ];
 function renderMerchantPanel(){
   const wrap = document.getElementById('villagePanelContent');

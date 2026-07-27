@@ -246,7 +246,7 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
       ? pickSmartMoves(movepool, sp, floor)
       : shuffle(movepool).slice(0,4);
     return {
-      lineId:id, stage, branch, name:sp.name, types:sp.types, unownForm: sp.name==='Zarbi' ? pickRandomZarbiForm() : null, moveObjs: moveIds.map(mid=>MOVES[mid]), ppCur: moveIds.map(mid=>basePP(MOVES[mid])),
+      lineId:id, stage, branch, name:sp.name, types:sp.types, unownForm: pickFormSprite(sp.name), moveObjs: moveIds.map(mid=>MOVES[mid]), ppCur: moveIds.map(mid=>basePP(MOVES[mid])),
       ability: rand(sp.abilities || line.abilities),
       stats, maxHp: stats.hp, hp: stats.hp, ...freshBattleFields()
     };

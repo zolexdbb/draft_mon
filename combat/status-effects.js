@@ -61,6 +61,22 @@ function triggerSwitchInAbilities(incoming, opponent){
     opponent.trapped = true;
     msg += ` ${opponent.name} ne peut plus s'échapper à cause de Marque Ombre !`;
   }
+  if(incoming.ability==='Électro Surge' && (!battleState.terrain || battleState.terrain.type!=='electric')){
+    battleState.terrain = { type:'electric', turns:5 };
+    msg += ` ${incoming.name} charge le terrain grâce à Électro Surge !`;
+  }
+  if(incoming.ability==='Psycho Surge' && (!battleState.terrain || battleState.terrain.type!=='psychic')){
+    battleState.terrain = { type:'psychic', turns:5 };
+    msg += ` ${incoming.name} charge le terrain grâce à Psycho Surge !`;
+  }
+  if(incoming.ability==='Copeaux Surge' && (!battleState.terrain || battleState.terrain.type!=='grassy')){
+    battleState.terrain = { type:'grassy', turns:5 };
+    msg += ` ${incoming.name} recouvre le terrain d'herbe grâce à Copeaux Surge !`;
+  }
+  if(incoming.ability==='Aqua Surge' && (!battleState.terrain || battleState.terrain.type!=='misty')){
+    battleState.terrain = { type:'misty', turns:5 };
+    msg += ` ${incoming.name} enveloppe le terrain de brume grâce à Aqua Surge !`;
+  }
   return msg;
 }
 function applyStatBoost(target, boosts, logs){
@@ -113,6 +129,10 @@ function inflictStatus(target, status, logs){
     logs.push(`${target.name} ne peut pas s'endormir grâce à son talent !`);
     return;
   }
+  if(target.ability==='Comateux'){
+    logs.push(`${target.name} est immunisé contre les altérations de statut grâce à Comateux !`);
+    return;
+  }
   if(status==='sommeil' && battleState){
     const loc = locateActiveSlot(target);
     const allies = loc && loc.side==='player' ? alivePlayerCombatants() : (loc ? aliveFoeCombatants() : []);
@@ -129,7 +149,7 @@ function inflictStatus(target, status, logs){
     logs.push(`${target.name} ne peut pas être paralysé grâce à son talent !`);
     return;
   }
-  if(status==='brulure' && (target.ability==='Ignifu-Voile' || types.includes('feu'))){
+  if(status==='brulure' && (target.ability==='Ignifu-Voile' || target.ability==='Écume' || types.includes('feu'))){
     logs.push(`${target.name} ne peut pas être brûlé !`);
     return;
   }
@@ -154,8 +174,8 @@ function applyStatusEffect(user, target, move, logs){
   const eff = move.effect||{};
   if(eff.selfBoost) applyStatBoost(user, eff.selfBoost, logs);
   if(eff.foeBoost){
-    if(target.ability==='Corps Sain' && eff.foeBoost.every(b=>b.stages<0)){
-      logs.push(`Corps Sain empêche la baisse de statistiques de ${target.name} !`);
+    if((target.ability==='Corps Sain' || target.ability==='Intégral Métal') && eff.foeBoost.every(b=>b.stages<0)){
+      logs.push(`${target.ability} empêche la baisse de statistiques de ${target.name} !`);
     } else if(target.mistTurns>0 && eff.foeBoost.every(b=>b.stages<0)){
       logs.push(`La Brume protège ${target.name} de la baisse de statistiques !`);
     } else {
@@ -438,6 +458,37 @@ function applyStatusEffect(user, target, move, logs){
   if(eff.wakeAll){
     if(user.status==='sommeil'){ user.status=null; user.sleepCounter=0; logs.push(`${user.name} se réveille !`); }
     if(target.status==='sommeil'){ target.status=null; target.sleepCounter=0; logs.push(`${target.name} se réveille !`); }
+  }
+  if(eff.speedSwap){
+    const tmp = user.stages.spe;
+    user.stages.spe = target.stages.spe;
+    target.stages.spe = tmp;
+    logs.push(`${user.name} échange sa Vitesse avec celle de ${target.name} !`);
+  }
+  if(eff.strengthSap){
+    const healAmt = Math.max(1, Math.round(target.stats.atk * statMultiplier(target.stages.atk)));
+    const before = user.hp;
+    user.hp = Math.min(user.maxHp, user.hp + healAmt);
+    applyStatBoost(target, [{stat:'atk',stages:-1}], logs);
+    logs.push(`${user.name} récupère ${user.hp-before} PV en absorbant la force de ${target.name} !`);
+  }
+  if(eff.purifyFoe){
+    if(target.status){
+      logs.push(`${target.name} est guéri de son altération de statut !`);
+      target.status = null;
+      target.sleepCounter = 0;
+      healPercent(user, 0.5, logs);
+    } else {
+      logs.push("Ça n'a aucun effet, la cible n'a aucune altération de statut.");
+    }
+  }
+  if(eff.instruct){
+    if(target.lastMoveUsed){
+      target.forcedMove = target.lastMoveUsed;
+      logs.push(`${target.name} devra réutiliser ${target.lastMoveUsed.name} !`);
+    } else {
+      logs.push("Ça ne marche pas, la cible n'a encore rien utilisé !");
+    }
   }
 }
 function endOfTurnStatus(battler, logs){

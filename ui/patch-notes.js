@@ -1,6 +1,39 @@
 /* ==== ui/patch-notes.js (généré depuis index.html) ==== */
 const PATCH_NOTES = [
   {
+    version: 'v0.8',
+    title: 'v0.8 — Gen 7 Update',
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "88 nouveaux Pokémon ajoutés (Alola, Pokédex complet 1 → 809), dont les 3 starters, les Gardiens des Îles (Tokorico, Tokopiyon, Tokotoro, Tokopisco), Cosmog/Cosmovum évoluant en Solgaleo ou Lunala, Necrozma et ses 3 fusions, Magearna, Marshadow, Zeraora, et Meltan/Melmetal",
+          "Les 11 Ultra-Chimères ajoutées (Zéroïd, Mouscoto, Cancrelove, Câblifère, Bamboiselle, Katagami, Engloutyran, Vémini/Mandrillon, Ama-Ama, Pierroteknik), toutes dotées du talent Éclosion",
+          "10 nouvelles lignées de Formes d'Alola, sélectionnables indépendamment de leurs versions Kanto au draft (Rattata, Sabelette, Goupix, Taupiqueur, Miaouss, Racaillou, Tadmorv, Noadkoko, Ossatueur et Raichu d'Alola)",
+          "Necrozma peut fusionner avec Solgaleo ou Lunala (ou devenir Ultra-Necrozma) via 3 nouveaux objets tenus, vendus par le Marchand Itinérant, sur le même principe que la Méga-Évolution",
+          "Lougaroc (Forme Diurne/Nocturne/Crépusculaire) et Plumeline (Styles Flamenco/Pom-Pom/Hula/Buyō) sont désormais de vraies branches d'évolution aux stats/types distincts, sur le même principe qu'Évoli",
+          "Silvallié change de type selon la Mémoire tenue (17 nouvelles Mémoires chez le Marchand Itinérant), sur le même principe qu'Arceus et ses Plaques",
+          "Météno affiche désormais l'une de ses 7 couleurs de noyau au hasard, purement cosmétique, comme les formes de Zarbi"
+        ]
+      },
+      {
+        icon: '⚔️', label: 'Capacités',
+        items: [
+          "47 nouvelles attaques de Génération 7 (Roc Éclair, Écran Aurore, Ruade Puissante, Laser Prismatique, Danse Révélation, Étranglement, Crocs Psy, Lame Solaire, Marteau Glace, Multi-Coups...)",
+          "Movepool enrichi pour de nombreuses lignées Gen 1-6 avec ces nouvelles attaques, selon leur type et leur thème"
+        ]
+      },
+      {
+        icon: '💠', label: 'Talents & Capacités Z',
+        items: [
+          "~30 nouveaux talents de Génération 7, dont plusieurs avec un vrai effet codé en combat : Éclosion (boost après un KO), les 4 Terrains Surge des Gardiens des Îles, Fantaisie (annule le premier coup subi), Comateux (immunité totale au statut), Armure Prisme / Force Neurale (dégâts super efficaces réduits/augmentés), Banc de Poissons et Corps Blindé (changement de forme selon les PV), Écume (résistance Feu / immunité brûlure / dégâts Eau doublés)",
+          "Nouveau système de Capacités Z : 18 Cristaux Z (un par type, ex. Pyrozélite, Aquazélite, Voltazélite...) en vente chez le Marchand Itinérant",
+          "En combat, un Pokémon tenant le bon Cristal Z peut déclencher une Capacité Z une fois par combat : la capacité correspondante devient un coup unique surboosté et toujours précis, avec une puissance suivant la vraie table de conversion officielle"
+        ]
+      }
+    ]
+  },
+  {
     version: 'v0.7',
     title: 'v0.7 — Gen 6 Update',
     categories: [
@@ -413,7 +446,15 @@ const PATCH_NOTES = [
     ]
   }
 ];
-const SPLASH_TEXTS = ["Gen 6 est disponible !"];
+const SPLASH_TEXTS = [
+  "Gen 7 est disponible !",
+  "88 nouveaux Pokémon d'Alola !",
+  "Les Capacités Z sont là !",
+  "Les Formes d'Alola rejoignent le draft !",
+  "Necrozma peut fusionner !",
+  "11 Ultra-Chimères à drafter !",
+  "Drafte les Gardiens des Îles !"
+];
 function renderPatchNoteBody(v){
   if(v.categories){
     return v.categories.map(c => `

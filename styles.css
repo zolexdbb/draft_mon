@@ -587,6 +587,7 @@ select option{
 .move-btn:hover:not(:disabled){ border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 0 #0a0a14; }
 .move-btn:disabled{ opacity:.35; cursor:not-allowed; }
 .move-btn small{ display:block; color:var(--text-dim); font-size:10px; margin-top:3px;}
+.move-btn.active{ background:linear-gradient(180deg,#4a3a1c 0%,#2e2410 100%); border-color:var(--accent); box-shadow:0 3px 0 #0a0a14, 0 0 0 1px var(--accent); }
 .switch-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
 

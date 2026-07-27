@@ -1,6 +1,16 @@
 /* ==== pokemon/forms.js (généré depuis index.html) ==== */
 const ZARBI_FORMS = ['201','201-b','201-c','201-d','201-e','201-f','201-g','201-h','201-i','201-j','201-k','201-l','201-m','201-n','201-o','201-p','201-q','201-r','201-s','201-t','201-u','201-v','201-w','201-x','201-y','201-z','201-exclamation','201-question'];
 function pickRandomZarbiForm(){ return ZARBI_FORMS[Math.floor(Math.random()*ZARBI_FORMS.length)]; }
+// Météno (Minior) : les 7 couleurs de noyau sont purement cosmétiques (mêmes stats/type/talent),
+// même principe que Zarbi ci-dessus : un identifiant de sprite tiré au hasard et conservé par membre.
+const MINIOR_FORMS = [774,10130,10131,10132,10133,10134,10135];
+function pickRandomMiniorForm(){ return MINIOR_FORMS[Math.floor(Math.random()*MINIOR_FORMS.length)]; }
+// Choisit un identifiant de sprite cosmétique aléatoire pour les espèces qui en ont besoin (Zarbi, Météno) ; null sinon.
+function pickFormSprite(name){
+  if(name==='Zarbi') return pickRandomZarbiForm();
+  if(name==='Météno') return pickRandomMiniorForm();
+  return null;
+}
 const SPRITE_SOURCES = {
   front: [
     id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/${id}.png`,
@@ -123,6 +133,12 @@ function getSpriteHTML(name, unownForm, facing, animated){
     id = FORM_SPRITE_IDS[name];
   } else if(name.startsWith('Arceus (')){
     id = DEX_NUMBERS['Arceus'];
+  } else if(name.startsWith('Lougaroc (')){
+    id = DEX_NUMBERS['Lougaroc'];
+  } else if(name.startsWith('Plumeline (Style')){
+    id = DEX_NUMBERS['Plumeline'];
+  } else if(name==='Météno'){
+    id = unownForm || pickRandomMiniorForm();
   } else {
     id = DEX_NUMBERS[name];
     if(!id) return `<span class="sprite-fallback">?</span>`;

@@ -77,6 +77,10 @@ function computeDamage(attacker, move, defender){
   if(attacker.ability==='Torche' && move.type==='feu' && attacker.torchActivated) abilityMult *= 1.5;
   if(defender.ability==='Isograisse' && (move.type==='feu'||move.type==='glace')) abilityMult *= 0.5;
   if(defender.ability==='Filtre' && eff>1) abilityMult *= 0.75;
+  if(defender.ability==='Armure Prisme' && eff>1) abilityMult *= 0.75;
+  if(attacker.ability==='Force Neurale' && eff>1) abilityMult *= 1.25;
+  if(defender.ability==='Écume' && move.type==='feu') abilityMult *= 0.5;
+  if(attacker.ability==='Écume' && move.type==='eau') abilityMult *= 2;
   if(defender.reflectTurns>0 && move.cat==='phys') abilityMult *= 0.5;
   if(defender.lightScreenTurns>0 && move.cat==='spec') abilityMult *= 0.5;
   if(attacker.heldItem==='orbeVie' && move.power>0) abilityMult *= 1.3;

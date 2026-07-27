@@ -112,6 +112,17 @@ function renderMoveGrid(){
     grid.appendChild(btn);
     return;
   }
+  if(canDeclareZMove(p, bs)){
+    const zBtn = document.createElement('button');
+    zBtn.className = 'move-btn' + (bs.declaringZMove ? ' active' : '');
+    zBtn.disabled = bs.locked;
+    zBtn.innerHTML = bs.declaringZMove ? '⚡ Capacité Z activée <small>Clique pour annuler</small>' : '⚡ Déclarer une Capacité Z <small>Choisis ensuite la capacité à surboosster</small>';
+    zBtn.onclick = ()=>{ bs.declaringZMove = !bs.declaringZMove; renderMoveGrid(); };
+    grid.appendChild(zBtn);
+  } else {
+    bs.declaringZMove = false;
+  }
+  const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
   p.moves.forEach((mv, idx)=>{
     const btn = document.createElement('button');
     btn.className='move-btn';
@@ -120,8 +131,15 @@ function renderMoveGrid(){
     const ppCur = p.ppCur ? p.ppCur[idx] : null;
     const ppMax = basePP(mv);
     const noPP = ppCur!==null && ppCur<=0;
-    btn.disabled = bs.locked || isDisabled || isLockedOut || noPP;
-    btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?" · Bloqué par l'objet":''}</small>`;
+    const zReady = zEligible && zEligible.includes(idx);
+    const zBlocked = zEligible && !zReady;
+    btn.disabled = bs.locked || isDisabled || isLockedOut || noPP || zBlocked;
+    if(zReady){
+      const zPreview = buildZMove(mv);
+      btn.innerHTML = `⚡ ${zPreview.name} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${zPreview.power} · via ${mv.name}</small>`;
+    } else {
+      btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?" · Bloqué par l'objet":''}</small>`;
+    }
     btn.onclick = ()=> handleMoveChoice(idx);
     grid.appendChild(btn);
   });
