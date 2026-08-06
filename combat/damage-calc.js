@@ -44,9 +44,9 @@ function computeDamage(attacker, move, defender){
     return { dmg: move.fixedDamage, eff: 1, crit:false };
   }
   const crit = rollCrit(attacker, defender);
-  const atkBase = move.cat==='phys' ? attacker.stats.atk : attacker.stats.spa;
+  const atkBase = move.useDefenseForAtk ? attacker.stats.def : (move.cat==='phys' ? attacker.stats.atk : attacker.stats.spa);
   const defBase = move.cat==='phys' ? defender.stats.def : defender.stats.spd;
-  let atkStage = move.cat==='phys' ? attacker.stages.atk : attacker.stages.spa;
+  let atkStage = move.useDefenseForAtk ? attacker.stages.def : (move.cat==='phys' ? attacker.stages.atk : attacker.stages.spa);
   let defStage = move.cat==='phys' ? defender.stages.def : defender.stages.spd;
   // Sur un coup critique, les baisses d'Attaque et les hausses de Défense adverses sont ignorées
   if(crit){ atkStage = Math.max(0, atkStage); defStage = Math.min(0, defStage); }
@@ -81,6 +81,12 @@ function computeDamage(attacker, move, defender){
   if(attacker.ability==='Force Neurale' && eff>1) abilityMult *= 1.25;
   if(defender.ability==='Écume' && move.type==='feu') abilityMult *= 0.5;
   if(attacker.ability==='Écume' && move.type==='eau') abilityMult *= 2;
+  if(attacker.ability==='Transistor' && move.type==='electrik') abilityMult *= 1.5;
+  if(attacker.ability==="Mâchoire du Dragon" && move.type==='dragon') abilityMult *= 1.5;
+  if(defender.ability==='Écailles Glacées' && move.cat==='spec') abilityMult *= 0.5;
+  if(attacker.ability==='Punk Rock' && move.sound) abilityMult *= 1.3;
+  if(defender.ability==='Punk Rock' && move.sound) abilityMult *= 0.5;
+  if(attacker.ability==='Instinct Gorille' && move.cat==='phys') abilityMult *= 1.5;
   if(defender.reflectTurns>0 && move.cat==='phys') abilityMult *= 0.5;
   if(defender.lightScreenTurns>0 && move.cat==='spec') abilityMult *= 0.5;
   if(attacker.heldItem==='orbeVie' && move.power>0) abilityMult *= 1.3;
@@ -94,6 +100,12 @@ function computeDamage(attacker, move, defender){
     const auraBreak = fieldMons.some(c=>c.ability==='Rupture Aura');
     if(move.type==='tenebres' && fieldMons.some(c=>c.ability==='Aura Sombre')) abilityMult *= auraBreak ? 0.75 : 1.33;
     if(move.type==='fee' && fieldMons.some(c=>c.ability==='Aura Féérique')) abilityMult *= auraBreak ? 0.75 : 1.33;
+    if(move.type==='acier' && attacker.ability!=="Esprit d'Acier"){
+      const loc = locateActiveSlot(attacker);
+      const allies = loc && loc.side==='player' ? alivePlayerCombatants() : aliveFoeCombatants();
+      if(allies.some(c=>c.ability==="Esprit d'Acier")) abilityMult *= 1.5;
+    }
+    if(move.type==='acier' && attacker.ability==="Esprit d'Acier") abilityMult *= 1.5;
   }
 
   // Météo

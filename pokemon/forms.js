@@ -63,7 +63,21 @@ const FORM_SPRITE_IDS = {
   'Boréas (Totémique)':10019, 'Fulguris (Totémique)':10020, 'Démétéros (Totémique)':10021,
   'Méga-Florizarre':10033, 'Méga-Dracaufeu X':10034, 'Méga-Dracaufeu Y':10035, 'Méga-Tortank':10036,
   'Méga-Kangourex':10039, 'Méga-Léviator':10041, 'Méga-Mewtwo Y':10044, 'Méga-Cizayox':10046,
-  'Méga-Gardevoir':10051, 'Méga-Carchacrok':10061, 'Méga-Lucario':10062, 'Méga-Métalosse':10076
+  'Méga-Gardevoir':10051, 'Méga-Carchacrok':10061, 'Méga-Lucario':10062, 'Méga-Métalosse':10076,
+  // Formes régionales d'Alola et de Galar : gardent le numéro de Pokédex national de leur espèce
+  // d'origine (donc absentes de DEX_NUMBERS sous ce nom), mais PokeAPI leur donne bien un
+  // identifiant de sprite dédié (10000+), vérifié espèce par espèce via l'API PokeAPI elle-même.
+  "Rattata d'Alola":10091, "Rattatac d'Alola":10092, "Raichu d'Alola":10100,
+  "Sabelette d'Alola":10101, "Sablaireau d'Alola":10102, "Goupix d'Alola":10103, "Feunard d'Alola":10104,
+  "Taupiqueur d'Alola":10105, "Triopikeur d'Alola":10106, "Miaouss d'Alola":10107, "Persian d'Alola":10108,
+  "Racaillou d'Alola":10109, "Gravalanch d'Alola":10110, "Grolem d'Alola":10111,
+  "Tadmorv d'Alola":10112, "Grotadmorv d'Alola":10113, "Noadkoko d'Alola":10114, "Ossatueur d'Alola":10115,
+  'Miaouss de Galar':10161, 'Ponyta de Galar':10162, 'Galopa de Galar':10163,
+  'Ramoloss de Galar':10164, 'Flagadoss de Galar':10165, 'Canarticho de Galar':10166,
+  'Smogogo de Galar':10167, 'M. Mime de Galar':10168, 'Artikodin de Galar':10169,
+  'Électhor de Galar':10170, 'Sulfura de Galar':10171, 'Corayon de Galar':10173,
+  'Zigzaton de Galar':10174, 'Linéon de Galar':10175, 'Daruman de Galar':10176,
+  'Darumacho de Galar':10177, 'Tutafeh de Galar':10179, 'Stunfisk de Galar':10180
 };
 function getSpriteSourceList(facing, animated){
   return animated ? [...ANIMATED_SPRITE_SOURCES[facing], ...ANIMATED_SPRITE_SOURCES_FALLBACK[facing], ...SPRITE_SOURCES[facing]] : SPRITE_SOURCES[facing];

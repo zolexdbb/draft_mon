@@ -112,17 +112,34 @@ function renderMoveGrid(){
     grid.appendChild(btn);
     return;
   }
-  if(canDeclareZMove(p, bs)){
+  if(canDeclareZMove(p, bs) && !p.dynamaxed){
     const zBtn = document.createElement('button');
     zBtn.className = 'move-btn' + (bs.declaringZMove ? ' active' : '');
     zBtn.disabled = bs.locked;
     zBtn.innerHTML = bs.declaringZMove ? '⚡ Capacité Z activée <small>Clique pour annuler</small>' : '⚡ Déclarer une Capacité Z <small>Choisis ensuite la capacité à surboosster</small>';
-    zBtn.onclick = ()=>{ bs.declaringZMove = !bs.declaringZMove; renderMoveGrid(); };
+    zBtn.onclick = ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove) bs.declaringDynamax = false; renderMoveGrid(); };
     grid.appendChild(zBtn);
   } else {
     bs.declaringZMove = false;
   }
+  if(p.dynamaxed){
+    const dynIndicator = document.createElement('div');
+    dynIndicator.className = 'move-btn active';
+    dynIndicator.style.cursor = 'default';
+    dynIndicator.innerHTML = `🔴 Dynamax actif <small>${p.dynamaxTurns} tour${p.dynamaxTurns>1?'s':''} restant${p.dynamaxTurns>1?'s':''}</small>`;
+    grid.appendChild(dynIndicator);
+  } else if(canDynamax(p, bs) && !bs.declaringZMove){
+    const dynBtn = document.createElement('button');
+    dynBtn.className = 'move-btn' + (bs.declaringDynamax ? ' active' : '');
+    dynBtn.disabled = bs.locked;
+    dynBtn.innerHTML = bs.declaringDynamax ? '🔴 Dynamax activé <small>Clique pour annuler</small>' : '🔴 Déclarer Dynamax <small>Toutes les capacités offensives deviennent Max pendant 3 tours</small>';
+    dynBtn.onclick = ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax) bs.declaringZMove = false; renderMoveGrid(); };
+    grid.appendChild(dynBtn);
+  } else {
+    bs.declaringDynamax = false;
+  }
   const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
+  const dynamaxPreview = bs.declaringDynamax || p.dynamaxed;
   p.moves.forEach((mv, idx)=>{
     const btn = document.createElement('button');
     btn.className='move-btn';
@@ -133,10 +150,14 @@ function renderMoveGrid(){
     const noPP = ppCur!==null && ppCur<=0;
     const zReady = zEligible && zEligible.includes(idx);
     const zBlocked = zEligible && !zReady;
+    const maxReady = dynamaxPreview && (mv.cat==='phys'||mv.cat==='spec');
     btn.disabled = bs.locked || isDisabled || isLockedOut || noPP || zBlocked;
     if(zReady){
       const zPreview = buildZMove(mv);
       btn.innerHTML = `⚡ ${zPreview.name} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${zPreview.power} · via ${mv.name}</small>`;
+    } else if(maxReady){
+      const maxPreview = buildMaxMove(mv, p, null, null);
+      btn.innerHTML = `🔴 ${maxPreview.name} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${maxPreview.power} · via ${mv.name}</small>`;
     } else {
       btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?" · Bloqué par l'objet":''}</small>`;
     }

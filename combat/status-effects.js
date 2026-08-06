@@ -141,7 +141,7 @@ function inflictStatus(target, status, logs){
       return;
     }
   }
-  if(status==='poison' && (target.ability==='Vaccin' || types.includes('poison') || types.includes('acier'))){
+  if(status==='poison' && (target.ability==='Vaccin' || target.ability==='Voile Pastel' || types.includes('poison') || types.includes('acier'))){
     logs.push(`${target.name} est immunisé contre le poison !`);
     return;
   }
@@ -176,6 +176,9 @@ function applyStatusEffect(user, target, move, logs){
   if(eff.foeBoost){
     if((target.ability==='Corps Sain' || target.ability==='Intégral Métal') && eff.foeBoost.every(b=>b.stages<0)){
       logs.push(`${target.ability} empêche la baisse de statistiques de ${target.name} !`);
+    } else if(target.ability==='Armure Miroir' && eff.foeBoost.every(b=>b.stages<0)){
+      applyStatBoost(user, eff.foeBoost, logs);
+      logs.push(`Armure Miroir renvoie la baisse de statistiques à ${user.name} !`);
     } else if(target.mistTurns>0 && eff.foeBoost.every(b=>b.stages<0)){
       logs.push(`La Brume protège ${target.name} de la baisse de statistiques !`);
     } else {

@@ -239,7 +239,37 @@ const ABILITY_DESC = {
   'Lucidité':"Ignore les changements de statistiques des autres Pokémon lors du calcul des dégâts.",
   'Régénération':"Restaure une partie des PV du porteur lorsqu'il quitte le combat.",
   'Effet Spore':"Peut infliger au hasard poison, paralysie ou sommeil à l'attaquant qui touche le porteur au contact.",
-  'Pointes Piquantes':"Blesse l'attaquant au contact, comme des Pointes vivantes."
+  'Pointes Piquantes':"Blesse l'attaquant au contact, comme des Pointes vivantes.",
+  /* ---- BLOC Gen 8 : nouveaux talents ---- */
+  'Libéro':"Change le type du porteur pour celui de la capacité qu'il s'apprête à utiliser.",
+  'Ramasse Ball':"Récupère automatiquement la Poké Ball du premier lancer raté du combat.",
+  'Chute Cotonneuse':"Disperse du coton au contact, réduisant la Vitesse de tous les autres Pokémon présents.",
+  'Propulseur':"Ignore les talents et capacités qui attirent les capacités vers le porteur.",
+  'Armure Miroir':"Renvoie à l'expéditeur toute baisse de statistique que le porteur devait subir.",
+  'Dégobage':"En utilisant Surf ou Plongeon, ramène une proie qui est recrachée en représailles si le porteur est touché.",
+  "Nerfs d'Acier":"Ignore les talents et capacités qui attirent les capacités vers le porteur.",
+  'Turbo Vapeur':"Augmente fortement la Vitesse du porteur s'il est touché par une capacité de type Feu ou Eau.",
+  'Punk Rock':"Renforce les capacités sonores du porteur et réduit de moitié les dégâts des capacités sonores subies.",
+  'Crache-Sable':"Déclenche une tempête de sable quand le porteur subit des dégâts.",
+  'Écailles Glacées':"Réduit de moitié les dégâts des capacités spéciales subies.",
+  'Mûrissement':"Double les effets des Baies mangées par le porteur.",
+  'Tête de Gel':"Un heaume de glace absorbe la première capacité physique subie ; il se reforme sous la Grêle.",
+  "Cercle d'Énergie":"Renforce les capacités des alliés situés à proximité du porteur.",
+  'Mimétisme':"Le type du porteur change selon le terrain de combat actif.",
+  'Anti-Écran':"Détruit Mur Lumière, Protection et Écran Aurore des deux camps à l'entrée en jeu.",
+  "Esprit d'Acier":"Renforce les capacités de type Acier du porteur et de ses alliés.",
+  'Corps Fatal':"Inflige un compte à rebours fatal de trois tours à quiconque touche le porteur au contact.",
+  'Âme Vagabonde':"Échange son talent avec celui de l'attaquant qui touche le porteur au contact.",
+  'Instinct Gorille':"Augmente fortement l'Attaque du porteur, mais le bloque sur la première capacité choisie.",
+  'Voile Pastel':"Immunise le porteur (et ses alliés) contre le poison.",
+  'Déclic Fringale':"Alterne entre un mode repu et un mode affamé à la fin de chaque tour.",
+  'Dégainage Rapide':"Donne une chance d'agir en premier parmi les capacités de même priorité.",
+  'Poing Furtif':"Les capacités de contact du porteur touchent partiellement les cibles protégées.",
+  'Remède Étrange':"Supprime tous les changements de statistiques des alliés à l'entrée en jeu du porteur.",
+  'Transistor':"Renforce les capacités de type Électrik du porteur.",
+  "Mâchoire du Dragon":"Renforce les capacités de type Dragon du porteur.",
+  'Hennissement Glacial':"Augmente fortement l'Attaque du porteur après avoir mis K.O. un Pokémon.",
+  'Hennissement Sinistre':"Augmente fortement l'Attaque Spéciale du porteur après avoir mis K.O. un Pokémon."
 };
 
 

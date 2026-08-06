@@ -3,6 +3,11 @@ function freshBattleFields(){
   return { stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status:null, sleepCounter:0, confuseCounter:0, flinched:false, protectChain:0 };
 }
 function resetBattleFields(c){
+  if(c.dynamaxed){
+    revertDynamaxBoost(c);
+    c.dynamaxed = false;
+    c.dynamaxTurns = 0;
+  }
   c.stages = {atk:0,def:0,spa:0,spd:0,spe:0,acc:0};
   // le statut (poison/brûlure/paralysie/sommeil/gel) persiste au changement, la confusion se dissipe en sortant
   c.confuseCounter = 0;
@@ -132,7 +137,7 @@ function startBattle(){
     pActive: aliveIdxs[0], pActive2: (isDouble && aliveIdxs.length>1) ? aliveIdxs[1] : null,
     fActive: 0, fActive2: (isDouble && enemyTeam.length>1) ? 1 : null,
     locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null, terrain:null,
-    pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false
+    pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false, dynamaxUsed:false, declaringDynamax:false
   };
   battleInProgress = true;
   document.getElementById('screenTower').classList.add('hidden');
@@ -223,6 +228,16 @@ function playerAttack(moveIdx, targetIdx){
     target = bs.foe[targetIdx];
   } else {
     target = aliveFoeCombatants()[0] || null;
+  }
+  if(bs.declaringDynamax && moveIdx>=0 && canDynamax(p, bs)){
+    applyDynamaxBoost(p);
+    p.dynamaxed = true;
+    p.dynamaxTurns = 3;
+    bs.dynamaxUsed = true;
+  }
+  bs.declaringDynamax = false;
+  if(p.dynamaxed && (move.cat==='phys' || move.cat==='spec')){
+    move = buildMaxMove(move, p, bs, target);
   }
   bs.pendingActions.push({ actor:p, move, target, isPlayer:true, slot });
   bs.locked = true;
@@ -385,7 +400,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(move.categoryFromHigherStat){
     move = { ...move, cat: actor.stats.spa > actor.stats.atk ? 'spec' : 'phys' };
   }
-  if(actor.ability==='Protéen' && !move.metronome && !move.mirrorMove){
+  if((actor.ability==='Protéen' || actor.ability==='Libéro') && !move.metronome && !move.mirrorMove){
     const newTypes = move.type2 ? [move.type, move.type2] : [move.type];
     const current = actor.transformedTypes || actor.types;
     const already = current.length===newTypes.length && newTypes.every(t=>current.includes(t));
@@ -411,6 +426,9 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   actor.lastMoveUsed = move;
   actor.lastMoveTarget = defender;
   if(actor.heldItem && ITEMS[actor.heldItem] && ITEMS[actor.heldItem].choiceLock && !actor.lockedMove){
+    actor.lockedMove = move;
+  }
+  if(actor.ability==='Instinct Gorille' && !actor.lockedMove){
     actor.lockedMove = move;
   }
   if(move.requiresAteBerry && !actor.ateBerry){
@@ -743,6 +761,32 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(move.cat==='spec') defender.lastSpecDamage = actualDmg;
   let msg = `<b>${actor.name}</b> ${actorIsPlayer?'utilise':'riposte avec'} ${move.name} !${crit?' <b>Coup critique !</b>':''}${effLabel(eff)} (${actualDmg} dégâts)${thawMsg}${enduredMsg}${wonderGuardMsg}`;
   if(sashSaved){ msg += ` ${defender.name} tient bon grâce à sa Ceinture Force !`; }
+  if(defender.ability==='Turbo Vapeur' && actualDmg>0 && (move.type==='feu'||move.type==='eau')){
+    let klogs = [];
+    applyStatBoost(defender, [{stat:'spe',stages:6}], klogs);
+    msg += ` ${defender.name} active sa Turbo Vapeur !`;
+  }
+  if(defender.ability==='Crache-Sable' && actualDmg>0 && battleState && (!battleState.weather || battleState.weather.type!=='sable')){
+    battleState.weather = { type:'sable', turns:5 };
+    msg += ` ${defender.name} déclenche une tempête de sable grâce à Crache-Sable !`;
+  }
+  if(defender.ability==='Chute Cotonneuse' && actualDmg>0 && battleState){
+    const loc = locateActiveSlot(defender);
+    const foes = loc && loc.side==='player' ? aliveFoeCombatants() : alivePlayerCombatants();
+    let klogs = [];
+    foes.forEach(f=> applyStatBoost(f, [{stat:'spe',stages:-1}], klogs));
+    msg += ` ${defender.name} disperse du coton qui réduit la Vitesse adverse !`;
+  }
+  if(defender.ability==='Corps Fatal' && actualDmg>0 && move.cat==='phys' && defender.hp>0){
+    defender.perishCounter = 3; actor.perishCounter = 3;
+    msg += ` Le Corps Fatal de ${defender.name} condamne les deux camps dans 3 tours !`;
+  }
+  if(defender.ability==='Âme Vagabonde' && actualDmg>0 && move.cat==='phys' && defender.hp>0){
+    const tmpAbility = actor.ability;
+    actor.ability = defender.ability;
+    defender.ability = tmpAbility;
+    msg += ` ${defender.name} échange son talent avec ${actor.name} grâce à Âme Vagabonde !`;
+  }
   if(move.boostOnKO && defender.hp<=0){
     let klogs = [];
     applyStatBoost(actor, [move.boostOnKO], klogs);
@@ -754,6 +798,16 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     statKeys.forEach(k=>{ if(actor.stats[k] > actor.stats[bestStat]) bestStat = k; });
     let klogs = [];
     applyStatBoost(actor, [{stat:bestStat, stages:1}], klogs);
+    msg += ' ' + klogs.join(' ');
+  }
+  if(actor.ability==='Hennissement Glacial' && defender.hp<=0){
+    let klogs = [];
+    applyStatBoost(actor, [{stat:'atk', stages:1}], klogs);
+    msg += ' ' + klogs.join(' ');
+  }
+  if(actor.ability==='Hennissement Sinistre' && defender.hp<=0){
+    let klogs = [];
+    applyStatBoost(actor, [{stat:'spa', stages:1}], klogs);
     msg += ' ' + klogs.join(' ');
   }
   if(defender.ability==='Banc de Poissons' && !defender.schoolBroken && defender.hp>0 && defender.hp<=defender.maxHp*0.25){
@@ -1003,6 +1057,14 @@ function endTurn(){
     if(c.tauntTurns>0){
       c.tauntTurns--;
       if(c.tauntTurns===0) logs.push(`${c.name} n'est plus provoqué.`);
+    }
+    if(c.dynamaxed && c.dynamaxTurns>0){
+      c.dynamaxTurns--;
+      if(c.dynamaxTurns===0){
+        revertDynamaxBoost(c);
+        c.dynamaxed = false;
+        logs.push(`${c.name} revient à sa taille normale.`);
+      }
     }
     if(c.perishCounter>0 && c.hp>0){
       c.perishCounter--;

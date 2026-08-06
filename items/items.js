@@ -112,7 +112,15 @@ const ITEMS = {
   memoireGlace:    { name:'Mémoire Glace',    sprite:ITEM_SPRITE('ice-memory'),      price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Silvallié au type Glace." },
   memoireDragon:   { name:'Mémoire Dragon',   sprite:ITEM_SPRITE('dragon-memory'),   price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Silvallié au type Dragon." },
   memoireTenebres: { name:'Mémoire Ténèbres', sprite:ITEM_SPRITE('dark-memory'),     price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Silvallié au type Ténèbres." },
-  memoireFee:      { name:'Mémoire Fée',      sprite:ITEM_SPRITE('fairy-memory'),    price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Silvallié au type Fée." }
+  memoireFee:      { name:'Mémoire Fée',      sprite:ITEM_SPRITE('fairy-memory'),    price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Silvallié au type Fée." },
+  // ---- Légendaires de Galar (tenus, vendus uniquement par le Marchand Itinérant) ----
+  epeeRouillee:     { name:'Épée Rouillée',   sprite:ITEM_SPRITE('rusted-sword'),    price:3000, kind:'held', category:'forme', formItem:true, emoji:'⚔️', desc:"Objet tenu : fait passer Zacian en Forme Épée Sacrée (Fée/Acier)." },
+  bouclierRouille:  { name:'Bouclier Rouillé', sprite:ITEM_SPRITE('rusted-shield'),  price:3000, kind:'held', category:'forme', formItem:true, emoji:'🛡️', desc:"Objet tenu : fait passer Zamazenta en Forme Bouclier Royal (Combat/Acier)." },
+  parcheminTenebres:{ name:'Parchemin des Ténèbres', sprite:ITEM_SPRITE('scroll-of-darkness'), price:2800, kind:'held', category:'forme', formItem:true, emoji:'📜', desc:"Objet tenu : fait passer Wushours en Shifours Style Farouche (Combat/Ténèbres)." },
+  parcheminAqua:    { name:'Parchemin Aqua',  sprite:ITEM_SPRITE('scroll-of-waters'), price:2800, kind:'held', category:'forme', formItem:true, emoji:'📜', desc:"Objet tenu : fait passer Wushours en Shifours Style Aqua (Combat/Eau)." },
+  renePartageGlace: { name:'Rêne Partagée Glace', sprite:ITEM_SPRITE('reins-of-unity'), price:3200, kind:'held', category:'forme', formItem:true, emoji:'🥶', desc:"Objet tenu : fait fusionner Sylveroy avec Blizzeval (Monture Glace, Psy/Glace)." },
+  renePartageSpectre:{ name:'Rêne Partagée Spectre', sprite:ITEM_SPRITE('reins-of-unity'), price:3200, kind:'held', category:'forme', formItem:true, emoji:'👻', desc:"Objet tenu : fait fusionner Sylveroy avec Spectreval (Monture Spectre, Psy/Spectre)." },
+  facteurGigamax:{ name:'Facteur Gigamax', sprite:ITEM_SPRITE('dynamax-band'), price:2000, kind:'held', category:'forme', formItem:true, emoji:'🔴', desc:"Objet tenu : permet au porteur de devenir Gigamax en plus de Dynamax, avec une Capacité G-Max unique s'il y est éligible." }
 };
 const ITEM_SPRITE_SOURCES = [
   slug => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/items/${slug}.png`,

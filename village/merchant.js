@@ -9,7 +9,9 @@ const MERCHANT_GROUPS = [
   { label: 'Pierres Méga', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite'] },
   { label: 'Cristaux Z', keys: ['zCrystalNormal','zCrystalCombat','zCrystalVol','zCrystalPoison','zCrystalSol','zCrystalRoche','zCrystalInsecte','zCrystalFantome','zCrystalAcier','zCrystalFeu','zCrystalEau','zCrystalPlante','zCrystalElectrik','zCrystalPsy','zCrystalGlace','zCrystalDragon','zCrystalTenebres','zCrystalFee'] },
   { label: 'Necrozma', keys: ['prismeCouchant','prismeAurore','ultranecrozium'] },
-  { label: 'Mémoires (Silvallié)', keys: ['memoireCombat','memoireVol','memoirePoison','memoireSol','memoireRoche','memoireInsecte','memoireFantome','memoireAcier','memoireFeu','memoireEau','memoirePlante','memoireElectrik','memoirePsy','memoireGlace','memoireDragon','memoireTenebres','memoireFee'] }
+  { label: 'Mémoires (Silvallié)', keys: ['memoireCombat','memoireVol','memoirePoison','memoireSol','memoireRoche','memoireInsecte','memoireFantome','memoireAcier','memoireFeu','memoireEau','memoirePlante','memoireElectrik','memoirePsy','memoireGlace','memoireDragon','memoireTenebres','memoireFee'] },
+  { label: 'Légendaires de Galar', keys: ['epeeRouillee','bouclierRouille','parcheminTenebres','parcheminAqua','renePartageGlace','renePartageSpectre'] },
+  { label: 'Gigamax', keys: ['facteurGigamax'] }
 ];
 function renderMerchantPanel(){
   const wrap = document.getElementById('villagePanelContent');

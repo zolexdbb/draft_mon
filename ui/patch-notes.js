@@ -1,6 +1,43 @@
 /* ==== ui/patch-notes.js (généré depuis index.html) ==== */
 const PATCH_NOTES = [
   {
+    version: 'v0.9',
+    title: 'v0.9 — Gen 8 Update',
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "88 nouveaux Pokémon ajoutés (Galar, Pokédex complet 1 → 890), dont les 3 starters, Zacian et Zamazenta (avec leurs formes Épée Sacrée/Bouclier Royal via objet tenu) et Éthernatos",
+          "14 nouvelles lignées de Formes de Galar, sélectionnables indépendamment de leurs versions Kanto/Johto au draft (Miaouss, Ponyta, Ramoloss, Canarticho, Smogogo, M. Mime, Artikodin, Électhor, Sulfura, Corayon, Zigzaton, Daruman, Tuniversion et Stunfisk de Galar)",
+          "Les Pokémon des deux extensions ajoutés : Wushours pouvant devenir Shifours Style Farouche ou Style Aqua via objet tenu, Zarude, Régieleki, Régidrago, Blizzeval, Spectreval, et Sylveroy pouvant fusionner avec l'un des deux pour devenir Monture Glace ou Monture Spectre"
+        ]
+      },
+      {
+        icon: '⚔️', label: 'Capacités',
+        items: [
+          "89 nouvelles attaques de Génération 8 (Damoclès Corporel, Roue Libre, Ballon Pyro, Bras Articulé, Draco-Flèches, Frappes Déferlantes, Triple Axel, Poltergeist, Faisceau d'Acier...)",
+          "Movepool enrichi pour de nombreuses lignées Gen 1-7 avec ces nouvelles attaques, selon leur type et leur thème",
+          "Damoclès Corporel calcule ses dégâts à partir de la Défense du lanceur plutôt que de son Attaque, et Bras Articulé change de catégorie physique/spéciale selon la statistique la plus haute du lanceur, comme dans les vrais jeux"
+        ]
+      },
+      {
+        icon: '💠', label: 'Talents',
+        items: [
+          "29 nouveaux talents de Génération 8, dont plusieurs avec un vrai effet codé en combat : Libéro (change de type comme Protéen), Corps Fatal et Âme Vagabonde (déclenchés au contact), Armure Miroir (renvoie les baisses de statistiques), Écailles Glacées (réduit les dégâts spéciaux subis), Voile Pastel (immunité au poison), Punk Rock (renforce/résiste aux capacités sonores), Turbo Vapeur (Vitesse à fond si touché par le Feu ou l'Eau), Transistor et Mâchoire du Dragon (renforcent leur type), Esprit d'Acier (renforce l'Acier du porteur et de ses alliés), Hennissement Glacial/Sinistre (boost après un KO, comme Éclosion), Instinct Gorille (Attaque boostée mais bloqué sur la première capacité), Chute Cotonneuse et Crache-Sable (déclenchés en prenant des dégâts)",
+          "Les autres nouveaux talents (Ramasse Ball, Mûrissement, Tête de Gel, Mimétisme...) ont leur description dans le Pokédex mais restent sans effet mécanique codé pour l'instant"
+        ]
+      },
+      {
+        icon: '🔴', label: 'Dynamax & Gigamax',
+        items: [
+          "Nouveau système de Dynamax : une fois par combat, un Pokémon peut Dynamaxer pendant 3 tours, ses PV actuels et max augmentant de 50%",
+          "Pendant le Dynamax, chaque capacité offensive choisie devient une Capacité Max du même type, avec une puissance boostée selon la table de conversion officielle",
+          "Nouvel objet tenu Facteur Gigamax : les lignées Gigamax-éligibles obtiennent en plus le nom officiel de leur Capacité G-Max, et pour une quinzaine d'entre elles (Gorythmic, Pyrobut, Lézargus, Dracaufeu, Corvaillus, Monthracite, Salarsen, Scolocendre, Angoliath...) un vrai effet bonus (dégâts fixes élevés, statut garanti, piège, tempête de sable, endormissement différé...)"
+        ]
+      }
+    ]
+  },
+  {
     version: 'v0.8',
     title: 'v0.8 — Gen 7 Update',
     categories: [
@@ -447,13 +484,11 @@ const PATCH_NOTES = [
   }
 ];
 const SPLASH_TEXTS = [
-  "Gen 7 est disponible !",
-  "88 nouveaux Pokémon d'Alola !",
-  "Les Capacités Z sont là !",
-  "Les Formes d'Alola rejoignent le draft !",
-  "Necrozma peut fusionner !",
-  "11 Ultra-Chimères à drafter !",
-  "Drafte les Gardiens des Îles !"
+  "Gen 8 est disponible !",
+  "Le Dynamax arrive !",
+  "Déclenche ton Gigamax !",
+  "89 nouvelles attaques !",
+  "29 nouveaux talents !"
 ];
 function renderPatchNoteBody(v){
   if(v.categories){

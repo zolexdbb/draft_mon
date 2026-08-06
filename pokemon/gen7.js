@@ -29,7 +29,7 @@ const LINES_GEN7 = [
   {name:'Larvibule',types:['insecte'],base:st(47,62,45,55,45,46)},
   {name:'Chrysapile',types:['insecte','electrik'],base:st(57,82,95,55,75,36)},
   {name:'Lucanon',types:['insecte','electrik'],base:st(77,70,90,145,75,43)}]},
-{id:'crabagarre',abilities:['Poing de Fer','Choc Nerveux'],moveIds:['bubble','leer','superpower','rocksmash','icepunch','closecombat','crabhammer','icehammer','firstimpression','brickbreak','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','bulkup','stoneedge'],
+{id:'crabagarre',abilities:['Poing de Fer','Choc Nerveux','Hennissement Glacial'],moveIds:['bubble','leer','superpower','rocksmash','icepunch','closecombat','crabhammer','icehammer','firstimpression','brickbreak','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','bulkup','stoneedge'],
  stages:[
   {name:'Crabagarre',types:['combat'],base:st(47,82,57,42,47,63)},
   {name:'Crabominable',types:['combat','glace'],base:st(97,132,77,62,67,43)}]},
@@ -37,14 +37,14 @@ const LINES_GEN7 = [
  stages:[
   {name:'Bombydou',types:['insecte','fee'],base:st(40,45,40,55,40,84)},
   {name:'Rubombelle',types:['insecte','fee'],base:st(60,55,60,95,70,124)}]},
-{id:'rocabot',abilities:['Regard Vif','Cran'],moveIds:['tackle','rockthrow','bite','accelerock','rockslide','crunch','stoneedge','throatchop','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','stealthrock','fireblast','earthquake'],
+{id:'rocabot',abilities:['Regard Vif','Cran','Anti-Écran'],moveIds:['tackle','rockthrow','bite','accelerock','rockslide','crunch','stoneedge','throatchop','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','stealthrock','fireblast','earthquake'],
  stages:[
   {name:'Rocabot',types:['roche'],base:st(45,65,40,30,40,60)}],
  branches:[
   {name:'Lougaroc (Forme Diurne)',types:['roche'],base:st(75,115,65,55,65,112),abilities:['Regard Vif','Cran'],extraMoveIds:[]},
   {name:'Lougaroc (Forme Nocturne)',types:['roche'],base:st(75,115,75,55,75,82),abilities:['Regard Vif','Esprit Vital'],extraMoveIds:[]},
   {name:'Lougaroc (Forme Crépusculaire)',types:['roche'],base:st(75,117,65,55,65,110),abilities:['Griffe Solide'],extraMoveIds:[]}]},
-{id:'vorasterie',abilities:['Point Poison','Sans Pitié'],moveIds:['tackle','poisonsting','toxicthread','poisonjab','sludgebomb','venomdrench','banefulbunker','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','recover','icebeam','surf','toxic'],
+{id:'vorasterie',abilities:['Point Poison','Sans Pitié','Corps Fatal'],moveIds:['tackle','poisonsting','toxicthread','poisonjab','sludgebomb','venomdrench','banefulbunker','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','recover','icebeam','surf','toxic','barbbarrage','corrosivegas','direclaw','shellsidearm'],
  stages:[
   {name:'Vorastérie',types:['poison','eau'],base:st(50,53,62,43,52,45)},
   {name:'Prédastérie',types:['poison','eau'],base:st(50,63,152,53,142,35)}]},
@@ -52,11 +52,11 @@ const LINES_GEN7 = [
  stages:[
   {name:'Tiboudet',types:['sol'],base:st(70,100,70,45,55,45)},
   {name:'Bourrinos',types:['sol'],base:st(100,125,100,55,85,35)}]},
-{id:'araqua',abilities:['Écume','Absorbe-Eau'],moveIds:['bubble','watergun','stringshot','bite','liquidation','crunch','hydropump','lunge','mirrorcoat','protect','swift','endure','hyperbeam','facade','surf','sleeptalk','rest','icebeam','leechlife'],
+{id:'araqua',abilities:['Écume','Absorbe-Eau','Hennissement Sinistre'],moveIds:['bubble','watergun','stringshot','bite','liquidation','crunch','hydropump','lunge','mirrorcoat','protect','swift','endure','hyperbeam','facade','surf','sleeptalk','rest','icebeam','leechlife'],
  stages:[
   {name:'Araqua',types:['eau','insecte'],base:st(38,40,52,40,72,27)},
   {name:'Tarenbulle',types:['eau','insecte'],base:st(68,70,92,50,132,42)}]},
-{id:'mimantis',abilities:['Chlorophylle','Régénération'],moveIds:['leafage','growth','absorb','razorleaf','leafblade','synthesis','solarblade','leechlife','megahorn','protect','swift','endure','hyperbeam','solarbeam','facade','sleeptalk','rest','swordsdance','gigadrain'],
+{id:'mimantis',abilities:['Chlorophylle','Régénération','Voile Pastel'],moveIds:['leafage','growth','absorb','razorleaf','leafblade','synthesis','solarblade','leechlife','megahorn','protect','swift','endure','hyperbeam','solarbeam','facade','sleeptalk','rest','swordsdance','gigadrain','appleacid','branchpoke','chloroblast','drumbeating','gravapple','jungleheal','snaptrap'],
  stages:[
   {name:'Mimantis',types:['plante'],base:st(40,55,35,50,35,35)},
   {name:'Floramantis',types:['plante'],base:st(70,105,90,80,90,45)}]},
@@ -83,7 +83,7 @@ const LINES_GEN7 = [
 {id:'gouroutan',abilities:['Symbiose','Téléportation'],moveIds:['confusion','tackle','psybeam','instruct','psychic','futuresight','calmmind','recover','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','shadowball','focusblast'],
  stages:[
   {name:'Gouroutan',types:['normal','psy'],base:st(90,60,80,90,110,60)}]},
-{id:'quartermac',abilities:['Réceptacle'],moveIds:['tackle','rockthrow','closecombat','stoneedge','firstimpression','superpower','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','bulkup','rockslide'],
+{id:'quartermac',abilities:['Réceptacle','Punk Rock'],moveIds:['tackle','rockthrow','closecombat','stoneedge','firstimpression','superpower','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','bulkup','rockslide','bodypress','coaching','meteorassault','noretreat','octolock','thunderouskick','triplearrows','victorydance'],
  stages:[
   {name:'Quartermac',types:['combat'],base:st(100,120,90,40,60,80)}]},
 {id:'sovkipou',abilities:['Sur-Régime'],moveIds:['tackle','leer','leechlife','liquidation','firstimpression','lunge','waterpulse','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','swordsdance','crunch'],
@@ -97,7 +97,7 @@ const LINES_GEN7 = [
 {id:'concombaffe',abilities:['Chair-Piège','Lucidité'],moveIds:['tackle','harden','recover','toxic','bodyslam','counter','mirrorcoat','protect','swift','endure','hyperbeam','facade','sleeptalk','rest'],
  stages:[
   {name:'Concombaffe',types:['eau'],base:st(55,60,130,30,130,5)}]},
-{id:'type0',abilities:['Carapace Rigide'],moveIds:['tackle','headbutt','crunch','ironhead','multiattack','shadowclaw','flamethrower','icebeam','thunderbolt','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','earthquake','psychic'],
+{id:'type0',abilities:['Carapace Rigide','Déclic Fringale'],moveIds:['tackle','headbutt','crunch','ironhead','multiattack','shadowclaw','flamethrower','icebeam','thunderbolt','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','earthquake','psychic'],
  stages:[
   {name:'Type:0',types:['normal'],base:st(95,95,95,95,95,59)},
   {name:'Silvallié',types:['normal'],base:st(95,95,95,95,95,95),abilities:['Architecture'],forms:{
@@ -189,7 +189,7 @@ const LINES_GEN7 = [
 {id:'pierroteknik',abilities:['Éclosion'],moveIds:['ember','mindblown','shadowball','flamethrower','fireblast','shadowbone','protect','swift','endure','hyperbeam','facade','sleeptalk','rest'],
  stages:[
   {name:'Pierroteknik',types:['feu','fantome'],base:st(53,127,53,151,79,107)}]},
-{id:'tokorico',abilities:['Électro Surge'],moveIds:['tackle','discharge','dazzlinggleam','thunderbolt','thunder','plasmafists','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','uturn'],
+{id:'tokorico',abilities:['Électro Surge','Dégainage Rapide'],moveIds:['tackle','discharge','dazzlinggleam','thunderbolt','thunder','plasmafists','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','uturn'],
  stages:[
   {name:'Tokorico',types:['electrik','fee'],base:st(70,115,85,95,75,130)}]},
 {id:'tokopiyon',abilities:['Psycho Surge'],moveIds:['confusion','psychic','moonblast','dazzlinggleam','futuresight','calmmind','protect','swift','endure','hyperbeam','facade','sleeptalk','rest'],
