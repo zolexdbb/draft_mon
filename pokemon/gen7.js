@@ -1,4 +1,13 @@
-/* ==== pokemon/gen7.js : Pokédex n°722 à 809 (Alola) + Formes d'Alola ==== */
+/* ==== SOMMAIRE ====
+   Pokédex n°722 à 809 (région d'Alola) + les 10 lignées de Formes d'Alola. Repères (lignes
+   approximatives) :
+   - L.3-99    : Starters et lignées classiques d'Alola
+   - L.100-164 : Cas spéciaux (Silvallié/type0, Plumeline/branches, Lougaroc/branches,
+     Cosmog→Cosmovum→Solgaleo/Lunala, Necrozma + ses 3 fusions)
+   - L.165-230 : Ultra-Chimères + légendaires d'Alola (Gardiens des Îles...) + Meltan/Melmetal
+   - L.231-269 : Formes d'Alola (lignées séparées, réutilisent le n° de Pokédex national)
+   - L.270-fin : DEX_NUMBERS_GEN7 (numéros de Pokédex, utilisés pour résoudre les sprites)
+==== */
 const LINES_GEN7 = [
 {id:'brindibou',abilities:['Engrais','Longue Distance'],moveIds:['tackle','growl','leafage','peck','razorleaf','synthesis','magicalleaf','airslash','leafblade','nightslash','spiritshackle','protect','swift','endure','gigadrain','hyperbeam','solarbeam','facade','falseswipe','sleeptalk','rest','swordsdance','bulletseed','hurricane','shadowball','darkpulse','moongeistbeam'],
  stages:[
@@ -97,6 +106,7 @@ const LINES_GEN7 = [
 {id:'concombaffe',abilities:['Chair-Piège','Lucidité'],moveIds:['tackle','harden','recover','toxic','bodyslam','counter','mirrorcoat','protect','swift','endure','hyperbeam','facade','sleeptalk','rest'],
  stages:[
   {name:'Concombaffe',types:['eau'],base:st(55,60,130,30,130,5)}]},
+// ---- Cas spéciaux : Silvallié, Plumeline, Lougaroc, Cosmog, Necrozma ----
 {id:'type0',abilities:['Carapace Rigide','Déclic Fringale'],moveIds:['tackle','headbutt','crunch','ironhead','multiattack','shadowclaw','flamethrower','icebeam','thunderbolt','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest','earthquake','psychic'],
  stages:[
   {name:'Type:0',types:['normal'],base:st(95,95,95,95,95,59)},
@@ -162,6 +172,7 @@ const LINES_GEN7 = [
  stages:[
   {name:'Vémini',types:['poison'],base:st(67,73,67,73,67,73)},
   {name:'Mandrillon',types:['poison','dragon'],base:st(73,73,73,127,73,121)}]},
+// ---- Ultra-Chimères + légendaires d'Alola + Meltan/Melmetal ----
 {id:'zeroid',abilities:['Éclosion'],moveIds:['tackle','rockslide','poisonjab','sludgebomb','stoneedge','psychic','ancientpower','protect','swift','endure','hyperbeam','facade','sleeptalk','rest'],
  stages:[
   {name:'Zéroïd',types:['roche','poison'],base:st(109,53,47,127,131,103)}]},
@@ -228,6 +239,7 @@ const LINES_GEN7 = [
  stages:[
   {name:'Meltan',types:['acier'],base:st(46,65,65,55,35,34)},
   {name:'Melmetal',types:['acier'],base:st(135,143,143,80,65,34),abilities:['Ferraille']}]},
+// ---- Formes d'Alola (lignées séparées et draftables) ----
 {id:'rattataalola',abilities:['Gloutonnerie','Isograisse'],moveIds:['tackle','tailwhip','bite','crunch','throatchop','darkestlariat','superfang','hyperfang','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest'],
  stages:[
   {name:"Rattata d'Alola",types:['tenebres','normal'],base:st(30,56,35,25,35,72)},

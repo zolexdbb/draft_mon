@@ -1,14 +1,13 @@
-/* ==== combat/ai-foe.js (généré depuis index.html) ==== */
+/* ==== IA des dresseurs adverses : choix des 4 attaques d'un Pokémon généré, et choix du
+   coup/de la cible à chaque tour de combat. ==== */
+// Sélectionne les 4 attaques d'un Pokémon généré (dresseur/tour) à partir de son movepool complet : privilégie le STAB, ajoute de la couverture, et un peu de statut aux étages avancés.
 function pickSmartMoves(movepool, sp, floor){
-  // Trier les attaques offensives par puissance, garder 1-2 statuts utiles
   const damaging = movepool.filter(id => MOVES[id].cat !== 'status' && MOVES[id].power > 0);
   const statusMoves = movepool.filter(id => MOVES[id].cat === 'status');
-  // Préférer STAB
   const stab = damaging.filter(id => sp.types.includes(MOVES[id].type));
   const nonStab = damaging.filter(id => !sp.types.includes(MOVES[id].type));
   const sortedStab = stab.sort((a,b)=>MOVES[b].power-MOVES[a].power);
   const sortedNonStab = nonStab.sort((a,b)=>MOVES[b].power-MOVES[a].power);
-  // Aux étages 4+, l'adversaire prend 2 STAB + 1 couverture + 1 statut
   const statusCount = floor >= 5 ? 1 : 0;
   const picked = [...sortedStab.slice(0,2), ...sortedNonStab.slice(0,2-Math.min(2,sortedStab.length)+2)];
   const usefulStatus = statusMoves.filter(id => {
@@ -16,7 +15,6 @@ function pickSmartMoves(movepool, sp, floor){
     return eff && (eff.status || eff.heal || eff.selfBoost);
   });
   const finalMoves = [...new Set([...picked, ...usefulStatus.slice(0,statusCount)])].slice(0,4);
-  // Compléter si besoin
   while(finalMoves.length < 4 && movepool.length > finalMoves.length){
     const remaining = movepool.filter(id => !finalMoves.includes(id));
     if(remaining.length === 0) break;
@@ -25,7 +23,7 @@ function pickSmartMoves(movepool, sp, floor){
   return finalMoves.slice(0,4);
 }
 
-// IA de Maître de Type : au KO, envoie le meilleur contre plutôt que le premier en vie.
+// Choisit le meilleur Pokémon de remplacement d'un dresseur adverse au KO (IA "excellente" des Maîtres de Type) : maximise son avantage de type offensif/défensif contre le Pokémon du joueur.
 function bestFoeSwitchIdx(foeTeam, player, excludeIdxs){
   excludeIdxs = excludeIdxs || [];
   const alive = foeTeam.map((c,i)=>({c,i})).filter(x=>x.c.hp>0 && !excludeIdxs.includes(x.i));
@@ -38,19 +36,16 @@ function bestFoeSwitchIdx(foeTeam, player, excludeIdxs){
   return scored.reduce((best,s)=> s.score>best.score ? s : best).i;
 }
 
-// Score un coup contre une cible précise (utilisé pour choisir la meilleure paire coup/cible
-// en combat double, où l'IA a le choix entre 1 ou 2 adversaires vivants).
+// Note un coup donné contre une cible donnée (efficacité de type, STAB, stat d'attaque, PV de la cible/du lanceur...) — plus le score est haut, plus l'IA a de chances de le choisir.
 function scoreFoeMoveVsTarget(foe, mv, target){
   if(mv.fixedDamage){ return getMult(mv.type, target.types)>0 ? 8 : 0; }
 
   if(mv.cat === 'status'){
     const eff = mv.effect||{};
     const hpRatioFoe = foe.hp / foe.maxHp;
-    // Soigner : priorité haute si PV < 40%
     if(eff.heal){
       return hpRatioFoe < 0.4 ? 50 - hpRatioFoe*80 : (hpRatioFoe < 0.7 ? 8 : 1);
     }
-    // Statut adverse : utile seulement si la cible n'en a pas et qu'elle a encore beaucoup de PV
     if(eff.status){
       const hpRatioTarget = target.hp / target.maxHp;
       if(eff.status === 'confusion'){
@@ -58,13 +53,11 @@ function scoreFoeMoveVsTarget(foe, mv, target){
       }
       return target.status ? 1 : (hpRatioTarget > 0.3 ? 16 : 3);
     }
-    // Boost perso : bon seulement si boost faible et PV corrects
     if(eff.selfBoost){
       const stat = eff.selfBoost[0].stat;
       const cur = foe.stages[stat]||0;
       return cur >= 3 ? 1 : (hpRatioFoe > 0.5 ? 14 : 3);
     }
-    // Débuff adverse
     if(eff.foeBoost){
       const stat = eff.foeBoost[0].stat;
       const cur = target.stages[stat]||0;
@@ -73,38 +66,31 @@ function scoreFoeMoveVsTarget(foe, mv, target){
     return 1;
   }
 
-  // Attaque offensive
   const eff = getMult(mv.type, target.types);
   if(eff === 0) return 0;
 
-  // Efficacité de type = levier principal
   let score = 10 * eff;
 
-  // STAB
   if(foe.types.includes(mv.type)) score *= 1.4;
 
-  // Préférer le bon stat d'attaque
   const foeAtkEff = foe.stats.atk * statMultiplier(foe.stages.atk||0);
   const foeSpaEff = foe.stats.spa * statMultiplier(foe.stages.spa||0);
   const isPhys = mv.cat === 'phys';
   if(isPhys && foeAtkEff > foeSpaEff*1.2) score *= 1.3;
   if(!isPhys && foeSpaEff > foeAtkEff*1.2) score *= 1.3;
 
-  // Pondérer par la puissance
   score *= (mv.power / 55);
 
-  // Éviter les attaques à recul si PV bas
   if(mv.recoil && (foe.hp/foe.maxHp) < 0.3) score *= 0.4;
 
   return score;
 }
 
-// possibleTargets : 1 cible en solo, jusqu'à 2 en combat double. Retourne {move, target}.
+// Point d'entrée appelé chaque tour pour un combattant adverse : filtre les coups jouables (PP, entrave, Choix...), note chaque paire coup/cible via scoreFoeMoveVsTarget, puis choisit le meilleur (Maître de Type) ou tire au sort pondéré (dresseur normal).
 function chooseFoeMove(foe, possibleTargets, excellent){
   let moves = foe.disabledMove ? foe.moveObjs.filter(mv=>mv.name!==foe.disabledMove.name) : foe.moveObjs;
   if(foe.lockedMove) moves = foe.moveObjs.filter(mv=>mv.name===foe.lockedMove.name);
   if(moves.length===0) moves = foe.moveObjs;
-  // Filtre par PP restants : plus de PP sur une capacité = elle n'est plus utilisable
   if(foe.ppCur){
     const withPP = moves.filter(mv => (foe.ppCur[foe.moveObjs.indexOf(mv)]||0) > 0);
     if(withPP.length > 0) moves = withPP;
@@ -129,10 +115,8 @@ function chooseFoeMove(foe, possibleTargets, excellent){
   if(valid.length === 0){
     chosen = { mv: rand(moves), target: possibleTargets[0] };
   } else if(excellent){
-    // IA de Maître de Type : prend toujours le meilleur coup, jamais de choix sous-optimal.
     chosen = valid.reduce((best,s)=> s.score>best.score ? s : best);
   } else {
-    // Sélection pondérée (pas toujours le meilleur, mais biaisé)
     const total = valid.reduce((a,s)=>a+s.score,0);
     let r = Math.random()*total;
     chosen = valid[valid.length-1];
@@ -144,5 +128,3 @@ function chooseFoeMove(foe, possibleTargets, excellent){
   }
   return { move: chosen.mv, target: chosen.target };
 }
-
-/* =================== BATTLE =================== */

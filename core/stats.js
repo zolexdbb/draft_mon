@@ -1,10 +1,12 @@
-/* ==== core/stats.js (généré depuis index.html) ==== */
+/* ==== Calcul des statistiques finales d'un Pokémon (niveau fixe 50) à partir de ses stats de
+   base, IV, EV et nature — formule officielle des jeux principaux. ==== */
 const STAT_LABEL = {hp:'PV', atk:'Atq', def:'Déf', spa:'AtqSp', spd:'DéfSp', spe:'Vit', acc:'Précision'};
 
+// Raccourci utilisé dans pokemon/gen*.js pour écrire les stats de base d'une espèce.
 function st(hp,atk,def,spa,spd,spe){ return {hp,atk,def,spa,spd,spe}; }
 
-/* =================== POKÉDEX GÉNÉRATION 1 (151) =================== */
 const LEVEL = 50;
+// Calcule les 6 statistiques finales d'un membre d'équipe à partir de ses stats de base + IV/EV/nature.
 function calcStats(base, ivs, evs, nature){
   const stats = {};
   ['hp','atk','def','spa','spd','spe'].forEach(stat=>{

@@ -1,10 +1,12 @@
-/* ==== village/merchant.js (généré depuis index.html) ==== */
+/* ==== Le Marchand Itinérant du Village (apparaît par chance après un Boss) : vend tous les
+   objets de forme spéciaux (Plaques d'Arceus, Mémoires, Cristaux Z, Pierres Méga, objets
+   légendaires...), organisés en groupes affichés avec un titre. ==== */
 const MERCHANT_SPAWN_RATE = 0.2;
 const MERCHANT_GROUPS = [
   { label: 'Giratina', keys: ['orbePlatine'] },
   { label: 'Shaymin', keys: ['gracidee'] },
   { label: 'Motisma', keys: ['appareilChauffe','appareilLavage','appareilFrigo','appareilVentilo','appareilTondeuse'] },
-  { label: 'Boréas / Fulguris / Démétéros', keys: ['miroirSacre'] },
+  { label: 'Boréas / Fulguris / Démétéros / Amovénus', keys: ['miroirSacre'] },
   { label: 'Arceus', keys: ['plaqueFlamme','plaqueHydro','plaqueHerbe','plaqueVolt','plaqueCiel','plaqueToxicite','plaqueTerre','plaqueInsecte','plaquePoing','plaqueGlace','plaqueEsprit','plaqueFantome','plaqueRoc','plaqueDraco','plaqueFer','plaqueOmbre'] },
   { label: 'Pierres Méga', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite'] },
   { label: 'Cristaux Z', keys: ['zCrystalNormal','zCrystalCombat','zCrystalVol','zCrystalPoison','zCrystalSol','zCrystalRoche','zCrystalInsecte','zCrystalFantome','zCrystalAcier','zCrystalFeu','zCrystalEau','zCrystalPlante','zCrystalElectrik','zCrystalPsy','zCrystalGlace','zCrystalDragon','zCrystalTenebres','zCrystalFee'] },
@@ -13,6 +15,7 @@ const MERCHANT_GROUPS = [
   { label: 'Légendaires de Galar', keys: ['epeeRouillee','bouclierRouille','parcheminTenebres','parcheminAqua','renePartageGlace','renePartageSpectre'] },
   { label: 'Gigamax', keys: ['facteurGigamax'] }
 ];
+// Affiche la boutique du Marchand Itinérant (tous les groupes d'objets spéciaux, achetables contre de l'argent).
 function renderMerchantPanel(){
   const wrap = document.getElementById('villagePanelContent');
   wrap.innerHTML = `

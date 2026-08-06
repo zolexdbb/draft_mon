@@ -1,11 +1,22 @@
-/* ==== combat/tower.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Progression de la Tour de Combat : quel étage est un Boss/Mini-Boss/combat double, génération
+   du dresseur adverse et de son équipe, et ce qui se passe après une victoire d'étage. Repères :
+   - L.10-20  : isBossFloor/isMiniBossFloor/isTwinFloor/moneyReward — nature de l'étage courant
+   - L.23-42  : archétypes de dresseurs normaux (nom/emoji/thème de type/dialogue)
+   - L.44-91  : Maîtres de Type (boss) — cycle sans répétition des 17 types, dialogues, sprites
+   - L.93-129 : génération du dresseur (normal/mini-boss/boss) et des jumeaux (combat double)
+   - L.131-146: renderTower — affiche l'écran de la Tour (étage courant, bouton Combattre)
+   - L.148-160: weightedSampleLines — tirage pondéré de lignées (réutilise lineWeight du draft)
+   - L.162-fin(250): generateEnemyTeam — construit l'équipe adverse complète (espèces, stats, movepool)
+   - L.252-fin : awardBadge/floorCleared — récompenses et écran suivant après une victoire d'étage
+==== */
 function isBossFloor(floor){ return floor%10===0; }
 function isMiniBossFloor(floor){ return floor%5===0 && !isBossFloor(floor); }
-// À tirer une seule fois par entrée en combat (comme generateTrainer/generateEnemyTeam) :
-// ~12% de chance sur un étage normal de tomber sur un duo de jumeaux en combat double.
+// ~12% de chance qu'un étage normal soit un combat double contre des jumeaux.
 function isTwinFloor(floor){
   return !isBossFloor(floor) && !isMiniBossFloor(floor) && Math.random() < 0.12;
 }
+// Argent gagné à la fin d'un combat (majoré sur les étages Boss/Mini-Boss/combat double).
 function moneyReward(floor, isTwin){
   let base = 20 + floor*8;
   if(isBossFloor(floor)) base *= 3;
@@ -34,10 +45,11 @@ const TRAINER_ARCHETYPES = [
 ];
 const TRAINER_FIRST_NAMES = ['Théo','Lucie','Marc','Sarah','Hugo','Emma','Léo','Chloé','Nathan','Lina','Maxime','Inès','Paul','Camille','Yanis','Manon','Romain','Jade','Kévin','Alicia'];
 
-// ---- Maîtres de Type (boss) : un circuit sans répétition des 17 types par run ----
+/* ---- Maîtres de Type (boss) ---- */
 const ALL_TYPES = Object.keys(TYPE_EMOJI);
 const TYPE_DISPLAY_OVERRIDE = { fee:'Fée' };
 function typeDisplayName(type){ return TYPE_DISPLAY_OVERRIDE[type] || (type.charAt(0).toUpperCase()+type.slice(1)); }
+// Choisit le type du prochain Maître de Type boss, sans répéter un type déjà rencontré durant cette run (recommence un cycle une fois les 17 épuisés).
 function pickBossType(){
   let available = ALL_TYPES.filter(t => !bossTypesUsed.includes(t));
   if(available.length===0){ bossTypesUsed = []; available = ALL_TYPES; }
@@ -65,20 +77,20 @@ const TYPE_MASTER_DIALOGUE = {
   tenebres: "L'obscurité ne pardonne à personne !",
   fee:      "Mon charme aura ta perte !",
 };
-// Sprites de dresseur (CDN Pokémon Showdown, https://play.pokemonshowdown.com/sprites/trainers/<nom>.png)
-// associés à chaque type de Maître de Type. Un type sans entrée retombe sur l'emoji.
 const TYPE_MASTER_SPRITE = {
   normal:'larry', feu:'flannery', eau:'misty', plante:'erika', electrik:'iono',
   vol:'kahili', poison:'koga', sol:'rika', insecte:'katy', combat:'bea',
   glace:'candice', psy:'sabrina', fantome:'phoebe', roche:'brock', dragon:'lance',
   acier:'steven', tenebres:'karen', fee:'jacinthe'
 };
+// Repli en emoji si le sprite du dresseur (Showdown) échoue à charger.
 function handleTrainerSpriteError(img){
   const span = document.createElement('span');
   span.textContent = img.dataset.fallbackEmoji || '❓';
   span.className = 'trainer-avatar-fallback';
   img.replaceWith(span);
 }
+// Avatar du dresseur : sprite dédié pour les Maîtres de Type (TYPE_MASTER_SPRITE), sinon son emoji d'archétype.
 function getTrainerAvatarHTML(trainer){
   const spriteName = trainer.masterType && TYPE_MASTER_SPRITE[trainer.masterType];
   if(!spriteName) return trainer.emoji;
@@ -86,7 +98,7 @@ function getTrainerAvatarHTML(trainer){
   return `<img src="${url}" alt="${trainer.name}" class="trainer-sprite-img" data-fallback-emoji="${trainer.emoji}" onerror="handleTrainerSpriteError(this)">`;
 }
 
-// Aux étages élevés, favoriser les archétypes avancés (partagé par generateTrainer et generateTwinTrainers)
+// Filtre les archétypes de dresseur disponibles à cet étage (favorise les archétypes avancés en montant dans la Tour). Partagé par generateTrainer et generateTwinTrainers.
 function trainerArchetypePool(floor){
   const available = TRAINER_ARCHETYPES.filter(a => floor >= a.minFloor);
   let pool;
@@ -97,6 +109,7 @@ function trainerArchetypePool(floor){
   if(pool.length === 0) pool = available;
   return pool;
 }
+// Génère le dresseur d'un étage normal/mini-boss/boss (nom, emoji, thème de type, dialogue).
 function generateTrainer(floor){
   const boss = isBossFloor(floor), miniBoss = isMiniBossFloor(floor);
   if(boss){
@@ -113,7 +126,7 @@ function generateTrainer(floor){
   const prefix = miniBoss ? '⭐ Mini-Boss ' : '';
   return { name:`${prefix}${archetype.title} ${name}`, emoji:archetype.emoji, theme:archetype.theme, dialogue:archetype.dialogue, boss:false, miniBoss };
 }
-// Duo de jumeaux pour un combat double : même archétype (même thème), deux prénoms distincts.
+// Génère le duo de jumeaux d'un combat double : même archétype/thème, deux prénoms distincts.
 function generateTwinTrainers(floor){
   const archetype = rand(trainerArchetypePool(floor));
   let n1 = rand(TRAINER_FIRST_NAMES);
@@ -126,7 +139,7 @@ function generateTwinTrainers(floor){
   ];
 }
 
-/* =================== SAUVEGARDE =================== */
+// Affiche l'écran de la Tour (étage courant, taille d'équipe adverse à venir, meilleur étage, argent).
 function renderTower(reward){
   document.getElementById('floorNum').textContent = towerFloor;
   updateBestFloor(towerFloor);
@@ -144,8 +157,7 @@ function renderTower(reward){
 }
 document.getElementById('fightBtn').onclick = ()=>{ startBattle(); };
 
-// Échantillonnage pondéré par lignée (réutilise lineWeight du draft : les légendaires
-// deviennent aussi rares dans les équipes adverses que dans le draft du joueur).
+// Tire n lignées sans remise, pondérées par lineWeight (réutilise la même rareté que le draft du joueur).
 function weightedSampleLines(lines, n){
   let pool = lines.map(l=>({l, w: lineWeight(l)}));
   const result = [];
@@ -160,6 +172,9 @@ function weightedSampleLines(lines, n){
   return result;
 }
 
+// Construit l'équipe adverse complète pour un combat : choisit les lignées (thématiques selon le
+// dresseur, 100% du type pour un Maître de Type), leur stade/branche (plus évolué en montant dans
+// la Tour), leurs stats (EV répartis aléatoirement, force croissante avec l'étage) et leurs 4 attaques.
 function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
   const sizes = [3,3,4,4,5,6];
   let size = sizes[Math.min(floor-1, sizes.length-1)];
@@ -168,10 +183,8 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
   else if(isMiniBossFloor(floor)){ strength = Math.min(1, strength+0.12); }
   if(maxSize) size = Math.min(size, maxSize);
 
-  // Construire le pool en fonction du thème du dresseur
   let linePool;
   if(isBoss){
-    // Maître de Type : équipe 100% du type (rareté légendaire toujours atténuée par le poids du draft)
     const themed = LINES.filter(l =>
       l.stages.some(s => s.types.includes(trainerTheme)) ||
       (l.branches && l.branches.some(b => b.types.includes(trainerTheme)))
@@ -186,7 +199,6 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
       l.stages.some(s => s.types.includes(trainerTheme)) ||
       (l.branches && l.branches.some(b => b.types.includes(trainerTheme)))
     );
-    // Si assez de Pokémon thématiques : 70% du thème, 30% random
     const themeCount = Math.ceil(size * 0.7);
     const themedPicked = weightedSampleLines(themed, Math.min(themeCount, themed.length));
     const otherPool = LINES.filter(l => !themedPicked.includes(l));
@@ -253,6 +265,7 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
   });
 }
 
+// Ajoute un badge de Maître de Type obtenu (par mode de difficulté) et sauvegarde. Retourne vrai si c'est un nouveau badge.
 function awardBadge(type){
   if(!badges[difficulty]) badges[difficulty] = [];
   const isNew = !badges[difficulty].includes(type);
@@ -260,6 +273,9 @@ function awardBadge(type){
   try { localStorage.setItem(badgeKeyFor(difficulty), JSON.stringify(badges[difficulty])); } catch(e){}
   return isNew;
 }
+// Appelé quand toute l'équipe adverse est K.O. : réinitialise l'équipe du joueur (sauf en
+// Difficile), verse la récompense, avance l'étage, puis dirige vers le bon écran suivant
+// (Village si Boss, Centre Soin si Mini-Boss en Difficile, event aléatoire, ou étage suivant).
 function floorCleared(){
   const clearedFloor = towerFloor;
   const wasBoss = battleState.trainer && battleState.trainer.boss;
@@ -290,10 +306,8 @@ function floorCleared(){
     document.getElementById('screenMiniCenter').classList.remove('hidden');
     renderMiniCenter(reward);
   } else if(maybeTriggerTowerEvent(reward)){
-    // renderTowerEvent() already handled the screen switch.
   } else {
     document.getElementById('screenTower').classList.remove('hidden');
     renderTower(reward);
   }
 }
-

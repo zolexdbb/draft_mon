@@ -1,4 +1,10 @@
-/* ==== ui/dex-viewer.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Le Pokédex consultable (écran Dex) : grille de toutes les espèces/formes/branches avec filtres
+   (recherche, type, rareté). Sert aussi d'écran de sélection en mode développeur. Repères :
+   - L.10-16 : rarityKey — catégorie de rareté utilisée par le filtre (distinct de rarityInfo)
+   - L.18-fin(71): renderDex — construit la grille filtrée (une carte par stade/branche de chaque lignée)
+   - L.75-fin : filtres (listes d'options type/rareté + les 3 menus déroulants + réinitialisation)
+==== */
 function rarityKey(line, stageIdx){
   if(LEGENDARY_IDS.includes(line.id)) return 'legendaire';
   if(RARE_IDS.includes(line.id)) return 'rare';
@@ -7,6 +13,8 @@ function rarityKey(line, stageIdx){
   return 'evo';
 }
 
+// Construit la grille du Dex : une carte par stade normal + par branche de chaque lignée,
+// filtrée selon dexFilters ; en mode développeur, les cartes deviennent cliquables pour la sélection libre.
 function renderDex(){
   const grid = document.getElementById('dexGrid');
   grid.innerHTML='';
@@ -18,7 +26,6 @@ function renderDex(){
       ...(line.branches ? line.branches.map((sp,bi)=>({sp,stageIdx:null,isBranch:true,branchIdx:bi})) : [])
     ];
     allStages.forEach(({sp, stageIdx, isBranch, branchIdx})=>{
-      // Filtres
       if(dexFilters.search && !sp.name.toLowerCase().includes(dexFilters.search.toLowerCase())) return;
       if(dexFilters.type && !sp.types.includes(dexFilters.type)) return;
       if(dexFilters.type2 && !sp.types.includes(dexFilters.type2)) return;
@@ -65,11 +72,9 @@ function renderDex(){
 
 document.getElementById('dexSearch').oninput = (e)=>{ dexFilters.search = e.target.value; renderDex(); };
 
-// Pastille colorée réutilisant exactement le style des tags de type déjà affichés sur les cartes du Dex.
 function typeOptionHTML(type, label){
   return `<span class="type-tag t-${type}">${typeIconHTML(type, 11)}${label}</span>`;
 }
-// Pastille colorée réutilisant exactement le style des badges de rareté déjà affichés sur les cartes du Dex.
 function rarityOptionHTML(css, label){
   return `<span class="rarity-badge ${css}">${label}</span>`;
 }
@@ -89,6 +94,7 @@ const DEX_RARITY_OPTIONS = [
   {value:'rare', label:'Rare', css:'rarity-rare'},{value:'pseudo', label:'Pseudo-légendaire', css:'rarity-pseudo'},
   {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'}
 ].map(o=> o.value ? {...o, html: rarityOptionHTML(o.css, o.label)} : o);
+// Affiche le menu déroulant de filtre par type principal.
 function renderDexTypeFilter(){
   const c = document.getElementById('dexTypeFilter');
   c.innerHTML = '';
@@ -97,6 +103,7 @@ function renderDexTypeFilter(){
     onChange: (val)=>{ dexFilters.type = val; renderDex(); }
   }));
 }
+// Affiche le menu déroulant de filtre par second type (optionnel).
 function renderDexTypeFilter2(){
   const c = document.getElementById('dexTypeFilter2');
   c.innerHTML = '';
@@ -105,6 +112,7 @@ function renderDexTypeFilter2(){
     onChange: (val)=>{ dexFilters.type2 = val; renderDex(); }
   }));
 }
+// Affiche le menu déroulant de filtre par rareté.
 function renderDexRarityFilter(){
   const c = document.getElementById('dexRarityFilter');
   c.innerHTML = '';
@@ -124,5 +132,3 @@ document.getElementById('dexResetFilter').onclick = ()=>{
   renderDexRarityFilter();
   renderDex();
 };
-
-/* =================== SPLASH TEXT & PATCH NOTES =================== */

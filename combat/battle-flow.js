@@ -1,7 +1,28 @@
-/* ==== combat/battle-flow.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Le moteur de combat : déroulement d'un combat du début (startBattle) à la fin d'un tour
+   (endTurn), en solo ou en double. Repères (lignes approximatives) :
+   - L.11-35  : resetBattleFields — remet à zéro l'état de combat d'un Pokémon (changement/K.O.)
+   - L.36-57  : renderTrainerBanner — bandeau dresseur(s) en haut de l'écran de combat
+   - L.59-98  : slots et helpers du combat double (qui est actif, qui est vivant, quelle boîte DOM)
+   - L.100-166: startBattle — initialise un combat complet (équipes, dresseur, intros/Intimidation)
+   - L.168-213: boucle de sélection des actions du joueur (1 ou 2 Pokémon selon solo/double)
+   - L.215-247: playerAttack — le joueur choisit une attaque (gère Capacité Z / Dynamax)
+   - L.249-284: tri et exécution de la file d'actions du tour (priorité puis vitesse)
+   - L.286-310: doVoluntarySwitch — changement de Pokémon volontaire en combat
+   - L.312-324: useBagPotion — utiliser une Potion sur un Pokémon en combat
+   - L.326-367: checkStatusBeforeMove — le Pokémon peut-il agir ce tour (gel/sommeil/paralysie/confusion) ?
+   - L.369-987: runStep — LE cœur du moteur, résout une attaque complète du début à la fin (voir
+     la liste des cas gérés juste au-dessus de la fonction)
+   - L.989-1130: endTurn — dégâts/soins de fin de tour + décompte de tous les effets à durée
+     (écrans, entrave, Rune Protect, Provoc, Dynamax, compte à rebours, météo, terrain...)
+   - L.1132-1159: handleFaintsAndAdvance — que faire après un K.O. (victoire/défaite/remplacement)
+   - L.1161-1187: replaceFoeSlot — l'IA envoie son prochain Pokémon après un K.O. adverse
+   - L.1189-fin : showSwitchPrompt — écran de choix du prochain Pokémon après un K.O. du joueur
+==== */
 function freshBattleFields(){
   return { stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status:null, sleepCounter:0, confuseCounter:0, flinched:false, protectChain:0 };
 }
+// Réinitialise l'état de combat d'un Pokémon (stages, statut temporaire, entrave, Dynamax...) : appelé au changement de Pokémon ou en fin de combat.
 function resetBattleFields(c){
   if(c.dynamaxed){
     revertDynamaxBoost(c);
@@ -9,7 +30,6 @@ function resetBattleFields(c){
     c.dynamaxTurns = 0;
   }
   c.stages = {atk:0,def:0,spa:0,spd:0,spe:0,acc:0};
-  // le statut (poison/brûlure/paralysie/sommeil/gel) persiste au changement, la confusion se dissipe en sortant
   c.confuseCounter = 0;
   c.flinched = false;
   c.lockedMove = null;
@@ -25,6 +45,7 @@ function resetBattleFields(c){
   c.schoolBroken = false;
   c.shieldsBroken = false;
 }
+// Affiche le bandeau du/des dresseur(s) adverse(s) (avatar + dialogue) en haut de l'écran de combat.
 function renderTrainerBanner(trainer, trainer2){
   const bannerEl = document.getElementById('trainerBanner');
   if(trainer2){
@@ -68,7 +89,6 @@ function aliveFoeCombatants(){
   return list;
 }
 function allFainted(team){ return team.every(c=>c.hp<=0); }
-// Localise un combattant actif sur le terrain (utilisé par les effets de switch forcé/Bouton Fuite).
 function locateActiveSlot(combatant){
   const bs = battleState;
   if(!bs) return null;
@@ -83,7 +103,6 @@ function setActiveSlot(side, slot, newIdx){
   if(side==='player'){ if(slot==='A') bs.pActive=newIdx; else bs.pActive2=newIdx; return bs.player[newIdx]; }
   if(slot==='A') bs.fActive=newIdx; else bs.fActive2=newIdx; return bs.foe[newIdx];
 }
-// Id de la boîte DOM (#playerBox/#player2Box/#foeBox/#foe2Box) occupée par un combattant actif.
 function boxIdFor(combatant){
   const loc = locateActiveSlot(combatant);
   if(!loc) return 'foeBox';
@@ -91,6 +110,9 @@ function boxIdFor(combatant){
   return loc.slot==='A' ? 'foeBox' : 'foe2Box';
 }
 
+// Initialise un nouveau combat : détermine l'adversaire (dresseur normal/mini-boss/boss/jumeaux,
+// ou combat forcé du mode développeur), construit les deux équipes, affiche l'écran de combat et
+// déclenche les effets d'entrée (Intimidation, météo/terrain auto).
 function startBattle(){
   let isDouble, trainer, trainer2, enemyTeam;
   if(typeof devEncounterOverride!=='undefined' && devEncounterOverride){
@@ -122,9 +144,8 @@ function startBattle(){
       stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status, sleepCounter, confuseCounter:0, flinched:false, protectChain:0
     };
   });
-  team.forEach(m=>{ m.eventBlocked = false; }); // le blocage d'un event ne dure qu'un seul combat
+  team.forEach(m=>{ m.eventBlocked = false; });
 
-  // En difficile, si toute l'équipe est déjà K.O. avant même le combat, c'est la défaite
   const aliveIdxs = playerRoster.map((c,i)=>c.hp>0?i:-1).filter(i=>i>=0);
   if(aliveIdxs.length===0){
     document.getElementById('screenTower').classList.add('hidden');
@@ -161,12 +182,15 @@ function startBattle(){
 }
 
 /* =================== Tour de jeu (solo et double, moteur unifié) =================== */
+// Démarre un nouveau tour côté joueur : vide la file d'actions et lance la sélection du slot A.
 function beginPlayerTurn(){
   const bs = battleState;
   bs.pendingActions = [];
   bs.locked = false;
   startSlotSelection('A');
 }
+// Demande son action au Pokémon du slot donné (A ou B) : passe automatiquement si K.O./coup à
+// charge en cours, sinon affiche la grille de capacités.
 function startSlotSelection(slot){
   const bs = battleState;
   const idx = playerSlotIdx(slot);
@@ -176,7 +200,6 @@ function startSlotSelection(slot){
   }
   const p = bs.player[idx];
   if(p.chargingMove){
-    // Un coup à charge se relance automatiquement au tour suivant, sans repasser par le choix du joueur.
     const target = (p.chargingTarget && p.chargingTarget.hp>0) ? p.chargingTarget : aliveFoeCombatants()[0];
     bs.pendingActions.push({ actor:p, move:p.chargingMove, target, isPlayer:true, slot });
     advanceAfterSlot(slot);
@@ -186,6 +209,7 @@ function startSlotSelection(slot){
   bs.locked = false;
   renderMoveGrid();
 }
+// Après le choix du slot A, passe au slot B en combat double (s'il est vivant), sinon termine le tour.
 function advanceAfterSlot(slot){
   const bs = battleState;
   const bIdx = playerSlotIdx('B');
@@ -195,6 +219,7 @@ function advanceAfterSlot(slot){
     finalizeTurn();
   }
 }
+// Une fois les actions du joueur choisies : fait choisir l'IA adverse (chooseFoeMove) puis lance la résolution du tour complet.
 function finalizeTurn(){
   const bs = battleState;
   bs.locked = true;
@@ -208,8 +233,8 @@ function finalizeTurn(){
   resolveTurn([...bs.pendingActions, ...foeActions]);
 }
 
-// Point d'entrée appelé par l'UI quand le joueur choisit une attaque pour le slot en cours de sélection.
-// targetIdx : index dans bs.foe (optionnel — auto-résolu s'il n'y a qu'un seul ennemi vivant).
+// Le joueur choisit une capacité (appelé par l'UI) : résout la cible, transforme le coup en
+// Capacité Z ou Capacité Max si déclaré, décrémente les PP, puis empile l'action du tour.
 function playerAttack(moveIdx, targetIdx){
   const bs = battleState;
   if(bs.locked) return;
@@ -244,11 +269,13 @@ function playerAttack(moveIdx, targetIdx){
   advanceAfterSlot(slot);
 }
 
+// Priorité effective d'un coup (talents qui la modifient, ex. Ailes Cyclone pour les capacités Vol).
 function effectivePriority(actor, move){
   let p = move.priority||0;
   if(actor.ability==='Ailes Cyclone' && move.type==='vol') p += 1;
   return p;
 }
+// Trie toutes les actions du tour (joueur + adversaire) par priorité puis vitesse (aléatoire en cas d'égalité), puis les exécute une par une.
 function resolveTurn(actions){
   const bs = battleState;
   bs.locked = true;
@@ -261,6 +288,7 @@ function resolveTurn(actions){
   });
   runQueue(sorted, 0);
 }
+// Exécute la file d'actions triée une par une (runStep), en sautant les combattants K.O. et en redirigeant vers une cible de secours si la cible d'origine est tombée entre-temps.
 function runQueue(queue, i){
   const bs = battleState;
   if(i>=queue.length || allFainted(bs.foe) || allFainted(bs.player)){ afterResolveTurn(); return; }
@@ -281,6 +309,7 @@ function afterResolveTurn(){
   endTurn();
 }
 
+// Changement de Pokémon volontaire choisi par le joueur en combat (Régé-Force soigne au retrait).
 function doVoluntarySwitch(i, slot){
   slot = slot || battleState.selectingSlot || 'A';
   const bs = battleState;
@@ -307,6 +336,7 @@ function doVoluntarySwitch(i, slot){
   setTimeout(()=> advanceAfterSlot(slot), 1000);
 }
 
+// Utilise une Potion du sac sur un Pokémon de l'équipe pendant le combat.
 function useBagPotion(i){
   const bs = battleState;
   const slot = bs.selectingSlot || 'A';
@@ -321,6 +351,8 @@ function useBagPotion(i){
   setTimeout(()=> advanceAfterSlot(slot), 1000);
 }
 
+// Vérifie si un Pokémon peut effectivement agir ce tour avant de résoudre son coup (recul de peur,
+// gel, sommeil, paralysie, se blesse en confusion). Retourne false si l'action est bloquée.
 function checkStatusBeforeMove(battler, logs, move){
   if(battler.flinched){
     battler.flinched = false;
@@ -339,7 +371,6 @@ function checkStatusBeforeMove(battler, logs, move){
   if(battler.status==='sommeil'){
     if(move && move.selfSleepOnly){
       logs.push(`${battler.name} dort profondément...`);
-      // Ronflement peut être utilisé pendant le sommeil, on ne décompte pas ce tour
     } else if(battler.sleepCounter>0){
       battler.sleepCounter--;
       logs.push(`${battler.name} dort profondément...`);
@@ -365,6 +396,17 @@ function checkStatusBeforeMove(battler, logs, move){
   return true;
 }
 
+// Résout une action de combat complète, dans l'ordre : entrave/forçage (Entrave, Instruct),
+// transformations du coup (Voix Aquatique, typeFromUser, categoryFromHigherStat, Protéen/Libéro),
+// cas spéciaux (Métronome, Copie), verrouillage d'objet Choix/Instinct Gorille, conditions
+// d'activation (requiresWeather, capacité prioritaire bloquée par Terrain Psychique), charge
+// (Lance-Soleil...), précision et esquive, Protection/Riposte/Damoclès Inversé, capacités de
+// statut (via applyStatusEffect), immunités totales de talent (Absorbe-Eau, Lévitation,
+// Anti-Bombe, Torche), dégel, K.O. Direct, cas fixes (Frappe Atlas, Effort, Docugnon, Cadeau,
+// Prescience, capacités à coups multiples), puis le calcul de dégâts principal (computeDamage) et
+// TOUS les effets déclenchés par le coup (talents de survie type Fermeté, contrecoup/drain,
+// statuts secondaires, changements de stats, talents de contact du défenseur, baie mangée,
+// vol d'objet, Bouton Fuite...).
 function runStep(actor, move, defender, actorIsPlayer, callback){
   let logs = [];
   const isProtectMove = move.effect && (move.effect.protect || move.effect.endure);
@@ -584,7 +626,6 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
-  // Immunités totales liées aux talents (annulent complètement l'attaque)
   if((defender.ability==='Absorbe-Eau' && move.type==='eau') || (defender.ability==='Absorbe-Volt' && move.type==='electrik')){
     const heal = Math.max(1, Math.round(defender.maxHp*0.25));
     defender.hp = Math.min(defender.maxHp, defender.hp+heal);
@@ -898,7 +939,6 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     applyStatBoost(defender, [{stat:'def',stages:1}], slogs2);
     msg += ' ' + slogs2.join(' ');
   }
-  // Talents de contact du défenseur (déclenchés par une attaque physique, sauf si l'attaquant a Sans Contact)
   if(move.cat==='phys' && defender.hp>0 && actor.hp>0 && actor.ability!=='Sans Contact'){
     if(defender.ability==='Peau Dure'){
       const rdmg = Math.max(1, Math.round(actor.maxHp/8));
@@ -987,7 +1027,11 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   setTimeout(callback, 1000);
 }
 
-/* =================== Fin de tour, K.O. et remplacements =================== */
+/* ---- Fin de tour, K.O. et remplacements ---- */
+// Appelé après chaque tour : applique endOfTurnStatus (poison/brûlure/météo/Reste...), les dégâts
+// de Vampigraine/racines/infestation, puis décompte tous les effets à durée limitée (écrans,
+// entrave, Rune Protect, Provoc, Dynamax, compte à rebours, météo, terrain, Prescience, Bâillement)
+// avant de passer à la gestion des K.O. éventuels.
 function endTurn(){
   const bs = battleState;
   const playerCombatants = alivePlayerCombatants();
@@ -1130,6 +1174,9 @@ function endTurn(){
   handleFaintsAndAdvance();
 }
 
+// Vérifie l'état de fin de tour : victoire/défaite si une équipe entière est K.O., sinon fait
+// entrer le prochain Pokémon adverse ou demande au joueur de choisir un remplaçant, sinon relance
+// le tour suivant.
 function handleFaintsAndAdvance(){
   const bs = battleState;
   if(allFainted(bs.player)){ setTimeout(()=> gameOver(), 700); return; }
@@ -1159,6 +1206,7 @@ function handleFaintsAndAdvance(){
   beginPlayerTurn();
 }
 
+// Envoie le prochain Pokémon adverse après un K.O. (choix optimal pour un Maître de Type, sinon le premier vivant).
 function replaceFoeSlot(slot, callback){
   const bs = battleState;
   const idx = slot==='A' ? bs.fActive : bs.fActive2;
@@ -1187,6 +1235,7 @@ function replaceFoeSlot(slot, callback){
   }, 900);
 }
 
+// Affiche l'écran de choix forcé du prochain Pokémon après un K.O. du joueur.
 function showSwitchPrompt(aliveIdx, slot){
   slot = slot || 'A';
   const bs = battleState;

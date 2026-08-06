@@ -1,15 +1,19 @@
-/* ==== ui/music.js ==== */
-// Chaque clé pointe vers une liste de pistes (playlist). Une seule piste = boucle simple.
-// Plusieurs pistes = lecture aléatoire (sans répéter deux fois de suite la même) avant de reboucler.
+/* ==== SOMMAIRE ====
+   Musique de fond : une piste (ou playlist) par écran, et une piste dédiée par Maître de Type
+   rencontré en combat. Bascule automatiquement au changement d'écran (MutationObserver) avec un
+   fondu enchaîné entre 2 lecteurs <audio> alternés. Repères :
+   - L.11-32 : MUSIC_TRACKS/TYPE_MUSIC/SCREEN_MUSIC — quelle(s) piste(s) pour quel écran/quel type
+   - L.42-fin(64): fadeAudioTo/shuffledOrder — fondu de volume + ordre de lecture aléatoire d'une playlist
+   - L.66-fin(133): resolveTrackList/getEffectiveMusicKey/playTrackFile/advancePlaylist/
+     playMusicKey/updateMusicForActiveScreen — résolution et lecture effective de la musique
+   - L.135-fin : réglage du volume, déverrouillage au premier clic (autoplay bloqué par le
+     navigateur sinon), fenêtre de réglages, écoute des changements d'écran
+==== */
 const MUSIC_TRACKS = {
   menu: ['assets/audio/menu/menu.mp3'],
   village: ['assets/audio/village/village.mp3'],
   battle: ['assets/audio/battle/battle.mp3']
 };
-// Musique dédiée par type pour les Maîtres de Type rencontrés en combat (étages boss de la tour).
-// Placez les OST de dresseurs dans assets/audio/dresseur/ et ajoutez une entrée par type
-// (ex: feu: ['assets/audio/dresseur/feu.mp3']) pour lui donner sa propre musique ou playlist ;
-// les types sans entrée utilisent la playlist "battle" par défaut.
 const TYPE_MUSIC = {
   normal:   ['assets/audio/dresseur/Larry.mp3'],
   feu:      ['assets/audio/dresseur/flannery.mp3'],
@@ -41,7 +45,7 @@ let musicVolume = parseFloat(localStorage.getItem('draftArenaMusicVolume'));
 if(isNaN(musicVolume)) musicVolume = 0.4;
 let musicUnlocked = false;
 let currentTrackKey = null;
-let playlistState = null; // { key, order:[idx...], pos }
+let playlistState = null;
 
 const musicAudioA = new Audio();
 const musicAudioB = new Audio();
@@ -51,6 +55,7 @@ const musicAudioB = new Audio();
 });
 let activeMusicAudio = musicAudioA;
 
+// Fait varier progressivement le volume d'un lecteur audio vers une valeur cible (fondu enchaîné entre pistes).
 function fadeAudioTo(audio, targetVolume, duration){
   const start = audio.volume;
   const startTime = performance.now();
@@ -62,6 +67,7 @@ function fadeAudioTo(audio, targetVolume, duration){
   requestAnimationFrame(step);
 }
 
+// Ordre de lecture aléatoire des n pistes d'une playlist (Fisher-Yates).
 function shuffledOrder(n){
   const arr = Array.from({length:n}, (_,i)=>i);
   for(let i=arr.length-1;i>0;i--){
@@ -71,7 +77,7 @@ function shuffledOrder(n){
   return arr;
 }
 
-// Résout la clé effective d'une capacité vers sa liste de pistes (gère le préfixe "battle:<type>").
+// Résout une clé musicale ("menu", "battle:feu"...) vers sa liste réelle de fichiers.
 function resolveTrackList(key){
   if(!key) return [];
   if(key.startsWith('battle:')){
@@ -82,8 +88,7 @@ function resolveTrackList(key){
   return MUSIC_TRACKS[key] || [];
 }
 
-// Détermine la clé musicale à jouer pour un panneau donné (le combat peut avoir une musique
-// spécifique selon le Maître de Type affronté).
+// Détermine la clé musicale à jouer pour l'écran actif (musique dédiée au Maître de Type affronté en combat, sinon la musique par défaut de l'écran).
 function getEffectiveMusicKey(panelId){
   if(panelId === 'screenBattle'){
     const trainer = (typeof battleState !== 'undefined' && battleState) ? battleState.trainer : null;
@@ -93,6 +98,7 @@ function getEffectiveMusicKey(panelId){
   return SCREEN_MUSIC[panelId];
 }
 
+// Joue un fichier audio en fondu enchaîné (bascule entre les 2 lecteurs alternés A/B).
 function playTrackFile(src, shouldLoop){
   const incoming = activeMusicAudio === musicAudioA ? musicAudioB : musicAudioA;
   const outgoing = activeMusicAudio;
@@ -107,10 +113,11 @@ function playTrackFile(src, shouldLoop){
   activeMusicAudio = incoming;
 }
 
+// Passe à la piste suivante d'une playlist à plusieurs pistes (appelé quand une piste se termine).
 function advancePlaylist(){
   if(!playlistState) return;
   const tracks = resolveTrackList(playlistState.key);
-  if(tracks.length <= 1) return; // piste unique : la boucle native s'en charge
+  if(tracks.length <= 1) return;
   playlistState.pos++;
   if(playlistState.pos >= playlistState.order.length){
     let newOrder = shuffledOrder(tracks.length);
@@ -124,6 +131,7 @@ function advancePlaylist(){
   playTrackFile(tracks[playlistState.order[playlistState.pos]], false);
 }
 
+// Lance la musique associée à une clé (ne fait rien si c'est déjà la piste en cours).
 function playMusicKey(key){
   if(!key || key === currentTrackKey) return;
   const tracks = resolveTrackList(key);
@@ -133,6 +141,7 @@ function playMusicKey(key){
   playTrackFile(tracks[playlistState.order[0]], tracks.length <= 1);
 }
 
+// Détecte quel écran est actuellement visible et joue la musique correspondante (appelé à chaque changement d'écran).
 function updateMusicForActiveScreen(){
   const panels = document.querySelectorAll('.panel');
   for(const p of panels){
@@ -143,12 +152,14 @@ function updateMusicForActiveScreen(){
   }
 }
 
+// Change le volume de la musique et le sauvegarde (persiste entre les sessions).
 function setMusicVolume(vol){
   musicVolume = Math.max(0, Math.min(1, vol));
   try { localStorage.setItem('draftArenaMusicVolume', String(musicVolume)); } catch(e){}
   fadeAudioTo(activeMusicAudio, musicVolume, 150);
 }
 
+// Débloque la lecture audio (les navigateurs bloquent l'autoplay sans interaction utilisateur) : appelé sur la première interaction.
 function unlockMusic(){
   if(musicUnlocked) return;
   musicUnlocked = true;
@@ -159,6 +170,7 @@ function unlockMusic(){
   }).catch(()=>{});
 }
 
+// Fenêtre de réglage du volume de la musique.
 function openMusicSettingsModal(){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -179,8 +191,6 @@ function openMusicSettingsModal(){
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
   document.getElementById('musicVolumeSlider').oninput = (e)=> setMusicVolume(parseInt(e.target.value)/100);
 }
-// capture:true : garantit que le déverrouillage se déclenche dès la toute première interaction,
-// même si un gestionnaire descendant (dropdown, éditeur...) appelle stopPropagation() en phase bulle.
 window.addEventListener('pointerdown', unlockMusic, { once:true, capture:true });
 window.addEventListener('keydown', unlockMusic, { once:true, capture:true });
 window.addEventListener('touchstart', unlockMusic, { once:true, capture:true });

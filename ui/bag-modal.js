@@ -1,4 +1,6 @@
-/* ==== ui/bag-modal.js (généré depuis index.html) ==== */
+/* ==== Fenêtre "Sac" hors combat (depuis la Tour) : liste des objets consommables possédés et
+   utilisation sur un membre de l'équipe (soin de PV/statut). ==== */
+// Ouvre la fenêtre modale du sac.
 function openBagModal(){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -15,6 +17,7 @@ function openBagModal(){
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
   renderBagItemList();
 }
+// Liste les objets consommables possédés avec un bouton "Utiliser" chacun.
 function renderBagItemList(){
   const list = document.getElementById('bagItemList');
   list.innerHTML = '';
@@ -40,6 +43,7 @@ function renderBagItemList(){
     btn.onclick = ()=> renderBagTargetList(btn.dataset.key);
   });
 }
+// Liste l'équipe pour choisir la cible d'un objet (grisé si le membre n'en a pas besoin : PV déjà pleins, pas le bon statut...).
 function renderBagTargetList(key){
   const item = ITEMS[key];
   const list = document.getElementById('bagItemList');

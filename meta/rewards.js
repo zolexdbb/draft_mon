@@ -1,17 +1,27 @@
-/* ==== meta/rewards.js (généré depuis index.html) ==== */
-/* Monnaie secondaire méta : Jetons de Tour, gagnés à la fin d'une run (défaite) selon l'étage atteint. */
+/* ==== SOMMAIRE ====
+   Monnaie méta "Jetons de Tour" (gagnée à la défaite selon l'étage atteint, persiste entre toutes
+   les parties) et les Boosts de départ achetables avec. Repères :
+   - L.11-fin(21): sauvegarde/chargement des Jetons et boosts achetés (localStorage)
+   - L.24-fin(29): tokensForRun — jetons gagnés en fin de run selon l'étage et la difficulté
+   - L.31-37 : BOOSTS — catalogue des boosts (bonus d'argent/objet de départ/réduction/reroll)
+   - L.39-fin(50): metaStartMoneyBonus/metaStartItems/metaShopDiscount/metaFreeRerolls — lecture
+     des effets cumulés des boosts achetés (consommé par initDraft/village/shop)
+   - L.52-fin : fenêtre "Boosts de départ" accessible depuis le menu Jouer
+==== */
 const TOKENS_KEY = 'draftArenaTowerTokens';
 const BOOSTS_KEY = 'draftArenaBoosts';
 let towerTokens = 0;
 let purchasedBoosts = [];
 let rerollsLeft = 0;
 
+// Charge les Jetons de Tour et les boosts achetés depuis localStorage (appelé une fois au démarrage).
 function loadMetaProgress(){
   try {
     towerTokens = parseInt(localStorage.getItem(TOKENS_KEY), 10) || 0;
     purchasedBoosts = JSON.parse(localStorage.getItem(BOOSTS_KEY) || '[]');
   } catch(e){ towerTokens = 0; purchasedBoosts = []; }
 }
+// Sauvegarde les Jetons de Tour et les boosts achetés (persiste entre toutes les parties, contrairement à la sauvegarde de partie).
 function saveMetaProgress(){
   try {
     localStorage.setItem(TOKENS_KEY, String(towerTokens));
@@ -20,9 +30,8 @@ function saveMetaProgress(){
 }
 loadMetaProgress();
 
-// 1 jeton tous les N étages francs (arrondi au jeton supérieur, jamais 0 pour une vraie progression).
-// Facile : 1 jeton tous les 8 étages · Normal : tous les 4 · Difficile : tous les 2.
 const TOKEN_DIFF_RATE = { facile: 1/8, normal: 1/4, difficile: 1/2 };
+// Jetons de Tour gagnés à la fin d'une run selon l'étage atteint et la difficulté (plus généreux en difficile).
 function tokensForRun(floorReached, diff){
   const cleared = Math.max(0, floorReached - 1);
   if(cleared===0) return 0;
@@ -50,6 +59,7 @@ function metaFreeRerolls(){
   return BOOSTS.filter(b=>purchasedBoosts.includes(b.id) && b.effect.freeReroll).reduce((a,b)=>a+b.effect.freeReroll,0);
 }
 
+// Fenêtre "Boosts de départ" (catalogue de boosts achetables avec les Jetons de Tour).
 function openBoostsModal(){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -67,6 +77,7 @@ function openBoostsModal(){
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
   renderBoostsList();
 }
+// Liste les boosts avec leur état (acquis/verrouillé si un prérequis manque/achetable) et branche l'achat.
 function renderBoostsList(){
   const list = document.getElementById('boostsList');
   if(!list) return;

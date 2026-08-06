@@ -1,4 +1,5 @@
-/* ==== pokemon/gen3.js : Pokédex n°252 à 386 ==== */
+/* ==== Pokédex n°252 à 386 (Hoenn), lignées classiques en ordre de Pokédex.
+   DEX_NUMBERS_GEN3 (numéros de Pokédex, pour les sprites) est à la fin du fichier. ==== */
 const LINES_GEN3 = [
 {id:'treecko',abilities:['Engrais','Turbo'],moveIds:['leer','tackle','quickattack','absorb','detect','gigadrain','doubleteam','dragonbreath','slash','leafblade','screech','synthesis','dragonclaw','brickbreak','rockslide','protect','aerialace','thunderpunch','crunch','swift','dig','swordsdance','bodyslam','nightslash','endure','rocktomb','bulletseed','hyperbeam','agility','safeguard','doubleedge','solarbeam','earthquake','dragonpulse','bulldoze','irontail','outrage','focusblast','facade','falseswipe','razorwind','frenzyplant','pound','megadrain','slam','endeavor','furycutter','takedown','lowkick','thief','magicalleaf','sunnyday','sleeptalk','rest','grassyterrain','dragondance','focuspunch','leafage','solarblade','strengthsap','troppkick'],
  stages:[

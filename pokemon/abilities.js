@@ -1,5 +1,20 @@
-/* ==== pokemon/abilities.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Textes descriptifs des talents (affichés au draft et dans l'éditeur). Repères (lignes
+   approximatives) :
+   - L.3-5     : Talents ajoutés pour Pokémon Légendes Arceus (v0.9.1)
+   - L.6-112   : Talents manquants de Génération 5
+   - L.113-135 : Talents manquants de Génération 3
+   - L.136-171 : Talents manquants de Génération 4
+   - L.172-194 : Talents de Génération 6
+   - L.195-245 : Nouveaux talents de Génération 7
+   - L.246-fin : Nouveaux talents de Génération 8
+   Note : les talents déjà décrits ici avant v0.9.1 (Intimidation, Illusion, Chlorophylle...)
+   sont réutilisés tels quels par les nouvelles lignées plutôt que redécrits.
+==== */
 const ABILITY_DESC = {
+  /* ---- BLOC : Légendes Arceus (talents nouvellement attribués) ---- */
+  'Incisif':"Booste de 50% la puissance des capacités tranchantes.",
+  'Querelleur':"Permet aux capacités Normal et Combat de toucher les Pokémon de type Spectre.",
   /* ---- BLOC 1 (Gen 5) : talents manquants ---- */
   'Victorieux':"Augmente de 10% la précision des capacités du porteur (et de ses alliés en Combat Duo/Multi).",
   'Contestation':"Inverse les changements de statistiques subis.",
@@ -271,6 +286,3 @@ const ABILITY_DESC = {
   'Hennissement Glacial':"Augmente fortement l'Attaque du porteur après avoir mis K.O. un Pokémon.",
   'Hennissement Sinistre':"Augmente fortement l'Attaque Spéciale du porteur après avoir mis K.O. un Pokémon."
 };
-
-
-/* =================== DRESSEURS THÉMATIQUES =================== */

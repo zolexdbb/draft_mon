@@ -1,4 +1,15 @@
-/* ==== ui/editor.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Éditeur d'équipe (mode Normal/Difficile) : grille des 6 membres draftés + fenêtre d'édition
+   détaillée d'un membre (stats de base, nature, talent, IV/EV, 4 attaques, évolution manuelle).
+   Repères :
+   - L.11-22 : showBuilder/isConfigured — écran de la grille d'équipe + condition "prêt à jouer"
+     (4 attaques distinctes choisies)
+   - L.23-fin(71): renderTeamGrid — construit les 6 cartes d'équipe (réordonnables, cliquables)
+   - L.75-fin(373): openEditor — construit toute la fenêtre d'édition d'un membre (stats, nature,
+     talent, IV/EV, évolution manuelle) et branche tous ses contrôles
+   - dans openEditor : buildMoveDropdown/buildAllMoveSlots — les 4 menus déroulants d'attaques,
+     groupés par catégorie (Physique/Spéciale/Statut), avec aperçu type/puissance/description
+==== */
 function showBuilder(){
   document.getElementById('screenDraft').classList.add('hidden');
   document.getElementById('screenBuilder').classList.remove('hidden');
@@ -6,9 +17,11 @@ function showBuilder(){
   document.getElementById('editor').classList.add('hidden');
   renderTeamGrid();
 }
+// Un membre est "prêt" quand ses 4 emplacements d'attaque sont remplis avec 4 attaques distinctes.
 function isConfigured(member){
   return member.moves.every(m=>m!==null) && new Set(member.moves).size===4;
 }
+// Construit la grille des 6 cartes d'équipe (sprite, types, talent, statut prêt/à configurer, réordonnancement).
 function renderTeamGrid(){
   const grid = document.getElementById('teamGrid');
   grid.innerHTML='';
@@ -60,6 +73,8 @@ function renderTeamGrid(){
 }
 
 /* =================== GENERIC CUSTOM SELECT (style attaques) =================== */
+// Ouvre et construit la fenêtre d'édition complète d'un membre d'équipe (stats de base, nature,
+// talent, IV, EV, 4 attaques, bouton d'évolution manuelle si la lignée en a une).
 function openEditor(idx){
   editingIndex = idx;
   const m = team[idx];
@@ -73,7 +88,6 @@ function openEditor(idx){
   const hasNextStage = !line.branches && line.stages.length > m.stage+1;
   const abilities = abilitiesFor(m);
 
-  // Stat bars helper
   const statBarColor = (val) => {
     if(val>=150) return '#6F35FC';
     if(val>=110) return '#EE8130';
@@ -205,6 +219,7 @@ function openEditor(idx){
   const movesPick = document.getElementById('movesPick');
   movesPick.innerHTML='';
 
+  // Construit le menu déroulant d'un emplacement d'attaque (exclut les capacités déjà choisies dans un autre emplacement), groupé par catégorie.
   function buildMoveDropdown(slot){
     const otherSelected = m.moves.filter((mv,i)=>i!==slot && mv!==null);
     const options = movepool.filter(mid => !otherSelected.includes(mid) || mid===m.moves[slot]);
@@ -214,17 +229,14 @@ function openEditor(idx){
     const row = document.createElement('div');
     row.className='move-select-row';
 
-    // Slot label
     const slotLabel = document.createElement('span');
     slotLabel.className='slot-label';
     slotLabel.textContent=`ATK ${slot+1}`;
     row.appendChild(slotLabel);
 
-    // Custom dropdown container
     const csel = document.createElement('div');
     csel.className='csel';
 
-    // Trigger (visible button)
     const trigger = document.createElement('div');
     trigger.className='csel-trigger';
     const renderTrigger = (mv, mid) => {
@@ -238,11 +250,9 @@ function openEditor(idx){
     };
     renderTrigger(currentMv, currentId);
 
-    // Dropdown list
     const dropdown = document.createElement('div');
     dropdown.className='csel-dropdown';
 
-    // Empty option
     const emptyOpt = document.createElement('div');
     emptyOpt.className='csel-opt' + (!currentId?' selected':'');
     emptyOpt.innerHTML=`<span class="csel-opt-empty">— Aucune attaque —</span>`;
@@ -251,14 +261,12 @@ function openEditor(idx){
       renderTrigger(null,null);
       dropdown.classList.remove('open');
       trigger.classList.remove('open');
-      // Update desc
       const descEl = row.querySelector('.move-desc');
       if(descEl) descEl.textContent='';
       renderTeamGrid();
     };
     dropdown.appendChild(emptyOpt);
 
-    // Group by category for visual separation
     ['phys','spec','status'].forEach(cat=>{
       const catMoves = options.filter(mid=>MOVES[mid].cat===cat);
       if(!catMoves.length) return;
@@ -282,11 +290,9 @@ function openEditor(idx){
           renderTrigger(mv,mid);
           dropdown.classList.remove('open');
           trigger.classList.remove('open');
-          // Update desc
           const descEl=row.querySelector('.move-desc');
           if(descEl) descEl.textContent=mv.desc||'';
           renderTeamGrid();
-          // Rebuild all slots to avoid duplicates
           buildAllMoveSlots();
         };
         dropdown.appendChild(opt);
@@ -296,7 +302,6 @@ function openEditor(idx){
     trigger.onclick=(e)=>{
       e.stopPropagation();
       const wasOpen=dropdown.classList.contains('open');
-      // Close all
       document.querySelectorAll('.csel-dropdown.open').forEach(d=>d.classList.remove('open'));
       document.querySelectorAll('.csel-trigger.open').forEach(d=>d.classList.remove('open'));
       if(!wasOpen){ dropdown.classList.add('open'); trigger.classList.add('open'); }
@@ -319,6 +324,7 @@ function openEditor(idx){
     return row;
   }
 
+  // Reconstruit les 4 menus déroulants d'attaques (appelé après chaque choix pour mettre à jour les options disponibles ailleurs).
   function buildAllMoveSlots(){
     movesPick.innerHTML='';
     for(let slot=0;slot<4;slot++){
@@ -375,5 +381,3 @@ function openEditor(idx){
 document.getElementById('validateTeamBtn').onclick = ()=>{
   finalizeTeamAndGoToTower();
 };
-
-/* =================== TOWER =================== */

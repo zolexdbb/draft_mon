@@ -1,9 +1,10 @@
-/* ==== village/shop.js (généré depuis index.html) ==== */
+/* ==== Le Pokéshop du Village : achète Potions/Baies/objets stratégiques, avec réduction possible via un boost méta acheté. ==== */
 const SHOP_CATEGORIES = [
   {key:'potion', label:'💊 Potions'},
   {key:'baie', label:'🍑 Baies'},
   {key:'strat', label:'🎗️ Stratégiques'}
 ];
+// Affiche le Pokéshop (onglets de catégorie + liste d'objets achetables, prix réduit si un boost de fidélité est acheté).
 function renderPokeshopPanel(){
   const wrap = document.getElementById('villagePanelContent');
   wrap.innerHTML = `

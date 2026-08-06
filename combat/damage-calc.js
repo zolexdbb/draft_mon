@@ -1,4 +1,12 @@
-/* ==== combat/damage-calc.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Calcul des dégâts et de la vitesse effective. Repères :
+   - statMultiplier / accuracyStageMultiplier : conversion stage (-6..+6) → multiplicateur
+   - rollCrit : tirage du coup critique
+   - moveEffectiveness : multiplicateur de type (avec les cas spéciaux : Querelleur vs Spectre...)
+   - computeDamage : calcul complet des dégâts d'un coup (LE plus gros morceau du fichier — c'est
+     ici que sont branchés presque tous les multiplicateurs liés aux talents/objets/météo/terrain)
+   - effectiveSpeed : vitesse réelle d'un combattant (talents/objets/statut/météo inclus)
+==== */
 function statMultiplier(stage){
   return stage>=0 ? (2+stage)/2 : 2/(2-stage);
 }
@@ -7,24 +15,26 @@ function accuracyStageMultiplier(stage){
   return s>=0 ? (3+s)/3 : 3/(3-s);
 }
 const CRIT_CHANCE = 1/16;
+// Tire au sort si le coup est critique (chance de base 1/16, modifiée par talents/objets).
 function rollCrit(attacker, defender){
   if(defender.ability==='Coque Armure' || defender.ability==='Armurbaston') return false;
   if(attacker.ability==='Sans Pitié' && defender.status==='poison') return true;
   let chance = CRIT_CHANCE;
-  if(attacker.ability==='Sniper') chance *= 1; // Sniper renforce les dégâts, pas la fréquence
+  if(attacker.ability==='Sniper') chance *= 1;
   if(defender.ability==='Écaille Spéciale') chance *= 4;
   if(attacker.critBoost) chance *= 4;
   if(attacker.heldItem==='griffeTranchante') chance *= 2;
   return Math.random() < chance;
 }
+// Vrai si un combattant présent a Air Lock/Ciel Gris (annule tous les effets de météo).
 function weatherNullified(){
   if(!battleState) return false;
   const check = c => c.ability==='Air Lock' || c.ability==='Ciel Gris';
   return [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(check);
 }
-// Comme getMult, mais gère les coups à double type (Plaquage Volant), les exceptions
-// d'efficacité forcée (Cristallisation vs Eau) et le contournement d'immunité (Mille Flèches).
-function moveEffectiveness(move, defTypes){
+// Multiplicateur d'efficacité de type d'un coup, avec les cas spéciaux : superEffectiveVs forcé,
+// bypassTypeImmunity (ex. Mille Flèches), et Querelleur (Normal/Combat touche les Spectre).
+function moveEffectiveness(move, defTypes, attacker){
   const atkTypes = move.type2 ? [move.type, move.type2] : [move.type];
   let eff = 1;
   defTypes.forEach(dt=>{
@@ -35,10 +45,13 @@ function moveEffectiveness(move, defTypes){
       v *= (chart && chart[dt]!==undefined) ? chart[dt] : 1;
     });
     if(move.bypassTypeImmunity && v===0) v = 1;
+    if(attacker && attacker.ability==='Querelleur' && dt==='fantome' && (move.type==='normal'||move.type==='combat') && v===0) v = 1;
     eff *= v;
   });
   return eff;
 }
+// Calcule les dégâts d'un coup : formule officielle (niveau/puissance/stats/STAB/efficacité/
+// variance/critique) puis tous les multiplicateurs de talents, objets, météo et terrain.
 function computeDamage(attacker, move, defender){
   if(move.fixedDamage){
     return { dmg: move.fixedDamage, eff: 1, crit:false };
@@ -48,7 +61,6 @@ function computeDamage(attacker, move, defender){
   const defBase = move.cat==='phys' ? defender.stats.def : defender.stats.spd;
   let atkStage = move.useDefenseForAtk ? attacker.stages.def : (move.cat==='phys' ? attacker.stages.atk : attacker.stages.spa);
   let defStage = move.cat==='phys' ? defender.stages.def : defender.stages.spd;
-  // Sur un coup critique, les baisses d'Attaque et les hausses de Défense adverses sont ignorées
   if(crit){ atkStage = Math.max(0, atkStage); defStage = Math.min(0, defStage); }
   const atkStat = atkBase * statMultiplier(atkStage) * (attacker.heldItem==='bandeauChoix' && move.cat==='phys' ? 1.5 : (attacker.heldItem==='lunettesChoix' && move.cat==='spec' ? 1.5 : 1));
   const terrainNow = battleState ? battleState.terrain : null;
@@ -57,12 +69,11 @@ function computeDamage(attacker, move, defender){
   const defTypes = defender.transformedTypes || defender.types;
   const hasStab = atkTypes.includes(move.type) || (move.type2 && atkTypes.includes(move.type2));
   const stab = hasStab ? (attacker.ability==='Adaptabilité' ? 2 : 1.5) : 1;
-  const eff = moveEffectiveness(move, defTypes);
+  const eff = moveEffectiveness(move, defTypes, attacker);
   const variance = 0.85 + Math.random()*0.3;
   const burnPenalty = (attacker.status==='brulure' && move.cat==='phys' && attacker.ability!=='Cran') ? 0.5 : 1;
   const critMult = crit ? (attacker.ability==='Sniper' ? 2.25 : 1.5) : 1;
 
-  // Multiplicateurs liés aux talents
   let abilityMult = 1;
   if(attacker.ability==='Cran' && attacker.status) abilityMult *= 1.5;
   const lowHp = attacker.hp <= attacker.maxHp/3;
@@ -94,7 +105,7 @@ function computeDamage(attacker, move, defender){
   if(attacker.ability==='Mâchouille' && move.bite) abilityMult *= 1.5;
   if(attacker.ability==='Méga-Lanceur' && move.pulse) abilityMult *= 1.5;
   if(attacker.ability==='Griffe Solide' && move.cat==='phys') abilityMult *= 1.3;
-  // Auras de champ : boostent (ou, avec Rupture Aura présente, réduisent) les capacités du type correspondant
+  if(attacker.ability==='Incisif' && move.slicing) abilityMult *= 1.5;
   if(battleState){
     const fieldMons = [...alivePlayerCombatants(), ...aliveFoeCombatants()];
     const auraBreak = fieldMons.some(c=>c.ability==='Rupture Aura');
@@ -108,7 +119,6 @@ function computeDamage(attacker, move, defender){
     if(move.type==='acier' && attacker.ability==="Esprit d'Acier") abilityMult *= 1.5;
   }
 
-  // Météo
   let weatherMult = 1;
   const weather = (battleState && !weatherNullified()) ? battleState.weather : null;
   if(weather){
@@ -121,7 +131,6 @@ function computeDamage(attacker, move, defender){
     }
   }
 
-  // Terrain
   let terrainMult = 1;
   const terrain = battleState ? battleState.terrain : null;
   if(terrain){
@@ -142,13 +151,14 @@ function computeDamage(attacker, move, defender){
   }
   if(move.facadeBoost && attacker.status) effectivePower *= 2;
   if(move.variablePower){
-    effectivePower = 30 + Math.floor(Math.random()*61); // entre 30 et 90
+    effectivePower = 30 + Math.floor(Math.random()*61);
   }
   const base = ((2*LEVEL/5+2) * effectivePower * (atkStat/defStat)) / 50 + 2;
   const dmg = Math.max(1, Math.round(base * stab * eff * variance * burnPenalty * critMult * abilityMult * weatherMult * terrainMult));
   return { dmg, eff, crit };
 }
 
+// Vitesse réelle d'un combattant pour déterminer l'ordre de jeu (stages, statut, talents, objets, météo).
 function effectiveSpeed(c){
   let spe = c.stats.spe * statMultiplier(c.stages.spe);
   if(c.status && c.ability==='Pied Véloce') spe *= 1.5;
@@ -162,4 +172,3 @@ function effectiveSpeed(c){
   }
   return spe;
 }
-

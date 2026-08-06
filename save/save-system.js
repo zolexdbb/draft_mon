@@ -1,4 +1,12 @@
-/* ==== save/save-system.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Sauvegarde de partie (localStorage, 5 emplacements) + meilleurs étages et badges par mode de
+   difficulté (persistent indépendamment des sauvegardes de partie, comme des high-scores). Repères :
+   - L.11-20 : meilleurs étages atteints par mode (chargés une fois au démarrage)
+   - L.26-32 : badges de Maître de Type obtenus par mode (chargés une fois au démarrage)
+   - L.39-49 : saveGame/loadGame — sauvegarde/charge une partie complète dans un emplacement
+   - L.88-fin : getSlotInfo/deleteSlot/hasSave — inspection des emplacements sans les charger
+     entièrement (utilisé par l'écran de choix d'emplacement)
+==== */
 const SAVE_KEY_PREFIX = 'draftArenaSave_';
 function slotKey(slot){ return SAVE_KEY_PREFIX + slot; }
 const BEST_FLOOR_FACILE_KEY = 'draftArenaBestFloorFacile';
@@ -27,9 +35,11 @@ function badgeKeyFor(diff){
     badges.difficile = JSON.parse(localStorage.getItem(BADGES_DIFFICILE_KEY)) || [];
   } catch(e){}
 })();
+// Meilleur étage atteint dans le mode de difficulté actuel.
 function currentBestFloor(){
   return difficulty==='difficile' ? bestFloorDifficile : (difficulty==='facile' ? bestFloorFacile : bestFloorNormal);
 }
+// Met à jour et sauvegarde le meilleur étage si l'étage courant le dépasse.
 function updateBestFloor(floor){
   if(floor>currentBestFloor()){
     if(difficulty==='difficile') bestFloorDifficile = floor;
@@ -38,6 +48,7 @@ function updateBestFloor(floor){
     try { localStorage.setItem(bestFloorKeyFor(difficulty), String(floor)); } catch(e){}
   }
 }
+// Sauvegarde l'état complet de la partie en cours dans l'emplacement actif.
 function saveGame(){
   try {
     localStorage.setItem(slotKey(currentSlot), JSON.stringify({
@@ -46,6 +57,7 @@ function saveGame(){
     }));
   } catch(e){ console.error('Sauvegarde impossible', e); }
 }
+// Charge une partie depuis un emplacement (recalcule les stats de chaque membre, gère les sauvegardes plus anciennes sans certains champs).
 function loadGame(slot){
   try {
     const raw = localStorage.getItem(slotKey(slot));
@@ -76,6 +88,7 @@ function loadGame(slot){
     return true;
   } catch(e){ console.error('Chargement impossible', e); return false; }
 }
+// Résumé léger d'un emplacement (sans reconstruire les stats) pour l'écran de choix d'emplacement.
 function getSlotInfo(slot){
   try {
     const raw = localStorage.getItem(slotKey(slot));
@@ -97,6 +110,3 @@ function hasSave(){
   for(let i=1;i<=5;i++){ if(getSlotInfo(i)) return true; }
   return false;
 }
-
-
-/* =================== UTILS =================== */

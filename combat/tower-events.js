@@ -1,10 +1,14 @@
-/* ==== combat/tower-events.js (généré depuis index.html) ==== */
-/* Événements aléatoires entre les étages normaux de la Tour (ni Mini-Boss, ni Boss). */
+/* ==== SOMMAIRE ====
+   Événements aléatoires entre deux étages normaux de la Tour (25% de chance, ni Mini-Boss ni
+   Boss). Repères :
+   - L.13-25 : conséquences partagées d'un event risqué raté (perte objet/argent, statut infligé)
+   - L.27-fin : TOWER_EVENTS — liste des events (id/emoji/texte d'intro/actions), d'abord les
+     "-- Sûrs --" (aucun risque), puis les "-- Risqués --" (pari avec gain ou pénalité)
+   - après TOWER_EVENTS : affichage de l'écran d'event et branchement retour vers la Tour
+==== */
 const TOWER_EVENT_CHANCE = 0.25;
 
-// PV/statut ne persistent qu'en mode Difficile (comme le reste du jeu) : le coût des events
-// risqués doit donc toujours toucher un objet/de l'argent (qui persiste partout), avec en plus
-// une morsure statut/PV réservée au Difficile où elle a vraiment un effet la prochaine bataille.
+// Pénalité d'un event risqué raté : vole un objet possédé au hasard, sinon de l'argent.
 function eventLoseMoneyOrItem(amount){
   const ownedKeys = Object.keys(bag).filter(k=>bag[k]>0);
   if(ownedKeys.length>0){
@@ -18,9 +22,8 @@ function eventLoseMoneyOrItem(amount){
   return lost>0 ? `Tu perds ${lost} 💰 dans la panique !` : "Heureusement, tu n'avais rien à perdre.";
 }
 const EVENT_STATUS_POOL = ['poison','brulure','paralysie','sommeil','gel'];
-// En Difficile : vrai statut aléatoire (avec les immunités de type/talent du moteur de combat).
-// En Facile/Normal (où PV/statut sont réinitialisés à chaque combat) : bloque un Pokémon
-// aléatoire pour le prochain combat, seule conséquence qui persiste réellement dans ces modes.
+// Autre pénalité possible d'un event risqué : en Difficile, inflige un vrai statut aléatoire ;
+// dans les autres modes (PV/statut réinitialisés à chaque combat), bloque juste un Pokémon pour le prochain combat.
 function eventAfflictRandomMember(){
   if(difficulty==='difficile'){
     const alive = team.filter(m=>m.hp>0);
@@ -183,6 +186,7 @@ const TOWER_EVENTS = [
 let currentTowerEvent = null;
 let pendingFloorReward = 0;
 
+// Appelé après chaque combat gagné : tire si un event se déclenche (25%), et si oui affiche l'écran d'event à la place du prochain étage.
 function maybeTriggerTowerEvent(reward){
   if(Math.random() >= TOWER_EVENT_CHANCE) return false;
   pendingFloorReward = reward;
@@ -192,7 +196,7 @@ function maybeTriggerTowerEvent(reward){
   renderTowerEvent();
   return true;
 }
-// Déclenchement manuel (mode développeur) : même écran, mais event choisi par id plutôt que tiré au sort.
+// Déclenche un event précis par son id (mode développeur : choisi manuellement plutôt que tiré au sort).
 function triggerTowerEventById(id){
   const ev = TOWER_EVENTS.find(e=>e.id===id);
   if(!ev) return false;
@@ -203,6 +207,7 @@ function triggerTowerEventById(id){
   renderTowerEvent();
   return true;
 }
+// Affiche l'écran d'event courant (texte, emoji, boutons d'action) et branche leur résolution.
 function renderTowerEvent(){
   const ev = currentTowerEvent;
   document.getElementById('eventTitle').textContent = ev.safe ? '✨ ÉVÉNEMENT' : '⚠️ ÉVÉNEMENT RISQUÉ';

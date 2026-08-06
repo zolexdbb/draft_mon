@@ -1,4 +1,6 @@
-/* ==== village/village-core.js (généré depuis index.html) ==== */
+/* ==== Écran central du Village (affiché après une victoire de Boss) : argent, badge éventuel,
+   apparition aléatoire du Marchand Itinérant, et petites animations de Pokémon qui se promènent. ==== */
+// Initialise l'écran du Village à l'arrivée (après un Boss) : récompense, badge, tirage du Marchand.
 function renderVillage(reward, newBadgeType){
   document.getElementById('villageReward').textContent = reward ? `+${reward} 💰 gagnés en battant le Boss !` : '';
   const badgeEl = document.getElementById('villageBadge');
@@ -27,7 +29,7 @@ function renderVillageRoamers(){
     const sp = speciesOf(m);
     const el = document.createElement('div');
     el.className = 'village-roamer';
-    const top = 58 + Math.random()*22; // % — reste sur la zone de sol, sous les bâtiments
+    const top = 58 + Math.random()*22;
     const left = 8 + Math.random()*20;
     const duration = 8 + Math.random()*5;
     const delay = -Math.random()*duration;

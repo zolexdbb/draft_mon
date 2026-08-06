@@ -1,4 +1,7 @@
-/* ==== combat/pp-system.js (généré depuis index.html) ==== */
+/* ==== Calcule les PP max d'une capacité (approximatif, pas la valeur officielle exacte, mais
+   cohérent : plus une capacité est puissante ou abusive, moins elle a de PP) + définition de
+   Lutte (Struggle), le coup de dernier recours utilisé à sec de PP. ==== */
+// Détermine les PP max d'une capacité selon sa catégorie/puissance/effet (pas de valeur pp explicite dans MOVES = calcul automatique).
 function basePP(move){
   if(!move) return 0;
   if(move.pp) return move.pp;

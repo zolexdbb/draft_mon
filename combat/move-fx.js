@@ -1,6 +1,7 @@
-/* ==== combat/move-fx.js ==== */
-/* TYPE_COLOR, TYPE_ICON_PATH et svgIcon() sont définis dans core/type-chart.js */
-
+/* ==== Animations visuelles jouées en combat quand une capacité est utilisée (icône de type qui
+   file vers la cible + éclat d'impact). TYPE_COLOR, TYPE_ICON_PATH et svgIcon() viennent de
+   core/type-chart.js. Point d'entrée : playMoveFx(), appelé depuis combat/battle-flow.js. ==== */
+// Crée un élément DOM d'effet (icône de type ou particule) positionné à x,y dans le terrain de combat.
 function spawnIcon(field, cls, x, y, color, svgHtml){
   const el = document.createElement('div');
   el.className = cls;
@@ -13,6 +14,7 @@ function spawnIcon(field, cls, x, y, color, svgHtml){
   return el;
 }
 
+// Anneau + particules qui explosent au point d'impact d'un coup.
 function spawnBurst(field, x, y, color){
   const ring = document.createElement('div');
   ring.className = 'move-fx-ring';
@@ -35,6 +37,7 @@ function spawnBurst(field, x, y, color){
   }
 }
 
+// Point d'entrée : joue l'animation d'une capacité (projectile pour une capacité spéciale, impact direct pour une physique) depuis l'attaquant vers le défenseur.
 function playMoveFx(move, actorIsPlayer){
   if(!move || (move.cat!=='phys' && move.cat!=='spec')) return;
   const field = document.querySelector('.vsfield');

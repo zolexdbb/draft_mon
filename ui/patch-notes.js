@@ -1,5 +1,34 @@
-/* ==== ui/patch-notes.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Historique des mises à jour (PATCH_NOTES, du plus récent au plus ancien) + la fenêtre qui les
+   affiche, et la phrase d'accroche aléatoire du bouton du menu principal (SPLASH_TEXTS).
+   PATCH_NOTES[0] est toujours la version courante. Repères : le contenu détaillé de chaque version
+   est en haut du fichier ; les fonctions d'affichage (renderPatchNotes/openPatchNotes) sont en bas,
+   juste avant SPLASH_TEXTS. Le tout premier écran affiché au chargement du jeu est en toute fin de
+   fichier (showScreen('screenMenu')).
+==== */
 const PATCH_NOTES = [
+  {
+    version: 'v0.9.1',
+    title: 'v0.9.1 — Légendes : Arceus',
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "12 nouvelles lignées de Formes de Hisui, sélectionnables indépendamment de leurs versions Kanto/Johto/Unova au draft (Caninos, Voltorbe, Typhlosion, Qwilfish, Farfuret, Clamiral, Fragilady, Zorua, Gueriaigle, Colimucus, Séracrawl et Archéduc d'Hisui)",
+          "7 nouvelles évolutions inédites : Cerbyllin (Cerfrousse), Hachécateur (nouvelle branche d'évolution d'Insécateur, aux côtés de Cizayox), Ursaking (Ursaring), Paragruel (Bargantua), Farfurex (Farfuret de Hisui) et Qwilpik (Qwilfish de Hisui)",
+          "Amovénus rejoint Boréas, Fulguris et Démétéros : une forme Totémique via le Miroir Sacré, déjà vendu par le Marchand Itinérant"
+        ]
+      },
+      {
+        icon: '⚔️', label: 'Capacités & Talents',
+        items: [
+          "Les nouvelles lignées apprennent les capacités propres à Légendes Arceus déjà présentes dans le Pokédex (Griffe Fatale, Bouclier Psy, Tempête Printanière, Triple Flèches, Tranchant Sans Fin, Hache de Pierre, Rafale des Cimes...)",
+          "2 nouveaux talents avec un vrai effet codé en combat : Incisif (+50% de puissance pour les capacités tranchantes) et Querelleur (les capacités Normal/Combat touchent les Pokémon Spectre)",
+          "Les autres talents attribués (Frisk, Illusion, Rattled, Mold Breaker, Healer, Contrary, Sharpness et bien d'autres) réutilisent les talents déjà existants dans le Pokédex"
+        ]
+      }
+    ]
+  },
   {
     version: 'v0.9',
     title: 'v0.9 — Gen 8 Update',
@@ -487,9 +516,10 @@ const SPLASH_TEXTS = [
   "Gen 8 est disponible !",
   "Le Dynamax arrive !",
   "Déclenche ton Gigamax !",
-  "89 nouvelles attaques !",
-  "29 nouveaux talents !"
+  "Légendes : Arceus débarque !",
+  "Les Formes de Hisui sont là !"
 ];
+// Génère le contenu HTML d'une entrée de patch note (liste de catégories avec icône, ou simple liste à puces).
 function renderPatchNoteBody(v){
   if(v.categories){
     return v.categories.map(c => `
@@ -500,6 +530,7 @@ function renderPatchNoteBody(v){
   }
   return `<ul>${v.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
 }
+// Génère la liste complète des versions (repliables, la plus récente dépliée par défaut).
 function renderPatchNotes(){
   return PATCH_NOTES.map((v,idx) => {
     const expanded = idx===0;
@@ -520,6 +551,7 @@ function renderPatchNotes(){
     </div>`;
   }).join('');
 }
+// Ouvre la fenêtre des notes de mise à jour (accessible depuis le bouton d'accroche du menu).
 function openPatchNotes(){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';

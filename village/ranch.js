@@ -1,6 +1,8 @@
-/* ==== village/ranch.js (généré depuis index.html) ==== */
+/* ==== Le Ranch du Village : un dresseur itinérant propose 3 Pokémon sauvages tirés au sort (un
+   seul recrutable par visite), à ajouter à l'équipe (en remplaçant un membre) ou envoyer au PC. ==== */
 let ranchChoices = null;
 let ranchRecruited = false;
+// Affiche les 3 candidats du Ranch (tirés une seule fois par visite au Village, mémorisés dans ranchChoices).
 function renderRanchPanel(){
   const wrap = document.getElementById('villagePanelContent');
   if(ranchRecruited){
@@ -39,6 +41,7 @@ function renderRanchPanel(){
     cardsWrap.appendChild(card);
   });
 }
+// Écran de confirmation du recrutement : choisir d'ajouter à l'équipe (en remplaçant un membre) ou d'envoyer directement au PC.
 function renderRanchRecruit(choice, sp){
   const wrap = document.getElementById('villagePanelContent');
   wrap.innerHTML = `

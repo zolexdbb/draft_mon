@@ -1,4 +1,6 @@
-/* ==== village/pokecenter.js (généré depuis index.html) ==== */
+/* ==== Centre Pokémon (Village, soin gratuit + accès au PC) et Mini-Centre (halte rapide après
+   un Mini-Boss en mode Difficile, uniquement le soin). ==== */
+// Affiche le panneau du Centre Pokémon (soin gratuit + accès au PC).
 function renderPokecentrePanel(){
   const wrap = document.getElementById('villagePanelContent');
   wrap.innerHTML = `
@@ -20,7 +22,7 @@ function renderPokecentrePanel(){
   document.getElementById('openPCBtn').onclick = renderPCPanel;
 }
 
-/* Halte rapide après un Mini-Boss en mode Difficile : uniquement le soin, pas d'accès Pokéshop/Ranch. */
+// Affiche l'écran du Mini-Centre (soin rapide après un Mini-Boss, sans accès au Pokéshop/Ranch).
 function renderMiniCenter(reward){
   document.getElementById('miniCenterReward').textContent = reward ? `+${reward} 💰 gagnés contre le Mini-Boss !` : '';
   document.getElementById('miniCenterMsg').textContent = '';

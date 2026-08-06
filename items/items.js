@@ -1,4 +1,19 @@
-/* ==== items/items.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Tous les objets du jeu (achetables au Pokéshop ou vendus par le Marchand Itinérant). Repères
+   (lignes approximatives) :
+   - L.4    : Potions (soin/statut, consommables en combat)
+   - L.16   : Baies (objets tenus, effet automatique en combat)
+   - L.26   : Objets stratégiques tenus (Bandeau/Lunettes Choix, Orbe Vie, Ceinture Force...)
+   - L.37   : Objets de forme (Plaques d'Arceus, appareils Motisma, Orbe Platiné, Gracidée...)
+   - L.62   : Pierres Méga-Évolution
+   - L.75   : Cristaux Z (un par type, débloquent les Capacités Z)
+   - L.94   : Objets de fusion Necrozma
+   - L.98   : Mémoires (retypent Silvallié)
+   - L.116  : Objets légendaires de Galar (Épée/Bouclier Rouillé, Parchemins, Rênes Partagées)
+   - L.123  : Facteur Gigamax (débloque le Gigamax en plus du Dynamax)
+   - Après ITEMS : résolution des sprites d'objets (ITEM_SPRITE_SOURCES, itemIconHTML, retry
+     automatique sur échec de chargement dans handleItemSpriteError)
+==== */
 function ITEM_SPRITE(slug){ return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${slug}.png`; }
 const ITEMS = {
   // ---- Potions ----
@@ -120,6 +135,7 @@ const ITEMS = {
   parcheminAqua:    { name:'Parchemin Aqua',  sprite:ITEM_SPRITE('scroll-of-waters'), price:2800, kind:'held', category:'forme', formItem:true, emoji:'📜', desc:"Objet tenu : fait passer Wushours en Shifours Style Aqua (Combat/Eau)." },
   renePartageGlace: { name:'Rêne Partagée Glace', sprite:ITEM_SPRITE('reins-of-unity'), price:3200, kind:'held', category:'forme', formItem:true, emoji:'🥶', desc:"Objet tenu : fait fusionner Sylveroy avec Blizzeval (Monture Glace, Psy/Glace)." },
   renePartageSpectre:{ name:'Rêne Partagée Spectre', sprite:ITEM_SPRITE('reins-of-unity'), price:3200, kind:'held', category:'forme', formItem:true, emoji:'👻', desc:"Objet tenu : fait fusionner Sylveroy avec Spectreval (Monture Spectre, Psy/Spectre)." },
+  // ---- Gigamax (tenu, vendu uniquement par le Marchand Itinérant) ----
   facteurGigamax:{ name:'Facteur Gigamax', sprite:ITEM_SPRITE('dynamax-band'), price:2000, kind:'held', category:'forme', formItem:true, emoji:'🔴', desc:"Objet tenu : permet au porteur de devenir Gigamax en plus de Dynamax, avec une Capacité G-Max unique s'il y est éligible." }
 };
 const ITEM_SPRITE_SOURCES = [
@@ -128,10 +144,12 @@ const ITEM_SPRITE_SOURCES = [
 ];
 const ITEM_SPRITE_MAX_ATTEMPTS = 8;
 const ITEM_SPRITE_RETRY_DELAYS = [300, 600, 1200, 2000, 3000, 4000, 5000];
+// Extrait le slug d'objet (ex. "potion") depuis une URL de sprite, pour retenter d'autres sources en cas d'échec.
 function itemSlugFromSprite(url){
   const m = url.match(/items\/([^/]+)\.png$/);
   return m ? m[1] : null;
 }
+// Génère le <img> d'icône d'un objet (avec repli automatique vers l'emoji si le sprite ne charge jamais).
 function itemIconHTML(key, size){
   const item = ITEMS[key];
   const s = size||22;
@@ -139,6 +157,7 @@ function itemIconHTML(key, size){
   const url = ITEM_SPRITE_SOURCES[0](slug);
   return `<img src="${url}" alt="${item.name}" data-item-slug="${slug}" data-item-emoji="${item.emoji}" data-item-size="${s}" style="width:${s}px;height:${s}px;object-fit:contain;image-rendering:pixelated;vertical-align:middle;" onerror="handleItemSpriteError(this)">`;
 }
+// Appelé quand un sprite d'objet échoue à charger : retente une autre source, puis abandonne vers l'emoji.
 function handleItemSpriteError(img){
   const slug = img.dataset.itemSlug;
   const attempt = parseInt(img.dataset.itemAttempt || '0', 10) + 1;

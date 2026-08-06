@@ -1,4 +1,5 @@
-/* ==== core/state.js (généré depuis index.html) ==== */
+/* ==== État global mutable de la partie en cours (équipe, argent, sac, progression de la Tour,
+   sauvegarde active, filtres du Dex...). Partagé et modifié par tous les autres fichiers. ==== */
 let draftPool = [];
 let draftRound = 0;
 let currentChoices = [];
@@ -6,7 +7,7 @@ let team = [];
 let editingIndex = null;
 let towerFloor = 1;
 let battleState = null;
-let difficulty = 'facile'; // 'facile' = PV restaurés entre chaque combat | 'difficile' = PV conservés
+let difficulty = 'facile';
 let money = 100;
 let bag = {};
 let pcBox = [null,null,null,null,null,null];

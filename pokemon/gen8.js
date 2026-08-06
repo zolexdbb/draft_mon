@@ -1,4 +1,12 @@
-/* ==== pokemon/gen8.js : Pokédex n°810 à 898 (Galar) + Formes de Galar + DLC ==== */
+/* ==== SOMMAIRE ====
+   Pokédex n°810 à 898 (région de Galar) + 14 lignées de Formes de Galar + contenu DLC. Repères
+   (lignes approximatives) :
+   - L.3-148   : Starters, lignées classiques de Galar, fossiles combinés
+   - L.149-188 : Légendaires de Galar (Zacian/Zamazenta/Éthernatos) + DLC (Wushours/Shifours,
+     Zarude, Régieleki, Régidrago, Blizzeval/Spectreval, Sylveroy)
+   - L.189-241 : Formes de Galar (lignées séparées, réutilisent le n° de Pokédex national)
+   - L.242-fin : DEX_NUMBERS_GEN8 (numéros de Pokédex, utilisés pour résoudre les sprites)
+==== */
 const LINES_GEN8 = [
 {id:'ouistempo',abilities:['Engrais','Copeaux Surge'],moveIds:['scratch','growl','vinewhip','branchpoke','razorleaf','leafblade','drumbeating','synthesis','grassyglide','solarblade','protect','swift','endure','hyperbeam','solarbeam','facade','sleeptalk','rest','swordsdance','closecombat'],
  stages:[
@@ -146,6 +154,7 @@ const LINES_GEN8 = [
   {name:'Fantyrm',types:['dragon','fantome'],base:st(28,60,30,40,30,82)},
   {name:'Dispareptil',types:['dragon','fantome'],base:st(68,80,50,60,50,102)},
   {name:'Lanssorien',types:['dragon','fantome'],base:st(88,120,75,100,75,142)}]},
+// ---- Légendaires de Galar + contenu DLC ----
 {id:'zacian',abilities:['Regard Vif'],moveIds:['tackle','playrough','closecombat','ironhead','moonblast','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','calmmind','swordsdance'],
  stages:[
   {name:'Zacian',types:['fee'],base:st(92,120,115,80,115,138),forms:{
@@ -186,6 +195,7 @@ const LINES_GEN8 = [
     renePartageGlace:{name:'Sylveroy (Monture Glace)',types:['psy','glace'],base:st(100,165,150,85,130,50),abilities:['Cran']},
     renePartageSpectre:{name:'Sylveroy (Monture Spectre)',types:['psy','fantome'],base:st(100,85,80,165,100,150),abilities:['Lévitation']}
   }}]},
+// ---- Formes de Galar (lignées séparées et draftables) ----
 {id:'miaoussgalar',abilities:['Ramassage','Mâchouille'],moveIds:['scratch','bite','ironhead','steelroller','crunch','protect','swift','endure','hyperbeam','facade','doubleedge','sleeptalk','rest'],
  stages:[
   {name:'Miaouss de Galar',types:['acier'],base:st(50,65,55,40,40,40)},

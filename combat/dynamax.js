@@ -1,8 +1,13 @@
-/* ==== combat/dynamax.js ==== */
-// Dynamax une seule fois par combat, côté joueur uniquement (même principe que les Capacités Z).
-// Pendant 3 tours, chaque capacité offensive (phys/spec) choisie devient une Capacité Max du même
-// type/catégorie, avec une puissance boostée selon la table officielle. Les capacités de statut ne
-// sont pas converties (même simplification que les Capacités Z de statut).
+/* ==== SOMMAIRE ====
+   Dynamax/Gigamax : une fois par combat, côté joueur uniquement, pendant 3 tours chaque capacité
+   offensive choisie devient une Capacité Max surboostée (PV du porteur aussi boostés de 50%).
+   - MAX_MOVE_BY_TYPE : nom/texte de la Capacité Max générique par type
+   - maxMovePower : table officielle de conversion puissance de base → puissance Capacité Max
+   - GIGAMAX_LINES : lignées éligibles au Gigamax (nom officiel de leur Capacité G-Max + effet
+     bonus codé pour certaines), actif si le porteur tient le Facteur Gigamax
+   - canDynamax / buildMaxMove : condition d'activation + construction de la capacité réelle
+   - applyDynamaxBoost / revertDynamaxBoost : mise à l'échelle atomique des PV actuels/max
+==== */
 const MAX_MOVE_BY_TYPE = {
   normal:   { name:'Ultimatteraque',      desc:"Une attaque colossale libérée par la puissance Dynamax." },
   combat:   { name:'Ultimapoing',         desc:"Un poing titanesque libéré par la puissance Dynamax." },
@@ -23,7 +28,6 @@ const MAX_MOVE_BY_TYPE = {
   tenebres: { name:'Ultimombre',          desc:"Une vague ténébreuse libérée par la puissance Dynamax." },
   fee:      { name:'Ultimastral',         desc:"Un éclat féérique libéré par la puissance Dynamax." }
 };
-// Table officielle de conversion puissance capacité de base -> puissance Capacité Max.
 function maxMovePower(basePower){
   const p = basePower || 0;
   if(p>=115) return 150;
@@ -34,8 +38,6 @@ function maxMovePower(basePower){
   if(p>=45) return 100;
   return 90;
 }
-// Lignées Gigamax-éligibles : nom/description officiels, et pour certaines un effet bonus codé
-// (appliqué directement sur la Capacité Max construite, en réutilisant les flags déjà existants).
 const GIGAMAX_LINES = {
   ouistempo:   { name:'G-Max Décibelle',       desc:"Fait vibrer le sol au rythme d'un tambour géant.", fixedPower:130 },
   flambino:    { name:'G-Max Foudre-Boulet',   desc:"Projette une boule de feu titanesque.", fixedPower:130 },
@@ -54,10 +56,14 @@ const GIGAMAX_LINES = {
   snorlax:     { name:'G-Max Câlin Collant',   desc:"Étreint la cible avec une force colossale.", secondaryBoost:{stat:'spe',stages:-1,chance:1} },
   gastly:      { name:'G-Max Épouvante',       desc:"Plonge la cible dans une terreur profonde.", secondaryBoost:{stat:'atk',stages:-1,chance:1} }
 };
+// Vrai si ce Pokémon peut Dynamaxer ce combat (pas déjà utilisé, au moins une capacité offensive avec PP).
 function canDynamax(p, bs){
   if(!p || !bs || bs.dynamaxUsed) return false;
   return (p.moves||[]).some((m,i)=> m && (m.cat==='phys'||m.cat==='spec') && p.ppCur[i]>0);
 }
+// Transforme une capacité de base en Capacité Max : puissance selon la table officielle, perd ses
+// effets secondaires ; si le porteur est Gigamax-éligible (tient le Facteur Gigamax + capacité de
+// son propre type), applique en plus le nom officiel de sa Capacité G-Max et son effet bonus.
 function buildMaxMove(baseMove, user, bs, target){
   const maxData = MAX_MOVE_BY_TYPE[baseMove.type] || { name:`${baseMove.name} Max`, desc:"Une capacité surboostée par la puissance Dynamax." };
   const mv = { ...baseMove };
@@ -84,14 +90,14 @@ function buildMaxMove(baseMove, user, bs, target){
   }
   return mv;
 }
-// Met à l'échelle PV actuels et PV max ensemble (déclenchement du Dynamax) ; opération atomique
-// pour éviter toute dérive avec les nombreux effets basés sur un pourcentage de maxHp.
+// Augmente PV actuels et PV max de 50% ensemble, de façon atomique (déclenchement du Dynamax).
 function applyDynamaxBoost(c){
   if(c.dynamaxHpBoosted) return;
   c.maxHp = Math.round(c.maxHp * 1.5);
   c.hp = Math.round(c.hp * 1.5);
   c.dynamaxHpBoosted = true;
 }
+// Annule applyDynamaxBoost (fin du Dynamax ou changement de Pokémon) : PV actuels/max ramenés à la normale.
 function revertDynamaxBoost(c){
   if(!c.dynamaxHpBoosted) return;
   const newMaxHp = Math.round(c.maxHp / 1.5);

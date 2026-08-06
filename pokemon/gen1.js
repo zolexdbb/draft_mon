@@ -1,4 +1,5 @@
-/* ==== pokemon/gen1.js : Pokédex n°1 à 151 ==== */
+/* ==== Pokédex n°1 à 151 (Kanto), lignées classiques en ordre de Pokédex.
+   DEX_NUMBERS_GEN1 (numéros de Pokédex, pour les sprites) est à la fin du fichier. ==== */
 const LINES_GEN1 = [
 {id:'bulbasaur',abilities:['Engrais','Chlorophylle',"Cercle d'Énergie"],moveIds:['growl','tackle','vinewhip','growth','razorleaf','poisonpowder','sleeppowder','takedown','magicalleaf','synthesis','amnesia','doubleedge','solarbeam','toxic','lightscreen','protect','swordsdance','bodyslam','endure','bulletseed','gigadrain','safeguard','sludgebomb','facade','falseswipe','petaldance','charm','sunnyday','sleeptalk','rest','grassyterrain','knockoff','weatherball','curse','ingrain','earthquake','outrage','scaryface','poisonjab','frenzyplant','petalblizzard','hyperbeam','leafage','solarblade','strengthsap','troppkick'],
  stages:[
@@ -262,10 +263,12 @@ const LINES_GEN1 = [
   {name:'M. Mime',types:['psy','fee'],base:st(40,45,65,100,120,90)}]},
 {id:'scyther',abilities:['Essaim','Technicien','Poing Furtif'],moveIds:['leer','quickattack','wingattack','doubleteam','steelwing','slash','focusenergy','airslash','irondefense','swordsdance','ironhead','brickbreak','lightscreen','protect','aerialace','swift','nightslash','endure','hyperbeam','knockoff','agility','safeguard','doubleedge','uturn','flashcannon','curse','closecombat','facade','silverwind','falseswipe','razorwind','metalclaw','counter','takedown','scaryface','thief','aircutter','sunnyday','raindance','sandstorm','sleeptalk','rest','batonpass','reversal','bugbite','furycutter','firstimpression','lunge','pollenpuff','skittersmack'],
  stages:[
-  {name:'Insécateur',types:['insecte','vol'],base:st(70,110,80,55,80,105)},
-  {name:'Cizayox',types:['insecte','acier'],base:st(70,130,100,55,80,65),forms:{
+  {name:'Insécateur',types:['insecte','vol'],base:st(70,110,80,55,80,105)}],
+ branches:[
+  {name:'Cizayox',types:['insecte','acier'],base:st(70,130,100,55,80,65),extraMoveIds:[],forms:{
     scizorite:{name:'Méga-Cizayox',types:['insecte','acier'],base:st(70,150,140,65,100,75),abilities:['Technicien']}
-  }}]},
+  }},
+  {name:'Hachécateur',types:['insecte','roche'],base:st(70,135,95,45,70,85),abilities:['Essaim','Sans Limite','Incisif'],extraMoveIds:['stoneaxe']}]},
 {id:'jynx',abilities:['Benêt','Prédiction'],moveIds:['lick','pound','powdersnow','sweetkiss','confusion','sing','faketears','icepunch','psychic','lovelykiss','meanlook','perishsong','blizzard','fakeout','wish','focuspunch','waterpulse','calmmind','taunt','icebeam','hyperbeam','lightscreen','protect','raindance','shadowball','brickbreak','doubleteam','reflect','torment','facade','rest','attract','thief','skillswap','focusblast','endure','recycle','flash','psychup','sleeptalk','dreameater','swagger'],
  stages:[
   {name:'Lippouti',types:['glace','psy'],base:st(45,30,15,85,65,65)},
@@ -349,7 +352,6 @@ const LINES_GEN1 = [
  stages:[
   {name:'Mew',types:['psy'],base:st(100,100,100,100,100,100)}]},
 
-/* =================== POKÉDEX GÉNÉRATION 2 (100) =================== */
 ];
 
 const DEX_NUMBERS_GEN1 = {
@@ -411,7 +413,7 @@ const DEX_NUMBERS_GEN1 = {
   'Poissirène':118,'Poissoroy':119,
   'Stari':120,'Staross':121,
   'Mime Jr.':439,'M. Mime':122,
-  'Insécateur':123,'Cizayox':212,
+  'Insécateur':123,'Cizayox':212,'Hachécateur':900,
   'Lippoutou':124,'Lippouti':238,
   'Élektek':125,'Élekid':239,'Élékable':466,
   'Magmar':126,'Magby':240,'Maganon':467,

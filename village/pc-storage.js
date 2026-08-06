@@ -1,10 +1,12 @@
-/* ==== village/pc-storage.js (généré depuis index.html) ==== */
+/* ==== Le PC du Centre Pokémon : boîte de stockage à 6 emplacements, échangeable avec l'équipe active. ==== */
+// Vignette d'un membre (sprite + nom), ou emplacement vide.
 function pcMemberCardHTML(m, extraLabel){
   if(!m) return `<div style="font-size:10px;color:var(--text-dim);text-align:center;padding:10px;">Emplacement vide</div>`;
   const sp = speciesOf(m);
   return `<div style="width:40px;height:40px;margin:0 auto 4px;">${getSpriteHTML(sp.name, m.unownForm)}</div>
     <div style="font-size:9px;text-align:center;color:var(--text-main);">${sp.name}${extraLabel||''}</div>`;
 }
+// Affiche l'écran du PC (grille d'équipe + grille de boîte) et branche l'échange par clic (équipe puis PC).
 function renderPCPanel(){
   const wrap = document.getElementById('villagePanelContent');
   pcSelectedTeamIdx = null;
@@ -53,6 +55,7 @@ function renderPCPanel(){
   });
   document.getElementById('pcBackBtn').onclick = renderPokecentrePanel;
 }
+// Met en surbrillance le membre d'équipe sélectionné et met à jour le message d'instruction.
 function renderPCSelection(){
   document.querySelectorAll('#pcTeamGrid .btn').forEach((cell,i)=>{
     cell.classList.toggle('diff-active', i===pcSelectedTeamIdx);
@@ -63,6 +66,7 @@ function renderPCSelection(){
   setVillageMsg(pcSelectedTeamIdx!==null ? "Choisis maintenant un Pokémon du PC pour l'échanger." : '');
 }
 
+// Dépose un nouveau membre dans le premier emplacement libre du PC (utilisé par le Ranch/les events de la Tour).
 function depositToPC(member){
   const idx = pcBox.findIndex(x=>!x);
   if(idx===-1) return false;

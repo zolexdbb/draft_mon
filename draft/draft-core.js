@@ -1,14 +1,30 @@
-/* ==== draft/draft-core.js (généré depuis index.html) ==== */
-const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','jirachi','deoxys','uxie','mesprit','azelf','dialga','palkia','heatran','regigigas','giratina','cresselia','phione','manaphy','darkrai','shaymin','arceus','victini','cobalion','terrakion','virizion','tornadus','thundurus','reshiram','zekrom','landorus','kyurem','keldeo','meloetta','genesect','xerneas','yveltal','zygarde','diancie','hoopa','volcanion','tokorico','tokopiyon','tokotoro','tokopisco','cosmog','necrozma','magearna','marshadow','zeraora','vemini','zeroid','mouscoto','cancrelove','cablifere','bamboiselle','katagami','engloutyran','amaama','pierroteknik','zacian','zamazenta','ethernatos','wushours','zarude','regieleki','regidrago','blizzeval','spectreval','sylveroy'];
+/* ==== SOMMAIRE ====
+   Cœur du système de draft : rareté des lignées, écran de choix (3 cartes par tour, 6 tours),
+   construction d'un membre par défaut, et movepool progressif par stade. Repères :
+   - L.10-17 : LEGENDARY_IDS/PSEUDO_IDS/RARE_IDS — listes d'ids qui pilotent la rareté au tirage
+   - L.18-23 : lineWeight — poids de tirage d'une lignée (utilisé partout : draft, équipes adverses)
+   - L.29-32 : rarityInfo — badge de rareté affiché sur une carte (mode Classic/Normal/Difficile)
+   - L.33-45 : weightedSampleCandidates — tire N candidats sans remise, pondérés
+   - L.46-49 : stageMultiplier — un stade précoce apparaît plus souvent qu'un stade évolué
+   - L.51-fin(69) : movepoolForStage — débloque progressivement le movepool selon le stade
+   - L.71-fin(85) : defaultMember — squelette d'un membre nouvellement drafté (mode Normal/Difficile)
+   - L.87-fin(99) : initDraft — remet à zéro le draft au lancement d'une nouvelle partie
+   - L.100-fin(206): nextDraftRound/renderDraftProgress/renderDraftTeamStrip — l'écran de draft
+     (3 cartes à choisir, barre de progression, reroll gratuit)
+   - L.208-fin : finalizeTeamAndGoToTower — calcule les stats finales et lance la Tour
+==== */
+const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','jirachi','deoxys','uxie','mesprit','azelf','dialga','palkia','heatran','regigigas','giratina','cresselia','phione','manaphy','darkrai','shaymin','arceus','victini','cobalion','terrakion','virizion','tornadus','thundurus','reshiram','zekrom','landorus','kyurem','keldeo','meloetta','genesect','xerneas','yveltal','zygarde','diancie','hoopa','volcanion','tokorico','tokopiyon','tokotoro','tokopisco','cosmog','necrozma','magearna','marshadow','zeraora','vemini','zeroid','mouscoto','cancrelove','cablifere','bamboiselle','katagami','engloutyran','amaama','pierroteknik','zacian','zamazenta','ethernatos','wushours','zarude','regieleki','regidrago','blizzeval','spectreval','sylveroy','amovenus'];
 const PSEUDO_IDS = ['dratini','larvitar','bagon','gible','axew','deino','goomy','bebecaille','fantyrm'];
 const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown','absol','relicanth','mawile','beldum','riolu','spiritomb','rotom','zorua','larvesta','druddigon','tirtouga','archen','tyrunt','amaura','galvagon','galvagla','hydragon','hydragla'];
+// Poids de tirage d'une lignée selon sa rareté (légendaire = très rare, pseudo-légendaire/rare = moins fréquent, sinon commun).
 function lineWeight(line){
-  if(LEGENDARY_IDS.includes(line.id)) return 0.5;  // Très rare : ~2× moins fréquent qu'avant
-  if(PSEUDO_IDS.includes(line.id)) return 3;         // Pseudo-légendaire : rare
-  if(RARE_IDS.includes(line.id)) return 6;           // Rares : moins communs
-  return 10;                                          // Communs
+  if(LEGENDARY_IDS.includes(line.id)) return 0.5;
+  if(PSEUDO_IDS.includes(line.id)) return 3;
+  if(RARE_IDS.includes(line.id)) return 6;
+  return 10;
 }
 const TOTAL_WEIGHT = LINES.reduce((a,l)=>a+lineWeight(l),0);
+// Détermine le badge de rareté à afficher sur une carte de draft (mode Classic/Normal/Difficile).
 function rarityInfo(line, stageIdx){
   if(LEGENDARY_IDS.includes(line.id)) return {label:'Légendaire', css:'rarity-legendaire'};
   if(PSEUDO_IDS.includes(line.id) && stageIdx===line.stages.length-1) return {label:'Pseudo-légendaire', css:'rarity-pseudo'};
@@ -17,6 +33,7 @@ function rarityInfo(line, stageIdx){
   if(stageIdx===line.stages.length-1) return {label:'Évolution finale', css:'rarity-evo'};
   return {label:'Évolution', css:'rarity-evo'};
 }
+// Tire n candidats sans remise dans une liste pondérée (utilisé pour les 3 cartes de draft proposées à chaque tour).
 function weightedSampleCandidates(candidates, n){
   let pool = [...candidates];
   const result = [];
@@ -30,11 +47,14 @@ function weightedSampleCandidates(candidates, n){
   }
   return result;
 }
+// Un stade non-évolué apparaît beaucoup plus souvent au draft qu'un stade déjà évolué.
 function stageMultiplier(stageIdx){
   if(stageIdx===0) return 1;
   if(stageIdx===1) return 0.35;
   return 0.12;
 }
+// Movepool disponible pour un stade non-branché : plus le stade est précoce, moins de capacités
+// puissantes sont débloquées (les capacités de statut restent toujours toutes disponibles).
 function movepoolForStage(line, stageIdx){
   const stagesCount = line.stages.length;
   const allIds = line.moveIds;
@@ -55,9 +75,8 @@ function movepoolForStage(line, stageIdx){
   return [...damaging, ...statusIds];
 }
 
-/* =================== SPRITES 2D =================== */
-// Numéros nationaux, utilisés pour pointer vers le dépôt public de sprites PokéAPI.
-// Lien direct vers des images existantes (pas de génération) ; si l'image ne charge pas, on retombe sur l'emoji.
+// Construit un membre d'équipe "vierge" (IV 31 partout, pas d'EV, pas d'attaques) juste après un
+// choix de draft en mode Normal/Difficile — le joueur le complète ensuite dans l'éditeur.
 function defaultMember(lineId, initialStage, branch){
   const line = lineOf(lineId);
   const hasBranch = branch!==undefined && branch!==null;
@@ -74,7 +93,7 @@ function defaultMember(lineId, initialStage, branch){
   };
 }
 
-// Build "prêt à l'emploi" pour le mode Facile : IV max, EV optimisés, nature adaptée, meilleures attaques.
+// Remet à zéro l'état d'une partie et lance le premier tour de draft (nouvelle partie).
 function initDraft(){
   draftRound = 0;
   team = [];
@@ -88,6 +107,7 @@ function initDraft(){
   battleInProgress = false;
   nextDraftRound();
 }
+// Affiche la barre de progression du draft (6 points : faits/en cours/à venir).
 function renderDraftProgress(){
   const wrap = document.getElementById('draftProgress');
   wrap.innerHTML='';
@@ -98,6 +118,7 @@ function renderDraftProgress(){
     wrap.appendChild(s);
   }
 }
+// Affiche la bande d'aperçu de l'équipe déjà draftée (6 emplacements, remplis ou vides).
 function renderDraftTeamStrip(){
   const strip = document.getElementById('draftTeamStrip');
   strip.innerHTML='';
@@ -114,6 +135,8 @@ function renderDraftTeamStrip(){
     strip.appendChild(slot);
   }
 }
+// Lance un tour de draft : tire 3 candidats (Facile = formes finales, sinon tous stades), affiche
+// leurs cartes complètes (stats, types, talent, taux d'apparition) ; termine le draft au 6e Pokémon.
 function nextDraftRound(){
   if(draftRound>=6){
     if(difficulty==='facile') finalizeTeamAndGoToTower();
@@ -145,7 +168,6 @@ function nextDraftRound(){
       ? {label: LEGENDARY_IDS.includes(line.id)?'Légendaire':(PSEUDO_IDS.includes(line.id)?'Pseudo-légendaire':(RARE_IDS.includes(line.id)?'Rare':'Commun')),
          css: LEGENDARY_IDS.includes(line.id)?'rarity-legendaire':(PSEUDO_IDS.includes(line.id)?'rarity-pseudo':(RARE_IDS.includes(line.id)?'rarity-rare':'rarity-commun'))}
       : rarityInfo(line, choice.stage);
-    // Capacité principale
     const ability = (sp.abilities || line.abilities)[0];
     const evoline = hasBranch
       ? [...line.stages.map(s=>s.name), sp.name].join(' → ')
@@ -184,6 +206,7 @@ function nextDraftRound(){
   });
 }
 
+// Calcule les stats finales de toute l'équipe draftée et lance la Tour de Combat (fin du draft/de l'éditeur).
 function finalizeTeamAndGoToTower(){
   team.forEach(m=>{
     const sp = speciesOf(m);
@@ -195,5 +218,3 @@ function finalizeTeamAndGoToTower(){
   towerFloor = 1;
   renderTower();
 }
-
-/* =================== BUILDER ===================== */

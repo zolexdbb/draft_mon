@@ -1,5 +1,15 @@
-/* ==== combat/battle-ui.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Affichage de l'écran de combat et gestion des clics du joueur (grille de capacités, switch,
+   sac, cible en combat double). Repères :
+   - L.11-24 : clearLog/setLog/renderBench — journal de combat + rangée de Poké Balls (équipe)
+   - L.26-77 : renderCombatantBox/renderBattle — affiche l'état complet d'un/des combattant(s)
+   - L.79-fin(157) : renderMoveGrid — construit la grille de boutons d'attaque (+ boutons Capacité
+     Z/Dynamax, aperçu de la capacité surboostée)
+   - L.159-fin(295): gestion des clics — choix d'attaque (avec choix de cible en double), switch
+     manuel, sac (Potion), et les petites animations (shakeBox/lungeBox/flashScreen)
+==== */
 function clearLog(){ document.getElementById('log').innerHTML = ''; }
+// Ajoute une ligne au journal de combat (garde au plus 60 lignes, scroll auto vers le bas).
 function setLog(html){
   if(!html) return;
   const el = document.getElementById('log');
@@ -11,6 +21,7 @@ function setLog(html){
   el.scrollTop = el.scrollHeight;
 }
 
+// Rangée de Poké Balls représentant toute l'équipe (vivant/K.O./actif), affichée sous le terrain de combat.
 function renderBench(containerId, roster, activeIdxs){
   const el = document.getElementById(containerId);
   el.innerHTML='';
@@ -23,13 +34,14 @@ function renderBench(containerId, roster, activeIdxs){
   });
 }
 
+// Met à jour l'affichage complet d'un combattant actif : nom, types, icône de statut, badges de
+// changement de stats, sprite, barre et texte de PV.
 function renderCombatantBox(c, prefix){
   document.getElementById(prefix+'Box').classList.remove('faint-fade');
   document.getElementById(prefix+'Name').textContent = c.name;
   const typeTag = document.getElementById(prefix+'Type');
   typeTag.innerHTML = c.types.map(t=>typeBadgeIconHTML(t)).join('');
 
-  // Icône de statut bien visible sur le sprite
   const box = document.getElementById(prefix+'Box');
   let badge = box.querySelector('.status-icon-badge');
   if(c.status){
@@ -40,7 +52,6 @@ function renderCombatantBox(c, prefix){
     badge.remove();
   }
 
-  // Badges de changement de stats (Atq +2, Vit -1, etc.)
   let statBadgesEl = document.getElementById(prefix+'StatBadges');
   if(!statBadgesEl){
     statBadgesEl = document.createElement('div');
@@ -67,6 +78,8 @@ function renderCombatantBox(c, prefix){
   document.getElementById(prefix+'HpText').textContent = `${Math.max(c.hp,0)} / ${c.maxHp} PV`;
 }
 
+// Point d'entrée principal d'affichage : redessine tout l'écran de combat (1 ou 2 combattants par
+// camp selon solo/double, bandeau météo, bancs d'équipe) puis la grille de capacités.
 function renderBattle(){
   const bs = battleState;
   const p = bs.player[bs.pActive], f = bs.foe[bs.fActive];
@@ -85,6 +98,9 @@ function renderBattle(){
   renderMoveGrid();
 }
 
+// Construit la grille de boutons d'attaque du Pokémon en train de choisir : Lutte si plus de PP,
+// bouton Capacité Z / indicateur ou bouton Dynamax (mutuellement exclusifs), puis les 4 capacités
+// avec leur aperçu Capacité Z/Max si applicable et leur état (PP épuisés, entravée, bloquée par un objet Choix).
 function renderMoveGrid(){
   const bs = battleState;
   const slot = bs.selectingSlot || 'A';
@@ -166,7 +182,7 @@ function renderMoveGrid(){
   });
 }
 
-// En combat double, si le coup vise un adversaire et qu'il y a 2 ennemis vivants, on demande la cible avant d'agir.
+// Clic sur une capacité : demande la cible d'abord si combat double avec 2 ennemis vivants, sinon attaque directement.
 function handleMoveChoice(moveIdx){
   const bs = battleState;
   if(bs.locked) return;
@@ -182,6 +198,7 @@ function handleMoveChoice(moveIdx){
   playerAttack(moveIdx);
 }
 
+// Affiche l'écran de choix de cible (combat double, capacité offensive) avant de lancer l'attaque.
 function promptTargetThenAttack(moveIdx, foes){
   const bs = battleState;
   document.getElementById('movesGrid').classList.add('hidden');
@@ -205,6 +222,7 @@ function promptTargetThenAttack(moveIdx, foes){
   });
 }
 
+// Ouvre l'écran de changement de Pokémon volontaire (liste des membres vivants non déjà sur le terrain).
 function openManualSwitch(){
   const bs = battleState;
   if(bs.locked) return;
@@ -231,6 +249,7 @@ function openManualSwitch(){
     sw.appendChild(btn);
   });
 }
+// Referme l'écran de switch/cible/sac et réaffiche la grille de capacités normale.
 function closeManualSwitch(){
   const bs = battleState;
   document.getElementById('switchGrid').classList.add('hidden');
@@ -240,6 +259,7 @@ function closeManualSwitch(){
   document.getElementById('bagBtn').classList.remove('hidden');
   document.getElementById('cancelSwitchBtn').classList.add('hidden');
 }
+// Ouvre l'écran de sélection de cible pour utiliser une Potion du sac en combat.
 function openBag(){
   const bs = battleState;
   if(bs.locked) return;
@@ -266,6 +286,7 @@ function openBag(){
     sw.innerHTML += `<div class="dex-rate" style="text-align:center;">Toute ton équipe est déjà à PV max !</div>`;
   }
 }
+// Secoue la boîte d'un combattant touché (tremblement plus fort sur un coup critique).
 function shakeBox(id, crit){
   const box = document.getElementById(id);
   if(!box) return;
@@ -273,11 +294,13 @@ function shakeBox(id, crit){
   void box.offsetWidth;
   box.classList.add(crit ? 'crit-shake' : 'shake');
 }
+// Anime un petit bond en avant de l'attaquant au moment où il attaque.
 function lungeBox(id){
   const box = document.getElementById(id);
   if(!box) return;
   box.classList.remove('lunge'); void box.offsetWidth; box.classList.add('lunge');
 }
+// Flash plein écran (coup critique ou coup super efficace).
 function flashScreen(kind){
   const flash = document.createElement('div');
   flash.className = kind==='crit' ? 'battle-flash flash-crit' : 'battle-flash flash-superfx';
@@ -286,6 +309,7 @@ function flashScreen(kind){
   setTimeout(()=> flash.remove(), 400);
 }
 
+// Texte affiché après les dégâts selon l'efficacité de type (super efficace / peu efficace / aucun effet).
 function effLabel(eff){
   if(eff>=2) return ' — Coup super efficace !';
   if(eff>0 && eff<1) return " — Ce n'est pas très efficace...";

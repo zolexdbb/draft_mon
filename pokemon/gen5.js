@@ -1,4 +1,5 @@
-/* ==== pokemon/gen5.js : Pokédex n°494 à 649 ==== */
+/* ==== Pokédex n°494 à 649 (Unova), lignées classiques en ordre de Pokédex.
+   DEX_NUMBERS_GEN5 (numéros de Pokédex, pour les sprites) est à la fin du fichier. ==== */
 const LINES_GEN5 = [
 {id:'victini',abilities:['Victorieux'],moveIds:['confusion','focusenergy','quickattack','headbutt','endure','zenheadbutt','reversal','doubleedge','overheat','megapunch','megakick','firepunch','thunderpunch','hyperbeam','solarbeam','firespin','thunderwave','lightscreen','safeguard','rest','snore','protect','sunnyday','willowisp','facade','swift','brickbreak','bounce','uturn','mysticalfire','flamethrower','thunderbolt','thunder','psychic','fireblast','sleeptalk','batonpass','encore','shadowball','futuresight','uproar','heatwave','taunt','trick','skillswap','blazekick','dazzlinggleam'],
  stages:[
@@ -106,9 +107,10 @@ const LINES_GEN5 = [
  stages:[
   {name:'Chlorobule',types:['plante'],base:st(45,35,50,70,50,30)},
   {name:'Fragilady',types:['plante'],base:st(70,60,75,110,75,90),abilities:['Chlorophylle','Tempo Perso']}]},
-{id:'basculin',abilities:['Téméraire','Adaptabilité'],moveIds:['tailwhip','watergun','tackle','flail','bite','scaryface','headbutt','crunch','takedown','thrash','doubleedge','uproar','bubblebeam','endeavor','agility','protect','icefang','waterpulse','facade','swift','icywind','mudshot','endure','raindance','zenheadbutt','sleeptalk','waterfall','rest','taunt','surf','reversal','icebeam','hydropump','blizzard','hyperbeam','whirlpool','muddywater'],
+{id:'basculin',abilities:['Téméraire','Adaptabilité'],moveIds:['tailwhip','watergun','tackle','flail','bite','scaryface','headbutt','crunch','takedown','thrash','doubleedge','uproar','bubblebeam','endeavor','agility','protect','icefang','waterpulse','facade','swift','icywind','mudshot','endure','raindance','zenheadbutt','sleeptalk','waterfall','rest','taunt','surf','reversal','icebeam','hydropump','blizzard','hyperbeam','whirlpool','muddywater','shadowball','infernalparade'],
  stages:[
-  {name:'Bargantua',types:['eau'],base:st(70,92,65,80,55,98)}]},
+  {name:'Bargantua',types:['eau'],base:st(70,92,65,80,55,98)},
+  {name:'Paragruel',types:['eau','fantome'],base:st(120,112,65,80,75,78),abilities:['Phobique','Adaptabilité','Brise Moule']}]},
 {id:'sandile',abilities:['Intimidation','Impudence'],moveIds:['leer','tackle','sandtomb','bite','dig','takedown','crunch','irontail','earthquake','doubleedge','outrage','dragonclaw','brickbreak','bulkup','rockslide','protect','aerialace','knockoff','bodyslam','endure','rocktomb','stealthrock','hyperbeam','sludgebomb','shadowclaw','stoneedge','bulldoze','irondefense','darkpulse','curse','taunt','focusblast','closecombat','facade','torment','swagger','sandattack','scaryface','sandstorm','thrash','aquatail','counter','spite','mudslap','thief','mudshot','sleeptalk','rest','focuspunch','dragonpulse'],
  stages:[
   {name:'Mascaïman',types:['sol','tenebres'],base:st(50,72,35,35,35,65)},
@@ -353,7 +355,7 @@ const DEX_NUMBERS_GEN5 = {
   'Venipatte':543,'Scobolide':544,'Brutapode':545,
   'Doudouvet':546,'Farfaduvet':547,
   'Chlorobule':548,'Fragilady':549,
-  'Bargantua':550,
+  'Bargantua':550,'Paragruel':902,
   'Mascaïman':551,'Escroco':552,'Crocorible':553,
   'Darumarond':554,'Darumacho':555,
   'Maracachi':556,

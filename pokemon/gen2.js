@@ -1,4 +1,5 @@
-/* ==== pokemon/gen2.js : Pokédex n°152 à 251 ==== */
+/* ==== Pokédex n°152 à 251 (Johto), lignées classiques en ordre de Pokédex.
+   DEX_NUMBERS_GEN2 (numéros de Pokédex, pour les sprites) est à la fin du fichier. ==== */
 const LINES_GEN2 = [
 {id:'chikorita',abilities:['Engrais','Feuille Garde'],moveIds:['tackle','tailwhip','disarmingvoice','razorleaf','bodyslam','reflect','safeguard','synthesis','solarbeam','lightscreen','gigadrain','headbutt','rocksmash','protect','swordsdance','doubleteam','endure','bulletseed','hyperbeam','knockoff','doubleedge','earthquake','bulldoze','irontail','curse','dazzlinggleam','outrage','facade','ancientpower','petaldance','frenzyplant','growl','petalblizzard','poisonpowder','magicalleaf','sweetscent','sleeptalk','takedown','charm','faketears','mudslap','sunnyday','zenheadbutt','encore','grassyterrain','rest','weatherball','endeavor','leafblade'],
  stages:[
@@ -122,10 +123,11 @@ const LINES_GEN2 = [
  stages:[
   {name:'Farfuret',types:['glace','tenebres'],base:st(55,95,55,35,75,115)},
   {name:'Dimoret',types:['tenebres','glace'],base:st(70,120,65,45,85,125),abilities:['Pression','Pickpocket']}]},
-{id:'teddiursa',abilities:['Ramassage','Pied Véloce'],moveIds:['faketears','leer','lick','scratch','furyswipes','sweetscent','slash','playnice','playrough','scaryface','rest','snore','thrash','bellydrum','closecombat','counter','crosschop','crunch','doubleedge','furycutter','metalclaw','nightslash','seismictoss','yawn','takedown','charm','protect','lowkick','thief','facade','aerialace','bulldoze','swift','rocktomb','endure','sunnyday','raindance','dig','brickbreak','shadowclaw','bulkup','bodyslam','firepunch','thunderpunch','icepunch','sleeptalk','metronome','rockslide','taunt','swordsdance','hypervoice','earthquake','stoneedge','hyperbeam','uproar','focuspunch'],
+{id:'teddiursa',abilities:['Ramassage','Pied Véloce'],moveIds:['faketears','leer','lick','scratch','furyswipes','sweetscent','slash','playnice','playrough','scaryface','rest','snore','thrash','bellydrum','closecombat','counter','crosschop','crunch','doubleedge','furycutter','metalclaw','nightslash','seismictoss','yawn','takedown','charm','protect','lowkick','thief','facade','aerialace','bulldoze','swift','rocktomb','endure','sunnyday','raindance','dig','brickbreak','shadowclaw','bulkup','bodyslam','firepunch','thunderpunch','icepunch','sleeptalk','metronome','rockslide','taunt','swordsdance','hypervoice','earthquake','stoneedge','hyperbeam','uproar','focuspunch','headlongrush'],
  stages:[
   {name:'Teddiursa',types:['normal'],base:st(60,80,50,50,50,40)},
-  {name:'Ursaring',types:['normal'],base:st(90,130,75,75,75,55)}]},
+  {name:'Ursaring',types:['normal'],base:st(90,130,75,75,75,55)},
+  {name:'Ursaking',types:['sol','normal'],base:st(130,140,105,45,80,50),abilities:['Cran','Anti-Bombe','Tension']}]},
 {id:'slugma',abilities:['Armumagma','Corps Ardent'],moveIds:['ember','rockthrow','smog','yawn','harden','ancientpower','rockslide','amnesia','bodyslam','recover','flamethrower','takedown','mudslap','protect','firespin','facade','bulldoze','mudshot','rocktomb','endure','sunnyday','sandstorm','sleeptalk','reflect','lightscreen','rockblast','rest','irondefense','willowisp','stealthrock','heatwave','fireblast','earthquake','stoneedge','overheat','hyperbeam','solarbeam','curse'],
  stages:[
   {name:'Limagma',types:['feu'],base:st(40,40,40,70,40,20)},
@@ -160,9 +162,10 @@ const LINES_GEN2 = [
  stages:[
   {name:'Phanpy',types:['sol'],base:st(90,60,60,40,40,40)},
   {name:'Donphan',types:['sol'],base:st(90,120,120,60,60,50)}]},
-{id:'stantler',abilities:['Intimidation','Prédiction'],moveIds:['tackle','leer','astonish','hypnosis','stomp','sandattack','takedown','confuseray','calmmind','zenheadbutt','imprison','doubleedge','bite','disable','doublekick','extrasensory','megahorn','spite','thrash','agility','scaryface','protect','psybeam','thief','facade','bulldoze','swift','endure','sunnyday','raindance','dig','bodyslam','sleeptalk','reflect','lightscreen','thunderwave','rest','skillswap','trick','shadowball','psychic','thunderbolt','earthquake','hyperbeam','thunder','solarbeam','uproar','psychup','futuresight','curse'],
+{id:'stantler',abilities:['Intimidation','Prédiction'],moveIds:['tackle','leer','astonish','hypnosis','stomp','sandattack','takedown','confuseray','calmmind','zenheadbutt','imprison','doubleedge','bite','disable','doublekick','extrasensory','megahorn','spite','thrash','agility','scaryface','protect','psybeam','thief','facade','bulldoze','swift','endure','sunnyday','raindance','dig','bodyslam','sleeptalk','reflect','lightscreen','thunderwave','rest','skillswap','trick','shadowball','psychic','thunderbolt','earthquake','hyperbeam','thunder','solarbeam','uproar','psychup','futuresight','curse','psyshieldbash'],
  stages:[
-  {name:'Cerfrousse',types:['normal'],base:st(73,95,62,85,65,85)}]},
+  {name:'Cerfrousse',types:['normal'],base:st(73,95,62,85,65,85)},
+  {name:'Cerbyllin',types:['normal','psy'],base:st(103,105,72,105,75,65),abilities:['Intimidation','Fouille','Herbivore']}]},
 {id:'smeargle',abilities:['Tempo Perso','Technicien'],moveIds:['sketch'],
  stages:[
   {name:'Queulorior',types:['normal'],base:st(55,20,35,20,45,75)}]},
@@ -206,7 +209,6 @@ const LINES_GEN2 = [
  stages:[
   {name:'Zarbi',types:['psy'],base:st(48,72,48,72,48,48)}]},
 
-/* =================== POKÉDEX GÉNÉRATION 3 (135) =================== */
 ];
 
 const DEX_NUMBERS_GEN2 = {
@@ -241,7 +243,7 @@ const DEX_NUMBERS_GEN2 = {
   'Caratroc':213,
   'Scarhino':214,
   'Farfuret':215,'Dimoret':461,
-  'Teddiursa':216,'Ursaring':217,
+  'Teddiursa':216,'Ursaring':217,'Ursaking':901,
   'Limagma':218,'Volcaropod':219,
   'Marcacrin':220,'Cochignon':221,'Mammochon':473,
   'Corayon':222,
@@ -251,7 +253,7 @@ const DEX_NUMBERS_GEN2 = {
   'Airmure':227,
   'Malosse':228,'Démolosse':229,
   'Phanpy':231,'Donphan':232,
-  'Cerfrousse':234,
+  'Cerfrousse':234,'Cerbyllin':899,
   'Queulorior':235,
   'Debugant':236,
   'Kapoera':237,

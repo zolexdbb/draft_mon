@@ -1,4 +1,6 @@
-/* ==== ui/dropdowns.js (généré depuis index.html) ==== */
+/* ==== Composant menu déroulant réutilisable partout dans le jeu (filtres du Dex, choix
+   nature/talent dans l'éditeur...), à la place du <select> natif du navigateur. ==== */
+// Construit un menu déroulant (bouton déclencheur + liste d'options) à partir d'une liste {value,label,html}.
 function createCustomSelect({options, value, placeholder, onChange}){
   const csel = document.createElement('div');
   csel.className = 'csel';

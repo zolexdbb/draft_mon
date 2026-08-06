@@ -1,4 +1,5 @@
-/* ==== pokemon/gen6.js : Pokédex n°650 à 721 (Kalos) ==== */
+/* ==== Pokédex n°650 à 721 (Kalos), lignées classiques en ordre de Pokédex.
+   DEX_NUMBERS_GEN6 (numéros de Pokédex, pour les sprites) est à la fin du fichier. ==== */
 const LINES_GEN6 = [
 {id:'chespin',abilities:['Engrais','Anti-Bombe'],moveIds:['growl','vinewhip','growth','rollout','bite','pinmissile','takedown','brickbreak','bulkup','bodyslam','closecombat','spikyshield','headbutt','dragonclaw','rocksmash','rockslide','protect','aerialace','thunderpunch','crunch','swift','dig','swordsdance','reflect','endure','rocktomb','bulletseed','gigadrain','hyperbeam','knockoff','mudshot','zenheadbutt','shadowclaw','solarbeam','stoneedge','earthquake','poisonjab','bulldoze','irondefense','spikes','curse','skullbash','frenzyplant','tackle','painsplit','bellydrum','superfang','synthesis','mudslap','scaryface','lowkick','magicalleaf','sunnyday','raindance','sleeptalk','ironhead','focusblast','reversal','endeavor'],
  stages:[

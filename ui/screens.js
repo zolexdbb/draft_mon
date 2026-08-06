@@ -1,6 +1,14 @@
-/* ==== ui/screens.js (généré depuis index.html) ==== */
-// Une défaite supprime la sauvegarde en cours : impossible de recharger la partie d'avant
-// pour retenter le même combat en boucle.
+/* ==== SOMMAIRE ====
+   Navigation entre écrans + fenêtres modales du menu principal (jouer/charger, Dex, équipe,
+   meilleurs étages, choix de difficulté). Repères :
+   - L.11-19 : gameOver/pauseBattleToMenu — fin de partie (défaite) et pause d'un combat en cours
+   - L.28-fin(43): showScreen — bascule l'écran actif affiché (unique point d'entrée pour changer de vue)
+   - L.45-fin(132): openSlotModal/openPlayMenu — choix d'un emplacement de sauvegarde (nouvelle
+     partie/chargement/suppression)
+   - L.168-fin(202): openScoreModal — meilleurs étages atteints par mode + badges de Maître de Type
+   - L.207-fin(271): openTeamModal — fenêtre "Équipe" (PV, statut, objet tenu, changer de leader)
+   - L.273-fin : openDifficultyChoice — fenêtre de choix Facile/Normal/Difficile en début de partie
+==== */
 function gameOver(){
   const earned = tokensForRun(towerFloor, difficulty);
   towerTokens += earned;
@@ -14,8 +22,7 @@ function gameOver(){
   document.getElementById('endFloor').textContent = towerFloor;
   document.getElementById('endTokensLabel').textContent = earned>0 ? `+${earned} 🎫 Jetons de Tour gagnés !` : '';
 }
-// Quitter vers le menu en plein combat met juste le combat en pause : le combat (même dresseur,
-// mêmes PV) reprend exactement où on l'a laissé au retour, rien n'est perdu ni réinitialisé.
+// Quitte vers le menu en plein combat sans le terminer : le combat reprend exactement où il en était au retour.
 function pauseBattleToMenu(){
   if(battleState) battleState.locked = false;
   saveGame();
@@ -37,6 +44,7 @@ function showScreen(id){
   if(id==='screenMenu') refreshMenuUI();
 }
 
+// Résumé texte d'un emplacement de sauvegarde (étage, difficulté, taille d'équipe, date, combat en pause).
 function slotSummaryHTML(slot){
   const info = getSlotInfo(slot);
   if(!info){
@@ -48,6 +56,7 @@ function slotSummaryHTML(slot){
   const battleLabel = info.battleInProgress ? ' · ⚔️ Combat en pause' : '';
   return `<div style="font-size:9px;color:var(--text-main);">Étage ${info.floor} · ${diffLabel} · ${info.teamCount} Pokémon${dateLabel?' · '+dateLabel:''}${battleLabel}</div>`;
 }
+// Fenêtre de choix d'emplacement de sauvegarde (5 slots), en mode 'load' (charger) ou 'new' (nouvelle partie/écraser, avec confirmation si occupé).
 function openSlotModal(mode){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -126,6 +135,7 @@ function openSlotModal(mode){
   });
 }
 
+// Fenêtre "Jouer" du menu principal (nouvelle partie / charger / boosts méta).
 function openPlayMenu(){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -160,9 +170,11 @@ document.getElementById('dexBackBtn').onclick = ()=>{
 document.getElementById('draftHomeBtn').onclick = ()=> showScreen('screenMenu');
 document.getElementById('builderHomeBtn').onclick = ()=> showScreen('screenMenu');
 
+// Met à jour les éléments du menu principal qui dépendent de l'état global (badge de Jetons de Tour).
 function refreshMenuUI(){
   document.getElementById('menuTokensBadge').textContent = `🎫 ${towerTokens} Jetons de Tour`;
 }
+// Ligne d'un mode de difficulté dans la fenêtre "Meilleurs étages" (meilleur étage + badges de Maître de Type obtenus).
 function scoreDiffRowHTML(label, floor, diffKey){
   const owned = badges[diffKey] || [];
   const badgeIcons = ALL_TYPES.map(t=> typeCoinHTML(t, owned.includes(t), 20)).join(' ');
@@ -177,6 +189,7 @@ function scoreDiffRowHTML(label, floor, diffKey){
       <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">${badgeIcons}</div>
     </div>`;
 }
+// Fenêtre "Meilleurs étages" (un résumé par mode de difficulté).
 function openScoreModal(){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -199,6 +212,8 @@ document.getElementById('scoreBtn').onclick = openScoreModal;
 document.getElementById('menuPatchNotesBtn').onclick = ()=> openPatchNotes();
 
 function hpBarColor(frac){ return frac>0.5 ? 'var(--good)' : (frac>0.2 ? '#e0a940' : '#e04040'); }
+// Fenêtre "Équipe" (accessible depuis la Tour/le Village) : PV, statut, objet tenu (échangeable
+// avec le sac), et changement de leader (le membre en position 0, celui envoyé en premier).
 function openTeamModal(){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -253,7 +268,6 @@ function openTeamModal(){
         if(m.heldItem){ bag[m.heldItem] = (bag[m.heldItem]||0)+1; }
         if(val){ bag[val] = Math.max(0,(bag[val]||0)-1); m.heldItem = val; }
         else { m.heldItem = null; }
-        // Un objet de forme (Orbe Platiné, Gracidée, Plaques...) change le type/stats/talent : on recalcule.
         const sp = speciesOf(m);
         m.computedStats = calcStats(sp.base, m.ivs, m.evs, m.nature);
         const validAbilities = sp.abilities || lineOf(m.lineId).abilities;
@@ -266,6 +280,7 @@ function openTeamModal(){
   });
 }
 
+// Fenêtre de choix de la difficulté (Facile/Normal/Difficile) avant de lancer un draft.
 function openDifficultyChoice(onConfirm){
   const overlay = document.createElement('div');
   overlay.className = 'patchnotes-overlay';
@@ -294,5 +309,3 @@ function openDifficultyChoice(onConfirm){
   document.getElementById('diffNormalBtn').onclick = ()=> pick('normal');
   document.getElementById('diffDifficileBtn').onclick = ()=> pick('difficile');
 }
-
-/* --------- POKÉDEX FILTRES --------- */

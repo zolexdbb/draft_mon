@@ -1,7 +1,20 @@
-/* ==== combat/status-effects.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Statuts (poison/brûlure/paralysie/sommeil/gel/confusion), talents déclenchés à l'entrée sur le
+   terrain (Intimidation, météo/terrain auto...), et applyStatusEffect() qui exécute tous les
+   effets des capacités de statut (move.effect.xxx). Repères :
+   - L.11-33 : icônes/couleurs de statut (affichage)
+   - L.36-46 : triggerIntimidate — baisse l'Attaque adverse à l'entrée si le talent est Intimidation
+   - L.47-82 : triggerSwitchInAbilities — météo/terrain auto à l'entrée (Crachin, Sécheresse, Surges...)
+   - L.83-95 : applyStatBoost — applique un changement de stats (boost/malus) avec message de log
+   - L.100-166 : inflictStatus — inflige un statut en vérifiant toutes les immunités (talent/type/terrain/Rune Protect/baie)
+   - L.172-fin(497) : applyStatusEffect — exécute un par un tous les effets possibles d'une capacité
+     de statut (voir la liste des flags juste au-dessus de la fonction)
+   - L.498-fin : endOfTurnStatus — dégâts/soins de fin de tour (poison, brûlure, météo, Reste, Mue, Turbo...)
+==== */
 const STATUS_LABEL = { poison:'☠️ Empoisonné', brulure:'🔥 Brûlé', paralysie:'⚡ Paralysé', sommeil:'💤 Endormi', confusion:'💫 Confus', gel:'🧊 Gelé' };
 const STATUS_ICON = { poison:'☠️', brulure:'🔥', paralysie:'⚡', sommeil:'💤', confusion:'💫', gel:'🧊' };
 const STATUS_COLOR = { poison:'#A33EA1', brulure:'#EE8130', paralysie:'#F7D02C', sommeil:'#9199A1', confusion:'#F95587', gel:'#96D9D6' };
+// Génère les points SVG d'une spirale (icône de confusion).
 function spiralPoints(turns, startR, endR, steps, cx, cy){
   cx = cx||12; cy = cy||12; steps = steps||40;
   const pts = [];
@@ -21,6 +34,7 @@ const STATUS_ICON_PATH = {
   confusion: `<polyline points="${spiralPoints(1.8,1,10)}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
   gel: TYPE_ICON_PATH.glace
 };
+// Icône affichée sur le sprite d'un Pokémon ayant un statut.
 function statusIconHTML(status, size){
   size = size || 16;
   const color = STATUS_COLOR[status] || '#e8e0f0';
@@ -28,10 +42,7 @@ function statusIconHTML(status, size){
   return `<span class="type-icon" style="width:${size}px;height:${size}px;color:${color};"><svg viewBox="0 0 24 24">${path}</svg></span>`;
 }
 
-/* =================== IA ADVERSAIRE =================== */
-/* =================== SYSTÈME DE PP =================== */
-// Calcule les PP max d'une capacité. Approximatif (pas la valeur officielle) mais cohérent :
-// plus une capacité est puissante ou abusive (Abri, soin...), moins elle a de PP.
+// Talent Intimidation : baisse l'Attaque de l'adversaire d'un cran quand ce Pokémon entre sur le terrain.
 function triggerIntimidate(incoming, opponent){
   if(incoming.ability==='Intimidation' && opponent && opponent.hp>0){
     const before = opponent.stages.atk;
@@ -42,6 +53,7 @@ function triggerIntimidate(incoming, opponent){
   }
   return '';
 }
+// Talents qui déclenchent automatiquement une météo ou un terrain à l'entrée sur le terrain (Crachin, Sécheresse, Sable Volant, Marque Ombre, les 4 talents Surge), et Marque Ombre (piège l'adversaire).
 function triggerSwitchInAbilities(incoming, opponent){
   let msg = '';
   if(!battleState) return msg;
@@ -79,6 +91,7 @@ function triggerSwitchInAbilities(incoming, opponent){
   }
   return msg;
 }
+// Applique une liste de changements de stats (boosts/malus, bornés à ±6) et log le résultat.
 function applyStatBoost(target, boosts, logs){
   boosts.forEach(b=>{
     const before = target.stages[b.stat];
@@ -91,11 +104,14 @@ function applyStatBoost(target, boosts, logs){
     }
   });
 }
+// Vrai si l'objet tenu de la cible est une baie qui soigne ce statut (ou tout statut).
 function berryCuresStatus(target, status){
   if(!target.heldItem || target.itemUsed) return false;
   const item = ITEMS[target.heldItem];
   return !!(item && item.berryCure && (item.berryCure===status || item.berryCure==='all'));
 }
+// Inflige un statut à une cible en vérifiant dans l'ordre toutes les immunités possibles (Rune
+// Protect, terrain, talent, type, déjà sous statut...) avant de l'appliquer réellement.
 function inflictStatus(target, status, logs){
   const types = target.transformedTypes || target.types || [];
   if(status!=='confusion' && target.safeguardTurns>0){
@@ -163,6 +179,7 @@ function inflictStatus(target, status, logs){
   if(status==='sommeil') target.sleepCounter = 2+Math.floor(Math.random()*2);
   logs.push(`${target.name} est ${STATUS_LABEL[status]} !`);
 }
+// Soigne un pourcentage des PV max et log le montant récupéré.
 function healPercent(target, frac, logs){
   const before = target.hp;
   target.hp = Math.min(target.maxHp, target.hp + Math.round(target.maxHp*frac));
@@ -170,6 +187,14 @@ function healPercent(target, frac, logs){
 }
 const WEATHER_LABEL = { pluie:'🌧️ Pluie', soleil:'☀️ Soleil intense', sable:'🌪️ Tempête de sable', grele:'🌨️ Grêle' };
 const TERRAIN_LABEL = { grassy:'🌱 Zone Herbue', electric:'⚡ Zone Électrique', misty:'✨ Zone Brumeuse', psychic:'🔮 Zone Psychique' };
+// Exécute tous les effets d'une capacité de statut (move.effect), un bloc if par flag possible :
+// selfBoost/foeBoost (stats), status, heal, weather/terrain, mist/lightScreen/reflect/safeguard
+// (écrans), haze/invertStages (annule/inverse les stats), disable/tauntBlock (entrave la cible),
+// forceSwitch/selfSwitch (échange forcé/volontaire), mimic/transform (copie capacité/apparence),
+// rest/critBoost/bellyDrum/protect/endure/lockOn (auto-effets), leechSeed/ingrain/trap (statuts de
+// terrain persistants), abilitySwap/abilityCopy/abilityRemove/itemSwap/itemRemove (vol/échange),
+// perishSong/painSplit/selfFaintDebuff (effets sacrificiels), speedSwap/strengthSap/purifyFoe/
+// instruct/wakeAll/recycle/psychUp/cureStatus/dualConfuse/teamProtect/trapField (divers Gen 6-8).
 function applyStatusEffect(user, target, move, logs){
   const eff = move.effect||{};
   if(eff.selfBoost) applyStatBoost(user, eff.selfBoost, logs);
@@ -494,6 +519,8 @@ function applyStatusEffect(user, target, move, logs){
     }
   }
 }
+// Dégâts/soins appliqués en fin de tour : poison, brûlure, dégâts de météo (sable/grêle), talents
+// météo (Force Soleil, Peau Sèche, Cuvette), Reste tenu, Mue (guérison auto), Turbo (boost Vitesse).
 function endOfTurnStatus(battler, logs){
   if(battler.hp<=0) return;
   if(battler.status==='poison'){
@@ -555,4 +582,3 @@ function endOfTurnStatus(battler, logs){
     logs.push(`La Vitesse de ${battler.name} augmente grâce à Turbo !`);
   }
 }
-

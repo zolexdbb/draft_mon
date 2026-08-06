@@ -1,11 +1,28 @@
-/* ==== moves/moves.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Toutes les capacités du jeu, une entrée par id (id utilisé dans les moveIds des Pokémon).
+   Repères (numéros de ligne approximatifs, décalent après modification du fichier) :
+   - L.2-100   : Capacités de base (Gen 1 d'origine : Charge, Flammèche, Griffe, Tonnerre...)
+   - L.101-135 : Nouvelles attaques Gen 1 (capacités manquantes ajoutées après coup)
+   - L.136-162 : BLOC 1 — capacités manquantes (Pokédex 1-58)
+   - L.163-188 : BLOC 2 — capacités manquantes (Pokédex 59-115)
+   - L.189-224 : BLOC 3 — capacités manquantes (fin Gen 1, ~116-155)
+   - L.225-299 : BLOC 4 — vraies capacités de Génération 2
+   - L.300-308 : BLOC (Gen 4) — nouvelles capacités
+   - L.309-401 : BLOC (Gen 3) — nouvelles capacités
+   - L.402-450 : Génération 6 (Kalos) — nouvelles capacités
+   - L.451-502 : BLOC Génération 7 — nouvelles capacités (Alola)
+   - L.503-fin : BLOC Génération 8 — nouvelles capacités (Galar). Contient aussi plusieurs
+     capacités en réalité propres à Pokémon Légendes Arceus (Griffe Fatale, Bouclier Psy,
+     Tempête Printanière, Hache de Pierre, Tranchant Sans Fin...), ajoutées ici par erreur
+     lors de la recherche Gen 8 mais réutilisées telles quelles pour les lignées de Hisui.
+==== */
 const MOVES = {
   tackle:{pp:35,name:'Charge',type:'normal',cat:'phys',power:40,accuracy:1,desc:"Charge l'adversaire avec tout le corps."},
   quickattack:{pp:30,name:'Vive-Attaque',type:'normal',cat:'phys',power:35,accuracy:1,priority:1,desc:"Une charge fulgurante qui touche en premier."},
   headbutt:{pp:15,name:"Coup d'Boule",type:'normal',cat:'phys',power:45,accuracy:1,flinch:0.3,desc:"Un coup de tête puissant et imprévisible. Peut faire peur."},
   doubleedge:{pp:15,name:'Damoclès',type:'normal',cat:'phys',power:65,accuracy:1,recoil:0.25,desc:"Un assaut au corps perdu : l'attaquant subit aussi le contrecoup."},
   hyperfang:{pp:15,name:'Croc de Mort',type:'normal',cat:'phys',power:60,accuracy:0.9,bite:true,flinch:0.1,desc:"Mord violemment l'adversaire avec ses incisives. Peut faire peur."},
-  slash:{pp:20,name:'Tranche',type:'normal',cat:'phys',power:50,accuracy:1,desc:"Lacère l'adversaire avec griffes, queue ou faux."},
+  slash:{pp:20,name:'Tranche',type:'normal',cat:'phys',power:50,accuracy:1,slicing:true,desc:"Lacère l'adversaire avec griffes, queue ou faux."},
   bodyslam:{pp:15,name:'Plaquage',type:'normal',cat:'phys',power:55,accuracy:1,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Plaque l'adversaire de tout son poids. Peut paralyser."},
   swift:{pp:20,name:'Météores',type:'normal',cat:'spec',power:50,accuracy:1.0,desc:"Une pluie d'étoiles qui ne rate presque jamais."},
   hyperbeam:{pp:5,name:'Ultralaser',type:'normal',cat:'spec',power:85,desc:"Un rayon dévastateur qui épuise l'attaquant.",accuracy:0.9},
@@ -26,7 +43,7 @@ const MOVES = {
   solarbeam:{pp:10,name:'Lance-Soleil',type:'plante',cat:'spec',power:70,accuracy:1,charge:true,sunSkip:true,chargeMsg:'absorbe la lumière du soleil',desc:"Absorbe la lumière puis libère un rayon puissant au tour suivant (immédiat en plein soleil)."},
   megadrain:{pp:10,name:'Méga-Sangsue',type:'plante',cat:'spec',power:50,accuracy:1,drain:0.5,desc:"Aspire l'énergie vitale de l'adversaire pour se soigner."},
   gigadrain:{pp:5,name:'Giga Sangsue',type:'plante',cat:'spec',power:65,accuracy:1,drain:0.5,desc:"Draine une grande quantité d'énergie adverse pour se soigner."},
-  leafblade:{pp:15,name:'Lame-Feuille',type:'plante',cat:'phys',power:65,accuracy:1,desc:"Une feuille aussi tranchante qu'une épée."},
+  leafblade:{pp:15,name:'Lame-Feuille',type:'plante',cat:'phys',power:65,accuracy:1,slicing:true,desc:"Une feuille aussi tranchante qu'une épée."},
 
   thundershock:{pp:30,name:'Éclair',type:'electrik',cat:'spec',power:45,accuracy:1,secondaryStatus:{status:'paralysie',chance:0.1},desc:"Une faible décharge électrique surprend l'adversaire. Peut paralyser."},
   thunderbolt:{pp:15,name:'Tonnerre',type:'electrik',cat:'spec',power:70,accuracy:1,secondaryStatus:{status:'paralysie',chance:0.1},desc:"Une puissante décharge électrique s'abat. Peut paralyser."},
@@ -62,7 +79,7 @@ const MOVES = {
   wingattack:{pp:35,name:'Cru-Ailes',type:'vol',cat:'phys',power:55,accuracy:1,desc:"Frappe l'adversaire avec des ailes largement déployées."},
   drillpeck:{pp:20,name:'Sonic-Pic',type:'vol',cat:'phys',power:65,accuracy:1,desc:"Un bec en vrille perfore l'adversaire."},
   hurricane:{pp:10,name:'Tempête Ailée',type:'vol',cat:'spec',power:70,accuracy:0.7,secondaryStatus:{status:'confusion',chance:0.3},desc:"Une tempête déchaînée emporte tout sur son passage. Peut confondre."},
-  airslash:{pp:15,name:"Lame d'Air",type:'vol',cat:'spec',power:60,accuracy:0.95,flinch:0.3,desc:"Une lame d'air tranchante peut apeurer l'adversaire."},
+  airslash:{pp:15,name:"Lame d'Air",type:'vol',cat:'spec',power:60,accuracy:0.95,flinch:0.3,slicing:true,desc:"Une lame d'air tranchante peut apeurer l'adversaire."},
 
   confusion:{pp:25,name:'Choc Mental',type:'psy',cat:'spec',power:45,accuracy:1,secondaryStatus:{status:'confusion',chance:0.1},desc:"Une attaque psychique légère mais déroutante. Peut rendre confus."},
   psychic:{pp:10,name:'Psyko',type:'psy',cat:'spec',power:75,accuracy:1,secondaryBoost:{stat:'spd',stages:-1,chance:0.1},desc:"Une puissante attaque télékinétique. Peut réduire la Défense Spéciale."},
@@ -95,7 +112,7 @@ const MOVES = {
   crunch:{pp:15,name:'Machouille',type:'tenebres',cat:'phys',power:65,accuracy:1,bite:true,secondaryBoost:{stat:'def',stages:-1,chance:0.2},desc:"Mord avec des crocs redoutables. Peut réduire la Défense."},
   darkpulse:{pp:15,name:'Vibrobscur',type:'tenebres',cat:'spec',power:65,accuracy:1,pulse:true,flinch:0.2,desc:"Libère une onde de ténèbres pures et terrifiantes. Peut faire peur."},
   suckerpunch:{pp:5,name:'Coup Bas',type:'tenebres',cat:'phys',power:55,accuracy:1,priority:1,desc:"Une attaque sournoise qui surprend l'adversaire."},
-  nightslash:{pp:15,name:'Tranche-Nuit',type:'tenebres',cat:'phys',power:60,accuracy:1,desc:"Lacère l'adversaire dès qu'une occasion se présente."},
+  nightslash:{pp:15,name:'Tranche-Nuit',type:'tenebres',cat:'phys',power:60,accuracy:1,slicing:true,desc:"Lacère l'adversaire dès qu'une occasion se présente."},
   feintattack:{pp:20,name:'Feinte',type:'tenebres',cat:'phys',power:50,accuracy:1.0,desc:"Une attaque sournoise qui ne rate jamais sa cible."},
 
   /* ---- Nouvelles attaques Gen 1 ---- */
@@ -141,7 +158,7 @@ const MOVES = {
   visegrip:{pp:30,name:'Force Poigne',type:'normal',cat:'phys',power:55,accuracy:1,desc:"Saisit et écrase la cible dans une poigne puissante."},
   guillotine:{pp:5,name:'Guillotine',type:'normal',cat:'phys',power:0,ohko:true,accuracy:0.3,desc:"De redoutables pinces mettent K.O. la cible d'un coup si l'attaque touche."},
   razorwind:{pp:10,name:'Coupe-Vent',type:'normal',cat:'spec',power:60,accuracy:1,charge:true,chargeMsg:'prépare une tornade tranchante',desc:"Prépare une tornade puis tranche la cible à distance au tour suivant."},
-  cut:{pp:30,name:'Coupe',type:'normal',cat:'phys',power:45,accuracy:0.95,desc:"Tranche la cible avec des griffes ou une faux."},
+  cut:{pp:30,name:'Coupe',type:'normal',cat:'phys',power:45,accuracy:0.95,slicing:true,desc:"Tranche la cible avec des griffes ou une faux."},
   whirlwind:{pp:20,name:'Cyclone',type:'normal',cat:'status',power:0,target:'foe',accuracy:1.0,effect:{forceSwitch:true},desc:"Une bourrasque qui force l'adversaire à quitter le combat."},
   fly:{pp:15,name:'Vol',type:'vol',cat:'phys',power:70,accuracy:0.95,charge:true,semiInvuln:'fly',chargeMsg:"prend son envol vers le ciel",desc:"Prend son envol (esquive les attaques, sauf Tornade/Ouragan/Fatal-Foudre/Stratopercut) puis fond sur la cible au tour suivant."},
   bind:{pp:20,name:'Étreinte',type:'normal',cat:'phys',power:40,accuracy:0.85,desc:"Enserre la cible dans une étreinte puissante."},
@@ -262,7 +279,7 @@ const MOVES = {
   swagger:{pp:15,name:'Vantardise',type:'normal',cat:'status',power:0,target:'foe',accuracy:0.85,effect:{foeBoost:[{stat:'atk',stages:2}],status:'confusion'},desc:"Provoque la cible pour booster son Attaque tout en la rendant confuse."},
   milkdrink:{pp:10,name:'Lait Soin',type:'normal',cat:'status',power:0,target:'self',effect:{heal:0.5},desc:"Un lait nourrissant qui restaure la moitié des PV max."},
   spark:{pp:20,name:'Étincelle',type:'electrik',cat:'phys',power:65,accuracy:1,secondaryStatus:{status:'paralysie',chance:0.3},desc:"Une charge électrifiée qui peut paralyser la cible."},
-  furycutter:{pp:20,name:'Taillade',type:'insecte',cat:'phys',power:20,accuracy:0.95,desc:"Une lame tranchante dont la puissance augmente à chaque coup consécutif."},
+  furycutter:{pp:20,name:'Taillade',type:'insecte',cat:'phys',power:20,accuracy:0.95,slicing:true,desc:"Une lame tranchante dont la puissance augmente à chaque coup consécutif."},
   meanlook:{pp:5,name:'Regard Noir',type:'normal',cat:'status',power:0,accuracy:1,target:'foe',effect:{trap:true},desc:"Un regard menaçant qui empêche la cible de fuir ou de switcher."},
   attract:{pp:15,name:'Attraction',type:'normal',cat:'status',power:0,accuracy:1,target:'foe',effect:{},desc:"Rend la cible amoureuse, ce qui peut l'empêcher d'attaquer."},
   sleeptalk:{pp:10,name:'Blabla Dodo',type:'normal',cat:'status',power:0,target:'self',selfSleepOnly:true,effect:{},desc:"Utilise une capacité au hasard tout en dormant profondément."},
@@ -514,7 +531,7 @@ const MOVES = {
   branchpoke:{pp:40,name:'Coup de Branche',type:'plante',cat:'phys',power:40,accuracy:1,desc:"Pique la cible avec une branche pointue et bien droite."},
   breakingswipe:{pp:15,name:'Balayage Rupture',type:'dragon',cat:'phys',power:60,accuracy:1,secondaryBoost:{stat:'atk',stages:-1,chance:1},desc:"Un large coup de queue qui réduit toujours l'Attaque de la cible."},
   burningjealousy:{pp:5,name:'Jalousie Ardente',type:'feu',cat:'spec',power:70,accuracy:1,secondaryStatus:{status:'brulure',chance:0.3},desc:"Une flamme née de la jalousie. Peut brûler la cible."},
-  ceaselessedge:{pp:15,name:'Tranchant Sans Fin',type:'tenebres',cat:'phys',power:65,accuracy:0.9,desc:"Une lame de coquillage tranchante qui frappe sans relâche."},
+  ceaselessedge:{pp:15,name:'Tranchant Sans Fin',type:'tenebres',cat:'phys',power:65,accuracy:0.9,slicing:true,desc:"Une lame de coquillage tranchante qui frappe sans relâche."},
   chloroblast:{pp:5,name:'Explosion Chloro',type:'plante',cat:'spec',power:150,accuracy:0.95,recoil:0.5,desc:"Libère toute l'énergie chlorophyllienne accumulée, au prix de graves blessures pour le lanceur."},
   clangoroussoul:{pp:5,name:'Âme Vibrante',type:'dragon',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1},{stat:'def',stages:1},{stat:'spa',stages:1},{stat:'spd',stages:1},{stat:'spe',stages:1}]},desc:"Un rugissement vibrant qui augmente toutes les statistiques du lanceur."},
   coaching:{pp:10,name:'Coaching',type:'combat',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'atk',stages:1},{stat:'def',stages:1}]},desc:"De précieux conseils tactiques qui augmentent l'Attaque et la Défense."},
@@ -574,7 +591,7 @@ const MOVES = {
   springtidestorm:{pp:5,name:'Tempête Printanière',type:'fee',cat:'spec',power:100,accuracy:0.8,secondaryBoost:{stat:'atk',stages:-1,chance:0.3},desc:"Enveloppe la cible dans des vents féériques violents. Peut réduire son Attaque."},
   steelbeam:{pp:5,name:"Faisceau d'Acier",type:'acier',cat:'spec',power:140,accuracy:0.95,recoil:0.5,desc:"Rassemble l'acier de son propre corps pour tirer un rayon dévastateur, au prix de graves blessures."},
   steelroller:{pp:5,name:"Rouleau d'Acier",type:'acier',cat:'phys',power:130,accuracy:1,desc:"Écrase la cible sous un rouleau compresseur d'acier."},
-  stoneaxe:{pp:15,name:'Hache de Pierre',type:'roche',cat:'phys',power:65,accuracy:0.9,desc:"Frappe la cible avec une hache de pierre taillée dans la roche."},
+  stoneaxe:{pp:15,name:'Hache de Pierre',type:'roche',cat:'phys',power:65,accuracy:0.9,slicing:true,desc:"Frappe la cible avec une hache de pierre taillée dans la roche."},
   strangesteam:{pp:10,name:'Vapeur Étrange',type:'fee',cat:'spec',power:90,accuracy:0.95,secondaryStatus:{status:'confusion',chance:0.2},desc:"Une vapeur féérique inquiétante. Peut rendre la cible confuse."},
   stuffcheeks:{pp:10,name:'Garde-à-Joues',type:'normal',cat:'status',power:0,target:'self',effect:{selfBoost:[{stat:'def',stages:2}]},desc:"Se gave les joues, ce qui augmente fortement sa Défense."},
   surgingstrikes:{pp:5,name:'Frappes Déferlantes',type:'eau',cat:'phys',power:25,accuracy:1,multiHit:{min:3,max:3},desc:"Enchaîne trois coups d'une précision et d'une fluidité redoutables."},

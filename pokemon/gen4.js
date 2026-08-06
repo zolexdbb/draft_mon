@@ -1,4 +1,5 @@
-/* ==== pokemon/gen4.js : Pokédex n°387 à 493 ==== */
+/* ==== Pokédex n°387 à 493 (Sinnoh), lignées classiques en ordre de Pokédex.
+   DEX_NUMBERS_GEN4 (numéros de Pokédex, pour les sprites) est à la fin du fichier. ==== */
 const LINES_GEN4 = [
 {id:'turtwig',abilities:['Engrais','Coque Armure'],moveIds:['absorb','amnesia','bodyslam','bulletseed','bulldoze','bite','crunch','curse','doubleedge','earthquake','endure','facade','gigadrain','hyperbeam','irondefense','ironhead','lightscreen','magicalleaf','megadrain','mudshot','mudslap','outrage','protect','razorleaf','reflect','rest','rockblast','rockslide','rocktomb','sandstorm','scaryface','solarbeam','stealthrock','stoneedge','sunnyday','swordsdance','synthesis','tackle','takedown','zenheadbutt','withdraw','frenzyplant'],
  stages:[

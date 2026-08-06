@@ -1,4 +1,7 @@
-/* ==== draft/draft-facile.js (généré depuis index.html) ==== */
+/* ==== Mode Facile : ne propose que les formes entièrement évoluées (dernier stade, ou chaque
+   branche pour une lignée à embranchements), déjà prêtes à combattre (IV/EV/nature/attaques
+   choisis automatiquement par autoBuildMember). ==== */
+// Liste les formes finales de toutes les lignées (hors déjà draftées) comme candidats — une entrée par branche si la lignée en a.
 function buildFacileCandidates(excludedLineIds){
   const candidates = [];
   LINES.forEach(line=>{
@@ -16,10 +19,12 @@ function buildFacileCandidates(excludedLineIds){
 }
 const ALL_FACILE_CANDIDATES = buildFacileCandidates([]);
 const TOTAL_FACILE_WEIGHT = ALL_FACILE_CANDIDATES.reduce((a,c)=>a+c.w,0);
+// Taux d'apparition affiché sur les cartes en mode Facile.
 function facileAppearanceRate(w){
   return (w/TOTAL_FACILE_WEIGHT*100);
 }
-// Movepool progressif : le stade final débloque le pool complet, les stades précoces n'ont que les attaques les plus faibles.
+// Construit un membre "prêt à combattre" pour le mode Facile : IV max, EV tout misés sur la
+// meilleure stat offensive + Vitesse, nature assortie, et les 4 meilleures attaques (pickSmartMoves).
 function autoBuildMember(lineId, stage, branch){
   const line = lineOf(lineId);
   const sp = branch!==null && branch!==undefined ? line.branches[branch] : line.stages[stage];
@@ -44,5 +49,3 @@ function autoBuildMember(lineId, stage, branch){
   member.moves = pickSmartMoves(movepool, sp, 5);
   return member;
 }
-
-/* =================== DRAFT ===================== */

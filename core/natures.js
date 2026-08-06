@@ -1,4 +1,5 @@
-/* ==== core/natures.js (généré depuis index.html) ==== */
+/* ==== Les 25 natures Pokémon : chacune booste une statistique de 10% et en pénalise une autre
+   de 10% (plus/minus null = nature neutre, pas d'effet). Utilisé par calcStats() dans core/stats.js. ==== */
 const NATURES = [
  {name:'Hardi', plus:null, minus:null},
  {name:'Solo', plus:'atk', minus:'def'},

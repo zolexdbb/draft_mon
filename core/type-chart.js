@@ -1,4 +1,7 @@
-/* ==== core/type-chart.js (généré depuis index.html) ==== */
+/* ==== SOMMAIRE ====
+   Les 18 types Pokémon : emoji/couleur/icône SVG pour l'affichage, TYPE_CHART pour les calculs
+   d'efficacité (utilisé par getMult() ici et par moveEffectiveness() dans combat/damage-calc.js).
+==== */
 const TYPE_EMOJI = {
   normal:'⭐',feu:'🔥',eau:'💧',plante:'🌿',electrik:'⚡',vol:'🪶',poison:'☠️',sol:'⛰️',
   insecte:'🐛',combat:'🥊',glace:'🧊',psy:'🔮',fantome:'👻',roche:'🪨',dragon:'🐲',
@@ -10,6 +13,7 @@ const TYPE_COLOR = {
   glace:'#96D9D6', psy:'#F95587', fantome:'#735797', roche:'#B6A136', dragon:'#6F35FC',
   acier:'#B7B7CE', tenebres:'#5A5465', fee:'#EE99AC'
 };
+// Génère les points SVG d'une étoile à N branches (utilisé pour dessiner certaines icônes de type).
 function starPoints(spikes, outerR, innerR, cx, cy){
   cx = cx||12; cy = cy||12;
   const pts = [];
@@ -42,31 +46,36 @@ const TYPE_ICON_PATH = {
   tenebres: `<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/>`,
   fee: `<path d="M12 20.5S3 15 3 9a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 6-9 11.5-9 11.5z"/>`
 };
+// Enveloppe le path SVG brut d'un type dans une balise <svg>.
 function svgIcon(type){
   return `<svg viewBox="0 0 24 24">${TYPE_ICON_PATH[type] || TYPE_ICON_PATH.normal}</svg>`;
 }
+// Icône de type seule (span coloré), sans fond ni texte.
 function typeIconHTML(type, size, color){
   size = size || 12;
   color = color || TYPE_COLOR[type] || '#e8e0f0';
   return `<span class="type-icon" style="width:${size}px;height:${size}px;color:${color};">${svgIcon(type)}</span>`;
 }
+// Icône de type sur fond coloré rond (utilisée pour les badges compacts sur les cartes de combat).
 function typeBadgeIconHTML(type, size){
   size = size || 22;
   const color = TYPE_COLOR[type] || '#666';
   return `<span class="type-badge-icon" style="width:${size}px;height:${size}px;background:${color};">${typeIconHTML(type, Math.round(size*0.62))}</span>`;
 }
-// Pièce grise gravée du symbole de type, pour les badges de Maître (obtenue = pleine couleur, non obtenue = grisée).
+// Pièce de Maître de Type au Village : pleine couleur si le badge est obtenu, grisée sinon.
 function typeCoinHTML(type, owned, size){
   size = size || 22;
   const iconColor = owned ? (TYPE_COLOR[type] || '#e8e0f0') : '#77777d';
   return `<span class="type-badge-icon" style="width:${size}px;height:${size}px;background:linear-gradient(160deg,#b9bcc4,#787c86);border:1px solid #55585f;opacity:${owned?1:.35};">${typeIconHTML(type, Math.round(size*0.62), iconColor)}</span>`;
 }
+// Étiquette de type avec icône + nom (utilisée sur les cartes de draft, l'éditeur, le Dex...).
 function typeTagHTML(type, opts){
   opts = opts || {};
   const cls = 'type-tag t-'+type+(opts.cls ? ' '+opts.cls : '');
   const style = opts.style ? ` style="${opts.style}"` : '';
   return `<span class="${cls}"${style}>${typeIconHTML(type, opts.iconSize||11)}${type}</span>`;
 }
+// Table d'efficacité des types (attaquant → {type défenseur: multiplicateur}). 2=super efficace, 0.5=peu efficace, 0=immunité.
 const TYPE_CHART = {
   normal:{roche:.5,fantome:0,acier:.5},
   feu:{plante:2,glace:2,insecte:2,feu:.5,eau:.5,roche:.5,dragon:.5,acier:2},
@@ -87,6 +96,7 @@ const TYPE_CHART = {
   tenebres:{psy:2,fantome:2,combat:.5,tenebres:.5,fee:.5},
   fee:{combat:2,dragon:2,tenebres:2,feu:.5,poison:.5,acier:.5}
 };
+// Multiplicateur d'efficacité total d'un type d'attaque contre 1 ou 2 types défenseurs (utilisé par l'IA pour choisir ses cibles/coups).
 function getMult(atkType, defTypes){
   let m = 1;
   defTypes.forEach(dt=>{
@@ -95,5 +105,3 @@ function getMult(atkType, defTypes){
   });
   return m;
 }
-
-/* =================== ATTAQUES =================== */
