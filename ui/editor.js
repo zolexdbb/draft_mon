@@ -156,6 +156,10 @@ function openEditor(idx){
               <div class="effect-desc" id="abilityDesc" style="margin-top:5px;">${ABILITY_DESC[m.ability||abilities[0]]||''}</div>
             </div>
           </div>
+          <div class="editor-section">
+            <div class="editor-section-title">Téracristal</div>
+            <div id="teraSelect"></div>
+          </div>
           ${evolveSection}
         </div>
         <div>
@@ -356,6 +360,12 @@ function openEditor(idx){
     }
   }));
   if(!m.ability) m.ability = abilities[0];
+  document.getElementById('teraSelect').appendChild(createCustomSelect({
+    options: TERA_TYPES.map(t=>({value:t, label:t, html:`${typeIconHTML(t)} ${t}`})),
+    value: m.teraType || sp.types[0],
+    onChange: (val)=>{ m.teraType = val; }
+  }));
+  if(!m.teraType) m.teraType = sp.types[0];
 
   if(line.branches){
     ed.querySelectorAll('.evolveBranchBtn').forEach(btn=>{

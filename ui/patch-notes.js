@@ -8,6 +8,42 @@
 ==== */
 const PATCH_NOTES = [
   {
+    version: 'v0.10',
+    title: 'v0.10 — Gen 9 Update : Paldea & Téracristallisation',
+    categories: [
+      {
+        icon: '📖', label: 'Pokédex & Contenu',
+        items: [
+          "111 nouveaux Pokémon ajoutés (région de Paldea, Pokédex complet 1 → 1017), dont les 3 starters, les 4 Pokémon du Fléau, le Trio Fidèle, Bafouinard (et ses 3 Masques), tous les Pokémon Paradoxe passés et futurs, la nouvelle lignée pseudo-légendaire Frigibax/Frigodragma/Baxcalibur, Miraidon et Koraidon, Terapagos et Pecharunt",
+          "4 nouvelles lignées de Formes de Paldea, sélectionnables indépendamment de leurs versions Kanto au draft (Axoloto de Paldea, et les 3 races de Tauros de Paldea : Combative, Flamboyante, Aquatique)",
+          "Le contenu des extensions Le Masque Turquoise et Le Disque Indigo ajouté : Poltchageist/Sencha Cha, Applique/Pommenectar, Archalu-Pont, et les Pokémon Paradoxe additionnels"
+        ]
+      },
+      {
+        icon: '⚔️', label: 'Capacités',
+        items: [
+          "36 nouvelles attaques de Génération 9 (Collision, Électro-Ruée, Lame Psy, Toupie Mortelle, Talon Marteau, Chaîne Maligne, Désastre, Négo-Tranchante, Bombe Nombre, Masse Titanesque, Pluie de Pépites...)",
+          "Deux nouvelles attaques (Collision, Électro-Ruée) infligent 33% de dégâts supplémentaires si le coup est super efficace, comme dans les vrais jeux"
+        ]
+      },
+      {
+        icon: '💠', label: 'Talents',
+        items: [
+          "36 nouveaux talents de Génération 9, dont plusieurs avec un vrai effet codé en combat : Protosynthèse et Quark Chargée (boostent la statistique la plus élevée du porteur sous Zénith / Zone Électrique), les 4 talents Fléau (réduisent une statistique de tous les autres Pokémon présents), Sel Purifiant (immunité totale aux altérations de statut, résiste au Spectre), Corps Cuit (immunité au Feu, booste la Défense), Cœur d'Or (immunité aux capacités de statut), et Chaîne Toxique (empoisonne gravement au contact)",
+          "Les autres nouveaux talents (Opportuniste, Commandant, Zéro à Héros, Synchro Masque, Téraforme Zéro...) ont leur description dans le Pokédex mais restent sans effet mécanique codé pour l'instant"
+        ]
+      },
+      {
+        icon: '💎', label: 'Téracristallisation',
+        items: [
+          "Nouvelle mécanique de combat, au même titre que la Méga-Évolution et le Dynamax : l'Orbe Tera, vendu par le Marchand Itinérant, permet à son porteur de se Téracristalliser une fois par combat",
+          "Le Type Tera de chaque Pokémon se choisit dans la fenêtre Équipe (par défaut, son premier type) ; une fois activée en combat via le bouton dédié, la Téracristallisation dure jusqu'à la fin du combat (contrairement au Dynamax, limité à 3 tours)",
+          "Le porteur devient mono-type de son Type Tera pour l'attaque et la défense, et bénéficie d'un bonus STAB de x2 (au lieu de x1.5) si ce type correspond à l'un de ses types d'origine — exactement comme dans les vrais jeux"
+        ]
+      }
+    ]
+  },
+  {
     version: 'v0.9.1',
     title: 'v0.9.1 — Légendes : Arceus',
     categories: [

@@ -71,8 +71,8 @@ function openSlotModal(mode){
           <div style="font-size:10px;color:var(--accent);font-family:'Press Start 2P',monospace;margin-bottom:4px;">Emplacement ${i}</div>
           ${slotSummaryHTML(i)}
         </div>
-        <button class="btn secondary slotActionBtn" data-slot="${i}" ${(mode==='load'&&!occupied)?'disabled':''} style="padding:6px 10px;font-size:9px;white-space:nowrap;">${actionLabel}</button>
-        ${occupied ? `<button class="btn secondary slotDeleteBtn" data-slot="${i}" style="padding:6px 8px;font-size:12px;" title="Supprimer">🗑️</button>` : ''}
+        <button class="btn secondary slotActionBtn" data-slot="${i}" ${(mode==='load'&&!occupied)?'disabled':''} style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:9px;white-space:nowrap;">${actionLabel}</button>
+        ${occupied ? `<button class="btn secondary slotDeleteBtn" data-slot="${i}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 8px;font-size:12px;" title="Supprimer">🗑️</button>` : ''}
       </div>`;
   }
   overlay.innerHTML = `
@@ -231,8 +231,10 @@ function openTeamModal(){
           <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
           <div style="font-size:8px;color:var(--text-dim);">${hp}/${maxHp} PV</div>
           <div id="teamHeldSel${i}" style="margin-top:4px;max-width:180px;"></div>
+          <div style="font-size:8px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-top:5px;">Téracristal</div>
+          <div id="teamTeraSel${i}" style="margin-top:2px;max-width:180px;"></div>
         </div>
-        <button class="btn secondary teamLeadBtn" data-idx="${i}" style="padding:6px 8px;font-size:9px;white-space:nowrap;" ${i===0?'disabled':''}>${i===0?'Leader':'Nommer leader'}</button>
+        <button class="btn secondary teamLeadBtn" data-idx="${i}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 8px;font-size:9px;white-space:nowrap;" ${i===0?'disabled':''}>${i===0?'Leader':'Nommer leader'}</button>
       </div>`;
   });
   overlay.innerHTML = `
@@ -275,6 +277,15 @@ function openTeamModal(){
         saveGame();
         close();
         openTeamModal();
+      }
+    }));
+    const sp = speciesOf(m);
+    document.getElementById(`teamTeraSel${i}`).appendChild(createCustomSelect({
+      options: TERA_TYPES.map(t=>({value:t, label:t, html:`${typeIconHTML(t)} ${t}`})),
+      value: m.teraType || sp.types[0],
+      onChange: (val)=>{
+        m.teraType = val;
+        saveGame();
       }
     }));
   });

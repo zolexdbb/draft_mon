@@ -93,7 +93,7 @@ function renderBoostsList(){
         <div style="font-size:11px;color:var(--text-main);"><b>${boost.name}</b></div>
         <div style="font-size:9px;color:var(--text-dim);line-height:1.4;">${boost.desc}${locked?`<br><i>Nécessite : ${BOOSTS.find(b=>b.id===boost.requires).name}</i>`:''}</div>
       </div>
-      <button class="btn secondary boostBuyBtn" data-id="${boost.id}" style="padding:6px 10px;font-size:10px;white-space:nowrap;" ${owned||locked?'disabled':''}>${owned?'✓ Acquis':`${boost.cost} 🎫`}</button>
+      <button class="btn secondary boostBuyBtn" data-id="${boost.id}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;" ${owned||locked?'disabled':''}>${owned?'✓ Acquis':`${boost.cost} 🎫`}</button>
     `;
     list.appendChild(row);
   });

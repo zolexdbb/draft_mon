@@ -81,7 +81,9 @@ const FORM_SPRITE_IDS = {
   "Typhlosion d'Hisui":10233, 'Qwilfish de Hisui':10234, 'Farfuret de Hisui':10235, 'Clamiral de Hisui':10236,
   'Fragilady de Hisui':10237, 'Zorua de Hisui':10238, 'Zoroark de Hisui':10239, 'Gueriaigle de Hisui':10240,
   'Colimucus de Hisui':10241, 'Muplodocus de Hisui':10242, 'Séracrawl de Hisui':10243, 'Archéduc de Hisui':10244,
-  'Amovénus (Totémique)':10249
+  'Amovénus (Totémique)':10249,
+  'Tauros de Paldea (Race Combative)':10250, 'Tauros de Paldea (Race Flamboyante)':10251,
+  'Tauros de Paldea (Race Aquatique)':10252, 'Axoloto de Paldea':10253
 };
 // Choisit la liste de sources à essayer (animées d'abord si demandé, puis repli, puis statique).
 function getSpriteSourceList(facing, animated){

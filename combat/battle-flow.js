@@ -139,7 +139,7 @@ function startBattle(){
     return {
       lineId:m.lineId, name:sp.name, types:sp.types, unownForm:m.unownForm, moves:m.moves.map(mid=>MOVES[mid]), ppCur: m.moves.map(mid=>basePP(MOVES[mid])),
       ability: m.ability || (sp.abilities||lineOf(m.lineId).abilities)[0],
-      heldItem: m.heldItem || null, itemUsed:false,
+      heldItem: m.heldItem || null, itemUsed:false, teraType: m.teraType || sp.types[0],
       stats:m.computedStats, maxHp, hp,
       stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status, sleepCounter, confuseCounter:0, flinched:false, protectChain:0
     };
@@ -158,7 +158,7 @@ function startBattle(){
     pActive: aliveIdxs[0], pActive2: (isDouble && aliveIdxs.length>1) ? aliveIdxs[1] : null,
     fActive: 0, fActive2: (isDouble && enemyTeam.length>1) ? 1 : null,
     locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null, terrain:null,
-    pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false, dynamaxUsed:false, declaringDynamax:false
+    pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false, dynamaxUsed:false, declaringDynamax:false, teraUsed:false, declaringTera:false
   };
   battleInProgress = true;
   document.getElementById('screenTower').classList.add('hidden');
@@ -261,6 +261,11 @@ function playerAttack(moveIdx, targetIdx){
     bs.dynamaxUsed = true;
   }
   bs.declaringDynamax = false;
+  if(bs.declaringTera && moveIdx>=0 && canTerastallize(p, bs)){
+    activateTera(p);
+    bs.teraUsed = true;
+  }
+  bs.declaringTera = false;
   if(p.dynamaxed && (move.cat==='phys' || move.cat==='spec')){
     move = buildMaxMove(move, p, bs, target);
   }
@@ -653,6 +658,20 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
+  if(defender.ability==='Corps Cuit' && move.type==='feu'){
+    let cclogs = [];
+    applyStatBoost(defender, [{stat:'def',stages:2}], cclogs);
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Corps Cuit protège ${defender.name} de la chaleur ! ${cclogs.join(' ')}`);
+    setTimeout(callback, 900);
+    return;
+  }
+  if(defender.ability==="Cœur d'Or" && move.cat==='status' && move.target!=='self'){
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Cœur d'Or) !`);
+    setTimeout(callback, 900);
+    return;
+  }
   let thawMsg = '';
   if(defender.status==='gel' && move.type==='feu'){
     defender.status = null;
@@ -893,6 +912,11 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     let slogs = [];
     inflictStatus(defender, move.secondaryStatus.status, slogs);
     msg += ' ' + slogs.join(' ');
+  }
+  if(actor.ability==='Chaîne Toxique' && defender.hp>0 && actualDmg>0 && !defender.status && !move.secondaryStatus && Math.random()<0.3){
+    let clogs = [];
+    inflictStatus(defender, 'poison', clogs);
+    msg += ' ' + clogs.join(' ');
   }
   if(move.secondaryBoost && defender.hp>0 && Math.random()<move.secondaryBoost.chance){
     if(defender.ability==='Corps Sain' && move.secondaryBoost.stages<0){

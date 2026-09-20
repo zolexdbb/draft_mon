@@ -35,7 +35,7 @@ function renderPokeshopPanel(){
         <div style="font-size:11px;color:var(--text-main);"><b>${item.name}</b> <span style="color:var(--text-dim);">(possédé : ${owned})</span></div>
         <div style="font-size:9px;color:var(--text-dim);line-height:1.4;">${item.desc}</div>
       </div>
-      <button class="btn secondary buyBtn" data-key="${key}" style="padding:6px 10px;font-size:10px;white-space:nowrap;">${price} 💰${discount>0?` <span style="text-decoration:line-through;opacity:.5;font-size:8px;">${item.price}</span>`:''}</button>
+      <button class="btn secondary buyBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;">${price} 💰${discount>0?` <span style="text-decoration:line-through;opacity:.5;font-size:8px;">${item.price}</span>`:''}</button>
     `;
     list.appendChild(row);
   });

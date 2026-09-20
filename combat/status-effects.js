@@ -145,8 +145,8 @@ function inflictStatus(target, status, logs){
     logs.push(`${target.name} ne peut pas s'endormir grâce à son talent !`);
     return;
   }
-  if(target.ability==='Comateux'){
-    logs.push(`${target.name} est immunisé contre les altérations de statut grâce à Comateux !`);
+  if(target.ability==='Comateux' || target.ability==='Sel Purifiant'){
+    logs.push(`${target.name} est immunisé contre les altérations de statut grâce à ${target.ability} !`);
     return;
   }
   if(status==='sommeil' && battleState){

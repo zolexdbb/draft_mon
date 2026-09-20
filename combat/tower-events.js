@@ -47,7 +47,7 @@ function eventAfflictRandomMember(){
 const TOWER_EVENTS = [
   // ---- Sûrs ----
   {
-    id:'forgottenPurse', emoji:'💰', safe:true,
+    id:'forgottenPurse', title:'Bourse Oubliée', emoji:'💰', safe:true,
     flavor: floor=>`En montant vers l'étage ${floor}, tu remarques une bourse abandonnée sur le sol.`,
     actions: [
       { label:'Ramasser', resolve: ()=>{
@@ -58,7 +58,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'healSpring', emoji:'💧', safe:true,
+    id:'healSpring', title:'Source Curative', emoji:'💧', safe:true,
     flavor: floor=>`Sur le chemin de l'étage ${floor}, tu croises une source aux reflets étranges.`,
     actions: [
       { label:'Se reposer', resolve: ()=>{
@@ -72,7 +72,7 @@ const TOWER_EVENTS = [
   },
   // ---- Risqués ----
   {
-    id:'suspiciousBush', emoji:'🌿', safe:false,
+    id:'suspiciousBush', title:'Buisson Suspect', emoji:'🌿', safe:false,
     flavor: floor=>`Un buisson s'agite bizarrement près du passage vers l'étage ${floor}...`,
     actions: [
       { label:'Fouiller (risqué)', resolve: ()=>{
@@ -90,7 +90,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'weirdMushrooms', emoji:'🍄', safe:false,
+    id:'weirdMushrooms', title:'Champignons Étranges', emoji:'🍄', safe:false,
     flavor: floor=>`Tu repères des champignons luisants près de l'entrée de l'étage ${floor}.`,
     actions: [
       { label:'Manger (risqué)', resolve: ()=>{
@@ -106,7 +106,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'mysteryVendor', emoji:'🎰', safe:false,
+    id:'mysteryVendor', title:'Distributeur Mystère', emoji:'🎰', safe:false,
     flavor: floor=>`Une vieille machine clignote sur le palier de l'étage ${floor}, réclamant une mise.`,
     actions: [
       { label:'Parier 50 💰 (risqué)', available:()=>money>=50, resolve: ()=>{
@@ -118,7 +118,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'unstablePath', emoji:'🕳️', safe:false,
+    id:'unstablePath', title:'Chemin Instable', emoji:'🕳️', safe:false,
     flavor: floor=>`Le sol semble fragile sur un raccourci menant à l'étage ${floor}.`,
     actions: [
       { label:'Prendre le raccourci (risqué)', resolve: ()=>{
@@ -138,7 +138,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'shadyMerchant', emoji:'👤', safe:false,
+    id:'shadyMerchant', title:'Silhouette Louche', emoji:'👤', safe:false,
     flavor: floor=>`Une silhouette te propose un échange étrange avant l'étage ${floor}.`,
     actions: [
       { label:'Échanger 80 💰 (risqué)', available:()=>money>=80, resolve: ()=>{
@@ -158,7 +158,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'wildNest', emoji:'🐾', safe:false,
+    id:'wildNest', title:'Repaire Sauvage', emoji:'🐾', safe:false,
     flavor: floor=>`Tu entends des grognements près de l'entrée de l'étage ${floor}.`,
     actions: [
       { label:"S'approcher (risqué)", resolve: ()=>{

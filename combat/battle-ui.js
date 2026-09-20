@@ -128,12 +128,12 @@ function renderMoveGrid(){
     grid.appendChild(btn);
     return;
   }
-  if(canDeclareZMove(p, bs) && !p.dynamaxed){
+  if(canDeclareZMove(p, bs) && !p.dynamaxed && !p.teraActive){
     const zBtn = document.createElement('button');
     zBtn.className = 'move-btn' + (bs.declaringZMove ? ' active' : '');
     zBtn.disabled = bs.locked;
     zBtn.innerHTML = bs.declaringZMove ? '⚡ Capacité Z activée <small>Clique pour annuler</small>' : '⚡ Déclarer une Capacité Z <small>Choisis ensuite la capacité à surboosster</small>';
-    zBtn.onclick = ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove) bs.declaringDynamax = false; renderMoveGrid(); };
+    zBtn.onclick = ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; } renderMoveGrid(); };
     grid.appendChild(zBtn);
   } else {
     bs.declaringZMove = false;
@@ -144,15 +144,31 @@ function renderMoveGrid(){
     dynIndicator.style.cursor = 'default';
     dynIndicator.innerHTML = `🔴 Dynamax actif <small>${p.dynamaxTurns} tour${p.dynamaxTurns>1?'s':''} restant${p.dynamaxTurns>1?'s':''}</small>`;
     grid.appendChild(dynIndicator);
-  } else if(canDynamax(p, bs) && !bs.declaringZMove){
+  } else if(canDynamax(p, bs) && !bs.declaringZMove && !bs.declaringTera && !p.teraActive){
     const dynBtn = document.createElement('button');
     dynBtn.className = 'move-btn' + (bs.declaringDynamax ? ' active' : '');
     dynBtn.disabled = bs.locked;
     dynBtn.innerHTML = bs.declaringDynamax ? '🔴 Dynamax activé <small>Clique pour annuler</small>' : '🔴 Déclarer Dynamax <small>Toutes les capacités offensives deviennent Max pendant 3 tours</small>';
-    dynBtn.onclick = ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax) bs.declaringZMove = false; renderMoveGrid(); };
+    dynBtn.onclick = ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax){ bs.declaringZMove = false; bs.declaringTera = false; } renderMoveGrid(); };
     grid.appendChild(dynBtn);
   } else {
     bs.declaringDynamax = false;
+  }
+  if(p.teraActive){
+    const teraIndicator = document.createElement('div');
+    teraIndicator.className = 'move-btn active';
+    teraIndicator.style.cursor = 'default';
+    teraIndicator.innerHTML = `${typeIconHTML(p.teraType)} Téracristallisé <small>Type Tera : ${p.teraType}</small>`;
+    grid.appendChild(teraIndicator);
+  } else if(canTerastallize(p, bs) && !bs.declaringZMove && !p.dynamaxed){
+    const teraBtn = document.createElement('button');
+    teraBtn.className = 'move-btn' + (bs.declaringTera ? ' active' : '');
+    teraBtn.disabled = bs.locked;
+    teraBtn.innerHTML = bs.declaringTera ? `${typeIconHTML(p.teraType)} Téracristallisation activée <small>Clique pour annuler</small>` : `💎 Déclarer la Téracristallisation <small>Devient mono-type ${p.teraType} pour le reste du combat</small>`;
+    teraBtn.onclick = ()=>{ bs.declaringTera = !bs.declaringTera; if(bs.declaringTera){ bs.declaringZMove = false; bs.declaringDynamax = false; } renderMoveGrid(); };
+    grid.appendChild(teraBtn);
+  } else {
+    bs.declaringTera = false;
   }
   const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
   const dynamaxPreview = bs.declaringDynamax || p.dynamaxed;

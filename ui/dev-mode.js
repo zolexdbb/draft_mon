@@ -198,7 +198,7 @@ function renderDevTowerPanel(){
   panel.classList.remove('hidden');
   document.getElementById('devTowerFloorInput').value = towerFloor||1;
   if(!devTowerPanelInitialized){
-    document.getElementById('devTowerEventSelect').innerHTML = TOWER_EVENTS.map(e=>`<option value="${e.id}">${e.emoji} ${e.id}</option>`).join('');
+    document.getElementById('devTowerEventSelect').innerHTML = TOWER_EVENTS.map(e=>`<option value="${e.id}">${e.emoji} ${e.title||e.id}</option>`).join('');
     document.getElementById('devTowerBossTypeSelect').innerHTML = ALL_TYPES.map(t=>`<option value="${t}">${typeDisplayName(t)}</option>`).join('');
     devTowerPanelInitialized = true;
   }

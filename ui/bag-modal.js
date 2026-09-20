@@ -35,7 +35,7 @@ function renderBagItemList(){
         <div style="font-size:10px;color:var(--text-main);"><b>${item.name}</b> (${bag[key]})</div>
         <div style="font-size:8px;color:var(--text-dim);">${item.desc}</div>
       </div>
-      <button class="btn secondary useBagItemBtn" data-key="${key}" style="padding:6px 10px;font-size:9px;">Utiliser</button>
+      <button class="btn secondary useBagItemBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:9px;">Utiliser</button>
     `;
     list.appendChild(row);
   });

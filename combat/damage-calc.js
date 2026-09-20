@@ -32,6 +32,24 @@ function weatherNullified(){
   const check = c => c.ability==='Air Lock' || c.ability==='Ciel Gris';
   return [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(check);
 }
+// Vrai si un combattant actif autre que "exclude" possède le talent donné (Fléau Épée/Tablette/
+// Perle/Récipient : réduisent une statistique de tous les autres Pokémon présents sauf eux-mêmes).
+function otherActiveHasAbility(name, exclude){
+  if(!battleState) return false;
+  return [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(c=>c!==exclude && c.ability===name);
+}
+// Stat (atk/def/spa/spd/spe) boostée de 30% (Protosynthèse sous Zénith / Quark Chargée sous Zone
+// Électrique) : celle qui a la plus haute valeur de base parmi les 5 (hors PV) chez ce combattant.
+function protoBoostStat(c){
+  if(!c || !c.ability) return null;
+  const active = (c.ability==='Protosynthèse' && battleState && !weatherNullified() && battleState.weather && battleState.weather.type==='soleil')
+    || (c.ability==='Quark Chargée' && battleState && battleState.terrain && battleState.terrain.type==='electric');
+  if(!active) return null;
+  const keys = ['atk','def','spa','spd','spe'];
+  let best = keys[0];
+  keys.forEach(k=>{ if(c.stats[k] > c.stats[best]) best = k; });
+  return best;
+}
 // Multiplicateur d'efficacité de type d'un coup, avec les cas spéciaux : superEffectiveVs forcé,
 // bypassTypeImmunity (ex. Mille Flèches), et Querelleur (Normal/Combat touche les Spectre).
 function moveEffectiveness(move, defTypes, attacker){
@@ -62,13 +80,24 @@ function computeDamage(attacker, move, defender){
   let atkStage = move.useDefenseForAtk ? attacker.stages.def : (move.cat==='phys' ? attacker.stages.atk : attacker.stages.spa);
   let defStage = move.cat==='phys' ? defender.stages.def : defender.stages.spd;
   if(crit){ atkStage = Math.max(0, atkStage); defStage = Math.min(0, defStage); }
-  const atkStat = atkBase * statMultiplier(atkStage) * (attacker.heldItem==='bandeauChoix' && move.cat==='phys' ? 1.5 : (attacker.heldItem==='lunettesChoix' && move.cat==='spec' ? 1.5 : 1));
+  const ruinAtkStat = move.cat==='phys' ? 'atk' : 'spa';
+  const ruinAtkAbility = ruinAtkStat==='atk' ? 'Fléau Tablette' : 'Fléau Récipient';
+  const ruinAtkMult = otherActiveHasAbility(ruinAtkAbility, attacker) ? 0.75 : 1;
+  const protoAtkStat = protoBoostStat(attacker);
+  const protoAtkMult = protoAtkStat===ruinAtkStat ? 1.3 : 1;
+  const atkStat = atkBase * statMultiplier(atkStage) * (attacker.heldItem==='bandeauChoix' && move.cat==='phys' ? 1.5 : (attacker.heldItem==='lunettesChoix' && move.cat==='spec' ? 1.5 : 1)) * ruinAtkMult * protoAtkMult;
   const terrainNow = battleState ? battleState.terrain : null;
-  const defStat = defBase * statMultiplier(defStage) * (defender.heldItem==='vesteCombat' && move.cat==='spec' ? 1.5 : 1) * (defender.ability==='Robe Feuillue' && terrainNow && terrainNow.type==='grassy' ? 1.5 : 1);
+  const ruinDefStat = move.cat==='phys' ? 'def' : 'spd';
+  const ruinDefAbility = ruinDefStat==='def' ? 'Fléau Épée' : 'Fléau Perle';
+  const ruinDefMult = otherActiveHasAbility(ruinDefAbility, defender) ? 0.75 : 1;
+  const protoDefStat = protoBoostStat(defender);
+  const protoDefMult = protoDefStat===ruinDefStat ? 1.3 : 1;
+  const defStat = defBase * statMultiplier(defStage) * (defender.heldItem==='vesteCombat' && move.cat==='spec' ? 1.5 : 1) * (defender.ability==='Robe Feuillue' && terrainNow && terrainNow.type==='grassy' ? 1.5 : 1) * ruinDefMult * protoDefMult;
   const atkTypes = attacker.transformedTypes || attacker.types;
   const defTypes = defender.transformedTypes || defender.types;
   const hasStab = atkTypes.includes(move.type) || (move.type2 && atkTypes.includes(move.type2));
-  const stab = hasStab ? (attacker.ability==='Adaptabilité' ? 2 : 1.5) : 1;
+  const teraStabBonus = attacker.teraActive && attacker.types.includes(move.type);
+  const stab = hasStab ? (attacker.ability==='Adaptabilité' || teraStabBonus ? 2 : 1.5) : 1;
   const eff = moveEffectiveness(move, defTypes, attacker);
   const variance = 0.85 + Math.random()*0.3;
   const burnPenalty = (attacker.status==='brulure' && move.cat==='phys' && attacker.ability!=='Cran') ? 0.5 : 1;
@@ -106,6 +135,8 @@ function computeDamage(attacker, move, defender){
   if(attacker.ability==='Méga-Lanceur' && move.pulse) abilityMult *= 1.5;
   if(attacker.ability==='Griffe Solide' && move.cat==='phys') abilityMult *= 1.3;
   if(attacker.ability==='Incisif' && move.slicing) abilityMult *= 1.5;
+  if(defender.ability==='Sel Purifiant' && move.type==='fantome') abilityMult *= 0.5;
+  if(move.superEffBoost && eff>1) abilityMult *= 1.33;
   if(battleState){
     const fieldMons = [...alivePlayerCombatants(), ...aliveFoeCombatants()];
     const auraBreak = fieldMons.some(c=>c.ability==='Rupture Aura');
@@ -164,6 +195,7 @@ function effectiveSpeed(c){
   if(c.status && c.ability==='Pied Véloce') spe *= 1.5;
   else if(c.status==='paralysie') spe *= 0.5;
   if(c.heldItem==='mouchoirChoix') spe *= 1.5;
+  if(protoBoostStat(c)==='spe') spe *= 1.5;
   const weather = weatherNullified() ? null : (battleState ? battleState.weather : null);
   if(weather){
     if(weather.type==='soleil' && c.ability==='Chlorophylle') spe *= 2;
