@@ -83,7 +83,23 @@ const FORM_SPRITE_IDS = {
   'Colimucus de Hisui':10241, 'Muplodocus de Hisui':10242, 'Séracrawl de Hisui':10243, 'Archéduc de Hisui':10244,
   'Amovénus (Totémique)':10249,
   'Tauros de Paldea (Race Combative)':10250, 'Tauros de Paldea (Race Flamboyante)':10251,
-  'Tauros de Paldea (Race Aquatique)':10252, 'Axoloto de Paldea':10253
+  'Tauros de Paldea (Race Aquatique)':10252, 'Axoloto de Paldea':10253,
+  // ---- Méga-Évolutions de Pokémon Légendes Z-A (v0.10.1) ----
+  'Méga-Mélodelfe':10278, 'Méga-Empiflor':10279, 'Méga-Staross':10280, 'Méga-Dracolosse':10281,
+  'Méga-Méganium':10282, 'Méga-Aligatueur':10283, 'Méga-Airmure':10284, 'Méga-Momartik':10285,
+  'Méga-Roitiflam':10286, 'Méga-Minotaupe':10287, 'Méga-Brutapode':10288, 'Méga-Baggaïd':10289,
+  'Méga-Ohmassacre':10290, 'Méga-Lugulabre':10291, 'Méga-Blindépique':10292, 'Méga-Goupelin':10293,
+  'Méga-Amphinobi':10294, 'Méga-Némélios':10295, 'Floette (Fleur Éternelle)':10296,
+  'Méga-Sepiatroce':10297, 'Méga-Golgopathe':10298, 'Méga-Kravarech':10299, 'Méga-Brutalibré':10300,
+  'Méga-Zygarde':10301, 'Méga-Draïeul':10302, 'Méga-Hexadron':10303,
+  // ---- Méga-Évolutions classiques manquantes (Kalos, v0.10.2) ----
+  'Méga-Alakazam':10037, 'Méga-Ectoplasma':10038, 'Méga-Scarabrute':10040, 'Méga-Ptéra':10042,
+  'Méga-Pharamp':10045, 'Méga-Scarhino':10047, 'Méga-Démolosse':10048, 'Méga-Tyranocif':10049,
+  'Méga-Mysdibule':10052, 'Méga-Galeking':10053, 'Méga-Charmina':10054, 'Méga-Élecsprint':10055,
+  'Méga-Branette':10056, 'Méga-Absol':10057, 'Méga-Blizzaroi':10060, 'Méga-Ténéfix':10066,
+  'Méga-Altaria':10067, 'Méga-Gallame':10068, 'Méga-Nanméouïe':10069, 'Méga-Sharpedo':10070,
+  'Méga-Flagadoss':10071, 'Méga-Steelix':10072, 'Méga-Roucarnage':10073, 'Méga-Oniglali':10074,
+  'Méga-Camérupt':10087, 'Méga-Lockpin':10088, 'Méga-Drattak':10089, 'Méga-Dardargnan':10090
 };
 // Choisit la liste de sources à essayer (animées d'abord si demandé, puis repli, puis statique).
 function getSpriteSourceList(facing, animated){

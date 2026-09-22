@@ -79,4 +79,17 @@ function renderBagTargetList(key){
 }
 document.getElementById('towerBagBtn').onclick = openBagModal;
 document.getElementById('towerTeamBtn').onclick = openTeamModal;
-document.getElementById('villageTeamBtn').onclick = openTeamModal;
+document.getElementById('villageMenuTeamBtn').onclick = ()=>{ closeVillageHamburgerMenu(); openTeamModal(); };
+document.getElementById('villageMenuBagBtn').onclick = ()=>{ closeVillageHamburgerMenu(); openBagModal(); };
+function closeVillageHamburgerMenu(){
+  document.getElementById('villageHamburgerMenu').classList.add('hidden');
+}
+document.getElementById('villageHamburgerBtn').onclick = ()=>{
+  document.getElementById('villageHamburgerMenu').classList.toggle('hidden');
+};
+document.addEventListener('click', (e)=>{
+  const menu = document.getElementById('villageHamburgerMenu');
+  const btn = document.getElementById('villageHamburgerBtn');
+  if(!menu || menu.classList.contains('hidden')) return;
+  if(!menu.contains(e.target) && e.target!==btn) menu.classList.add('hidden');
+});

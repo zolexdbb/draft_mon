@@ -9,13 +9,13 @@
    - L.142-fin : panneau permanent affiché dans la Tour (changer d'étage, forcer un event, lancer
      un combat choisi) une fois le mode développeur débloqué
 ==== */
-const DEV_MODE_KEY = 'draftArenaDevMode';
 const DEV_TRIGGER_NAME = 'Lockpin';
 const DEV_TRIGGER_CLICKS = 7;
 const DEV_CODE = '1701';
 
+// Volontairement non persisté (pas de localStorage) : le mode dev doit être redéclenché à chaque
+// actualisation de la page (7 clics sur Lockpin + code), jamais réactivé automatiquement.
 let devModeUnlocked = false;
-try { devModeUnlocked = localStorage.getItem(DEV_MODE_KEY) === '1'; } catch(e){}
 
 let devEncounterOverride = null;
 
@@ -56,7 +56,6 @@ function openDevCodePrompt(){
   const submit = ()=>{
     if(input.value === DEV_CODE){
       devModeUnlocked = true;
-      try { localStorage.setItem(DEV_MODE_KEY, '1'); } catch(e){}
       close();
       startDevFlow();
     } else {

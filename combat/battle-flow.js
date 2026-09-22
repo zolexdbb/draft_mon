@@ -45,8 +45,27 @@ function resetBattleFields(c){
   c.schoolBroken = false;
   c.shieldsBroken = false;
 }
+// Couleur "arène classique" (violet fantôme neutre) utilisée pour un dresseur normal, reprise
+// telle quelle du canevas de référence (rgba(155,120,200,...) partout dans Battle.dc.html).
+const CLASSIC_ARENA_RGB = '155,120,200';
+function hexToRgbString(hex){
+  return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(',');
+}
+// Thème l'arène de combat : violet classique pour un dresseur normal, ou couleur officielle du
+// type du Maître de Type affronté (pour donner plus de vie à la Tour) — utilisée telle quelle,
+// sans mélange, pour que ex. un Maître Normal donne une arène neutre/grise et non violette.
+function applyArenaTheme(trainer){
+  const el = document.getElementById('screenBattle');
+  if(!el) return;
+  if(trainer && trainer.boss && trainer.masterType && TYPE_COLOR[trainer.masterType]){
+    el.style.setProperty('--arena-rgb', hexToRgbString(TYPE_COLOR[trainer.masterType]));
+  } else {
+    el.style.setProperty('--arena-rgb', CLASSIC_ARENA_RGB);
+  }
+}
 // Affiche le bandeau du/des dresseur(s) adverse(s) (avatar + dialogue) en haut de l'écran de combat.
 function renderTrainerBanner(trainer, trainer2){
+  applyArenaTheme(trainer2 ? null : trainer);
   const bannerEl = document.getElementById('trainerBanner');
   if(trainer2){
     bannerEl.className = 'trainer-banner twin-banner';
@@ -1263,10 +1282,13 @@ function replaceFoeSlot(slot, callback){
 function showSwitchPrompt(aliveIdx, slot){
   slot = slot || 'A';
   const bs = battleState;
+  const zBanner = document.querySelector('.zmove-banner');
+  if(zBanner) zBanner.remove();
   document.getElementById('movesGrid').classList.add('hidden');
+  document.getElementById('mechanicsGrid').classList.add('hidden');
   document.getElementById('movesHeader').classList.add('hidden');
-  document.getElementById('manualSwitchBtn').classList.add('hidden');
-  document.getElementById('bagBtn').classList.add('hidden');
+  document.getElementById('battleActionsToggleBtn').classList.add('hidden');
+  document.getElementById('movesPanelActionsRevealed').classList.add('hidden');
   document.getElementById('cancelSwitchBtn').classList.add('hidden');
   const sw = document.getElementById('switchGrid');
   sw.classList.remove('hidden');

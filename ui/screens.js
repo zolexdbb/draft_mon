@@ -66,9 +66,9 @@ function openSlotModal(mode){
     const occupied = !!info;
     const actionLabel = mode==='load' ? (occupied?'Charger':'—') : (occupied?'Écraser':'Nouvelle partie');
     rows += `
-      <div style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;">
         <div style="flex:1;">
-          <div style="font-size:10px;color:var(--accent);font-family:'Press Start 2P',monospace;margin-bottom:4px;">Emplacement ${i}</div>
+          <div style="font-size:10px;color:var(--accent-light);font-family:var(--font-display);margin-bottom:4px;">Emplacement ${i}</div>
           ${slotSummaryHTML(i)}
         </div>
         <button class="btn secondary slotActionBtn" data-slot="${i}" ${(mode==='load'&&!occupied)?'disabled':''} style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:9px;white-space:nowrap;">${actionLabel}</button>

@@ -101,20 +101,43 @@ function renderBattle(){
 // Construit la grille de boutons d'attaque du Pokémon en train de choisir : Lutte si plus de PP,
 // bouton Capacité Z / indicateur ou bouton Dynamax (mutuellement exclusifs), puis les 4 capacités
 // avec leur aperçu Capacité Z/Max si applicable et leur état (PP épuisés, entravée, bloquée par un objet Choix).
+// Construit un bouton compact de la colonne mécaniques (icône + libellé) ; grisé et non cliquable
+// si indisponible, mais toujours affiché pour garder la colonne à hauteur fixe.
+function buildMechButton(icon, label, available, isActive, tooltip, onClick){
+  const btn = document.createElement('button');
+  btn.className = 'mech-btn' + (isActive ? ' active' : '');
+  btn.disabled = !available || battleState.locked;
+  btn.title = tooltip || '';
+  btn.innerHTML = `<span class="mech-icon">${icon}</span><span class="mech-label">${label}</span>`;
+  if(available && onClick) btn.onclick = onClick;
+  return btn;
+}
+// Construit un indicateur (non cliquable) montrant qu'une mécanique est déjà active ce combat.
+function buildMechIndicator(icon, label, tooltip){
+  const el = document.createElement('div');
+  el.className = 'mech-btn active';
+  el.style.cursor = 'default';
+  el.title = tooltip || '';
+  el.innerHTML = `<span class="mech-icon">${icon}</span><span class="mech-label">${label}</span>`;
+  return el;
+}
 function renderMoveGrid(){
   const bs = battleState;
   const slot = bs.selectingSlot || 'A';
   const activeIdx = playerSlotIdx(slot);
   const p = bs.player[activeIdx];
   const grid = document.getElementById('movesGrid');
+  const mechGrid = document.getElementById('mechanicsGrid');
   const header = document.getElementById('movesHeader');
+  const oldZBanner = grid.parentNode.querySelector('.zmove-banner');
+  if(oldZBanner) oldZBanner.remove();
   grid.innerHTML='';
+  mechGrid.innerHTML='';
   document.getElementById('switchGrid').classList.add('hidden');
   grid.classList.remove('hidden');
   header.classList.toggle('hidden', !bs.isDouble);
   if(bs.isDouble) header.textContent = `Choisis l'attaque pour ${p.name}`;
-  document.getElementById('manualSwitchBtn').classList.remove('hidden');
-  document.getElementById('bagBtn').classList.remove('hidden');
+  document.getElementById('battleActionsToggleBtn').classList.remove('hidden');
   document.getElementById('cancelSwitchBtn').classList.add('hidden');
   document.getElementById('manualSwitchBtn').disabled = bs.locked;
   document.getElementById('bagBtn').disabled = bs.locked;
@@ -128,47 +151,46 @@ function renderMoveGrid(){
     grid.appendChild(btn);
     return;
   }
+  // Colonne fixe de 3 boutons compacts (icône + libellé), toujours affichés dans le même ordre
+  // (Dynamax / Méga / Téracristallisation) pour que la colonne garde toujours la même hauteur et
+  // reste alignée avec le bloc d'attaques — actif/disponible/indisponible plutôt qu'apparaître et
+  // disparaître. Le détail va dans le title (tooltip) pour rester compact.
+  if(!canDeclareZMove(p, bs) || p.dynamaxed || p.teraActive) bs.declaringZMove = false;
+  // Dynamax
+  if(p.dynamaxed){
+    mechGrid.appendChild(buildMechIndicator('🔴','Dynamax',`${p.dynamaxTurns} tour${p.dynamaxTurns>1?'s':''} restant${p.dynamaxTurns>1?'s':''}`));
+  } else {
+    const available = canDynamax(p, bs) && !bs.declaringZMove && !bs.declaringTera && !p.teraActive;
+    mechGrid.appendChild(buildMechButton('🔴','Dynamax', available, bs.declaringDynamax,
+      bs.declaringDynamax ? 'Dynamax activé — clique pour annuler' : (available ? 'Toutes les capacités offensives deviennent Max pendant 3 tours' : (bs.dynamaxUsed ? 'Déjà utilisé ce combat' : 'Indisponible pour le moment')),
+      ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax){ bs.declaringZMove = false; bs.declaringTera = false; } renderMoveGrid(); }));
+    if(!available) bs.declaringDynamax = false;
+  }
+  // Méga-Évolution : automatique via l'objet tenu (pas de déclaration en combat dans ce jeu),
+  // affichée active si le Pokémon est déjà sous sa forme Méga, sinon indisponible.
+  const isMega = p.name && p.name.startsWith('Méga-');
+  mechGrid.appendChild(isMega
+    ? buildMechIndicator('💎','Méga','Méga-Évolution active (objet tenu)')
+    : buildMechButton('💎','Méga', false, false, 'La Méga-Évolution est automatique : équipe une Méga-Gemme dans la fenêtre Équipe', null));
+  // Téracristallisation
+  if(p.teraActive){
+    mechGrid.appendChild(buildMechIndicator(typeIconHTML(p.teraType),'Téracristal',`Téracristallisé — Type Tera : ${p.teraType}`));
+  } else {
+    const available = canTerastallize(p, bs) && !bs.declaringZMove && !p.dynamaxed;
+    mechGrid.appendChild(buildMechButton('💠','Téracristal', available, bs.declaringTera,
+      bs.declaringTera ? 'Téracristallisation activée — clique pour annuler' : (available ? `Devient mono-type ${p.teraType} pour le reste du combat` : "Nécessite l'Orbe Tera en objet tenu"),
+      ()=>{ bs.declaringTera = !bs.declaringTera; if(bs.declaringTera){ bs.declaringZMove = false; bs.declaringDynamax = false; } renderMoveGrid(); }));
+    if(!available) bs.declaringTera = false;
+  }
+  // Capacité Z : mécanique plus rare (Cristaux Z), affichée en bandeau au-dessus de la grille
+  // d'attaques uniquement quand elle est utilisable, pour ne pas perturber la colonne fixe.
   if(canDeclareZMove(p, bs) && !p.dynamaxed && !p.teraActive){
     const zBtn = document.createElement('button');
-    zBtn.className = 'move-btn' + (bs.declaringZMove ? ' active' : '');
+    zBtn.className = 'move-btn zmove-banner' + (bs.declaringZMove ? ' active' : '');
     zBtn.disabled = bs.locked;
     zBtn.innerHTML = bs.declaringZMove ? '⚡ Capacité Z activée <small>Clique pour annuler</small>' : '⚡ Déclarer une Capacité Z <small>Choisis ensuite la capacité à surboosster</small>';
     zBtn.onclick = ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; } renderMoveGrid(); };
-    grid.appendChild(zBtn);
-  } else {
-    bs.declaringZMove = false;
-  }
-  if(p.dynamaxed){
-    const dynIndicator = document.createElement('div');
-    dynIndicator.className = 'move-btn active';
-    dynIndicator.style.cursor = 'default';
-    dynIndicator.innerHTML = `🔴 Dynamax actif <small>${p.dynamaxTurns} tour${p.dynamaxTurns>1?'s':''} restant${p.dynamaxTurns>1?'s':''}</small>`;
-    grid.appendChild(dynIndicator);
-  } else if(canDynamax(p, bs) && !bs.declaringZMove && !bs.declaringTera && !p.teraActive){
-    const dynBtn = document.createElement('button');
-    dynBtn.className = 'move-btn' + (bs.declaringDynamax ? ' active' : '');
-    dynBtn.disabled = bs.locked;
-    dynBtn.innerHTML = bs.declaringDynamax ? '🔴 Dynamax activé <small>Clique pour annuler</small>' : '🔴 Déclarer Dynamax <small>Toutes les capacités offensives deviennent Max pendant 3 tours</small>';
-    dynBtn.onclick = ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax){ bs.declaringZMove = false; bs.declaringTera = false; } renderMoveGrid(); };
-    grid.appendChild(dynBtn);
-  } else {
-    bs.declaringDynamax = false;
-  }
-  if(p.teraActive){
-    const teraIndicator = document.createElement('div');
-    teraIndicator.className = 'move-btn active';
-    teraIndicator.style.cursor = 'default';
-    teraIndicator.innerHTML = `${typeIconHTML(p.teraType)} Téracristallisé <small>Type Tera : ${p.teraType}</small>`;
-    grid.appendChild(teraIndicator);
-  } else if(canTerastallize(p, bs) && !bs.declaringZMove && !p.dynamaxed){
-    const teraBtn = document.createElement('button');
-    teraBtn.className = 'move-btn' + (bs.declaringTera ? ' active' : '');
-    teraBtn.disabled = bs.locked;
-    teraBtn.innerHTML = bs.declaringTera ? `${typeIconHTML(p.teraType)} Téracristallisation activée <small>Clique pour annuler</small>` : `💎 Déclarer la Téracristallisation <small>Devient mono-type ${p.teraType} pour le reste du combat</small>`;
-    teraBtn.onclick = ()=>{ bs.declaringTera = !bs.declaringTera; if(bs.declaringTera){ bs.declaringZMove = false; bs.declaringDynamax = false; } renderMoveGrid(); };
-    grid.appendChild(teraBtn);
-  } else {
-    bs.declaringTera = false;
+    grid.parentNode.insertBefore(zBtn, grid);
   }
   const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
   const dynamaxPreview = bs.declaringDynamax || p.dynamaxed;
@@ -218,9 +240,10 @@ function handleMoveChoice(moveIdx){
 function promptTargetThenAttack(moveIdx, foes){
   const bs = battleState;
   document.getElementById('movesGrid').classList.add('hidden');
+  document.getElementById('mechanicsGrid').classList.add('hidden');
   document.getElementById('movesHeader').classList.add('hidden');
-  document.getElementById('manualSwitchBtn').classList.add('hidden');
-  document.getElementById('bagBtn').classList.add('hidden');
+  document.getElementById('battleActionsToggleBtn').classList.add('hidden');
+  document.getElementById('movesPanelActionsRevealed').classList.add('hidden');
   document.getElementById('cancelSwitchBtn').classList.remove('hidden');
   const sw = document.getElementById('switchGrid');
   sw.classList.remove('hidden');
@@ -249,9 +272,10 @@ function openManualSwitch(){
   const aliveIdx = bs.player.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
   if(aliveIdx.length===0){ setLog("Aucun autre Pokémon disponible pour switcher !"); return; }
   document.getElementById('movesGrid').classList.add('hidden');
+  document.getElementById('mechanicsGrid').classList.add('hidden');
   document.getElementById('movesHeader').classList.add('hidden');
-  document.getElementById('manualSwitchBtn').classList.add('hidden');
-  document.getElementById('bagBtn').classList.add('hidden');
+  document.getElementById('battleActionsToggleBtn').classList.add('hidden');
+  document.getElementById('movesPanelActionsRevealed').classList.add('hidden');
   document.getElementById('cancelSwitchBtn').classList.remove('hidden');
   const sw = document.getElementById('switchGrid');
   sw.classList.remove('hidden');
@@ -270,9 +294,10 @@ function closeManualSwitch(){
   const bs = battleState;
   document.getElementById('switchGrid').classList.add('hidden');
   document.getElementById('movesGrid').classList.remove('hidden');
+  document.getElementById('mechanicsGrid').classList.remove('hidden');
   document.getElementById('movesHeader').classList.toggle('hidden', !(bs && bs.isDouble));
-  document.getElementById('manualSwitchBtn').classList.remove('hidden');
-  document.getElementById('bagBtn').classList.remove('hidden');
+  document.getElementById('battleActionsToggleBtn').classList.remove('hidden');
+  document.getElementById('movesPanelActionsRevealed').classList.add('hidden');
   document.getElementById('cancelSwitchBtn').classList.add('hidden');
 }
 // Ouvre l'écran de sélection de cible pour utiliser une Potion du sac en combat.
@@ -281,9 +306,10 @@ function openBag(){
   if(bs.locked) return;
   if((bag.potion||0)<=0){ setLog("Tu n'as aucune Potion dans ton sac ! Achètes-en au Village."); return; }
   document.getElementById('movesGrid').classList.add('hidden');
+  document.getElementById('mechanicsGrid').classList.add('hidden');
   document.getElementById('movesHeader').classList.add('hidden');
-  document.getElementById('manualSwitchBtn').classList.add('hidden');
-  document.getElementById('bagBtn').classList.add('hidden');
+  document.getElementById('battleActionsToggleBtn').classList.add('hidden');
+  document.getElementById('movesPanelActionsRevealed').classList.add('hidden');
   document.getElementById('cancelSwitchBtn').classList.remove('hidden');
   const sw = document.getElementById('switchGrid');
   sw.classList.remove('hidden');
@@ -336,3 +362,14 @@ function effLabel(eff){
 document.getElementById('manualSwitchBtn').onclick = openManualSwitch;
 document.getElementById('cancelSwitchBtn').onclick = closeManualSwitch;
 document.getElementById('bagBtn').onclick = openBag;
+// Le bouton ☰ révèle/masque "Changer de Pokémon" et "Sac" (repliés par défaut pour garder le
+// module d'actions compact, comme dans le canevas).
+document.getElementById('battleActionsToggleBtn').onclick = ()=>{
+  document.getElementById('movesPanelActionsRevealed').classList.toggle('hidden');
+};
+document.addEventListener('click', (e)=>{
+  const revealed = document.getElementById('movesPanelActionsRevealed');
+  const toggleBtn = document.getElementById('battleActionsToggleBtn');
+  if(!revealed || revealed.classList.contains('hidden')) return;
+  if(!revealed.contains(e.target) && e.target!==toggleBtn) revealed.classList.add('hidden');
+});

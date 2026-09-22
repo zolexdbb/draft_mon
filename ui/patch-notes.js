@@ -41,38 +41,32 @@ const PATCH_NOTES = [
           "Le porteur devient mono-type de son Type Tera pour l'attaque et la défense, et bénéficie d'un bonus STAB de x2 (au lieu de x1.5) si ce type correspond à l'un de ses types d'origine — exactement comme dans les vrais jeux"
         ]
       }
-    ]
-  },
-  {
-    version: 'v0.9.1',
-    title: 'v0.9.1 — Légendes : Arceus',
-    categories: [
+    ],
+    subVersions: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
-        items: [
-          "12 nouvelles lignées de Formes de Hisui, sélectionnables indépendamment de leurs versions Kanto/Johto/Unova au draft (Caninos, Voltorbe, Typhlosion, Qwilfish, Farfuret, Clamiral, Fragilady, Zorua, Gueriaigle, Colimucus, Séracrawl et Archéduc d'Hisui)",
-          "7 nouvelles évolutions inédites : Cerbyllin (Cerfrousse), Hachécateur (nouvelle branche d'évolution d'Insécateur, aux côtés de Cizayox), Ursaking (Ursaring), Paragruel (Bargantua), Farfurex (Farfuret de Hisui) et Qwilpik (Qwilfish de Hisui)",
-          "Amovénus rejoint Boréas, Fulguris et Démétéros : une forme Totémique via le Miroir Sacré, déjà vendu par le Marchand Itinérant"
-        ]
-      },
-      {
-        icon: '⚔️', label: 'Capacités & Talents',
-        items: [
-          "Les nouvelles lignées apprennent les capacités propres à Légendes Arceus déjà présentes dans le Pokédex (Griffe Fatale, Bouclier Psy, Tempête Printanière, Triple Flèches, Tranchant Sans Fin, Hache de Pierre, Rafale des Cimes...)",
-          "2 nouveaux talents avec un vrai effet codé en combat : Incisif (+50% de puissance pour les capacités tranchantes) et Querelleur (les capacités Normal/Combat touchent les Pokémon Spectre)",
-          "Les autres talents attribués (Frisk, Illusion, Rattled, Mold Breaker, Healer, Contrary, Sharpness et bien d'autres) réutilisent les talents déjà existants dans le Pokédex"
+        version: 'v0.10.1',
+        title: 'v0.10.1 — Méga-Évolutions de Pokémon Légendes Z-A',
+        categories: [
+          {
+            icon: '🔷', label: 'Méga-Évolutions',
+            items: [
+              "26 nouvelles Méga-Évolutions inédites, introduites dans Pokémon Légendes Z-A, ajoutées à des lignées déjà présentes dans le Pokédex : Méga-Dracolosse (Dragon/Vol), Méga-Empiflor (Plante/Poison), Méga-Mélodelfe (Fée/Vol), Méga-Staross (Eau/Psy), Méga-Méganium (Plante/Fée), Méga-Aligatueur (Eau/Dragon), Méga-Airmure, Méga-Momartik, Méga-Roitiflam, Méga-Minotaupe, Méga-Brutapode, Méga-Baggaïd, Méga-Ohmassacre, Méga-Lugulabre, Méga-Blindépique, Méga-Goupelin, Méga-Amphinobi, Méga-Némélios, Floette (Fleur Éternelle), Méga-Golgopathe (Roche/Combat), Méga-Kravarech, Méga-Brutalibré, Méga-Sepiatroce, Méga-Zygarde, Méga-Draïeul et Méga-Hexadron",
+              "Chaque Méga-Évolution s'obtient via sa propre Méga-Gemme, vendue par le Marchand Itinérant (nouvel onglet dédié « Méga Z-A »), et s'équipe comme n'importe quel objet tenu dans la fenêtre Équipe",
+              "9 nouveaux talents de Méga-Évolution accompagnent ces formes (Multi-Écaille, Boyaux Dehors, Inflexible, Furie Ultime, Foreuse Perçante, Survoltage, Crinière Ardente, Zénith Suprême, Dracomorphose) ; les autres réutilisent des talents déjà existants dans le Pokédex (Force Pure, Rebond, Alerte Neige, Brise Moule, Coque Armure, Intimidation, Infiltration, Anti-Bombe, Lévitation, Protéen, Aura Féérique, Griffe Solide, Régénération, Annule Garde, Contestation, Rupture Aura, Acharné...)"
+            ]
+          }
         ]
       }
     ]
   },
   {
     version: 'v0.9',
-    title: 'v0.9 — Gen 8 Update',
+    title: 'v0.9 — Gen 8 Update : Galar & Dynamax/Gigamax',
     categories: [
       {
         icon: '📖', label: 'Pokédex & Contenu',
         items: [
-          "88 nouveaux Pokémon ajoutés (Galar, Pokédex complet 1 → 890), dont les 3 starters, Zacian et Zamazenta (avec leurs formes Épée Sacrée/Bouclier Royal via objet tenu) et Éthernatos",
+          "88 nouveaux Pokémon ajoutés (région de Galar, Pokédex complet 1 → 890), dont les 3 starters, Zacian et Zamazenta (avec leurs formes Épée Sacrée/Bouclier Royal via objet tenu) et Éthernatos",
           "14 nouvelles lignées de Formes de Galar, sélectionnables indépendamment de leurs versions Kanto/Johto au draft (Miaouss, Ponyta, Ramoloss, Canarticho, Smogogo, M. Mime, Artikodin, Électhor, Sulfura, Corayon, Zigzaton, Daruman, Tuniversion et Stunfisk de Galar)",
           "Les Pokémon des deux extensions ajoutés : Wushours pouvant devenir Shifours Style Farouche ou Style Aqua via objet tenu, Zarude, Régieleki, Régidrago, Blizzeval, Spectreval, et Sylveroy pouvant fusionner avec l'un des deux pour devenir Monture Glace ou Monture Spectre"
         ]
@@ -100,16 +94,40 @@ const PATCH_NOTES = [
           "Nouvel objet tenu Facteur Gigamax : les lignées Gigamax-éligibles obtiennent en plus le nom officiel de leur Capacité G-Max, et pour une quinzaine d'entre elles (Gorythmic, Pyrobut, Lézargus, Dracaufeu, Corvaillus, Monthracite, Salarsen, Scolocendre, Angoliath...) un vrai effet bonus (dégâts fixes élevés, statut garanti, piège, tempête de sable, endormissement différé...)"
         ]
       }
+    ],
+    subVersions: [
+      {
+        version: 'v0.9.1',
+        title: 'v0.9.1 — Légendes Arceus Update : Hisui',
+        categories: [
+          {
+            icon: '📖', label: 'Pokédex & Contenu',
+            items: [
+              "12 nouvelles lignées de Formes de Hisui (région de Hisui), sélectionnables indépendamment de leurs versions Kanto/Johto/Unova au draft (Caninos, Voltorbe, Typhlosion, Qwilfish, Farfuret, Clamiral, Fragilady, Zorua, Gueriaigle, Colimucus, Séracrawl et Archéduc d'Hisui)",
+              "7 nouvelles évolutions inédites : Cerbyllin (Cerfrousse), Hachécateur (nouvelle branche d'évolution d'Insécateur, aux côtés de Cizayox), Ursaking (Ursaring), Paragruel (Bargantua), Farfurex (Farfuret de Hisui) et Qwilpik (Qwilfish de Hisui)",
+              "Amovénus rejoint Boréas, Fulguris et Démétéros : une forme Totémique via le Miroir Sacré, déjà vendu par le Marchand Itinérant"
+            ]
+          },
+          {
+            icon: '⚔️', label: 'Capacités & Talents',
+            items: [
+              "Les nouvelles lignées apprennent les capacités propres à Légendes Arceus déjà présentes dans le Pokédex (Griffe Fatale, Bouclier Psy, Tempête Printanière, Triple Flèches, Tranchant Sans Fin, Hache de Pierre, Rafale des Cimes...)",
+              "2 nouveaux talents avec un vrai effet codé en combat : Incisif (+50% de puissance pour les capacités tranchantes) et Querelleur (les capacités Normal/Combat touchent les Pokémon Spectre)",
+              "Les autres talents attribués (Frisk, Illusion, Rattled, Mold Breaker, Healer, Contrary, Sharpness et bien d'autres) réutilisent les talents déjà existants dans le Pokédex"
+            ]
+          }
+        ]
+      }
     ]
   },
   {
     version: 'v0.8',
-    title: 'v0.8 — Gen 7 Update',
+    title: 'v0.8 — Gen 7 Update : Alola & Capacités Z',
     categories: [
       {
         icon: '📖', label: 'Pokédex & Contenu',
         items: [
-          "88 nouveaux Pokémon ajoutés (Alola, Pokédex complet 1 → 809), dont les 3 starters, les Gardiens des Îles (Tokorico, Tokopiyon, Tokotoro, Tokopisco), Cosmog/Cosmovum évoluant en Solgaleo ou Lunala, Necrozma et ses 3 fusions, Magearna, Marshadow, Zeraora, et Meltan/Melmetal",
+          "88 nouveaux Pokémon ajoutés (région d'Alola, Pokédex complet 1 → 809), dont les 3 starters, les Gardiens des Îles (Tokorico, Tokopiyon, Tokotoro, Tokopisco), Cosmog/Cosmovum évoluant en Solgaleo ou Lunala, Necrozma et ses 3 fusions, Magearna, Marshadow, Zeraora, et Meltan/Melmetal",
           "Les 11 Ultra-Chimères ajoutées (Zéroïd, Mouscoto, Cancrelove, Câblifère, Bamboiselle, Katagami, Engloutyran, Vémini/Mandrillon, Ama-Ama, Pierroteknik), toutes dotées du talent Éclosion",
           "10 nouvelles lignées de Formes d'Alola, sélectionnables indépendamment de leurs versions Kanto au draft (Rattata, Sabelette, Goupix, Taupiqueur, Miaouss, Racaillou, Tadmorv, Noadkoko, Ossatueur et Raichu d'Alola)",
           "Necrozma peut fusionner avec Solgaleo ou Lunala (ou devenir Ultra-Necrozma) via 3 nouveaux objets tenus, vendus par le Marchand Itinérant, sur le même principe que la Méga-Évolution",
@@ -137,12 +155,12 @@ const PATCH_NOTES = [
   },
   {
     version: 'v0.7',
-    title: 'v0.7 — Gen 6 Update',
+    title: 'v0.7 — Gen 6 Update : Kalos & Méga-Évolution',
     categories: [
       {
         icon: '📖', label: 'Pokédex & Contenu',
         items: [
-          "72 nouveaux Pokémon ajoutés (Kalos, Pokédex complet 1 → 721)",
+          "72 nouveaux Pokémon ajoutés (région de Kalos, Pokédex complet 1 → 721)",
           "Nouveau type Fée, avec le retypage rétroactif officiel de 8 lignées existantes (Mélofée, Rondoudou, Marill, Grodoudou, Togépi, M. Mime, Tarsal/Kirlia/Gardevoir, Mysdibule)",
           "6 nouveaux Pokémon Légendaires/Fabuleux (Xerneas, Yveltal, Zygarde, Diancie, Hoopa, Volcanion) et une nouvelle lignée pseudo-légendaire (Mucuscule/Colimucus/Muplodocus)",
           "Movepool enrichi pour de nombreuses lignées existantes avec les nouvelles attaques de Génération 6 pertinentes selon leur thème"
@@ -217,12 +235,12 @@ const PATCH_NOTES = [
   },
   {
     version: 'v0.6',
-    title: 'v0.6 — Gen 5 Update',
+    title: 'v0.6 — Gen 5 Update : Unova',
     categories: [
       {
         icon: '📖', label: 'Pokédex & Contenu',
         items: [
-          "156 nouveaux Pokémon ajoutés (Unova, Pokédex complet 1 → 649)",
+          "156 nouveaux Pokémon ajoutés (région d'Unova, Pokédex complet 1 → 649)",
           "19 nouveaux talents de Génération 5 ajoutés avec leurs vraies descriptions officielles (Victorieux, Contestation, Mode Zen, Illusion, Garde Magik, Défaitiste, Herbivore, Épine de Fer, Turbo Brasier, Téra-Voltage...)",
           "13 nouveaux Pokémon Légendaires/Fabuleux (Victini, Cobalion, Terrakion, Virizion, Tornadus, Thundurus, Reshiram, Zekrom, Landorus, Kyurem, Keldeo, Meloetta, Genesect) et 2 nouvelles lignées pseudo-légendaires (Coupenotte/Tranchodon, Solochi/Trioxhydre)",
           "5 nouveaux Pokémon Rares (Zorua/Zoroark, Larvesta/Volcarona, Druddigon, Tirtouga/Carracosta, Archen/Archeops)"
@@ -287,12 +305,12 @@ const PATCH_NOTES = [
   },
   {
     version: 'v0.5',
-    title: 'v0.5 — Gen 4 Update',
+    title: 'v0.5 — Gen 4 Update : Sinnoh',
     categories: [
       {
         icon: '📖', label: 'Pokédex & Contenu',
         items: [
-          "107 nouveaux Pokémon ajoutés (Sinnoh, Pokédex complet 1 → 493)",
+          "107 nouveaux Pokémon ajoutés (région de Sinnoh, Pokédex complet 1 → 493)",
           "18 lignées existantes reçoivent leur évolution ou pré-évolution de Génération 4 (Magnézone, Lucario, Tangrowth, Yanmega, Mamoswine, Weavile, Honchkiss, Roserade, Porygon-Z, Bébés Happiny/Mime Jr./Bonsly/Munchlax/Mantyke/Chingling...)",
           "2 nouvelles évolutions pour Évoli : Phyllali et Givrali",
           "7 nouvelles attaques de Génération 4 (Aurasphère, Close Combat, Exploforce, Draco-Météore, Dracochoc, Demi-Tour, Piège de Roc)",
@@ -366,12 +384,12 @@ const PATCH_NOTES = [
   },
   {
     version: 'v0.4',
-    title: 'v0.4 — Gen 3 Update',
+    title: 'v0.4 — Gen 3 Update : Hoenn',
     categories: [
       {
         icon: '📖', label: 'Pokédex & Contenu',
         items: [
-          "135 nouveaux Pokémon ajoutés (Pokédex complet 1 → 386)",
+          "135 nouveaux Pokémon ajoutés (région de Hoenn, Pokédex complet 1 → 386)",
           "20 nouveaux talents de Génération 3 (Fermeté, Garde Mystik, Cran, Crachin, Sécheresse, Sable Volant, Marque Ombre, Ventouse, Air Lock, Peau Dure, Turbo, Déguisement...)",
           "45 nouvelles attaques de Génération 3 (Danse Draco, Feu Follet, Surchauffe, Calmesprit, Provoc, Souvenir, Sabotage...)",
           "Restructuration des évolutions à embranchements façon Évoli (Chenipotte, Arakdo)"
@@ -441,12 +459,12 @@ const PATCH_NOTES = [
   },
   {
     version: 'v0.3',
-    title: 'v0.3 — Update Génération 2',
+    title: 'v0.3 — Gen 2 Update : Johto',
     categories: [
       {
         icon: '📖', label: 'Pokédex & Contenu',
         items: [
-          "100 Pokémon de la Génération 2 ajoutés (Johto complet, hors Zarbi)",
+          "100 Pokémon de la Génération 2 ajoutés (région de Johto complète, hors Zarbi)",
           "Évolutions ajoutées : Crobat, Steelix, Blissey, Kingdra, Scizor, Porygon2...",
           "Nouvelles branches d'évolution : Bellossom, Politoed, Slowking, Espeon, Umbreon"
         ]
@@ -528,12 +546,12 @@ const PATCH_NOTES = [
   },
   {
     version: 'v0.1',
-    title: 'v0.1 — Base',
+    title: 'v0.1 — Gen 1 Update : Kanto',
     categories: [
       {
         icon: '🎯', label: 'Draft & Builder',
         items: [
-          "Draft de 6 Pokémon Gen 1",
+          "Draft de 6 Pokémon Gen 1 (région de Kanto)",
           "Builder complet EV/IV/Nature/Talent/Attaques"
         ]
       },
@@ -566,10 +584,26 @@ function renderPatchNoteBody(v){
   }
   return `<ul>${v.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
 }
-// Génère la liste complète des versions (repliables, la plus récente dépliée par défaut).
+// Génère le bloc (repliable) d'une sous-version, réutilisé dans la liste défilante de sous-versions.
+function renderSubVersionBlock(sv){
+  return `
+    <div class="patchnotes-version patchnotes-subversion">
+      <div class="patchnotes-version-header">
+        <span class="patchnotes-chevron">▸</span>
+        <span class="patchnotes-version-title">${sv.title}</span>
+      </div>
+      <div class="patchnotes-version-content" style="display:none;">
+        ${renderPatchNoteBody(sv)}
+      </div>
+    </div>`;
+}
+// Génère la liste complète des versions (repliables, la plus récente dépliée par défaut). Les
+// sous-versions (ex. v0.10.1, v0.10.2) sont affichées en tête de leur version parente, de la plus
+// récente à la plus ancienne, dans une liste défilante indépendante.
 function renderPatchNotes(){
   return PATCH_NOTES.map((v,idx) => {
     const expanded = idx===0;
+    const subs = (v.subVersions||[]).slice().reverse();
     return `
     <div class="patchnotes-version">
       <div class="patchnotes-version-header">
@@ -577,12 +611,8 @@ function renderPatchNotes(){
         <span class="patchnotes-version-title">${v.title}</span>
       </div>
       <div class="patchnotes-version-content"${expanded?'':' style="display:none;"'}>
+        ${subs.length ? `<div class="patchnotes-subversions">${subs.map(renderSubVersionBlock).join('')}</div>` : ''}
         ${renderPatchNoteBody(v)}
-        ${(v.subVersions||[]).map(sv => `
-          <div class="patchnotes-version" style="margin-left:16px;margin-top:10px;padding-left:10px;border-left:2px solid var(--line);">
-            <div class="patchnotes-version-title" style="font-size:9px;color:var(--accent-dim,var(--text-dim));">${sv.title}</div>
-            ${renderPatchNoteBody(sv)}
-          </div>`).join('')}
       </div>
     </div>`;
   }).join('');

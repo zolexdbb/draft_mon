@@ -18,12 +18,7 @@ function renderRanchPanel(){
       <div id="ranchDraftCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;"></div>
       <div class="dex-rate" id="villageMsg" style="text-align:center;margin-top:10px;color:var(--good);"></div>
     </div>`;
-  if(!ranchChoices){
-    const excluded = [...team.map(m=>m.lineId), ...pcBox.filter(x=>x).map(m=>m.lineId)];
-    const isFacile = difficulty==='facile';
-    const pool = isFacile ? buildFacileCandidates(excluded) : buildDraftCandidates(excluded);
-    ranchChoices = weightedSampleCandidates(pool, 3);
-  }
+  ensureRanchChoices();
   const choices = ranchChoices;
   const cardsWrap = document.getElementById('ranchDraftCards');
   choices.forEach(choice=>{
@@ -69,6 +64,7 @@ function renderRanchRecruit(choice, sp){
     ranchRecruited = true;
     saveGame();
     setVillageMsg(`✓ ${sp.name} envoyé au PC !`);
+    renderVillageRanchPen();
     renderRanchPanel();
   };
   document.getElementById('ranchToTeamBtn').onclick = ()=>{
@@ -92,6 +88,8 @@ function renderRanchRecruit(choice, sp){
         }
         ranchRecruited = true;
         saveGame();
+        renderVillageRanchPen();
+        renderVillageTeamRing();
         renderRanchPanel();
       };
       picker.appendChild(btn);

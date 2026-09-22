@@ -1,5 +1,5 @@
 /* ==== Le Marchand Itinérant du Village (apparaît par chance après un Boss) : vend tous les
-   objets de forme spéciaux (Plaques d'Arceus, Mémoires, Cristaux Z, Pierres Méga, objets
+   objets de forme spéciaux (Plaques d'Arceus, Mémoires, Cristaux Z, Méga-Gemmes, objets
    légendaires...), organisés en groupes affichés avec un titre. ==== */
 const MERCHANT_SPAWN_RATE = 0.2;
 const MERCHANT_GROUPS = [
@@ -8,13 +8,14 @@ const MERCHANT_GROUPS = [
   { label: 'Motisma', tab: '🔌 Motisma', keys: ['appareilChauffe','appareilLavage','appareilFrigo','appareilVentilo','appareilTondeuse'] },
   { label: 'Boréas / Fulguris / Démétéros / Amovénus', tab: '🌀 Forces de la Nature', keys: ['miroirSacre'] },
   { label: 'Arceus', tab: '💠 Arceus', keys: ['plaqueFlamme','plaqueHydro','plaqueHerbe','plaqueVolt','plaqueCiel','plaqueToxicite','plaqueTerre','plaqueInsecte','plaquePoing','plaqueGlace','plaqueEsprit','plaqueFantome','plaqueRoc','plaqueDraco','plaqueFer','plaqueOmbre'] },
-  { label: 'Pierres Méga', tab: '🔷 Pierres Méga', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite'] },
+  { label: 'Méga Gemme', tab: '🔷 Méga Gemme', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite','absolite','flagadossite','camerouptite','dardargnite','branettite','mysdibulite','pharampite','altarite','tyranocivite','roucarnagite','elecsprintite','demolossite','nanmeouite','lockpinite','tenefixite','sharpedite','scarhinoite','pteraite','alakazamite','oniglalite','scarabruite','galekingite','gallamite','drattakite','ectoplasmite','charminite','blizzarite','steelixite'] },
   { label: 'Cristaux Z', tab: '⚡ Cristaux Z', keys: ['zCrystalNormal','zCrystalCombat','zCrystalVol','zCrystalPoison','zCrystalSol','zCrystalRoche','zCrystalInsecte','zCrystalFantome','zCrystalAcier','zCrystalFeu','zCrystalEau','zCrystalPlante','zCrystalElectrik','zCrystalPsy','zCrystalGlace','zCrystalDragon','zCrystalTenebres','zCrystalFee'] },
   { label: 'Necrozma', tab: '✨ Necrozma', keys: ['prismeCouchant','prismeAurore','ultranecrozium'] },
   { label: 'Mémoires (Silvallié)', tab: '💾 Mémoires', keys: ['memoireCombat','memoireVol','memoirePoison','memoireSol','memoireRoche','memoireInsecte','memoireFantome','memoireAcier','memoireFeu','memoireEau','memoirePlante','memoireElectrik','memoirePsy','memoireGlace','memoireDragon','memoireTenebres','memoireFee'] },
   { label: 'Légendaires de Galar', tab: '⚔️ Galar', keys: ['epeeRouillee','bouclierRouille','parcheminTenebres','parcheminAqua','renePartageGlace','renePartageSpectre'] },
   { label: 'Gigamax', tab: '🔴 Gigamax', keys: ['facteurGigamax'] },
-  { label: 'Téracristallisation', tab: '💎 Tera', keys: ['orbeTera'] }
+  { label: 'Téracristallisation', tab: '💎 Tera', keys: ['orbeTera'] },
+  { label: 'Méga Gemme (Pokémon Légendes Z-A)', tab: '🆕 Méga Z-A', keys: ['dragoninite','victreebelite','clefablite','starminite','meganiumite','feraligite','skarmorite','froslassite','emboarite','excadrite','scolipite','scraftinite','eelektrossite','chandelurite','chesnaughtite','delphoxite','greninjite','pyroarite','floettite','barbaracite','dragalgite','hawluchanite','malamarite','zygardite','drampanite','falinksite'] }
 ];
 // Affiche la boutique du Marchand Itinérant : un onglet par groupe d'objets spéciaux (comme le
 // Pokéshop), pour que le catalogue entier reste accessible sans scroll interminable.

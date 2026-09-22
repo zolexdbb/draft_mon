@@ -56,7 +56,9 @@ const LINES_GEN3 = [
   {name:'Gardevoir',types:['psy','fee'],base:st(68,65,65,125,115,80),abilities:['Synchro','Calque'],extraMoveIds:['moonlight'],forms:{
     gardevoirite:{name:'Méga-Gardevoir',types:['psy','fee'],base:st(68,85,65,165,135,100),abilities:['Aura Féérique']}
   }},
-  {name:'Gallame',types:['psy','combat'],base:st(68,125,65,65,115,80),abilities:['Impassible','Cœur Noble'],extraMoveIds:['swordsdance','leafblade','closecombat','slash','nightslash','brickbreak','bulkup','rocktomb','shadowclaw','stoneedge','earthquake','cometpunch','falseswipe','lowkick','bulldoze','poisonjab','rockslide','reversal']}
+  {name:'Gallame',types:['psy','combat'],base:st(68,125,65,65,115,80),abilities:['Impassible','Cœur Noble'],extraMoveIds:['swordsdance','leafblade','closecombat','slash','nightslash','brickbreak','bulkup','rocktomb','shadowclaw','stoneedge','earthquake','cometpunch','falseswipe','lowkick','bulldoze','poisonjab','rockslide','reversal'],forms:{
+    gallamite:{name:'Méga-Gallame',types:['psy','combat'],base:st(68,165,95,65,115,110),abilities:['Attention']}
+  }}
  ]},
 {id:'surskit',abilities:['Glissade'],moveIds:['quickattack','sweetscent','watergun','whirlwind','gust','aircutter','scaryface','stunspore','airslash','gigadrain','bugbite','fellstinger','hydropump','mudshot','psybeam','takedown','agility','mudslap','protect','waterpulse','thief','facade','aerialace','swift','icywind','endure','sunnyday','raindance','uturn','sleeptalk','waterfall','rest','leechlife','surf','icebeam','blizzard','hurricane','hyperbeam','solarbeam','haze','weatherball','psychup'],
  stages:[
@@ -97,23 +99,33 @@ const LINES_GEN3 = [
   {name:'Delcatty',types:['normal'],base:st(70,65,65,55,55,90)}]},
 {id:'sableye',abilities:['Regard Vif','Insomnia'],moveIds:['leer','tackle','takedown','detect','shadowclaw','confuseray','knockoff','psybeam','nightslash','zenheadbutt','shadowball','recover','phantomforce','calmmind','thunderwave','brickbreak','bulkup','lightscreen','protect','aerialace','thunderpunch','icepunch','dig','firepunch','reflect','bodyslam','nightshade','furyswipes','meanlook','scratch','astonish','fakeout','disable','metalclaw','icywind','mudshot','rocktomb','endure','sunnyday','raindance','sleeptalk','metronome','dazzlinggleam','rest','imprison','darkpulse','skillswap','willowisp','trick','gigadrain','encore','hyperbeam','spite','focuspunch','flatter','suckerpunch','torment','thief','lowkick','mudslap'],
  stages:[
-  {name:'Ténéfix',types:['tenebres','fantome'],base:st(50,75,75,65,65,50)}]},
+  {name:'Ténéfix',types:['tenebres','fantome'],base:st(50,75,75,65,65,50),forms:{
+    tenefixite:{name:'Méga-Ténéfix',types:['tenebres','fantome'],base:st(50,85,125,85,115,20),abilities:['Rebond']}
+  }}]},
 {id:'mawile',abilities:['Hyper Cutter','Intimidation'],moveIds:['bite','fairywind','faketears','knockoff','charm','drainingkiss','irondefense','crunch','ironhead','taunt','playrough','dynamicpunch','headbutt','rocksmash','brickbreak','rockslide','icebeam','protect','poweruppunch','thunderpunch','icepunch','swordsdance','doubleteam','bodyslam','endure','rocktomb','stealthrock','fireblast','hyperbeam','sludgebomb','doubleedge','flashcannon','darkpulse','dazzlinggleam','focusblast','facade','ancientpower','falseswipe','poisonfang','swagger','astonish','growl','batonpass','spitup','stockpile','swallow','suckerpunch','sweetscent','sunnyday','raindance','solarbeam','shadowball','torment','rest','attract','stoneedge','strength','seismictoss','slam','tickle'],
  stages:[
-  {name:'Mysdibule',types:['acier','fee'],base:st(50,85,85,55,55,50)}]},
+  {name:'Mysdibule',types:['acier','fee'],base:st(50,85,85,55,55,50),forms:{
+    mysdibulite:{name:'Méga-Mysdibule',types:['acier','fee'],base:st(50,105,125,55,95,50),abilities:['Force Pure']}
+  }}]},
 {id:'aron',abilities:['Fermeté','Tête de Roc','Turbo Vapeur'],moveIds:['harden','screech','tackle','metalclaw','rocktomb','headbutt','protect','rockslide','ironhead','stridoson','takedown','irontail','irondefense','doubleedge','dragonclaw','thunderwave','brickbreak','icebeam','poweruppunch','thunderpunch','icepunch','crunch','dig','firepunch','bodyslam','endure','stealthrock','fireblast','hyperbeam','mudshot','shadowclaw','flamethrower','solarbeam','stoneedge','thunderbolt','earthquake','whirlpool','surf','dragonpulse','bulldoze','darkpulse','outrage','hydropump','focusblast','blizzard','thunder','facade','ancientpower','swagger','autotomize','curse','endeavor','mudslap','reversal','stomp','superpower','focuspunch','waterpulse','sunnyday','taunt','raindance','shockwave','sandstorm','aerialace','rest','attract','flashcannon','cut','strength','rocksmash','anchorshot','doubleironbash','gearup','smartstrike','sunsteelstrike','behemothbash','behemothblade','shelter','steelbeam','steelroller'],
  stages:[
   {name:'Galekid',types:['acier','roche'],base:st(50,70,100,40,40,30)},
   {name:'Galegon',types:['acier','roche'],base:st(60,90,140,50,50,40)},
-  {name:'Galeking',types:['acier','roche'],base:st(70,110,180,60,60,50)}]},
+  {name:'Galeking',types:['acier','roche'],base:st(70,110,180,60,60,50),forms:{
+    galekingite:{name:'Méga-Galeking',types:['acier'],base:st(70,140,230,60,80,50),abilities:['Filtre']}
+  }}]},
 {id:'meditite',abilities:['Force Pure','Télépathe'],moveIds:['confusion','detect','endure','psybeam','calmmind','zenheadbutt','takedown','agility','recover','dynamicpunch','firepunch','icepunch','thunderpunch','brickbreak','bulkup','rockslide','lightscreen','protect','poweruppunch','aerialace','swift','reflect','bodyslam','rocktomb','hyperbeam','shadowball','poisonjab','taunt','metronome','focusblast','closecombat','cometpunch','facade','fakeout','counter','batonpass','lowkick','thief','sunnyday','raindance','sleeptalk','imprison','skillswap','trick','aurasphere','psychic','reversal','psychicterrain','focuspunch','painsplit'],
  stages:[
   {name:'Méditikka',types:['combat','psy'],base:st(30,40,55,40,55,60)},
-  {name:'Charmina',types:['combat','psy'],base:st(60,60,75,60,75,80)}]},
+  {name:'Charmina',types:['combat','psy'],base:st(60,60,75,60,75,80),forms:{
+    charminite:{name:'Méga-Charmina',types:['combat','psy'],base:st(60,100,85,80,85,100),abilities:['Force Brute']}
+  }}]},
 {id:'electrike',abilities:['Paratonnerre','Statik'],moveIds:['leer','quickattack','tackle','thundershock','thunderwave','spark','bite','eerieimpulse','charge','thunderbolt','thunder','headbutt','icefang','lightscreen','protect','crunch','swift','bodyslam','endure','discharge','hyperbeam','agility','overheat','flamethrower','hypervoice','curse','howl','shockwave','electricterrain','raindance','irontail','doubleteam','rest','attract','thief','flash','sleeptalk','swagger','strength','uproar'],
  stages:[
   {name:'Dynavolt',types:['electrik'],base:st(40,45,40,65,40,65)},
-  {name:'Élecsprint',types:['electrik'],base:st(70,75,60,105,60,105)}]},
+  {name:'Élecsprint',types:['electrik'],base:st(70,75,60,105,60,105),forms:{
+    elecsprintite:{name:'Méga-Élecsprint',types:['electrik'],base:st(70,75,80,135,80,135),abilities:['Intimidation']}
+  }}]},
 {id:'plusle',abilities:['Plus'],moveIds:['growl','playnice','quickattack','thunderwave','spark','encore','swift','charge','discharge','batonpass','agility','thunder','charm','sing','sweetkiss','wish','faketears','mudslap','protect','facade','endure','raindance','thunderpunch','sleeptalk','lightscreen','rest','eerieimpulse','skillswap','thunderbolt','playrough','electricterrain','superfang','uproar','endeavor'],
  stages:[
   {name:'Posipi',types:['electrik'],base:st(60,50,40,85,75,95)}]},
@@ -138,7 +150,9 @@ const LINES_GEN3 = [
 {id:'carvanha',abilities:['Peau Dure','Turbo'],moveIds:['leer','nightslash','focusenergy','bite','screech','crunch','agility','takedown','bounce','doubleedge','slash','icebeam','icefang','protect','swift','endure','rocktomb','hyperbeam','icywind','zenheadbutt','earthquake','whirlpool','surf','poisonjab','darkpulse','taunt','hydropump','waterfall','blizzard','closecombat','facade','ancientpower','skullbash','poisonfang','scaryface','swagger','destinybond','thrash','waterpulse','raindance','doubleteam','torment','rest','attract','thief','sleeptalk','bulldoze','strength','rocksmash'],
  stages:[
   {name:'Carvanha',types:['eau','tenebres'],base:st(45,90,20,65,20,65)},
-  {name:'Sharpedo',types:['eau','tenebres'],base:st(70,120,40,95,40,95)}]},
+  {name:'Sharpedo',types:['eau','tenebres'],base:st(70,120,40,95,40,95),forms:{
+    sharpedite:{name:'Méga-Sharpedo',types:['eau','tenebres'],base:st(70,140,70,110,65,105),abilities:['Mâchouille']}
+  }}]},
 {id:'wailmer',abilities:['Ignifu-Voile','Benêt'],moveIds:['astonish','growl','nobleroar','splash','watergun','mist','waterpulse','whirlpool','dive','bounce','bodyslam','rest','amnesia','hydropump','curse','defensecurl','doubleedge','fissure','rollout','snore','thrash','tickle','zenheadbutt','icebeam','blizzard','hyperbeam','protect','raindance','earthquake','doubleteam','rocktomb','facade','attract','endure','sleeptalk','bulldoze','swagger','surf','strength','rocksmash','waterfall'],
  stages:[
   {name:'Wailmer',types:['eau'],base:st(130,70,35,70,35,60)},
@@ -146,7 +160,9 @@ const LINES_GEN3 = [
 {id:'numel',abilities:['Benêt','Tempo Perso'],moveIds:['growl','tackle','ember','focusenergy','bulldoze','amnesia','curse','takedown','earthquake','flamethrower','doubleedge','rockslide','headbutt','protect','dig','bodyslam','endure','rocktomb','stealthrock','fireblast','hyperbeam','selfdestruct','overheat','willowisp','ironhead','zenheadbutt','stoneedge','heatwave','firespin','flashcannon','facade','ancientpower','fissure','eruption','yawn','swallow','spitup','stockpile','scaryface','howl','rollout','defensecurl','growth','stomp','charm','mudslap','mudshot','sunnyday','raindance','sandstorm','sleeptalk','rest','endeavor','solarbeam'],
  stages:[
   {name:'Chamallot',types:['feu','sol'],base:st(60,60,40,65,45,35)},
-  {name:'Camérupt',types:['feu','sol'],base:st(70,100,70,105,75,40)}]},
+  {name:'Camérupt',types:['feu','sol'],base:st(70,100,70,105,75,40),forms:{
+    camerouptite:{name:'Méga-Camérupt',types:['feu','sol'],base:st(70,120,100,145,105,20),abilities:['Sans Limite']}
+  }}]},
 {id:'torkoal',abilities:['Écran Fumée','Sécheresse'],moveIds:['ember','smog','withdraw','rapidspin','smokescreen','flamewheel','protect','bodyslam','irondefense','flamethrower','curse','heatwave','amnesia','eruption','ancientpower','fissure','flail','yawn','takedown','firespin','facade','bulldoze','rocktomb','endure','sunnyday','sandstorm','zenheadbutt','sleeptalk','rest','rockslide','willowisp','stealthrock','fireblast','sludgebomb','earthquake','stoneedge','overheat','hyperbeam','solarbeam','weatherball','doubleedge'],
  stages:[
   {name:'Chartor',types:['feu'],base:st(70,85,140,85,70,20)}]},
@@ -171,7 +187,9 @@ const LINES_GEN3 = [
 {id:'swablu',abilities:['Médic Nature','Ciel Gris'],moveIds:['growl','peck','disarmingvoice','mist','dragonbreath','safeguard','twister','takedown','moonblast','featherdance','dragonpulse','dragonclaw','icebeam','protect','playrough','aerialace','swift','bodyslam','endure','fly','hyperbeam','agility','dracometeor','willowisp','flamethrower','solarbeam','heatwave','earthquake','hypervoice','firespin','bulldoze','hurricane','dazzlinggleam','outrage','facade','sing','astonish','haze','furyattack','thief','fireblast','sleeptalk','rest','dragondance','weatherball','doubleedge','endeavor'],
  stages:[
   {name:'Tylton',types:['normal','vol'],base:st(45,40,60,40,75,50)},
-  {name:'Altaria',types:['dragon','vol'],base:st(75,70,90,70,105,80)}]},
+  {name:'Altaria',types:['dragon','vol'],base:st(75,70,90,70,105,80),forms:{
+    altarite:{name:'Méga-Altaria',types:['dragon','fee'],base:st(75,110,110,110,105,80),abilities:['Féerisation']}
+  }}]},
 {id:'zangoose',abilities:['Vaccin'],moveIds:['leer','tackle','quickattack','metalclaw','slash','nightslash','falseswipe','dig','detect','taunt','swordsdance','closecombat','headbutt','thunderwave','brickbreak','rockslide','icebeam','protect','aerialace','thunderpunch','icepunch','swift','firepunch','bodyslam','knockoff','agility','endure','rocktomb','fireblast','hyperbeam','zenheadbutt','shadowclaw','flamethrower','solarbeam','thunderbolt','surf','shadowball','poisonjab','irontail','curse','focusblast','blizzard','thunder','cometpunch','facade','fakeout','razorwind','skullbash','scratch','furycutter','counter','disable','doublekick','flail','furyswipes','takedown','lowkick','thief','sunnyday','raindance','sleeptalk','rest','aurasphere','batonpass','reversal','endeavor'],
  stages:[
   {name:'Mangriff',types:['normal'],base:st(73,115,60,60,60,90)}]},
@@ -217,7 +235,9 @@ const LINES_GEN3 = [
 {id:'shuppet',abilities:['Insomnia','Corps Maudit'],moveIds:['lick','screech','slash','confuseray','knockoff','willowisp','shadowclaw','curse','shadowball','swordsdance','phantomforce','headbutt','calmmind','thunderwave','protect','bodyslam','endure','hyperbeam','zenheadbutt','psychic','thunderbolt','darkpulse','taunt','metronome','thunder','facade','torment','dreameater','swagger','razorwind','iciclespear','nightshade','spite','suckerpunch','trick','scaryface','psybeam','thief','icywind','sunnyday','raindance','sleeptalk','dazzlinggleam','skillswap','rest','destinybond','disable','imprison'],
  stages:[
   {name:'Polichombr',types:['fantome'],base:st(44,75,35,63,33,45)},
-  {name:'Branette',types:['fantome'],base:st(64,115,65,83,63,65)}]},
+  {name:'Branette',types:['fantome'],base:st(64,115,65,83,63,65),forms:{
+    branettite:{name:'Méga-Branette',types:['fantome'],base:st(64,165,75,93,83,75),abilities:['Farceur']}
+  }}]},
 {id:'duskull',abilities:['Lévitation'],moveIds:['astonish','bind','disable','firepunch','icepunch','leer','shadowpunch','thunderpunch','confuseray','nightshade','willowisp','meanlook','curse','shadowball','futuresight','destinybond','protect','thief','facade','swift','icywind','rocktomb','endure','sunnyday','raindance','brickbreak','bodyslam','sleeptalk','metronome','rest','rockslide','taunt','imprison','darkpulse','leechlife','skillswap','trick','psychic','calmmind','icebeam','blizzard','earthquake','phantomforce','focusblast','hyperbeam','haze','spite'],
  stages:[
   {name:'Skelénox',types:['fantome'],base:st(20,40,90,30,90,25)},
@@ -232,12 +252,18 @@ const LINES_GEN3 = [
   {name:'Éoko',types:['psy'],base:st(65,50,70,95,80,65)}]},
 {id:'absol',abilities:['Pression'],moveIds:['confuseray','leer','quickattack','knockoff','detect','swordsdance','slash','nightslash','doubleteam','taunt','shadowclaw','focusenergy','airslash','futuresight','perishsong','phantomforce','calmmind','thunderwave','rockslide','icebeam','protect','playrough','aerialace','swift','bodyslam','endure','rocktomb','fireblast','hyperbeam','doubleedge','willowisp','zenheadbutt','stoneedge','thunderbolt','shadowball','darkpulse','blizzard','thunder','closecombat','facade','falseswipe','razorwind','waterpulse','sunnyday','raindance','irontail','shockwave','sandstorm','torment','rest','attract','thief','flash','psychup','sleeptalk','dreameater','swagger','cut','strength','rocksmash','bite','curse','meanlook','megahorn','suckerpunch'],
  stages:[
-  {name:'Absol',types:['tenebres'],base:st(65,130,60,75,60,75)}]},
+  {name:'Absol',types:['tenebres'],base:st(65,130,60,75,60,75),forms:{
+    absolite:{name:'Méga-Absol',types:['tenebres'],base:st(65,150,60,115,60,115),abilities:['Rebond']}
+  }}]},
 {id:'snorunt',abilities:['Attention','Rideau Neige'],moveIds:['astonish','bite','blizzard','block','bodyslam','crunch','disable','doubleteam','endure','facade','faketears','headbutt','hyperbeam','icebeam','icefang','iciclespear','leer','lightscreen','powdersnow','protect','raindance','rest','rollout','scaryface','shadowball','sheercold','sleeptalk','spikes','spite','taunt','waterpulse','weatherball'],
  stages:[
   {name:'Stalgamin',types:['glace'],base:st(50,50,50,50,50,50)}], branches:[
-  {name:'Oniglali',types:['glace'],base:st(80,80,80,80,80,80),abilities:['Attention','Rideau Neige'],extraMoveIds:['bulldoze','darkpulse','earthquake','explosion','freezedry','icywind','ironhead','skullbash','takedown']},
-  {name:'Momartik',types:['glace','fantome'],base:st(70,80,70,80,70,110),abilities:['Rideau Neige','Corps Maudit'],extraMoveIds:['charm','confuseray','curse','destinybond','drainingkiss','haze','imprison','nightshade','painsplit','petaldance','phantomforce','icepunch','psychic','psychup','reflect','thunder','thunderbolt','thunderwave','trick','willowisp']}
+  {name:'Oniglali',types:['glace'],base:st(80,80,80,80,80,80),abilities:['Attention','Rideau Neige'],extraMoveIds:['bulldoze','darkpulse','earthquake','explosion','freezedry','icywind','ironhead','skullbash','takedown'],forms:{
+    oniglalite:{name:'Méga-Oniglali',types:['glace'],base:st(80,120,80,120,80,100),abilities:['Glaciation']}
+  }},
+  {name:'Momartik',types:['glace','fantome'],base:st(70,80,70,80,70,110),abilities:['Rideau Neige','Corps Maudit'],extraMoveIds:['charm','confuseray','curse','destinybond','drainingkiss','haze','imprison','nightshade','painsplit','petaldance','phantomforce','icepunch','psychic','psychup','reflect','thunder','thunderbolt','thunderwave','trick','willowisp'],forms:{
+    froslassite:{name:'Méga-Momartik',types:['glace','fantome'],base:st(70,80,70,140,100,120),abilities:['Alerte Neige']}
+  }}
  ]},
 {id:'spheal',abilities:['Isograisse','Benêt'],moveIds:['rollout','powdersnow','waterpulse','rest','icebeam','blizzard','aquatail','babydolleyes','bulldoze','hyperbeam','icefang','icywind','ironhead','irontail','rockslide','rocksmash','surf','encore','bodyslam','protect','raindance','doubleteam','facade','attract','endure','sleeptalk','swagger','waterfall','dive'],
  stages:[
@@ -261,7 +287,9 @@ const LINES_GEN3 = [
  stages:[
   {name:'Draby',types:['dragon'],base:st(45,75,60,40,30,50)},
   {name:'Drackhaus',types:['dragon'],base:st(65,95,100,60,50,50)},
-  {name:'Drattak',types:['dragon','vol'],base:st(95,135,80,110,80,100)}]},
+  {name:'Drattak',types:['dragon','vol'],base:st(95,135,80,110,80,100),forms:{
+    drattakite:{name:'Méga-Drattak',types:['dragon','vol'],base:st(95,145,130,120,90,120),abilities:['Aérisation']}
+  }}]},
 {id:'beldum',abilities:['Corps Sain',"Esprit d'Acier"],moveIds:['metalclaw','tackle','zenheadbutt','flashcannon','takedown','psychic','ironhead','irondefense','hyperbeam','scaryface','meteormash','agility','explosion','mudslap','protect','facade','aerialace','bulldoze','icywind','rocktomb','endure','sunnyday','raindance','sandstorm','brickbreak','shadowclaw','bodyslam','thunderpunch','icepunch','sleeptalk','reflect','lightscreen','rest','rockslide','trick','shadowball','stealthrock','sludgebomb','earthquake','stoneedge','knockoff','focuspunch','psychup','doubleedge','futuresight','headbutt','swift','skullbash','confusion','steelwing','irontail','autotomize','shiftgear','extrasensory','calmmind','cosmicpower','dig','anchorshot','doubleironbash','gearup','smartstrike','sunsteelstrike'],
  stages:[
   {name:'Terhal',types:['acier','psy'],base:st(40,55,80,35,60,30)},

@@ -322,5 +322,20 @@ const ABILITY_DESC = {
   'Marionnettiste Empoisonneur':"Rend l'adversaire confus dès qu'il est empoisonné par une capacité du porteur.",
   'Synchro Masque':"Le masque porté détermine la statistique boostée lorsque le porteur se Téracristallise.",
   'Téraforme Zéro':"Change de Forme Stellaire à la Téracristallisation, révélant tout son potentiel caché.",
-  'Coque Tera':"Tant que le porteur est à PV max, tous les coups qu'il subit sont peu efficaces, quel que soit leur type."
+  'Coque Tera':"Tant que le porteur est à PV max, tous les coups qu'il subit sont peu efficaces, quel que soit leur type.",
+  /* ---- BLOC : nouveaux talents de Méga-Évolution (Pokémon Légendes Z-A, v0.10.1) ---- */
+  'Multi-Écaille':"Réduit fortement les dégâts subis tant que le porteur est à PV max.",
+  'Boyaux Dehors':"Inflige à l'attaquant qui met le porteur K.O. par un coup direct des dégâts égaux aux PV qu'il lui restait.",
+  'Inflexible':"Ignore les talents et capacités qui redirigent les capacités vers un autre Pokémon.",
+  'Furie Ultime':"Booste fortement l'Attaque Spéciale quand les PV du porteur passent sous la moitié.",
+  'Foreuse Perçante':"Les capacités de contact du porteur touchent même les cibles protégées.",
+  'Survoltage':"Lévite et booste fortement sa statistique la plus élevée après avoir mis K.O. un Pokémon.",
+  'Crinière Ardente':"Renforce fortement les capacités de type Feu du porteur.",
+  'Zénith Suprême':"Invoque un fort ensoleillement à l'entrée en jeu du porteur.",
+  'Dracomorphose':"Transforme les capacités de type Normal du porteur en capacités de type Dragon.",
+  /* ---- BLOC : nouveaux talents de Méga-Évolution classiques (Kalos, complétion v0.10.2) ---- */
+  'Féerisation':"Transforme les capacités de type Normal du porteur en capacités de type Fée, et en augmente légèrement la puissance.",
+  'Glaciation':"Transforme les capacités de type Normal du porteur en capacités de type Glace, et en augmente légèrement la puissance.",
+  'Aérisation':"Transforme les capacités de type Normal du porteur en capacités de type Vol, et en augmente légèrement la puissance.",
+  'Force Brute':"Double l'Attaque du porteur, mais ses statistiques réelles ne sont pas modifiées pour le calcul d'autres effets."
 };
