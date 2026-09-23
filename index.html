@@ -19,23 +19,51 @@
   <div class="panel" id="screenMenu">
     <button class="menu-splash" id="splashTextBtn">Gen 3 is here!!!</button>
     <div class="menu-illustration" aria-hidden="true">
-      <div class="menu-stairs">
-        <div class="menu-stair-hl" style="top:4%;left:0%;right:87.5%;"></div>
-        <div class="menu-stair-hl" style="top:16%;left:12.5%;right:75%;"></div>
-        <div class="menu-stair-hl" style="top:28%;left:25%;right:62.5%;"></div>
-        <div class="menu-stair-hl" style="top:40%;left:37.5%;right:50%;"></div>
-        <div class="menu-stair-hl" style="top:52%;left:50%;right:37.5%;"></div>
-      </div>
-      <div class="menu-trainer">
-        <div class="mt-leg mt-leg-back"></div>
-        <div class="mt-leg mt-leg-front"></div>
-        <div class="mt-torso"></div>
-        <div class="mt-arm mt-arm-back"></div>
-        <div class="mt-arm mt-arm-front"></div>
-        <div class="mt-head"></div>
-        <div class="mt-cap"></div>
-        <div class="mt-cap-brim"></div>
-      </div>
+      <svg viewBox="0 0 400 300" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="menuStairFill" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#3A2E48"/><stop offset=".55" stop-color="#262231"/><stop offset="1" stop-color="#181922"/>
+          </linearGradient>
+          <linearGradient id="menuStairFade" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset=".6" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity=".2"/>
+          </linearGradient>
+          <linearGradient id="menuStairFadeX" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity="1"/>
+          </linearGradient>
+          <mask id="menuStairMask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="600" height="500"><rect x="0" y="0" width="400" height="300" fill="url(#menuStairFade)"/></mask>
+          <mask id="menuStairMaskX" maskUnits="userSpaceOnUse" x="-100" y="-100" width="600" height="500"><rect x="0" y="0" width="400" height="300" fill="url(#menuStairFadeX)"/></mask>
+        </defs>
+        <g mask="url(#menuStairMask)">
+          <g mask="url(#menuStairMaskX)">
+            <g id="menuStairScroll">
+              <path id="menuStairBody" fill="url(#menuStairFill)"/>
+              <path id="menuStairRisers" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+              <path id="menuStairTreads" fill="none" stroke="rgba(246,216,136,.34)" stroke-width="2" stroke-linecap="round"/>
+            </g>
+          </g>
+        </g>
+        <g id="menuTrainer" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path id="menuLegB" stroke="#3F3253" stroke-width="9"/>
+          <rect id="menuShoeB" width="19" height="4" rx="2" fill="#241D2E" stroke="none"/>
+          <path id="menuLegA" stroke="#4A3B5F" stroke-width="9"/>
+          <rect id="menuShoeA" width="19" height="4" rx="2" fill="#241D2E" stroke="none"/>
+          <g id="menuBody">
+            <g id="menuChest">
+              <rect x="183" y="64" width="13" height="28" rx="4" fill="#E8B23D" fill-opacity=".7" stroke="none"/>
+              <path id="menuArmBack" stroke="#46385A" stroke-width="7"/>
+            </g>
+            <path d="M194 104L200 68" stroke="#55446A" stroke-width="17"/>
+            <g id="menuChestFront">
+              <path id="menuArmFront" stroke="#5E4C75" stroke-width="7"/>
+            </g>
+            <g id="menuHead">
+              <circle cx="204" cy="53" r="10" fill="#4A3B5C" stroke="none"/>
+              <path d="M192.5 52A11.5 11.5 0 0 1 215.5 52Z" fill="#E8B23D" stroke="none"/>
+              <rect x="209" y="50" width="14" height="4" rx="2" fill="#E8B23D" stroke="none"/>
+            </g>
+          </g>
+        </g>
+      </svg>
     </div>
     <div class="menu-content">
       <div style="margin:0 0 14px;">
@@ -78,14 +106,6 @@
       <div id="dexRarityFilter" style="min-width:150px;"></div>
       <button class="btn secondary" id="dexResetFilter" style="padding:6px 12px;font-size:11px;">✕ Reset</button>
     </div>
-    <div id="devDexSelectBar" class="dev-dex-select-bar hidden">
-      <div class="dev-dex-select-info">🧬 Sélection équipe dev — <span id="devDexSelectCount">0</span>/6</div>
-      <div id="devDexSelectChips" class="dev-dex-select-chips"></div>
-      <div class="dev-dex-select-actions">
-        <button class="btn secondary" id="devDexCancelBtn" style="padding:8px 14px;font-size:10px;">Annuler</button>
-        <button class="btn" id="devDexConfirmBtn" style="padding:8px 14px;font-size:10px;" disabled>Valider l'équipe</button>
-      </div>
-    </div>
     <div class="draft-cards" id="dexGrid"></div>
   </div>
 
@@ -124,37 +144,6 @@
         <button class="btn" id="fightBtn">Combattre</button>
         <button class="btn secondary" id="towerBagBtn">🎒 Sac</button>
         <button class="btn secondary" id="towerTeamBtn">👥 Équipe</button>
-      </div>
-    </div>
-    <div id="devTowerPanel" class="dev-tower-panel hidden">
-      <div class="dev-tower-panel-header" id="devTowerToggleBtn">🛠️ Outils Développeur</div>
-      <div class="dev-tower-panel-body hidden" id="devTowerPanelBody">
-        <div class="dev-tower-row">
-          <label>Étage :</label>
-          <input type="number" id="devTowerFloorInput" min="1" max="999" value="1">
-          <button class="btn secondary" id="devTowerFloorApplyBtn" style="width:auto;padding:6px 12px;font-size:10px;">Aller à cet étage</button>
-        </div>
-        <div class="dev-tower-row">
-          <button class="btn secondary" id="devTowerVillageBtn" style="width:auto;padding:6px 12px;font-size:10px;">🏘️ Aller au Village</button>
-        </div>
-        <div class="dev-tower-row">
-          <label>Event :</label>
-          <select id="devTowerEventSelect"></select>
-          <button class="btn secondary" id="devTowerEventTriggerBtn" style="width:auto;padding:6px 12px;font-size:10px;">Déclencher</button>
-        </div>
-        <div class="dev-tower-row">
-          <label>Dresseur :</label>
-          <select id="devTowerKindSelect">
-            <option value="normal">Normal</option>
-            <option value="miniboss">⭐ Mini-Boss</option>
-            <option value="boss">👑 Maître de Type</option>
-            <option value="twin">👯 Jumeaux (combat double)</option>
-          </select>
-          <select id="devTowerBossTypeSelect" disabled></select>
-        </div>
-        <div class="dev-tower-row">
-          <button class="btn" id="devTowerFightBtn" style="width:auto;padding:8px 14px;font-size:10px;">⚔️ Combattre ce dresseur</button>
-        </div>
       </div>
     </div>
   </div>
@@ -455,10 +444,19 @@
 <script src="ui/editor.js"></script>
 <script src="ui/dropdowns.js"></script>
 <script src="ui/screens.js"></script>
+<script src="ui/menu-stairs.js"></script>
 <script src="ui/music.js"></script>
 <script src="ui/bag-modal.js"></script>
 <script src="ui/dex-viewer.js"></script>
 <script src="ui/patch-notes.js"></script>
-<script src="ui/dev-mode.js"></script>
+<script>
+  // Outils de développement : fichier local non versionné (*.local.js dans .gitignore), chargé seulement
+  // en local (localhost, réseau privé, file://) pour ne pas provoquer d'erreur 404 en ligne.
+  (function(){
+    var h = location.hostname;
+    var isLocal = location.protocol === 'file:' || /^(localhost|127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h) || /\.local$/.test(h);
+    if(isLocal) document.write('<script src="ui/dev-mode.local.js"><\/script>');
+  })();
+</script>
 </body>
 </html>

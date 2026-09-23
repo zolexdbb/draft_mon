@@ -55,12 +55,9 @@ function renderDex(){
         <div class="stat-line">AtqSp ${sp.base.spa} · DéfSp ${sp.base.spd} · Vit ${sp.base.spe}</div>
         <div class="dex-rate">${rateText}</div>
       `;
-      if(typeof devDexSelectMode!=='undefined' && devDexSelectMode){
+      if(window.DEV_HOOKS){
         const entry = { lineId: line.id, stage: isBranch ? line.stages.length-1 : stageIdx, branch: isBranch ? branchIdx : null };
-        if(devDexSelectionHas(entry)) card.classList.add('selected');
-        card.onclick = ()=> toggleDevDexSelection(entry);
-      } else if(sp.name===DEV_TRIGGER_NAME){
-        card.onclick = handleDevTriggerClick;
+        window.DEV_HOOKS.decorateDexCard(card, sp, entry);
       }
       grid.appendChild(card);
       count++;

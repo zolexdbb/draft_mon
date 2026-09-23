@@ -152,7 +152,7 @@ function renderTower(reward){
   if(rewardEl){
     rewardEl.textContent = reward ? `+${reward} 💰 gagnés au combat précédent !` : '';
   }
-  renderDevTowerPanel();
+  if(window.DEV_HOOKS) window.DEV_HOOKS.renderTowerPanel();
   saveGame();
 }
 document.getElementById('fightBtn').onclick = ()=>{ startBattle(); };

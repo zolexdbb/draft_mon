@@ -1,0 +1,3 @@
+﻿# Outils de développement locaux (jamais versionnés)
+*.local.js
+*.local.css

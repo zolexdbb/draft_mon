@@ -23,7 +23,7 @@ function renderVillage(reward, newBadgeType){
 // fixe, une place par emplacement d'équipe — occupée par le pokémon correspondant s'il est vivant,
 // ou simplement une bûche vide sinon (jamais de siège qui disparaît/se déplace selon l'équipe).
 const VILLAGE_LOG_SEATS = [
-  {x:26,y:92},{x:33,y:87},{x:46,y:96},{x:58,y:96},{x:67,y:87},{x:74,y:92}
+  {x:29,y:96},{x:40,y:91},{x:45,y:98},{x:52,y:98},{x:57,y:91},{x:68,y:96}
 ];
 // Dispose toute l'équipe du joueur sur les 6 bûches autour du feu de camp (coordonnées en % du
 // plan). Chaque membre vivant occupe toujours la même bûche (son rang dans l'équipe) ; les

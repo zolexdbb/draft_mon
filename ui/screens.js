@@ -164,7 +164,7 @@ document.getElementById('menuDexBtn').onclick = ()=>{
   renderDex();
 };
 document.getElementById('dexBackBtn').onclick = ()=>{
-  if(typeof devDexSelectMode!=='undefined' && devDexSelectMode) exitDevDexSelectMode();
+  if(window.DEV_HOOKS) window.DEV_HOOKS.leaveDex();
   showScreen('screenMenu');
 };
 document.getElementById('draftHomeBtn').onclick = ()=> showScreen('screenMenu');

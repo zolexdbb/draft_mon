@@ -134,9 +134,9 @@ function boxIdFor(combatant){
 // déclenche les effets d'entrée (Intimidation, météo/terrain auto).
 function startBattle(){
   let isDouble, trainer, trainer2, enemyTeam;
-  if(typeof devEncounterOverride!=='undefined' && devEncounterOverride){
-    ({ trainer, trainer2, isDouble, enemyTeam } = devEncounterOverride);
-    devEncounterOverride = null;
+  const forcedEncounter = window.DEV_HOOKS ? window.DEV_HOOKS.takeEncounter() : null;
+  if(forcedEncounter){
+    ({ trainer, trainer2, isDouble, enemyTeam } = forcedEncounter);
   } else if(isTwinFloor(towerFloor)){
     isDouble = true;
     const twins = generateTwinTrainers(towerFloor);

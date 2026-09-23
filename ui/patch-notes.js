@@ -56,6 +56,47 @@ const PATCH_NOTES = [
             ]
           }
         ]
+      },
+      {
+        version: 'v0.10.2',
+        title: 'v0.10.2 — Refonte visuelle : Combat, Campement & Accueil',
+        categories: [
+          {
+            icon: '⚔️', label: 'Écran de combat',
+            items: [
+              "L'écran de combat occupe désormais tout l'écran, sur téléphone comme sur ordinateur, et tient entièrement dans la fenêtre sans avoir à défiler",
+              "Vraie arène de combat en arrière-plan : classique (violette) contre un dresseur normal, et aux couleurs du type du Maître de Type affronté (Eau = bleue, Feu = orange, Glace = bleu clair, Normal = neutre...) avec brume, sol dégradé et zone au sol sous chaque combattant",
+              "L'arène et le module d'actions forment une seule fenêtre de combat : l'adversaire en haut à droite (sprite agrandi, barre de PV au-dessus), ton Pokémon en bas à gauche, puis l'historique, les mécaniques et les attaques regroupés en bas à droite",
+              "Les 3 boutons de mécanique (Dynamax, Méga, Téracristallisation) sont toujours affichés, à la même hauteur exacte que la grille des attaques, et la Capacité Z passe dans une bannière dédiée quand elle est disponible",
+              "« Changer de Pokémon » et « Sac » sont rangés derrière un bouton hamburger qui les révèle au clic"
+            ]
+          },
+          {
+            icon: '🏕️', label: 'Campement',
+            items: [
+              "Le Campement est entièrement refait en plein écran, comme une vraie scène : bâtiments dessinés (Centre Pokémon, Poké Mart, Ranch avec sa clôture et sa grange, échoppe du Marchand Itinérant) au lieu d'icônes",
+              "Toute ton équipe en vie est installée autour du feu de camp, chaque Pokémon sur sa propre bûche (6 places), et les 3 Pokémon proposés par le Ranch sont visibles directement dans son enclos",
+              "Le bâtiment « Équipe » est remplacé par un bouton hamburger donnant accès à la modification d'équipe et au sac",
+              "Ambiance de camp installé à l'intérieur de la Tour : grande salle de pierre avec arche et piliers, plafond qui se perd dans le noir, torches, bannières, tour de guet, tentes en retrait, brume et braises qui montent du feu",
+              "Les Pokémon du camp et de l'enclos sont nettement agrandis pour être plus visibles"
+            ]
+          },
+          {
+            icon: '🏠', label: 'Accueil',
+            items: [
+              "Le logo de tour à côté du titre est retiré et « Tour de Combat » passe sous « Draft Mon »",
+              "Le texte d'accroche penché est plus grand, plus net, et n'est plus coupé par le haut de la page",
+              "Nouvelle animation en bas à droite : un dresseur gravit un escalier en restant sur place pendant que l'escalier défile, avec une vraie marche (pieds posés sur les marches, balancement des jambes et des bras, buste et tête vivants). L'escalier colle au bas de la page, et l'animation reste visible en arrière-plan sur mobile"
+            ]
+          },
+          {
+            icon: '📱', label: 'Adaptation à tous les écrans',
+            items: [
+              "Tous les écrans s'adaptent au téléphone (portrait et paysage), à la tablette et à l'ordinateur : tailles des Pokémon en combat ajustées à la hauteur disponible, combats en double et bannière des jumeaux compactés, Campement sans défilement en paysage",
+              "Les fenêtres (sac, équipe, Ranch, notes de mise à jour...) ne dépassent plus de l'écran, et les grilles du Dex, du draft et de l'équipe passent sur deux colonnes sur les écrans moyens"
+            ]
+          }
+        ]
       }
     ]
   },
