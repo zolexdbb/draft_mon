@@ -459,6 +459,7 @@ select option{
   content:''; position:absolute; top:50%; left:50%; width:7px; height:7px;
   background:#eef3f8; border:1.5px solid #16263a; border-radius:50%; transform:translate(-50%,-50%);
 }
+.hazard-chip{ display:inline-flex; align-items:center; justify-content:center; height:20px; min-width:20px; padding:0 5px; margin-left:4px; border-radius:10px; font-size:11px; font-weight:800; color:var(--text-main); background:rgba(232,178,61,.16); border:1px solid rgba(232,178,61,.5); }
 .pokeball-icon.alive{ opacity:1; }
 .pokeball-icon.fainted{ filter:grayscale(1); opacity:.3; }
 .pokeball-icon.active{ box-shadow:0 0 0 2px var(--accent), 0 0 8px rgba(232,178,61,.6); }

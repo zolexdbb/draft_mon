@@ -60,8 +60,8 @@ function fadeAudioTo(audio, targetVolume, duration){
   const start = audio.volume;
   const startTime = performance.now();
   function step(now){
-    const t = Math.min(1, (now - startTime) / duration);
-    audio.volume = start + (targetVolume - start) * t;
+    const t = Math.max(0, Math.min(1, (now - startTime) / duration));
+    audio.volume = Math.max(0, Math.min(1, start + (targetVolume - start) * t));
     if(t < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);

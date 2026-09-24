@@ -19,6 +19,7 @@
    - L.1161-1187: replaceFoeSlot — l'IA envoie son prochain Pokémon après un K.O. adverse
    - L.1189-fin : showSwitchPrompt — écran de choix du prochain Pokémon après un K.O. du joueur
 ==== */
+const FREEZE_MAX_TURNS = 3;
 function freshBattleFields(){
   return { stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status:null, sleepCounter:0, confuseCounter:0, flinched:false, protectChain:0 };
 }
@@ -44,6 +45,33 @@ function resetBattleFields(c){
   c.disguiseBroken = false;
   c.schoolBroken = false;
   c.shieldsBroken = false;
+  restoreStashedItem(c);
+  if(c.roosted){ c.transformedTypes = c.roostTypes || null; c.roosted = false; }
+  c.substitute = 0; c.helped = false; c.aquaRing = false; c.magnetRise = 0; c.telekinesis = 0; c.healBlock = 0; c.embargoTurns = 0;
+  c.smackDown = false; c.miracleEyed = false; c.electrified = false; c.powdered = false; c.quickGuard = false; c.wideGuard = false;
+  c.hitsTaken = 0; c.usedMoveNames = null; c.protectPunish = null;
+  c.mustRecharge = false;
+  c.contMove = null;
+  c.contTurns = 0;
+  c.bideStored = 0;
+  c.streak = 0;
+  c.streakMove = null;
+  c.actedTurns = 0;
+  c.hitThisTurn = false;
+  c.hitPhysThisTurn = false;
+  c.throatChop = 0;
+  c.infatuated = false;
+  c.encoreTurns = 0;
+  c.tormented = false;
+  c.foresighted = false;
+  c.destinyBond = false;
+  c.grudge = false;
+  c.magicCoat = false;
+  c.imprisoning = false;
+  c.snatching = false;
+  c.nightmare = false;
+  c.freezeTurns = c.status==='gel' ? c.freezeTurns : 0;
+  if(!c.teraActive) c.transformedTypes = null;
 }
 // Couleur "arène classique" (violet fantôme neutre) utilisée pour un dresseur normal, reprise
 // telle quelle du canevas de référence (rgba(155,120,200,...) partout dans Battle.dc.html).
@@ -159,7 +187,7 @@ function startBattle(){
       lineId:m.lineId, name:sp.name, types:sp.types, unownForm:m.unownForm, moves:m.moves.map(mid=>MOVES[mid]), ppCur: m.moves.map(mid=>basePP(MOVES[mid])),
       ability: m.ability || (sp.abilities||lineOf(m.lineId).abilities)[0],
       heldItem: m.heldItem || null, itemUsed:false, teraType: m.teraType || sp.types[0],
-      stats:m.computedStats, maxHp, hp,
+      stats:m.computedStats, ivs:m.ivs, maxHp, hp,
       stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status, sleepCounter, confuseCounter:0, flinched:false, protectChain:0
     };
   });
@@ -176,7 +204,7 @@ function startBattle(){
     player: playerRoster, foe: enemyTeam,
     pActive: aliveIdxs[0], pActive2: (isDouble && aliveIdxs.length>1) ? aliveIdxs[1] : null,
     fActive: 0, fActive2: (isDouble && enemyTeam.length>1) ? 1 : null,
-    locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null, terrain:null,
+    locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null, terrain:null, hazards: freshHazards(), pledgeFx: freshPledgeFx(),
     pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false, dynamaxUsed:false, declaringDynamax:false, teraUsed:false, declaringTera:false
   };
   battleInProgress = true;
@@ -218,6 +246,17 @@ function startSlotSelection(slot){
     return;
   }
   const p = bs.player[idx];
+  if(p.mustRecharge){
+    bs.pendingActions.push({ actor:p, move:p.moves[0], target: aliveFoeCombatants()[0] || null, isPlayer:true, slot });
+    advanceAfterSlot(slot);
+    return;
+  }
+  if(p.contMove && (p.contTurns>0 || p.contMove.bide)){
+    const target = aliveFoeCombatants()[0] || null;
+    bs.pendingActions.push({ actor:p, move:p.contMove, target, isPlayer:true, slot });
+    advanceAfterSlot(slot);
+    return;
+  }
   if(p.chargingMove){
     const target = (p.chargingTarget && p.chargingTarget.hp>0) ? p.chargingTarget : aliveFoeCombatants()[0];
     bs.pendingActions.push({ actor:p, move:p.chargingMove, target, isPlayer:true, slot });
@@ -296,6 +335,7 @@ function playerAttack(moveIdx, targetIdx){
 // Priorité effective d'un coup (talents qui la modifient, ex. Ailes Cyclone pour les capacités Vol).
 function effectivePriority(actor, move){
   let p = move.priority||0;
+  if(move.grassyGlide && battleState && battleState.terrain && battleState.terrain.type==='grassy') p += 1;
   if(actor.ability==='Ailes Cyclone' && move.type==='vol') p += 1;
   return p;
 }
@@ -307,18 +347,26 @@ function resolveTurn(actions){
     const pa = effectivePriority(a.actor, a.move), pb = effectivePriority(b.actor, b.move);
     if(pa!==pb) return pb-pa;
     const sa = effectiveSpeed(a.actor), sb = effectiveSpeed(b.actor);
-    if(sa!==sb) return sb-sa;
+    if(sa!==sb) return (bs.trickRoomTurns>0) ? sa-sb : sb-sa;
     return Math.random()<0.5 ? -1 : 1;
   });
+  bs.turnQueue = sorted;
   runQueue(sorted, 0);
 }
 // Exécute la file d'actions triée une par une (runStep), en sautant les combattants K.O. et en redirigeant vers une cible de secours si la cible d'origine est tombée entre-temps.
 function runQueue(queue, i){
   const bs = battleState;
   if(i>=queue.length || allFainted(bs.foe) || allFainted(bs.player)){ afterResolveTurn(); return; }
+  if(queue[i].actor.hp>0) mergePledge(queue, i);
   const action = queue[i];
+  bs.turnIdx = i;
   if(action.actor.hp<=0){ runQueue(queue, i+1); return; }
   let target = action.target;
+  if(target && bs.redirect && action.move.target!=='self' && action.move.cat!=='status'){
+    const tl = locateActiveSlot(target);
+    const red = tl ? bs.redirect[tl.side] : null;
+    if(red && red.hp>0 && red!==target && locateActiveSlot(red)) target = red;
+  }
   if(target && target.hp<=0 && action.move.target!=='self'){
     const replacement = action.isPlayer ? aliveFoeCombatants().find(c=>c!==target) : alivePlayerCombatants().find(c=>c!==target);
     if(replacement) target = replacement;
@@ -342,7 +390,7 @@ function doVoluntarySwitch(i, slot){
   leaving.chargingMove = null;
   leaving.chargingTarget = null;
   leaving.invulnType = null;
-  let switchMsg = '';
+  let switchMsg = pursuitBeforeSwitch(leaving);
   if(leaving.ability==='Régé-Force' && leaving.hp>0){
     const heal = Math.max(1, Math.round(leaving.maxHp/3));
     leaving.hp = Math.min(leaving.maxHp, leaving.hp+heal);
@@ -356,8 +404,11 @@ function doVoluntarySwitch(i, slot){
   const incoming = bs.player[i];
   const opponent = aliveFoeCombatants()[0];
   const intimidateMsg = opponent ? (triggerIntimidate(incoming, opponent) + triggerSwitchInAbilities(incoming, opponent)) : '';
+  const hazardKO = incoming.hp<=0 && alivePlayerCombatants().length===0;
   setLog(`Tu rappelles ton Pokémon et envoies ${incoming.name} !${switchMsg}${intimidateMsg}`);
-  setTimeout(()=> advanceAfterSlot(slot), 1000);
+  renderBattle();
+  // Si les pièges mettent K.O. le seul Pokémon actif, on passe directement à la gestion des K.O. (choix d'un remplaçant).
+  setTimeout(()=>{ if(hazardKO) handleFaintsAndAdvance(); else advanceAfterSlot(slot); }, 1000);
 }
 
 // Utilise une Potion du sac sur un Pokémon de l'équipe pendant le combat.
@@ -378,16 +429,30 @@ function useBagPotion(i){
 // Vérifie si un Pokémon peut effectivement agir ce tour avant de résoudre son coup (recul de peur,
 // gel, sommeil, paralysie, se blesse en confusion). Retourne false si l'action est bloquée.
 function checkStatusBeforeMove(battler, logs, move){
+  if(battler.mustRecharge){
+    battler.mustRecharge = false;
+    battler.contMove = null; battler.contTurns = 0;
+    logs.push(`${battler.name} doit se reposer !`);
+    return false;
+  }
   if(battler.flinched){
     battler.flinched = false;
     logs.push(`${battler.name} recule de peur et ne peut pas attaquer !`);
     return false;
   }
   if(battler.status==='gel'){
-    if(Math.random()<0.2){
+    // 20 % de dégel par tour, mais jamais plus de FREEZE_MAX_TURNS tours perdus d'affilée (le gel ne
+    // dure donc plus indéfiniment) ; certaines capacités Feu dégèlent leur lanceur d'office.
+    if(move && move.thawsUser){
       battler.status = null;
+      battler.freezeTurns = 0;
+      logs.push(`${battler.name} dégèle grâce à la chaleur de ${move.name} !`);
+    } else if(Math.random()<0.2 || (battler.freezeTurns||0) >= FREEZE_MAX_TURNS){
+      battler.status = null;
+      battler.freezeTurns = 0;
       logs.push(`${battler.name} n'est plus gelé !`);
     } else {
+      battler.freezeTurns = (battler.freezeTurns||0) + 1;
       logs.push(`${battler.name} est gelé et ne peut pas attaquer !`);
       return false;
     }
@@ -403,6 +468,10 @@ function checkStatusBeforeMove(battler, logs, move){
       battler.status = null;
       logs.push(`${battler.name} se réveille !`);
     }
+  }
+  if(battler.infatuated && Math.random()<0.5){
+    logs.push(`${battler.name} est amoureux et ne peut pas attaquer !`);
+    return false;
   }
   if(battler.status==='paralysie' && Math.random()<0.25){
     logs.push(`${battler.name} est paralysé ! Il ne peut pas attaquer.`);
@@ -420,6 +489,225 @@ function checkStatusBeforeMove(battler, logs, move){
   return true;
 }
 
+// Lien du Destin / Rancune : si le défenseur vient d'être mis K.O. par ce coup, l'attaquant tombe avec lui
+// (Lien du Destin) ou la capacité utilisée perd tous ses PP (Rancune).
+function koRetaliation(actor, move, defender){
+  let msg = '';
+  if(defender.hp>0) return msg;
+  if(defender.destinyBond && actor.hp>0){
+    actor.hp = 0;
+    msg += ` ${defender.name} entraîne ${actor.name} dans sa chute grâce à Lien du Destin !`;
+  }
+  if(defender.grudge){
+    const list = actor.moveObjs || actor.moves || [];
+    const idx = list.indexOf(move);
+    if(idx>=0 && actor.ppCur){
+      actor.ppCur[idx] = 0;
+      msg += ` La rancune de ${defender.name} vide les PP de ${move.name} !`;
+    }
+  }
+  return msg;
+}
+// Note qu'un Pokémon vient d'être touché ce tour (Vendetta, Mitra-Poing, Piège Coquille, Patience).
+function markHit(defender, move, dmg){
+  if(!(dmg>0)) return;
+  defender.hitsTaken = (defender.hitsTaken||0) + 1;
+  defender.hitThisTurn = true;
+  if(move.cat==='phys') defender.hitPhysThisTurn = true;
+  if(defender.contMove && defender.contMove.bide) defender.bideStored = (defender.bideStored||0) + dmg;
+  if(defender.raging && defender.hp>0) applyStatBoost(defender, [{stat:'atk', stages:1}], []);
+}
+// Effets « spéciaux » d'un coup, appliqués une fois les dégâts infligés : recharge, briseurs d'écrans, vol d'objet,
+// soin de statut, fin de terrain, perte de type, vol de stats, Étranglement, drain de PP, contrecoup en PV max,
+// et enchaînement des capacités à durée (Mania, Colère, Danse-Fleur...).
+function applyMoveExtras(actor, move, defender, dmg){
+  let msg = '';
+  markHit(defender, move, dmg);
+  if(move.recharge && actor.hp>0) actor.mustRecharge = true;
+  if(move.breaksScreens && (defender.reflectTurns>0 || defender.lightScreenTurns>0)){
+    defender.reflectTurns = 0; defender.lightScreenTurns = 0;
+    msg += ` Les écrans protégeant ${defender.name} sont brisés !`;
+  }
+  if(move.stealItem && dmg>0 && defender.heldItem && !actor.heldItem){
+    actor.heldItem = defender.heldItem; actor.itemUsed = false;
+    defender.heldItem = null;
+    msg += ` ${actor.name} dérobe l'objet de ${defender.name} !`;
+  }
+  if(move.cureTargetStatus && defender.status===move.cureTargetStatus){
+    defender.status = null;
+    msg += ` ${defender.name} est soigné de son statut !`;
+  }
+  if(move.endsTerrain && battleState && battleState.terrain){
+    battleState.terrain = null;
+    msg += ' Le terrain de combat disparaît !';
+  }
+  if(move.removeTypeAfter && actor.hp>0){
+    const kept = (actor.transformedTypes || actor.types).filter(t=>t!==move.removeTypeAfter);
+    actor.transformedTypes = kept.length ? kept : ['normal'];
+    msg += ` ${actor.name} perd son type ${typeDisplayName(move.removeTypeAfter)} !`;
+  }
+  if(move.stealBoosts){
+    let stolen = false;
+    ['atk','def','spa','spd','spe'].forEach(s=>{
+      const v = defender.stages[s];
+      if(v>0){ actor.stages[s] = Math.min(6, actor.stages[s]+v); defender.stages[s] = 0; stolen = true; }
+    });
+    if(stolen) msg += ` ${actor.name} vole les augmentations de statistiques de ${defender.name} !`;
+  }
+  if(move.throatChop && defender.hp>0){
+    defender.throatChop = 2;
+    msg += ` ${defender.name} ne peut plus utiliser de capacités sonores !`;
+  }
+  if(move.ppDrain && defender.hp>0){
+    const list = defender.moveObjs || defender.moves || [];
+    const idx = list.indexOf(defender.lastMoveUsed);
+    if(idx>=0 && defender.ppCur && defender.ppCur[idx]>0){
+      const lost = Math.min(move.ppDrain, defender.ppCur[idx]);
+      defender.ppCur[idx] -= lost;
+      msg += ` ${defender.lastMoveUsed.name} de ${defender.name} perd ${lost} PP !`;
+    }
+  }
+  if(move.recoilMaxHp && actor.hp>0){
+    const r = Math.max(1, Math.ceil(actor.maxHp*move.recoilMaxHp));
+    actor.hp = Math.max(0, actor.hp-r);
+    msg += ` Le contrecoup blesse ${actor.name} (${r} dégâts) !`;
+  }
+  actor.lastMoveFailed = false;
+  if(move.rage) actor.raging = true;
+  if(move.roundBoost && battleState) battleState.roundUsed = true;
+  if(move.fusion && battleState) battleState.fusionUsed = move.fusion;
+  if(move.plasma && battleState) battleState.ionDeluge = true;
+  if(move.pledgeCombo && battleState){
+    const pl = locateActiveSlot(actor);
+    if(pl){
+      const fxSide = move.pledgeCombo==='rainbow' ? pl.side : (pl.side==='player' ? 'foe' : 'player');
+      pledgeFxOf(fxSide)[move.pledgeCombo] = 4;
+      const fxText = { rainbow:'Un arc-en-ciel apparaît dans le ciel', fire:'Une mer de feu entoure le camp adverse', swamp:'Un marécage recouvre le camp adverse' };
+      msg += ` ${fxText[move.pledgeCombo]} !`;
+    }
+  }
+  if(move.payDay && battleState){
+    const pl = locateActiveSlot(actor);
+    if(pl && pl.side==='player'){ battleState.payDayMoney = (battleState.payDayMoney||0) + 5*LEVEL; msg += ` Des pièces s'éparpillent (${5*LEVEL} 💰) !`; }
+  }
+  if(move.coreEnforcer && !actor.movedFirst && defender.hp>0 && defender.ability){
+    defender.ability = null;
+    msg += ` Le talent de ${defender.name} est neutralisé !`;
+  }
+  if(move.finalGambit) actor.hp = 0;
+  if(move.effect && move.effect.selfSwitch && actor.hp>0){
+    const sl = [];
+    applyStatusEffect(actor, defender, { name:move.name, effect:{ selfSwitch:true } }, sl);
+    msg += ' ' + sl.join(' ');
+  }
+  if(move.secondarySelfBoosts && actor.hp>0 && Math.random()<move.secondarySelfBoosts.chance){
+    const sl = [];
+    applyStatBoost(actor, move.secondarySelfBoosts.boosts, sl);
+    msg += ' ' + sl.join(' ');
+  }
+  if(move.naturalGift || move.fling){
+    if(move.fling){ msg += ` ${actor.name} lance son objet !`; actor.heldItem = null; }
+    else { actor.itemUsed = true; actor.heldItem = null; }
+  }
+  if(move.eatBerry && defender.hp>0 && defender.heldItem && ITEMS[defender.heldItem] && ITEMS[defender.heldItem].category==='baie' && !defender.itemUsed){
+    const bl = [];
+    const stolen = defender.heldItem;
+    defender.itemUsed = true; defender.heldItem = null;
+    const prev = actor.heldItem, prevUsed = actor.itemUsed;
+    actor.heldItem = stolen; actor.itemUsed = false;
+    eatBerryOf(actor, bl);
+    actor.heldItem = prev; actor.itemUsed = prevUsed;
+    msg += ' ' + bl.join(' ');
+  }
+  if(move.burnBerry && defender.heldItem && ITEMS[defender.heldItem] && ITEMS[defender.heldItem].category==='baie'){
+    defender.heldItem = null;
+    msg += ` La baie de ${defender.name} est réduite en cendres !`;
+  }
+  if(move.clearsStages && defender.hp>0){
+    defender.stages = {atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0};
+    msg += ` Les changements de statistiques de ${defender.name} sont annulés !`;
+  }
+  if(move.smackDown && defender.hp>0){
+    defender.smackDown = true;
+    msg += ` ${defender.name} est cloué au sol !`;
+  }
+  if(move.forceSwitchOnHit && defender.hp>0 && actor.hp>0){
+    const fl = [];
+    applyStatusEffect(actor, defender, { name:move.name, effect:{ forceSwitch:true } }, fl);
+    msg += ' ' + fl.join(' ');
+  }
+  if(move.rampage && actor.hp>0){
+    if(!actor.contMove){
+      actor.contMove = move;
+      actor.contTurns = 1 + Math.floor(Math.random()*2);
+    } else {
+      actor.contTurns--;
+      if(actor.contTurns<=0){
+        actor.contMove = null;
+        if(!move.noConfuse){
+          actor.confuseCounter = 2 + Math.floor(Math.random()*3);
+          msg += ` ${actor.name} est pris de confusion à force de se déchaîner !`;
+        }
+      }
+    }
+  }
+  return msg;
+}
+// Effets d'un coup à frappes multiples appliqués après la dernière frappe (le chemin des coups multiples
+// n'exécute pas le reste de runStep) : piégeage, drain, contrecoup, statut/peur/stats secondaires. La chance
+// d'un effet secondaire est celle d'au moins un déclenchement sur l'ensemble des frappes.
+function multiHitAfterEffects(actor, move, defender, total, hits){
+  let msg = '';
+  const chance = c => 1 - Math.pow(1-serene(actor, c), Math.max(1,hits));
+  if(move.trap && defender.hp>0){
+    defender.trapped = true;
+    if(move.trapDamage) defender.infested = true;
+    msg += ` ${defender.name} est piégé !`;
+  }
+  if(move.drain && total>0){
+    const h = Math.max(1, Math.round(total*move.drain));
+    actor.hp = Math.min(actor.maxHp, actor.hp+h);
+    msg += ` ${actor.name} récupère ${h} PV !`;
+  }
+  if(move.recoil && total>0){
+    const r = Math.max(1, Math.round(total*move.recoil));
+    actor.hp = Math.max(0, actor.hp-r);
+    msg += ` Le contrecoup blesse ${actor.name} (${r} dégâts) !`;
+  }
+  msg += koRetaliation(actor, move, defender);
+  msg += applyMoveExtras(actor, move, defender, total);
+  if(move.secondaryStatus && defender.hp>0 && Math.random()<chance(move.secondaryStatus.chance)){
+    const slogs = [];
+    inflictStatus(defender, move.secondaryStatus.status, slogs);
+    msg += ' ' + slogs.join(' ');
+  }
+  if(move.secondaryBoost && defender.hp>0 && Math.random()<chance(move.secondaryBoost.chance)){
+    if(defender.ability==='Corps Sain' && move.secondaryBoost.stages<0){
+      msg += ` Corps Sain empêche la baisse de statistiques de ${defender.name} !`;
+    } else if(defender.mistTurns>0 && move.secondaryBoost.stages<0){
+      msg += ` La Brume protège ${defender.name} de la baisse de statistiques !`;
+    } else {
+      const blogs = [];
+      applyStatBoost(defender, [{stat:move.secondaryBoost.stat, stages:move.secondaryBoost.stages}], blogs);
+      msg += ' ' + blogs.join(' ');
+    }
+  }
+  if(move.secondarySelfBoost && Math.random()<chance(move.secondarySelfBoost.chance)){
+    const blogs = [];
+    applyStatBoost(actor, [{stat:move.secondarySelfBoost.stat, stages:move.secondarySelfBoost.stages}], blogs);
+    msg += ' ' + blogs.join(' ');
+  }
+  if(move.selfBoost){
+    const blogs = [];
+    applyStatBoost(actor, move.selfBoost, blogs);
+    msg += ' ' + blogs.join(' ');
+  }
+  if(move.flinch && defender.hp>0 && defender.ability!=='Attention' && Math.random()<chance(move.flinch)){
+    defender.flinched = true;
+    msg += ` ${defender.name} recule de peur !`;
+  }
+  return msg;
+}
 // Résout une action de combat complète, dans l'ordre : entrave/forçage (Entrave, Instruct),
 // transformations du coup (Voix Aquatique, typeFromUser, categoryFromHigherStat, Protéen/Libéro),
 // cas spéciaux (Métronome, Copie), verrouillage d'objet Choix/Instinct Gorille, conditions
@@ -438,6 +726,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   const canMove = checkStatusBeforeMove(actor, logs, move);
   renderBattle();
   if(!canMove){
+    actor.contMove = null; actor.contTurns = 0;
     setLog(logs.join(' '));
     setTimeout(callback, 900);
     return;
@@ -447,6 +736,136 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
+  if(actor.tormented && actor.lastMoveUsed && actor.lastMoveUsed.name===move.name && move.name!==STRUGGLE_MOVE.name){
+    setLog(`<b>${actor.name}</b> ne peut pas utiliser ${move.name} deux fois de suite, il est tourmenté !`);
+    setTimeout(callback, 900);
+    return;
+  }
+  if(battleState){
+    const foesOfActor = actorIsPlayer ? aliveFoeCombatants() : alivePlayerCombatants();
+    const jailer = foesOfActor.find(c=>c.imprisoning && (c.moves||c.moveObjs||[]).some(mm=>mm && mm.name===move.name));
+    if(jailer){
+      setLog(`<b>${actor.name}</b> ne peut pas utiliser ${move.name}, ${jailer.name} l'a scellée avec Possessif !`);
+      setTimeout(callback, 900);
+      return;
+    }
+  }
+  actor.destinyBond = false;
+  actor.grudge = false;
+  const bsx = battleState;
+  const firstAction = !(actor.actedTurns>0);
+  actor.actedTurns = (actor.actedTurns||0) + 1;
+  const queueLater = bsx && bsx.turnQueue ? bsx.turnQueue.slice((bsx.turnIdx||0)+1) : [];
+  actor.movedFirst = queueLater.some(a=>a.actor===defender);
+  const failMove = why =>{
+    actor.contMove = null; actor.contTurns = 0;
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name}... ${why}`);
+    setTimeout(callback, 900);
+  };
+  if(move.firstTurnOnly && !firstAction){ failMove('mais ça échoue !'); return; }
+  if(move.suckerPunch){
+    const target = queueLater.find(a=>a.actor===defender);
+    if(!target || target.move.cat==='status'){ failMove('mais ça échoue, la cible ne prépare pas d\'attaque !'); return; }
+  }
+  if(move.requiresPhysHit && !actor.hitPhysThisTurn){ failMove('mais le piège ne se déclenche pas !'); return; }
+  if(move.focusPunch && actor.hitThisTurn){ failMove('mais perd sa concentration !'); return; }
+  if(move.requiresTargetItem && !defender.heldItem){ failMove('mais ça échoue, la cible ne tient aucun objet !'); return; }
+  if(move.endsTerrain && !(bsx && bsx.terrain)){ failMove('mais ça échoue, il n\'y a aucun terrain !'); return; }
+  if(move.sound && actor.throatChop>0){ failMove('mais Étranglement l\'empêche d\'utiliser des sons !'); return; }
+  actor.usedMoveNames = actor.usedMoveNames || new Set();
+  if(move.lastResort){
+    const others = (actor.moveObjs||actor.moves||[]).filter(m=>m && m.name!==move.name);
+    if(!others.length || !others.every(m=>actor.usedMoveNames.has(m.name))){ failMove('mais ça échoue, il reste des capacités à utiliser !'); return; }
+  }
+  actor.usedMoveNames.add(move.name);
+  actor.prevMoveFailed = !!actor.lastMoveFailed;
+  actor.lastMoveFailed = true;
+  if(!move.rage) actor.raging = false;
+  if(move.ignoresAbility && defender){
+    const savedAbility = defender.ability;
+    defender.ability = null;
+    const cbIgnore = callback;
+    callback = ()=>{ defender.ability = savedAbility; cbIgnore(); };
+  }
+  if(move.metalBurst && !((actor.lastPhysDamage||0)+(actor.lastSpecDamage||0))){ failMove('mais ça échoue, personne ne l\'a touché !'); return; }
+  if(move.synchronoise){
+    const at = actor.transformedTypes||actor.types, dt = defender.transformedTypes||defender.types;
+    if(!at.some(t=>dt.includes(t))){ failMove('mais ça n\'affecte pas la cible !'); return; }
+  }
+  if(move.naturalGift){
+    const nit = actor.heldItem && ITEMS[actor.heldItem];
+    if(!nit || nit.category!=='baie' || actor.itemUsed){ failMove('mais ça échoue, il n\'a pas de baie !'); return; }
+  }
+  if(move.fling && !actor.heldItem){ failMove('mais ça échoue, il n\'a aucun objet à lancer !'); return; }
+  if(actor.powdered && move.type==='feu'){
+    const pd = Math.max(1, Math.floor(actor.maxHp/4));
+    actor.hp = Math.max(0, actor.hp-pd); actor.powdered = false;
+    failMove(`mais la poudre explose (${pd} dégâts) !`);
+    return;
+  }
+  if(actor.electrified){ move = { ...move, type:'electrik' }; actor.electrified = false; }
+  if(bsx && bsx.ionDeluge && move.type==='normal') move = { ...move, type:'electrik' };
+  if(move.effect && move.effect.copycat){
+    const last = bsx && bsx.lastMoveAny;
+    if(last && !(last.effect && (last.effect.copycat || last.effect.meFirst))){
+      setLog(`<b>${actor.name}</b> utilise ${move.name} et copie ${last.name} !`);
+      setTimeout(()=> runStep(actor, last, defender, actorIsPlayer, callback), 900);
+    } else {
+      setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
+      setTimeout(callback, 900);
+    }
+    return;
+  }
+  if(move.effect && move.effect.meFirst){
+    const tgtAction = queueLater.find(a=>a.actor===defender);
+    if(tgtAction && tgtAction.move.cat!=='status' && tgtAction.move.power>0){
+      const boosted = { ...tgtAction.move, power: Math.round(tgtAction.move.power*1.5) };
+      setLog(`<b>${actor.name}</b> utilise ${move.name} et prend la capacité ${tgtAction.move.name} !`);
+      setTimeout(()=> runStep(actor, boosted, defender, actorIsPlayer, callback), 900);
+    } else {
+      setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
+      setTimeout(callback, 900);
+    }
+    return;
+  }
+  if(move.bide){
+    if(!actor.contMove){
+      actor.contMove = move; actor.contTurns = 2; actor.bideStored = 0;
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name} ! Il accumule de l'énergie...`);
+      setTimeout(callback, 900);
+      return;
+    }
+    actor.contTurns--;
+    if(actor.contTurns>0){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> accumule toujours de l'énergie...`);
+      setTimeout(callback, 900);
+      return;
+    }
+    const stored = actor.bideStored||0;
+    actor.contMove = null; actor.bideStored = 0;
+    if(stored<=0 || defender.hp<=0){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> libère son énergie... mais ça échoue !`);
+      setTimeout(callback, 900);
+      return;
+    }
+    const bdmg = Math.min(defender.hp, stored*2);
+    defender.hp -= bdmg;
+    markHit(defender, move, bdmg);
+    renderBattle();
+    shakeBox(boxIdFor(defender), false);
+    setLog(`<b>${actor.name}</b> libère l'énergie accumulée ! ${defender.name} subit ${bdmg} dégâts !`);
+    setTimeout(callback, 1000);
+    return;
+  }
+  if(move.escalate || move.echoed){
+    if(actor.streakMove===move.name) actor.streak = Math.min((actor.streak||0)+1, 4);
+    else actor.streak = 0;
+  }
+  actor.streakMove = move.name;
   if(actor.forcedMove){
     const forced = actor.forcedMove;
     actor.forcedMove = null;
@@ -462,6 +881,29 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(move.typeFromUser){
     const userType = (actor.transformedTypes || actor.types)[0];
     move = { ...move, type: userType };
+  }
+  if(move.natureForce){
+    const terr = battleState && battleState.terrain ? battleState.terrain.type : null;
+    move = { ...move, type: { grassy:'plante', electric:'electrik', misty:'fee', psychic:'psy' }[terr] || 'normal' };
+  }
+  if(move.weatherBall){
+    const w = (battleState && !weatherNullified() && battleState.weather) ? battleState.weather.type : null;
+    const wt = { soleil:'feu', pluie:'eau', sable:'roche', grele:'glace' }[w];
+    if(wt) move = { ...move, type: wt, power: move.power*2 };
+  }
+  if(move.itemType){
+    const heldIt = actor.heldItem && ITEMS[actor.heldItem];
+    const itType = itemMoveType(heldIt, move.itemType);
+    if(itType) move = { ...move, type: itType };
+  }
+  if(move.hiddenPower) move = { ...move, type: hiddenPowerType(actor) };
+  if(move.teraBlast){
+    move = { ...move, cat: actor.stats.spa>actor.stats.atk ? 'spec' : 'phys' };
+    if(actor.teraActive && actor.teraType) move.type = actor.teraType;
+  }
+  if(move.terrainPulse){
+    const terr = battleState && battleState.terrain ? battleState.terrain.type : null;
+    if(terr) move = { ...move, type: { grassy:'plante', electric:'electrik', misty:'fee', psychic:'psy' }[terr], power: move.power*2 };
   }
   if(move.categoryFromHigherStat){
     move = { ...move, cat: actor.stats.spa > actor.stats.atk ? 'spec' : 'phys' };
@@ -491,6 +933,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   }
   actor.lastMoveUsed = move;
   actor.lastMoveTarget = defender;
+  if(battleState) battleState.lastMoveAny = move;
   if(actor.heldItem && ITEMS[actor.heldItem] && ITEMS[actor.heldItem].choiceLock && !actor.lockedMove){
     actor.lockedMove = move;
   }
@@ -533,14 +976,14 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     }
   }
   let acc;
-  if(move.target==='self'){
+  if(move.target==='self' || move.neverMiss || defender.telekinesis>0){
     acc = 1;
   } else if(actor.guaranteedHit){
     acc = 1;
   } else {
     acc = move.accuracy!==undefined ? move.accuracy : 0.95;
     acc *= accuracyStageMultiplier(actor.stages.acc);
-    if(move.cat!=='status') acc /= accuracyStageMultiplier(defender.stages.eva||0);
+    if(move.cat!=='status') acc /= accuracyStageMultiplier(defender.foresighted ? Math.min(0, defender.stages.eva||0) : (defender.stages.eva||0));
     if(actor.ability==='Victorieux') acc *= 1.1;
   }
   const weatherNow = battleState ? battleState.weather : null;
@@ -558,21 +1001,40 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       return;
     }
   }
+  if(defender.quickGuard && move.target!=='self' && actor!==defender && effectivePriority(actor, move)>0){
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ${defender.name} est protégé par Prévention !`);
+    setTimeout(callback, 900);
+    return;
+  }
   lungeBox(boxIdFor(actor));
   playMoveFx(move, actorIsPlayer);
   if(Math.random() > acc){
-    setLog(`<b>${actor.name}</b> utilise ${move.name}... mais rate son coup !`);
+    let missMsg = '';
+    if(move.crashOnMiss){
+      const crash = Math.max(1, Math.round(actor.maxHp/2));
+      actor.hp = Math.max(0, actor.hp - crash);
+      missMsg = ` ${actor.name} se blesse en s'écrasant (${crash} dégâts) !`;
+    }
+    actor.contMove = null; actor.contTurns = 0;
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name}... mais rate son coup !${missMsg}`);
     actor.guaranteedHit = false;
     setTimeout(callback, 900);
     return;
   }
   actor.guaranteedHit = false;
-  if(defender.protected && move.cat!=='status'){
+  if(defender.protected && move.cat!=='status' && !move.ignoresProtect){
     let punishMsg = '';
     if(defender.punishOnContact && move.cat==='phys'){
       const rdmg = Math.max(1, Math.round(actor.maxHp/8));
       actor.hp = Math.max(0, actor.hp-rdmg);
       punishMsg = ` ${actor.name} est blessé au contact (${rdmg} dégâts) !`;
+    }
+    if(defender.protectPunish && move.cat==='phys'){
+      const pp = defender.protectPunish;
+      if(pp.stat){ const pl = []; applyStatBoost(actor, [{stat:pp.stat, stages:pp.stages}], pl); punishMsg += ' ' + pl.join(' '); }
+      if(pp.status){ const pl = []; inflictStatus(actor, pp.status, pl); punishMsg += ' ' + pl.join(' '); }
     }
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} se protège de l'attaque !${punishMsg}`);
@@ -610,6 +1072,12 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     return;
   }
   if(move.cat==='status'){
+    if(defender.substitute>0 && move.target==='foe' && actor!==defender && !move.sound && !(move.effect && (move.effect.substitute || move.effect.protect))){
+      renderBattle();
+      setLog(`<b>${actor.name}</b> utilise ${move.name}... mais le clone de ${defender.name} bloque la capacité !`);
+      setTimeout(callback, 900);
+      return;
+    }
     if(move.requiresStatus && defender.status!==move.requiresStatus){
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
@@ -643,7 +1111,20 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       setTimeout(callback, 900);
       return;
     }
-    applyStatusEffect(actor, defender, move, logs);
+    const rivals = actorIsPlayer ? aliveFoeCombatants() : alivePlayerCombatants();
+    const snatcher = (move.target==='self' && !(move.effect && move.effect.snatch)) ? rivals.find(c=>c.snatching) : null;
+    if(snatcher){
+      snatcher.snatching = false;
+      logs.push(`${snatcher.name} vole la capacité ${move.name} !`);
+      applyStatusEffect(snatcher, actor, move, logs);
+    } else if(move.target==='foe' && defender.magicCoat && !(move.effect && move.effect.magicCoat)){
+      defender.magicCoat = false;
+      logs.push(`${defender.name} renvoie ${move.name} grâce à Reflet Magik !`);
+      applyStatusEffect(defender, actor, move, logs);
+    } else {
+      applyStatusEffect(actor, defender, move, logs);
+    }
+    actor.lastMoveFailed = false;
     renderBattle();
     if(move.target==='foe') shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${logs.join(' ')}`);
@@ -658,7 +1139,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 1000);
     return;
   }
-  if(defender.ability==='Lévitation' && move.type==='sol' && !move.bypassTypeImmunity){
+  if((defender.ability==='Lévitation' || defender.magnetRise>0) && move.type==='sol' && !move.bypassTypeImmunity && !defender.smackDown && !(battleState && battleState.gravityTurns>0)){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Lévitation) !`);
     setTimeout(callback, 900);
@@ -692,8 +1173,9 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     return;
   }
   let thawMsg = '';
-  if(defender.status==='gel' && move.type==='feu'){
+  if(defender.status==='gel' && (move.type==='feu' || move.thawsTarget)){
     defender.status = null;
+    defender.freezeTurns = 0;
     thawMsg = ` ${defender.name} dégèle sous la chaleur !`;
   }
   if(move.ohko){
@@ -791,23 +1273,37 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       return;
     }
     const { min, max } = move.multiHit;
-    const hits = min + Math.floor(Math.random()*(max-min+1));
-    let total = 0, actualHits = 0, lastCrit = false;
+    let hits = min + Math.floor(Math.random()*(max-min+1));
+    if(move.beatUp){
+      const bLoc = locateActiveSlot(actor);
+      const roster = bLoc ? (bLoc.side==='player' ? battleState.player : battleState.foe) : [];
+      hits = Math.max(1, roster.filter(c=>c.hp>0).length);
+    }
+    let total = 0, actualHits = 0, lastCrit = false, hitSub = false;
     for(let i=0;i<hits;i++){
       if(defender.hp<=0) break;
       const { dmg: hdmg, crit: hcrit } = computeDamage(actor, move, defender);
+      if(defender.substitute>0 && !move.sound){
+        const ab = Math.min(defender.substitute, hdmg);
+        defender.substitute -= ab;
+        hitSub = true; total += ab; actualHits++; lastCrit = lastCrit || hcrit;
+        continue;
+      }
       const applied = Math.min(hdmg, defender.hp);
       defender.hp -= applied;
       total += applied;
       actualHits++;
       lastCrit = lastCrit || hcrit;
     }
-    if(move.cat==='phys') defender.lastPhysDamage = total;
-    if(move.cat==='spec') defender.lastSpecDamage = total;
+    if(!hitSub){
+      if(move.cat==='phys') defender.lastPhysDamage = total;
+      if(move.cat==='spec') defender.lastSpecDamage = total;
+    }
+    const extraMsg = hitSub ? ' Le clone encaisse les coups !' : multiHitAfterEffects(actor, move, defender, total, actualHits);
     renderBattle();
     shakeBox(boxIdFor(defender), lastCrit);
     if(lastCrit) flashScreen('crit');
-    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Touché ${actualHits} fois pour un total de ${total} dégâts !`);
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Touché ${actualHits} fois pour un total de ${total} dégâts !${extraMsg}`);
     setTimeout(callback, 1000);
     return;
   }
@@ -835,6 +1331,18 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     enduredMsg = ` ${defender.name} tient bon grâce à Ténacité !`;
   }
   if(move.holdBack) actualDmg = Math.min(actualDmg, defender.hp - 1);
+  if(defender.substitute>0 && !move.sound && !move.ignoresProtect && actualDmg>0){
+    const absorbed = Math.min(defender.substitute, actualDmg);
+    defender.substitute -= absorbed;
+    const broke = defender.substitute<=0;
+    if(broke) defender.substitute = 0;
+    markHit(defender, move, absorbed);
+    renderBattle();
+    shakeBox(boxIdFor(defender), crit);
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Le clone de ${defender.name} encaisse ${absorbed} dégâts${broke?' et disparaît':''} !`);
+    setTimeout(callback, 1000);
+    return;
+  }
   defender.hp = Math.max(0, defender.hp-actualDmg);
   if(move.cat==='phys') defender.lastPhysDamage = actualDmg;
   if(move.cat==='spec') defender.lastSpecDamage = actualDmg;
@@ -917,6 +1425,13 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     }
   }
   if(move.recoil){ const r=Math.max(1,Math.round(actualDmg*move.recoil)); actor.hp=Math.max(0,actor.hp-r); msg+=` Le contrecoup blesse ${actor.name} (${r} dégâts) !`; }
+  msg += koRetaliation(actor, move, defender);
+  msg += applyMoveExtras(actor, move, defender, actualDmg);
+  if(move.clearsHazards && actor.hp>0 && battleState){
+    const spinLoc = locateActiveSlot(actor);
+    const spinLogs = [];
+    if(spinLoc && clearHazards(spinLoc.side, spinLogs)) msg += ' ' + spinLogs.join(' ');
+  }
   if(move.selfDestruct){
     actor.hp = 0;
     msg += ` ${actor.name} est mis K.O. par le contrecoup de l'explosion !`;
@@ -927,7 +1442,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     inflictStatus(defender, pick, tlogs);
     msg += ' ' + tlogs.join(' ');
   }
-  if(move.secondaryStatus && defender.hp>0 && Math.random()<move.secondaryStatus.chance){
+  if(move.secondaryStatus && defender.hp>0 && Math.random()<serene(actor, move.secondaryStatus.chance)){
     let slogs = [];
     inflictStatus(defender, move.secondaryStatus.status, slogs);
     msg += ' ' + slogs.join(' ');
@@ -937,7 +1452,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     inflictStatus(defender, 'poison', clogs);
     msg += ' ' + clogs.join(' ');
   }
-  if(move.secondaryBoost && defender.hp>0 && Math.random()<move.secondaryBoost.chance){
+  if(move.secondaryBoost && defender.hp>0 && Math.random()<serene(actor, move.secondaryBoost.chance)){
     if(defender.ability==='Corps Sain' && move.secondaryBoost.stages<0){
       msg += ` Corps Sain empêche la baisse de statistiques de ${defender.name} !`;
     } else if(defender.mistTurns>0 && move.secondaryBoost.stages<0){
@@ -951,7 +1466,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       msg += ' ' + blogs.join(' ');
     }
   }
-  if(move.secondarySelfBoost && Math.random()<move.secondarySelfBoost.chance){
+  if(move.secondarySelfBoost && Math.random()<serene(actor, move.secondarySelfBoost.chance)){
     let blogs = [];
     applyStatBoost(actor, [{stat:move.secondarySelfBoost.stat, stages:move.secondarySelfBoost.stages}], blogs);
     msg += ' ' + blogs.join(' ');
@@ -961,7 +1476,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     applyStatBoost(actor, move.selfBoost, blogs);
     msg += ' ' + blogs.join(' ');
   }
-  if(move.flinch && defender.hp>0 && defender.ability!=='Attention' && Math.random()<move.flinch){
+  if(move.flinch && defender.hp>0 && defender.ability!=='Attention' && Math.random()<serene(actor, move.flinch)){
     defender.flinched = true;
     msg += ` ${defender.name} recule de peur !`;
   }
@@ -1082,6 +1597,37 @@ function endTurn(){
   const all = [...playerCombatants, ...foeCombatants];
   let logs = [];
   all.forEach(c=> endOfTurnStatus(c, logs));
+  if(bs.waterSportTurns>0){
+    bs.waterSportTurns--;
+    if(bs.waterSportTurns===0) logs.push('Les jets d\'eau de Tourniquet cessent.');
+  }
+  [['mudSportTurns','Les jets de boue de Lance-Boue cessent.'],['gravityTurns','La gravité revient à la normale.'],['wonderRoomTurns','La Zone Étrange se dissipe.'],['trickRoomTurns','La Distorsion se dissipe.']].forEach(([k,msg])=>{
+    if(bs[k]>0){ bs[k]--; if(bs[k]===0) logs.push(msg); }
+  });
+  if(bs.tailwind){ ['player','foe'].forEach(s=>{ if(bs.tailwind[s]>0){ bs.tailwind[s]--; if(bs.tailwind[s]===0) logs.push('Le vent arrière retombe.'); } }); }
+  if(bs.luckyChant){ ['player','foe'].forEach(s=>{ if(bs.luckyChant[s]>0) bs.luckyChant[s]--; }); }
+  if(bs.pledgeFx){
+    ['player','foe'].forEach(side=>{
+      const fx = bs.pledgeFx[side];
+      if(fx.fire>0){
+        (side==='player' ? playerCombatants : foeCombatants).forEach(c=>{
+          const types = c.transformedTypes || c.types || [];
+          if(c.hp<=0 || types.includes('feu')) return;
+          c.hp = Math.max(0, c.hp - Math.max(1, Math.round(c.maxHp/8)));
+          logs.push(`${c.name} est brûlé par la mer de feu !`);
+        });
+      }
+      [['rainbow',"L'arc-en-ciel disparaît."],['fire','La mer de feu se dissipe.'],['swamp','Le marécage se dessèche.']].forEach(([k,msg])=>{
+        if(fx[k]>0){ fx[k]--; if(fx[k]===0) logs.push(msg); }
+      });
+    });
+  }
+  if(bs.magicRoomTurns>0){
+    bs.magicRoomTurns--;
+    if(bs.magicRoomTurns===0){ [...bs.player, ...bs.foe].forEach(restoreStashedItem); logs.push('La Zone Magique se dissipe : les objets fonctionnent de nouveau.'); }
+  }
+  bs.redirect = null;
+  bs.ionDeluge = false;
   playerCombatants.forEach(c=>{
     if(c.hp>0 && c.seeded && foeCombatants.length){
       const opp = foeCombatants[0];
@@ -1118,6 +1664,29 @@ function endTurn(){
     c.protected = false;
     c.punishOnContact = false;
     c.enduring = false;
+    c.magicCoat = false;
+    c.snatching = false;
+    c.hitThisTurn = false;
+    c.hitPhysThisTurn = false;
+    c.helped = false; c.quickGuard = false; c.wideGuard = false; c.powdered = false; c.electrified = false;
+    if(c.healBlock>0) c.healBlock--;
+    if(c.magnetRise>0) c.magnetRise--;
+    if(c.telekinesis>0) c.telekinesis--;
+    if(c.embargoTurns>0){ c.embargoTurns--; if(c.embargoTurns===0) restoreStashedItem(c); }
+    if(c.roosted){ c.transformedTypes = c.roostTypes || null; c.roosted = false; }
+    if(c.aquaRing && c.hp>0 && c.hp<c.maxHp && !(c.healBlock>0)){
+      c.hp = Math.min(c.maxHp, c.hp + Math.max(1, Math.round(c.maxHp/16)));
+      logs.push(`${c.name} récupère des PV grâce à l'Anneau Hydro !`);
+    }
+    if(c.throatChop>0) c.throatChop--;
+    if(c.encoreTurns>0){
+      c.encoreTurns--;
+      if(c.encoreTurns===0){
+        const choiceLocked = c.heldItem && ITEMS[c.heldItem] && ITEMS[c.heldItem].choiceLock;
+        if(!choiceLocked && c.ability!=='Instinct Gorille') c.lockedMove = null;
+        logs.push(`L'effet d'Encore sur ${c.name} prend fin.`);
+      }
+    }
     if(c.mistTurns>0){
       c.mistTurns--;
       if(c.mistTurns===0) logs.push(`La Brume protégeant ${c.name} se dissipe.`);
@@ -1212,6 +1781,13 @@ function endTurn(){
       return true;
     });
   }
+  const turnNow = bs.turnNo || 0;
+  bs.faintTurn = bs.faintTurn || {};
+  [bs.pActive, bs.pActive2].forEach(i=>{ if(i!=null && bs.player[i] && bs.player[i].hp<=0) bs.faintTurn.player = turnNow; });
+  [bs.fActive, bs.fActive2].forEach(i=>{ if(i!=null && bs.foe[i] && bs.foe[i].hp<=0) bs.faintTurn.foe = turnNow; });
+  bs.turnNo = turnNow + 1;
+  bs.roundUsed = false; bs.fusionUsed = null;
+  [...bs.player, ...bs.foe].forEach(c=>{ c.loweredThisTurn = false; });
   renderBattle();
   if(logs.length) setLog(logs.join(' '));
   handleFaintsAndAdvance();
@@ -1307,6 +1883,7 @@ function showSwitchPrompt(aliveIdx, slot){
       const opponent = aliveFoeCombatants()[0];
       const intimMsg = opponent ? (triggerIntimidate(c, opponent) + triggerSwitchInAbilities(c, opponent)) : '';
       setLog(`Tu envoies ${c.name} !${intimMsg}`);
+      renderBattle();
       handleFaintsAndAdvance();
     };
     sw.appendChild(btn);

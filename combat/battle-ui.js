@@ -22,7 +22,7 @@ function setLog(html){
 }
 
 // Rangée de Poké Balls représentant toute l'équipe (vivant/K.O./actif), affichée sous le terrain de combat.
-function renderBench(containerId, roster, activeIdxs){
+function renderBench(containerId, roster, activeIdxs, hazards, pledge){
   const el = document.getElementById(containerId);
   el.innerHTML='';
   const actives = Array.isArray(activeIdxs) ? activeIdxs : [activeIdxs];
@@ -32,6 +32,30 @@ function renderBench(containerId, roster, activeIdxs){
     span.title = c.name;
     el.appendChild(span);
   });
+  if(hazards){
+    const chips = [];
+    if(hazards.rocks) chips.push({ icon:'🪨', label:HAZARD_LABEL.rocks });
+    if(hazards.spikes) chips.push({ icon:'▲'+hazards.spikes, label:`${HAZARD_LABEL.spikes} (${hazards.spikes}/3)` });
+    if(hazards.toxic) chips.push({ icon:'☠️'+hazards.toxic, label:`${HAZARD_LABEL.toxic} (${hazards.toxic}/2)` });
+    if(hazards.web) chips.push({ icon:'🕸️', label:HAZARD_LABEL.web });
+    chips.forEach(ch=>{
+      const chip = document.createElement('span');
+      chip.className = 'hazard-chip';
+      chip.textContent = ch.icon;
+      chip.title = ch.label;
+      el.appendChild(chip);
+    });
+  }
+  if(pledge){
+    ['rainbow','fire','swamp'].forEach(k=>{
+      if(!(pledge[k]>0)) return;
+      const chip = document.createElement('span');
+      chip.className = 'hazard-chip';
+      chip.textContent = PLEDGE_LABEL[k].split(' ')[0];
+      chip.title = `${PLEDGE_LABEL[k]} (${pledge[k]} tour${pledge[k]>1?'s':''})`;
+      el.appendChild(chip);
+    });
+  }
 }
 
 // Met à jour l'affichage complet d'un combattant actif : nom, types, icône de statut, badges de
@@ -92,8 +116,8 @@ function renderBattle(){
   if(showP2) renderCombatantBox(bs.player[bs.pActive2], 'player2');
   if(showF2) renderCombatantBox(bs.foe[bs.fActive2], 'foe2');
   document.getElementById('screenBattle').classList.toggle('is-double-battle', !!bs.isDouble);
-  renderBench('playerBench', bs.player, showP2 ? [bs.pActive, bs.pActive2] : [bs.pActive]);
-  renderBench('foeBench', bs.foe, showF2 ? [bs.fActive, bs.fActive2] : [bs.fActive]);
+  renderBench('playerBench', bs.player, showP2 ? [bs.pActive, bs.pActive2] : [bs.pActive], bs.hazards && bs.hazards.player, bs.pledgeFx && bs.pledgeFx.player);
+  renderBench('foeBench', bs.foe, showF2 ? [bs.fActive, bs.fActive2] : [bs.fActive], bs.hazards && bs.hazards.foe, bs.pledgeFx && bs.pledgeFx.foe);
   document.getElementById('weatherBanner').textContent = bs.weather ? `${WEATHER_LABEL[bs.weather.type]} (${bs.weather.turns} tour${bs.weather.turns>1?'s':''} restant${bs.weather.turns>1?'s':''})` : '';
   renderMoveGrid();
 }
@@ -197,7 +221,7 @@ function renderMoveGrid(){
   p.moves.forEach((mv, idx)=>{
     const btn = document.createElement('button');
     btn.className='move-btn';
-    const isDisabled = p.disabledMove && p.disabledMove.name===mv.name;
+    const isDisabled = (p.disabledMove && p.disabledMove.name===mv.name) || (p.tormented && p.lastMoveUsed && p.lastMoveUsed.name===mv.name);
     const isLockedOut = p.lockedMove && p.lockedMove.name!==mv.name;
     const ppCur = p.ppCur ? p.ppCur[idx] : null;
     const ppMax = basePP(mv);
@@ -213,7 +237,7 @@ function renderMoveGrid(){
       const maxPreview = buildMaxMove(mv, p, null, null);
       btn.innerHTML = `🔴 ${maxPreview.name} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${maxPreview.power} · via ${mv.name}</small>`;
     } else {
-      btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?" · Bloqué par l'objet":''}</small>`;
+      btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?(p.encoreTurns>0?' · Encore':" · Bloqué par l'objet"):''}</small>`;
     }
     btn.onclick = ()=> handleMoveChoice(idx);
     grid.appendChild(btn);

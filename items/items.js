@@ -74,6 +74,10 @@ const ITEMS = {
   plaqueDraco:    { name:'Plaque Draco',     sprite:ITEM_SPRITE('draco-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Dragon." },
   plaqueFer:      { name:'Plaque Fer',       sprite:ITEM_SPRITE('iron-plate'),   price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Acier." },
   plaqueOmbre:    { name:'Plaque Ombre',     sprite:ITEM_SPRITE('dread-plate'),  price:1800, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Arceus au type Ténèbres." },
+  moduleChoc:     { name:'Module Choc',      sprite:ITEM_SPRITE('shock-drive'),  price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : Techno-Buster devient de type Électrik quand Genesect le porte." },
+  modulePyro:     { name:'Module Pyro',      sprite:ITEM_SPRITE('burn-drive'),   price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : Techno-Buster devient de type Feu quand Genesect le porte." },
+  moduleCryo:     { name:'Module Cryo',      sprite:ITEM_SPRITE('chill-drive'),  price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : Techno-Buster devient de type Glace quand Genesect le porte." },
+  moduleAqua:     { name:'Module Aqua',      sprite:ITEM_SPRITE('douse-drive'),  price:1500, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : Techno-Buster devient de type Eau quand Genesect le porte." },
   // ---- Méga-Gemmes (tenues, vendues uniquement par le Marchand Itinérant) ----
   charizarditeX:  { name:'Dracaufeurite X',  sprite:ITEM_SPRITE('charizardite-x'), price:3000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Dracaufeu en Méga-Dracaufeu X (Feu/Dragon)." },
   charizarditeY:  { name:'Dracaufeurite Y',  sprite:ITEM_SPRITE('charizardite-y'), price:3000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait Méga-Évoluer Dracaufeu en Méga-Dracaufeu Y (Feu/Vol)." },

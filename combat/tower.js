@@ -294,7 +294,9 @@ function floorCleared(){
       if(c.itemUsed) m.heldItem = null;
     }
   });
-  const reward = moneyReward(clearedFloor, wasTwin);
+  let reward = moneyReward(clearedFloor, wasTwin);
+  if(battleState.happyHour) reward *= 2;
+  reward += battleState.payDayMoney || 0;
   money += reward;
   towerFloor++;
   document.getElementById('screenBattle').classList.add('hidden');

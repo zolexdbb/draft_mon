@@ -12,7 +12,7 @@ function pickSmartMoves(movepool, sp, floor){
   const picked = [...sortedStab.slice(0,2), ...sortedNonStab.slice(0,2-Math.min(2,sortedStab.length)+2)];
   const usefulStatus = statusMoves.filter(id => {
     const eff = MOVES[id].effect;
-    return eff && (eff.status || eff.heal || eff.selfBoost);
+    return eff && (eff.status || eff.heal || eff.selfBoost || eff.hazard);
   });
   const finalMoves = [...new Set([...picked, ...usefulStatus.slice(0,statusCount)])].slice(0,4);
   while(finalMoves.length < 4 && movepool.length > finalMoves.length){
@@ -28,6 +28,7 @@ function bestFoeSwitchIdx(foeTeam, player, excludeIdxs){
   excludeIdxs = excludeIdxs || [];
   const alive = foeTeam.map((c,i)=>({c,i})).filter(x=>x.c.hp>0 && !excludeIdxs.includes(x.i));
   if(alive.length===0) return -1;
+  if(!player) return alive[0].i;
   const scored = alive.map(({c,i})=>{
     const offense = Math.max(...c.types.map(t=>getMult(t, player.types)));
     const defense = Math.max(...player.types.map(t=>getMult(t, c.types)));
@@ -45,6 +46,12 @@ function scoreFoeMoveVsTarget(foe, mv, target){
     const hpRatioFoe = foe.hp / foe.maxHp;
     if(eff.heal){
       return hpRatioFoe < 0.4 ? 50 - hpRatioFoe*80 : (hpRatioFoe < 0.7 ? 8 : 1);
+    }
+    if(eff.hazard){
+      const h = (typeof hazardsOf==='function') ? hazardsOf('player') : null;
+      if(!h) return 1;
+      const full = eff.hazard==='rocks' ? h.rocks : eff.hazard==='spikes' ? h.spikes>=3 : eff.hazard==='toxic' ? h.toxic>=2 : h.web;
+      return full ? 0 : (eff.hazard==='rocks' ? 16 : 12);
     }
     if(eff.status){
       const hpRatioTarget = target.hp / target.maxHp;
@@ -89,12 +96,19 @@ function scoreFoeMoveVsTarget(foe, mv, target){
 // Point d'entrée appelé chaque tour pour un combattant adverse : filtre les coups jouables (PP, entrave, Choix...), note chaque paire coup/cible via scoreFoeMoveVsTarget, puis choisit le meilleur (Maître de Type) ou tire au sort pondéré (dresseur normal).
 function chooseFoeMove(foe, possibleTargets, excellent){
   let moves = foe.disabledMove ? foe.moveObjs.filter(mv=>mv.name!==foe.disabledMove.name) : foe.moveObjs;
+  if(foe.tormented && foe.lastMoveUsed){
+    const varied = moves.filter(mv=>mv.name!==foe.lastMoveUsed.name);
+    if(varied.length) moves = varied;
+  }
   if(foe.lockedMove) moves = foe.moveObjs.filter(mv=>mv.name===foe.lockedMove.name);
   if(moves.length===0) moves = foe.moveObjs;
   if(foe.ppCur){
     const withPP = moves.filter(mv => (foe.ppCur[foe.moveObjs.indexOf(mv)]||0) > 0);
     if(withPP.length > 0) moves = withPP;
     else return { move: STRUGGLE_MOVE, target: possibleTargets[0] };
+  }
+  if(foe.contMove && (foe.contTurns>0 || foe.contMove.bide)){
+    return { move: foe.contMove, target: possibleTargets[0] };
   }
   if(foe.chargingMove){
     moves = moves.filter(mv=>mv===foe.chargingMove);

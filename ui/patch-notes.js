@@ -90,12 +90,80 @@ const PATCH_NOTES = [
             ]
           },
           {
+            icon: '📖', label: 'Pokédex : Pokémon manquants',
+            items: [
+              "5 Pokémon qui manquaient au Pokédex sont ajoutés : Scalpereur (dernière évolution de Scalproie), Courrousinge (évolution de Colossinge), Farigiraf (évolution de Girafarig), Deusolourdo (évolution d'Insolourdo) et Ire-Foudre, un Pokémon Paradoxe légendaire",
+              "Scalproie et Scalpereur apprennent Négo-Tranchante"
+            ]
+          },
+          {
             icon: '📱', label: 'Adaptation à tous les écrans',
             items: [
               "Tous les écrans s'adaptent au téléphone (portrait et paysage), à la tablette et à l'ordinateur : tailles des Pokémon en combat ajustées à la hauteur disponible, combats en double et bannière des jumeaux compactés, Campement sans défilement en paysage",
               "Les fenêtres (sac, équipe, Ranch, notes de mise à jour...) ne dépassent plus de l'écran, et les grilles du Dex, du draft et de l'équipe passent sur deux colonnes sur les écrans moyens"
             ]
           }
+        ]
+      },
+      {
+        version: 'v0.10.3',
+        title: 'v0.10.3 — Corrections de combat, talents & attaques',
+        categories: [
+            {
+              icon: '🧬', label: 'Talents & attaques : vérification complète',
+              items: [
+                "Les talents de tous les Pokémon (1 084 stades, formes Méga comprises) ont été vérifiés un par un et corrigés d'après les données officielles : chaque stade d'évolution a maintenant ses propres talents (par exemple Chrysacier n'a plus les talents de Chenipan mais Mue, Papilusion a Œil Composé et Lentiteintée), avec le talent caché en dernière position",
+                "Les talents inventés sont retirés (par exemple « Cercle d'Énergie » pour Bulbizarre, « Dégobage » pour Carapuce ou « Transistor » pour Pichu) et les talents cités par des Pokémon mais jamais décrits dans le jeu ont maintenant leur description (Normalise, Frein, Heavy Metal, Rage Poison, Filature...)",
+                "Les listes d'attaques de toutes les lignées ont été vérifiées : environ 4 500 attaques qu'un Pokémon ne peut jamais apprendre dans les jeux officiels ont été retirées (par exemple Charge pour Salamèche ou Psyko pour Pikachu), et environ 2 080 attaques apprises par niveau dans les derniers jeux et jusqu'ici absentes ont été ajoutées",
+                "Les attaques réservées à une branche d'évolution (Rafflesia, Joliflor...) ont aussi été vérifiées",
+                "Crocs Feu et Crocs Éclair sont ajoutées au jeu, et les Crocs (Feu, Givre, Éclair) et Poings (Feu, Glace, Éclair) élémentaires sont donnés à tous les Pokémon qui peuvent officiellement les apprendre (255 attaques ajoutées sur 130 lignées)",
+                "Toutes les attaques qu'un Pokémon peut apprendre officiellement par tutorat ou par reproduction (Ronflement, Vantardise, Coup d’Boule, Queue de Fer, Onde de Choc...) sont ajoutées à ceux qui ne les avaient pas : environ 5 750 attaques sur 554 lignées, ce qui porte la liste médiane à 47 attaques par lignée"
+              ]
+            },
+            {
+              icon: '⚔️', label: 'Attaques : chacune vérifiée',
+              items: [
+                "Les 834 attaques du jeu ont été testées une par une en combat et comparées aux données officielles : plus aucune n'a d'erreur ni d'effet manquant",
+                "Corrections de type (Morsure passe Ténèbres ; Charme, Doux Baiser et Rayon Lune passent Fée ; Nitro Crash passe Combat ; Salaison passe Roche ; Hommage Posthume passe Spectre) et de catégorie (Danse Fleurs, Relâche, Ball’Météo, Brouhaha et Tranch’Air deviennent spéciales, Plongée devient physique, Cauchemar devient une capacité de statut)",
+                "Priorités ajoutées : Riposte, Voile Miroir, Vendetta, Mitra-Poing, Carapiège, Bec-Canon, Cyclone, Téléport passent en priorité négative ; Reflet Magik, Saisie, Sheauriken et Patience passent en priorité positive ; Gliss’Herbe n'est prioritaire que sous Champ Herbu",
+                "16 attaques à frappes multiples frappent enfin plusieurs fois (Double Pied, Dard-Nuée, Furie, Torgnoles, Poing Comète, Picanon, Pilonnage, Combo-Griffe, Triple Pied, Cogne, Stalactite, Balle Graine, Boule Roc...), Baston frappe une fois par Pokémon debout, et les effets secondaires des attaques à frappes multiples (poison de Double Dard, peur d'Écrous d’Poing...) s'appliquent enfin",
+                "Étreinte, Ligotage, Danse Flammes, Claquoir, Siphon et Tourbi-Sable piègent enfin la cible et lui infligent des dégâts à chaque tour ; Mawashi Geri et Piqué font parfois reculer, Électacle peut paralyser et Kokiyarme peut empoisonner",
+                "18 capacités de statut qui ne faisaient rien fonctionnent enfin : Attraction, Encore, Tourmente, Dépit, Clairvoyance, Flair, Lien du Destin, Rancune, Tourniquet, Camouflage, Conversion, Conversion 2, Reflet Magik, Possessif, Saisie, Cauchemar, Change-Côté et Thérémonie",
+                "Nouvelles mécaniques : recharge après Ultralaser, Hydroblast, Rafale Feu, Végé-Attaque et consorts ; taux de coup critique élevé (Tranche, Coup Croix, Lame de Roc, Griffe Ombre...) et coups toujours critiques ; attaques qui ne ratent jamais (Météores, Aéropique, Onde de Choc, Aurasphère...) ; Mania, Colère, Danse Fleurs et Grand Courroux durent 2 à 3 tours puis rendent confus ; Roulade, Ball'Glace et Taillade gagnent en puissance à chaque tour ; Patience, Coup Bas, Bluff, Escarmouche, Mitra-Poing et Carapiège suivent leurs vraies conditions ; Pied Voltige et Pied Sauté blessent le lanceur en cas d'échec ; Casse-Brique et Psycho-Croc détruisent les écrans ; Larcin et Clepto-Mânes volent objet et bonus de stats ; Force Nature, Ball’Météo et Champlification changent de type selon le terrain ou la météo"
+              ]
+            },
+            {
+              icon: '🆕', label: 'Nouvelles attaques & puissances officielles',
+              items: [
+                "237 attaques qui manquaient au jeu sont ajoutées, avec leur nom, leur type, leur puissance, leur précision, leurs PP et leur description officiels : Boutefeu, Rapace, Vampi-Poing, Éco-Sphère, Telluriforce, Change Éclair, Pisto-Poing, Aqua-Jet, Ébullition, Plaie Croix, Mégafouet, Vampigraine, Atterrissage, Hurlement, Clonage, Distorsion, Vent Arrière, Gravité, Exuviation, Machination, Papillodanse, Anti-Brume, Zone Étrange, Zone Magique et bien d'autres",
+                "Elles sont données aux Pokémon qui peuvent officiellement les apprendre (par niveau, tutorat, reproduction ou CT) : près de 10 900 apprentissages ajoutés, la liste médiane passe à 66 attaques par lignée",
+                "La puissance de toutes les attaques est maintenant celle des jeux officiels (152 attaques modifiées : Tonnerre passe de 70 à 90, Lance-Flammes à 90, Surf à 90, Ultralaser à 150, Damoclès à 120...). Les attaques à frappes multiples utilisent la puissance officielle par frappe",
+                "Toutes les attaques ont maintenant leur effet spécial : Clonage (le clone encaisse les coups), Distorsion, Vent Arrière, Gravité, Lance-Boue, Zone Étrange, Zone Magique, Embargo, Anti-Soin, Air Veinard, Coup d'Main, Par Ici / Poudre Fureur, Vœu Soin / Danse Lune, Second Souffle, Photocopie, Moi d'Abord, À la Queue, Après Vous, les échanges de stats et de types, les protections à effet (Piège de Fil, Rempart Brûlant, Tatamigaeshi, Prévention)...",
+                "Effets des attaques offensives : puissance selon le poids (Balayage, Nœud Herbe, Tacle Lourd, Tacle Feu), selon la Vitesse (Gyroballe, Boule Élek), selon les PV (Presse, Essorage, Giclédo, Pression Extrême), selon les stats (Force Ajoutée, Arrogance, Poing de Colère), Fulmifer, Dernier Recours, Tout ou Rien, Tricherie, Choc Psy, Synchropeine, Draco-Queue et Projection qui forcent le changement, Picore et Piqûre qui mangent la baie, Dégommage, Don Naturel, Téra Explosion...",
+                "Demi-Tour, Eau Revoir et Change Éclair font enfin revenir le lanceur, et Copie ne fait plus planter le combat quand c'est un adversaire qui l'utilise. Close Combat, Pouvoir Antique, Vent Argenté, Draco-Ascension, Acide Malique et Tour Rapide ont maintenant leurs bonnes variations de statistiques"
+              ]
+            },
+            {
+              icon: '🏷️', label: 'Noms officiels & mécaniques complétées',
+              items: [
+                "Les 834 attaques portent maintenant leur nom français officiel (234 renommées : Balayage, Colère, Larcin, Hantise, Clepto-Mânes, Carapiège, Sheauriken, Kokiyarme, Pouvoir Antique, Champ Herbu...), et Implore et Ombre Portée sont ajoutées avec leurs apprentissages officiels",
+                "Hantise a sa vraie puissance (90) et traverse les protections",
+                "Poursuite frappe avec une puissance doublée un Pokémon qui quitte le combat ; Frénésie augmente l'Attaque à chaque coup reçu ; Chant Canon double si un autre Pokémon l'a déjà utilisé ce tour ; Flamme Croix et Éclair Croix se renforcent l'un l'autre ; Vengeance double si un allié est tombé au tour précédent ; Trépignement, Cent Rancunes, Vaste Pouvoir et Force G suivent leurs vraies conditions",
+                "Puissance Cachée prend le type déterminé par les IV du Pokémon, et Jugement / Coup Varia-Type prennent le type de la plaque ou de la mémoire tenue ; Retour et Frustration ont une puissance fixe de 102",
+                "Plasma Punch électrise les capacités du tour, Jackpot rapporte de l'argent en Tour de Combat, Rayon Spectral, Choc Météore et Photo-Geyser ignorent le talent de la cible, Sanction Suprême neutralise le talent d'une cible qui a déjà agi, et Brouhaha empêche les Pokémon de s'endormir tant qu'il dure",
+                "Aire d'Eau, Aire de Feu et Aire d'Herbe se combinent enfin en combat double : si deux alliés utilisent deux Aires différentes dans le même tour, elles fusionnent en une seule attaque de puissance 150 et créent un effet de camp pendant 4 tours (Eau + Feu : Arc-en-ciel, chances des effets secondaires doublées ; Feu + Herbe : Mer de Feu, 1/8 des PV perdus par tour chez l'adversaire hors Feu ; Herbe + Eau : Marécage, Vitesse adverse divisée par 4). Les effets s'affichent à côté des Poké Balls",
+                "Techno-Buster change de type selon le Module tenu (Module Choc : Électrik, Pyro : Feu, Cryo : Glace, Aqua : Eau), en vente chez le Marchand Itinérant ; Jugement ne réagit plus qu'aux Plaques et Coup Varia-Type qu'aux Mémoires"
+              ]
+            },
+            {
+              icon: '🪨', label: 'Corrections de combat',
+              items: [
+                "Les pièges d'entrée fonctionnent enfin : Piège de Roc (dégâts selon la faiblesse au type Roche), Picots (jusqu'à 3 couches, de plus en plus douloureux), Pics Toxik (jusqu'à 2 couches, nouvelle capacité qui empoisonne) et Toile Gluante (baisse la Vitesse) sont posés sur le camp adverse et touchent chaque Pokémon qui entre ensuite en combat (changement, remplaçant après un K.O., Hurlement, Change-Éclair...)",
+                "Picots, Pics Toxik et Toile Gluante ne touchent pas les Pokémon Vol ni ceux avec Lévitation ; un Pokémon Poison au sol absorbe les Pics Toxik. Tour Rapide et Toupie Éclat éliminent les pièges du camp de leur lanceur. Les pièges posés s'affichent à côté des Poké Balls de chaque camp, et les dresseurs adverses savent maintenant les utiliser",
+                "« Pointes » est renommée Picots, et Pics Toxik est ajoutée à plusieurs Pokémon Poison (Nidoran, Rozbouton, Mimigal, Qwilfish, Rapion, Cradopaud, Miamiasme, Germéclat)",
+                "Le gel n'est plus interminable : un Pokémon gelé dégèle toujours au bout de 3 tours perdus au maximum (20 % de chance de dégel à chaque tour comme avant), et les capacités Feu comme Roue de Feu ou Feu Sacré dégèlent leur lanceur"
+              ]
+            }
         ]
       }
     ]

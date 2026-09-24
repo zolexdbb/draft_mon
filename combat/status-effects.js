@@ -57,6 +57,15 @@ function triggerIntimidate(incoming, opponent){
 function triggerSwitchInAbilities(incoming, opponent){
   let msg = '';
   if(!battleState) return msg;
+  msg += applyEntryHazards(incoming);
+  if(battleState.wishHeal){
+    const wl = locateActiveSlot(incoming);
+    if(wl && battleState.wishHeal[wl.side] && incoming.hp>0){
+      battleState.wishHeal[wl.side] = false;
+      incoming.hp = incoming.maxHp; incoming.status = null; incoming.sleepCounter = 0;
+      msg += ` ${incoming.name} est entièrement soigné par le sacrifice de son coéquipier !`;
+    }
+  }
   if(incoming.ability==='Crachin' && (!battleState.weather || battleState.weather.type!=='pluie')){
     battleState.weather = { type:'pluie', turns:5 };
     msg += ` ${incoming.name} déclenche la pluie grâce à Crachin !`;
@@ -91,12 +100,187 @@ function triggerSwitchInAbilities(incoming, opponent){
   }
   return msg;
 }
+// Poursuite : un adversaire qui connaît Poursuite peut frapper (puissance x2, une chance sur deux) le Pokémon
+// qui s'apprête à quitter le terrain, avant qu'il ne parte. Renvoie le texte à ajouter au journal.
+function pursuitBeforeSwitch(leaver){
+  if(!battleState || !leaver || leaver.hp<=0) return '';
+  const loc = locateActiveSlot(leaver);
+  if(!loc) return '';
+  const hunters = loc.side==='player' ? aliveFoeCombatants() : alivePlayerCombatants();
+  let msg = '';
+  hunters.forEach(h=>{
+    if(leaver.hp<=0) return;
+    const list = h.moveObjs || h.moves || [];
+    const idx = list.findIndex(m=>m && m.pursuit);
+    if(idx<0 || (h.ppCur && h.ppCur[idx]<=0) || Math.random()>0.5) return;
+    const mv = list[idx];
+    if(h.ppCur) h.ppCur[idx]--;
+    const dm = computeDamage(h, { ...mv, power: mv.power*2 }, leaver).dmg;
+    leaver.hp = Math.max(0, leaver.hp - dm);
+    markHit(leaver, mv, dm);
+    msg += ` ${h.name} rattrape ${leaver.name} avec ${mv.name} avant son départ (${dm} dégâts) !`;
+  });
+  return msg;
+}
+/* ---- Pièges d'entrée : Piège de Roc, Picots, Pics Toxik, Toile Gluante ----
+   Posés sur le camp adverse du lanceur (battleState.hazards.player / .foe), ils agissent sur chaque
+   Pokémon qui ENTRE ensuite sur le terrain (changement, remplaçant après K.O., Hurlement, Change-Éclair...).
+   Picots/Pics Toxik/Toile Gluante n'affectent que les Pokémon au sol. Tour Rapide / Toupie Mortelle
+   nettoient le camp de leur lanceur. */
+const HAZARD_LABEL = { rocks:'🪨 Piège de Roc', spikes:'▲ Picots', toxic:'☠️ Pics Toxik', web:'🕸️ Toile Gluante' };
+function freshHazards(){
+  return { player:{ rocks:false, spikes:0, toxic:0, web:false }, foe:{ rocks:false, spikes:0, toxic:0, web:false } };
+}
+function hazardsOf(side){
+  if(!battleState) return null;
+  if(!battleState.hazards) battleState.hazards = freshHazards();
+  return battleState.hazards[side];
+}
+/* ---- Aires (Aire d'Eau / Aire de Feu / Aire d'Herbe) : en combat double, deux alliés qui utilisent
+   deux Aires différentes dans le même tour les combinent en une seule attaque de puissance 150 (du type de
+   la première Aire) qui crée un effet de camp pendant 4 tours : Arc-en-ciel (Eau+Feu, chances des effets
+   secondaires doublées pour le camp du lanceur), Mer de Feu (Feu+Herbe, 1/8 des PV perdus par tour hors
+   Feu) ou Marécage (Herbe+Eau, Vitesse divisée par 4) sur le camp adverse. ---- */
+const PLEDGE_COMBOS = { 'fire+water':'rainbow', 'water+fire':'rainbow', 'fire+grass':'fire', 'grass+fire':'fire', 'grass+water':'swamp', 'water+grass':'swamp' };
+const PLEDGE_LABEL = { rainbow:'🌈 Arc-en-ciel', fire:'🔥 Mer de Feu', swamp:'🟤 Marécage' };
+function freshPledgeFx(){
+  return { player:{ rainbow:0, fire:0, swamp:0 }, foe:{ rainbow:0, fire:0, swamp:0 } };
+}
+function pledgeFxOf(side){
+  if(!battleState) return null;
+  if(!battleState.pledgeFx) battleState.pledgeFx = freshPledgeFx();
+  return battleState.pledgeFx[side];
+}
+// Chance d'effet secondaire d'un coup : doublée par l'Arc-en-ciel du camp du lanceur.
+function serene(actor, chance){
+  if(!battleState || !battleState.pledgeFx) return chance;
+  const loc = locateActiveSlot(actor);
+  return (loc && battleState.pledgeFx[loc.side].rainbow>0) ? Math.min(1, chance*2) : chance;
+}
+// Si un allié a prévu une autre Aire plus loin dans la file, fusionne les deux actions en une seule
+// (l'allié lance l'attaque combinée à la place de la première Aire). Renvoie l'action à exécuter.
+function mergePledge(queue, i){
+  const action = queue[i];
+  const mv = action.move;
+  if(!mv || !mv.pledge || !battleState || !battleState.isDouble) return action;
+  const loc = locateActiveSlot(action.actor);
+  if(!loc) return action;
+  for(let j=i+1; j<queue.length; j++){
+    const other = queue[j];
+    if(!other.move || !other.move.pledge || other.move.pledge===mv.pledge || other.actor===action.actor || other.actor.hp<=0) continue;
+    const ol = locateActiveSlot(other.actor);
+    if(!ol || ol.side!==loc.side) continue;
+    const combo = PLEDGE_COMBOS[mv.pledge+'+'+other.move.pledge];
+    if(!combo) continue;
+    queue.splice(j, 1);
+    const merged = { ...other, move:{ ...other.move, name:`${mv.name} + ${other.move.name}`, type:mv.type, power:150, pledgeCombo:combo } };
+    queue[i] = merged;
+    return merged;
+  }
+  return action;
+}
+// Vrai si le Pokémon touche le sol (les Vol et le talent Lévitation évitent Picots/Pics Toxik/Toile Gluante).
+function isGrounded(c){
+  if(c.smackDown || (battleState && battleState.gravityTurns>0)) return true;
+  if(c.magnetRise>0) return false;
+  const types = c.transformedTypes || c.types || [];
+  return !(types.includes('vol') || c.ability==='Lévitation');
+}
+// Mange la baie tenue par un combattant (effet immédiat : soin de PV ou de statut) ; renvoie true si une baie a été mangée.
+function eatBerryOf(c, logs){
+  const it = c.heldItem && ITEMS[c.heldItem];
+  if(!it || it.category!=='baie' || c.itemUsed) return false;
+  c.itemUsed = true; c.ateBerry = true;
+  if(it.berryHeal){
+    const before = c.hp;
+    c.hp = Math.min(c.maxHp, c.hp + Math.max(1, Math.round(c.maxHp*it.berryHeal)));
+    logs.push(`${c.name} mange sa ${it.name} et récupère ${c.hp-before} PV !`);
+  } else if(it.berryCure && c.status && (it.berryCure==='all' || it.berryCure===c.status)){
+    c.status = null;
+    logs.push(`${c.name} mange sa ${it.name} et est soigné !`);
+  } else {
+    logs.push(`${c.name} mange sa ${it.name} !`);
+  }
+  return true;
+}
+// Rend leur objet aux combattants dont il était temporairement mis de côté (Embargo, Zone Magique).
+function restoreStashedItem(c){
+  if(c.roomItem && !c.heldItem){ c.heldItem = c.roomItem; }
+  c.roomItem = null;
+}
+// Le camp `side` ('player'|'foe') subit un nouveau piège (posé par un Pokémon de l'autre camp).
+function placeHazard(kind, side, logs){
+  const h = hazardsOf(side);
+  if(!h) return;
+  const who = side==='foe' ? "l'équipe adverse" : 'ton équipe';
+  if(kind==='rocks'){
+    if(h.rocks){ logs.push('Mais ça échoue, des pierres flottent déjà autour de '+who+' !'); return; }
+    h.rocks = true;
+    logs.push(`Des pierres pointues flottent autour de ${who} !`);
+  } else if(kind==='spikes'){
+    if(h.spikes>=3){ logs.push('Mais ça échoue, il y a déjà 3 couches de picots autour de '+who+' !'); return; }
+    h.spikes++;
+    logs.push(`Des picots se dispersent au sol autour de ${who} ! (couche ${h.spikes}/3)`);
+  } else if(kind==='toxic'){
+    if(h.toxic>=2){ logs.push('Mais ça échoue, il y a déjà 2 couches de pics toxiques autour de '+who+' !'); return; }
+    h.toxic++;
+    logs.push(`Des pics empoisonnés se dispersent au sol autour de ${who} ! (couche ${h.toxic}/2)`);
+  } else if(kind==='web'){
+    if(h.web){ logs.push('Mais ça échoue, une toile gluante recouvre déjà le sol autour de '+who+' !'); return; }
+    h.web = true;
+    logs.push(`Une toile gluante s'étend au sol autour de ${who} !`);
+  }
+}
+// Retire tous les pièges du camp `side`.
+function clearHazards(side, logs){
+  const h = hazardsOf(side);
+  if(!h || !(h.rocks || h.spikes || h.toxic || h.web)) return false;
+  h.rocks = false; h.spikes = 0; h.toxic = 0; h.web = false;
+  logs.push(side==='foe' ? "Les pièges autour de l'équipe adverse disparaissent !" : 'Les pièges autour de ton équipe disparaissent !');
+  return true;
+}
+// Applique les pièges du camp du Pokémon qui vient d'entrer (dégâts, poison, Vitesse) et renvoie le texte à ajouter au journal.
+function applyEntryHazards(incoming){
+  if(!battleState || !incoming || incoming.hp<=0) return '';
+  const loc = locateActiveSlot(incoming);
+  if(!loc) return '';
+  const h = hazardsOf(loc.side);
+  if(!h || !(h.rocks || h.spikes || h.toxic || h.web)) return '';
+  const logs = [];
+  const types = incoming.transformedTypes || incoming.types || [];
+  const grounded = isGrounded(incoming);
+  if(h.rocks){
+    const dmg = Math.max(1, Math.floor(incoming.maxHp * 0.125 * getMult('roche', types)));
+    incoming.hp = Math.max(0, incoming.hp - dmg);
+    logs.push(`Des pierres pointues blessent ${incoming.name} ! (${dmg} dégâts)`);
+  }
+  if(h.spikes && grounded && incoming.hp>0){
+    const frac = [1/8, 1/6, 1/4][h.spikes-1];
+    const dmg = Math.max(1, Math.floor(incoming.maxHp * frac));
+    incoming.hp = Math.max(0, incoming.hp - dmg);
+    logs.push(`Les picots blessent ${incoming.name} ! (${dmg} dégâts)`);
+  }
+  if(h.toxic && grounded && incoming.hp>0){
+    if(types.includes('poison')){
+      h.toxic = 0;
+      logs.push(`${incoming.name} absorbe les pics empoisonnés, qui disparaissent !`);
+    } else {
+      inflictStatus(incoming, 'poison', logs);
+    }
+  }
+  if(h.web && grounded && incoming.hp>0){
+    logs.push(`${incoming.name} est pris dans la toile gluante !`);
+    applyStatBoost(incoming, [{stat:'spe', stages:-1}], logs);
+  }
+  return logs.length ? ' ' + logs.join(' ') : '';
+}
 // Applique une liste de changements de stats (boosts/malus, bornés à ±6) et log le résultat.
 function applyStatBoost(target, boosts, logs){
   boosts.forEach(b=>{
     const before = target.stages[b.stat];
     target.stages[b.stat] = Math.max(-6, Math.min(6, before + b.stages));
     const actual = target.stages[b.stat]-before;
+    if(actual<0) target.loweredThisTurn = true;
     if(actual!==0){
       logs.push(`${STAT_LABEL[b.stat]} de ${target.name} ${actual>0?'augmente':'diminue'} !`);
     } else {
@@ -120,6 +304,10 @@ function inflictStatus(target, status, logs){
   }
   if(battleState && battleState.terrain && battleState.terrain.type==='misty'){
     logs.push(`La Zone Brumeuse empêche ${target.name} d'avoir un problème de statut !`);
+    return;
+  }
+  if(status==='sommeil' && battleState && [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(c=>c.contMove && c.contMove.uproar)){
+    logs.push(`Le vacarme empêche ${target.name} de s'endormir !`);
     return;
   }
   if(status==='sommeil' && battleState && battleState.terrain && battleState.terrain.type==='electric'){
@@ -177,10 +365,12 @@ function inflictStatus(target, status, logs){
   }
   target.status = status;
   if(status==='sommeil') target.sleepCounter = 2+Math.floor(Math.random()*2);
+  if(status==='gel') target.freezeTurns = 0;
   logs.push(`${target.name} est ${STATUS_LABEL[status]} !`);
 }
 // Soigne un pourcentage des PV max et log le montant récupéré.
 function healPercent(target, frac, logs){
+  if(target.healBlock>0){ logs.push(`Anti-Soin empêche ${target.name} de récupérer des PV !`); return; }
   const before = target.hp;
   target.hp = Math.min(target.maxHp, target.hp + Math.round(target.maxHp*frac));
   logs.push(`${target.name} récupère ${target.hp-before} PV !`);
@@ -197,7 +387,10 @@ const TERRAIN_LABEL = { grassy:'🌱 Zone Herbue', electric:'⚡ Zone Électriqu
 // instruct/wakeAll/recycle/psychUp/cureStatus/dualConfuse/teamProtect/trapField (divers Gen 6-8).
 function applyStatusEffect(user, target, move, logs){
   const eff = move.effect||{};
-  if(eff.selfBoost) applyStatBoost(user, eff.selfBoost, logs);
+  if(eff.selfBoost){
+    if(eff.boostIfType && !(user.transformedTypes||user.types).includes(eff.boostIfType)) logs.push('Mais ça n\'a aucun effet sur ' + user.name + ' !');
+    else applyStatBoost(user, eff.selfBoost, logs);
+  }
   if(eff.foeBoost){
     if((target.ability==='Corps Sain' || target.ability==='Intégral Métal') && eff.foeBoost.every(b=>b.stages<0)){
       logs.push(`${target.ability} empêche la baisse de statistiques de ${target.name} !`);
@@ -248,6 +441,10 @@ function applyStatusEffect(user, target, move, logs){
       logs.push(`Ça ne marche pas, ${target.name} n'a pas encore utilisé de capacité !`);
     }
   }
+  if(eff.hazard && battleState){
+    const userLoc = locateActiveSlot(user);
+    if(userLoc) placeHazard(eff.hazard, userLoc.side==='player' ? 'foe' : 'player', logs);
+  }
   if(eff.forceSwitch && battleState){
     if(target.ability==='Ventouse'){
       logs.push(`${target.name} résiste grâce à Ventouse !`);
@@ -283,6 +480,8 @@ function applyStatusEffect(user, target, move, logs){
       const aliveIdx = roster.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
       if(aliveIdx.length>0){
         const newIdx = rand(aliveIdx);
+        const pursuitMsg = pursuitBeforeSwitch(user);
+        if(pursuitMsg) logs.push(pursuitMsg.trim());
         const savedStages = eff.batonPass ? {...user.stages} : null;
         const entering = setActiveSlot(loc.side, loc.slot, newIdx);
         resetBattleFields(entering);
@@ -300,10 +499,279 @@ function applyStatusEffect(user, target, move, logs){
       }
     }
   }
+  /* ---- Capacités « spéciales » longtemps sans effet (Attraction, Encore, Tourmente, Dépit, Clairvoyance...) ---- */
+  if(eff.infatuate){
+    if(target.infatuated) logs.push(`${target.name} est déjà amoureux !`);
+    else { target.infatuated = true; logs.push(`${target.name} tombe amoureux de ${user.name} !`); }
+  }
+  if(eff.encore){
+    if(!target.lastMoveUsed || target.encoreTurns>0){
+      logs.push('Mais ça échoue !');
+    } else {
+      target.lockedMove = target.lastMoveUsed;
+      target.encoreTurns = 3;
+      logs.push(`${target.name} est obligé de répéter ${target.lastMoveUsed.name} !`);
+    }
+  }
+  if(eff.torment){
+    if(target.tormented) logs.push('Mais ça échoue !');
+    else { target.tormented = true; logs.push(`${target.name} est tourmenté : il ne pourra plus utiliser deux fois de suite la même capacité !`); }
+  }
+  if(eff.spite){
+    const list = target.moveObjs || target.moves || [];
+    const idx = list.indexOf(target.lastMoveUsed);
+    if(idx>=0 && target.ppCur && target.ppCur[idx]>0){
+      const before = target.ppCur[idx];
+      target.ppCur[idx] = Math.max(0, before-4);
+      logs.push(`Les PP de ${target.lastMoveUsed.name} de ${target.name} baissent de ${before-target.ppCur[idx]} !`);
+    } else {
+      logs.push('Mais ça échoue !');
+    }
+  }
+  if(eff.foresight){
+    target.foresighted = true;
+    if((target.stages.eva||0)>0) target.stages.eva = 0;
+    logs.push(`${user.name} identifie ${target.name} : son esquive est neutralisée et les Spectre ne sont plus immunisés contre Normal et Combat !`);
+  }
+  if(eff.destinyBond){
+    user.destinyBond = true;
+    logs.push(`${user.name} veut entraîner son adversaire dans sa chute !`);
+  }
+  if(eff.grudge){
+    user.grudge = true;
+    logs.push(`${user.name} garde une rancune tenace !`);
+  }
+  if(eff.waterSport && battleState){
+    battleState.waterSportTurns = 5;
+    logs.push('Des jets d\'eau affaiblissent les attaques de type Feu pendant 5 tours !');
+  }
+  if(eff.camouflage){
+    const terr = battleState && battleState.terrain ? battleState.terrain.type : null;
+    const t = { grassy:'plante', electric:'electrik', misty:'fee', psychic:'psy' }[terr] || 'normal';
+    user.transformedTypes = [t];
+    logs.push(`${user.name} se camoufle et devient de type ${typeDisplayName(t)} !`);
+  }
+  if(eff.conversion){
+    const current = user.transformedTypes || user.types;
+    const options = [...new Set((user.moves || user.moveObjs || []).map(m=>m && m.type).filter(t=>t && !current.includes(t)))];
+    if(options.length){
+      const t = rand(options);
+      user.transformedTypes = [t];
+      logs.push(`${user.name} devient de type ${typeDisplayName(t)} !`);
+    } else logs.push('Mais ça échoue !');
+  }
+  if(eff.conversion2){
+    const last = target.lastMoveUsed;
+    if(last && last.type){
+      const options = ALL_TYPES.filter(t=>getMult(last.type, [t])<1);
+      if(options.length){
+        const t = rand(options);
+        user.transformedTypes = [t];
+        logs.push(`${user.name} devient de type ${typeDisplayName(t)}, résistant à ${last.name} !`);
+      } else logs.push('Mais ça échoue !');
+    } else logs.push('Mais ça échoue !');
+  }
+  if(eff.magicCoat){
+    user.magicCoat = true;
+    logs.push(`${user.name} s'entoure d'un voile magique qui renverra la prochaine capacité de statut !`);
+  }
+  if(eff.imprison){
+    user.imprisoning = true;
+    logs.push(`${user.name} scelle les capacités que l'adversaire partage avec lui !`);
+  }
+  if(eff.snatch){
+    user.snatching = true;
+    logs.push(`${user.name} guette la prochaine capacité de soutien adverse !`);
+  }
+  if(eff.nightmare){
+    if(target.status==='sommeil' && !target.nightmare){
+      target.nightmare = true;
+      logs.push(`${target.name} fait un cauchemar !`);
+    } else logs.push('Mais ça échoue !');
+  }
+  if(eff.courtChange && battleState){
+    const h = hazardsOf('player'), f = hazardsOf('foe');
+    if(h && f){
+      const tmp = { ...h };
+      Object.assign(h, f);
+      Object.assign(f, tmp);
+      logs.push('Les pièges des deux camps sont échangés !');
+    }
+  }
+  if(eff.teaTime && battleState){
+    let any = false;
+    [...alivePlayerCombatants(), ...aliveFoeCombatants()].forEach(c=>{
+      const it = c.heldItem && ITEMS[c.heldItem];
+      if(it && it.category==='baie' && !c.itemUsed){
+        any = true;
+        c.itemUsed = true; c.ateBerry = true;
+        if(it.berryHeal){
+          const before = c.hp;
+          c.hp = Math.min(c.maxHp, c.hp + Math.max(1, Math.round(c.maxHp*it.berryHeal)));
+          logs.push(`${c.name} mange sa ${it.name} et récupère ${c.hp-before} PV !`);
+        } else if(it.berryCure && c.status && (it.berryCure==='all' || it.berryCure===c.status)){
+          c.status = null;
+          logs.push(`${c.name} mange sa ${it.name} et est soigné !`);
+        } else {
+          logs.push(`${c.name} mange sa ${it.name} !`);
+        }
+      }
+    });
+    if(!any) logs.push('Mais rien ne se passe...');
+  }
+  /* ---- Capacités de terrain, de camp et de soutien ---- */
+  const bsE = battleState;
+  const userLocE = bsE ? locateActiveSlot(user) : null;
+  const userSide = userLocE ? userLocE.side : null;
+  const fail = () => logs.push('Mais ça échoue !');
+  if(eff.helpingHand){
+    const mates = (userSide==='player' ? alivePlayerCombatants() : aliveFoeCombatants()).filter(c=>c!==user);
+    if(mates.length){ mates[0].helped = true; logs.push(`${user.name} encourage ${mates[0].name} !`); } else fail();
+  }
+  if(eff.roost){
+    user.roostTypes = user.transformedTypes || null;
+    const kept = (user.transformedTypes || user.types).filter(t=>t!=='vol');
+    user.transformedTypes = kept.length ? kept : ['normal'];
+    user.roosted = true;
+  }
+  if(eff.substitute){
+    const cost = Math.max(1, Math.floor(user.maxHp/4));
+    if(user.substitute>0){ logs.push(`${user.name} a déjà un clone !`); }
+    else if(user.hp<=cost){ logs.push(`${user.name} n'a pas assez de PV pour créer un clone !`); }
+    else { user.hp -= cost; user.substitute = cost; logs.push(`${user.name} crée un clone de lui-même !`); }
+  }
+  if(eff.mudSport && bsE){ bsE.mudSportTurns = 5; logs.push('Des jets de boue affaiblissent les attaques de type Électrik pendant 5 tours !'); }
+  if(eff.redirect && bsE && userSide){
+    bsE.redirect = bsE.redirect || {};
+    bsE.redirect[userSide] = user;
+    logs.push(`${user.name} attire tous les regards !`);
+  }
+  if(eff.tailwind && bsE && userSide){
+    bsE.tailwind = bsE.tailwind || { player:0, foe:0 };
+    bsE.tailwind[userSide] = 4;
+    logs.push(`Un vent arrière souffle : la Vitesse de ${userSide==='player'?'ton équipe':"l'équipe adverse"} est doublée pendant 4 tours !`);
+  }
+  if(eff.gravity && bsE){ bsE.gravityTurns = 5; logs.push('La gravité s\'intensifie ! Plus rien ne peut voler ni léviter pendant 5 tours !'); }
+  if(eff.trickRoom && bsE){
+    if(bsE.trickRoomTurns>0){ bsE.trickRoomTurns = 0; logs.push('La Distorsion prend fin !'); }
+    else { bsE.trickRoomTurns = 5; logs.push('Les dimensions se déforment : les plus lents agissent en premier pendant 5 tours !'); }
+  }
+  if(eff.wonderRoom && bsE){ bsE.wonderRoomTurns = 5; logs.push('Défense et Défense Spéciale sont échangées pendant 5 tours !'); }
+  if(eff.magicRoom && bsE){
+    bsE.magicRoomTurns = 5;
+    [...alivePlayerCombatants(), ...aliveFoeCombatants()].forEach(c=>{ if(c.heldItem){ c.roomItem = c.heldItem; c.heldItem = null; } });
+    logs.push('Les objets tenus sont neutralisés pendant 5 tours !');
+  }
+  if(eff.embargo){
+    if(target.heldItem){ target.roomItem = target.heldItem; target.heldItem = null; }
+    target.embargoTurns = 5;
+    logs.push(`${target.name} ne peut plus utiliser son objet !`);
+  }
+  if(eff.healingWish && bsE && userSide){
+    bsE.wishHeal = bsE.wishHeal || {};
+    bsE.wishHeal[userSide] = true;
+    user.hp = 0;
+    logs.push(`${user.name} se sacrifie pour soigner son remplaçant !`);
+  }
+  if(eff.randomBoost){
+    applyStatBoost(user, [{ stat: rand(['atk','def','spa','spd','spe']), stages: eff.randomBoost }], logs);
+  }
+  if(eff.psychoShift){
+    if(user.status && !target.status){
+      const before = user.status;
+      inflictStatus(target, before, logs);
+      if(target.status===before) user.status = null;
+    } else fail();
+  }
+  if(eff.healBlock){ target.healBlock = 5; logs.push(`${target.name} ne peut plus récupérer de PV pendant 5 tours !`); }
+  if(eff.luckyChant && bsE && userSide){
+    bsE.luckyChant = bsE.luckyChant || { player:0, foe:0 };
+    bsE.luckyChant[userSide] = 5;
+    logs.push('Un air veinard protège des coups critiques pendant 5 tours !');
+  }
+  if(eff.powerTrick){
+    user.stats = { ...user.stats, atk: user.stats.def, def: user.stats.atk };
+    logs.push(`${user.name} échange son Attaque et sa Défense !`);
+  }
+  if(eff.abilitySet){
+    if(target.ability==='Comateux' || target.ability==='Sel Purifiant') fail();
+    else { target.ability = eff.abilitySet; logs.push(`Le talent de ${target.name} devient ${eff.abilitySet} !`); }
+  }
+  if(eff.entrainment){
+    target.ability = user.ability;
+    logs.push(`${target.name} acquiert le talent ${user.ability} !`);
+  }
+  if(eff.swapStages){
+    eff.swapStages.forEach(s=>{ const tmp = user.stages[s]||0; user.stages[s] = target.stages[s]||0; target.stages[s] = tmp; });
+    logs.push(`${user.name} et ${target.name} échangent leurs changements de statistiques !`);
+  }
+  if(eff.splitStats){
+    user.stats = { ...user.stats }; target.stats = { ...target.stats };
+    eff.splitStats.forEach(s=>{ const avg = Math.floor((user.stats[s]+target.stats[s])/2); user.stats[s] = avg; target.stats[s] = avg; });
+    logs.push(`${user.name} et ${target.name} partagent leurs statistiques !`);
+  }
+  if(eff.defog && bsE){
+    clearHazards('player', logs); clearHazards('foe', logs);
+    [...alivePlayerCombatants(), ...aliveFoeCombatants()].forEach(c=>{ c.reflectTurns = 0; c.lightScreenTurns = 0; c.mistTurns = 0; });
+    if(bsE.terrain){ bsE.terrain = null; logs.push('Le terrain de combat disparaît !'); }
+  }
+  if(eff.aquaRing){ user.aquaRing = true; logs.push(`${user.name} s'entoure d'un voile d'eau qui le soigne !`); }
+  if(eff.magnetRise){ user.magnetRise = 5; logs.push(`${user.name} lévite grâce à l'électromagnétisme !`); }
+  if(eff.wideGuard){ user.wideGuard = true; logs.push(`${user.name} protège son camp des attaques de zone !`); }
+  if(eff.quickGuard){ user.quickGuard = true; logs.push(`${user.name} protège son camp des attaques prioritaires !`); }
+  if(eff.telekinesis){ target.telekinesis = 3; logs.push(`${target.name} est soulevé par télékinésie : plus rien ne peut le rater !`); }
+  if(eff.setType){ target.transformedTypes = [eff.setType]; logs.push(`${target.name} devient de type ${typeDisplayName(eff.setType)} !`); }
+  if(eff.addType){
+    const cur = target.transformedTypes || target.types;
+    if(cur.includes(eff.addType)) fail();
+    else { target.transformedTypes = [...cur, eff.addType]; logs.push(`${target.name} devient aussi de type ${typeDisplayName(eff.addType)} !`); }
+  }
+  if(eff.copyTypes){ user.transformedTypes = [...(target.transformedTypes || target.types)]; logs.push(`${user.name} prend les types de ${target.name} !`); }
+  if(eff.quash || eff.afterYou){
+    const q = bsE && bsE.turnQueue;
+    if(q){
+      const at = q.findIndex((a,i)=> i>(bsE.turnIdx||0) && a.actor===target);
+      if(at>=0){
+        const [act] = q.splice(at, 1);
+        if(eff.quash) q.push(act); else q.splice((bsE.turnIdx||0)+1, 0, act);
+        logs.push(eff.quash ? `${target.name} passera en dernier !` : `${target.name} agira juste après !`);
+      } else fail();
+    } else fail();
+  }
+  if(eff.allySwitch && bsE && bsE.isDouble){
+    if(userSide==='player' && bsE.pActive2!=null){ const t = bsE.pActive; bsE.pActive = bsE.pActive2; bsE.pActive2 = t; logs.push('Les alliés échangent leur place !'); }
+    else if(userSide==='foe' && bsE.fActive2!=null){ const t = bsE.fActive; bsE.fActive = bsE.fActive2; bsE.fActive2 = t; logs.push('Les alliés échangent leur place !'); }
+    else fail();
+  } else if(eff.allySwitch){ fail(); }
+  if(eff.bestow){
+    if(user.heldItem && !target.heldItem){ target.heldItem = user.heldItem; user.heldItem = null; logs.push(`${user.name} donne son objet à ${target.name} !`); } else fail();
+  }
+  if(eff.electrify){
+    const later = bsE && bsE.turnQueue && bsE.turnQueue.some((a,i)=> i>(bsE.turnIdx||0) && a.actor===target);
+    if(later){ target.electrified = true; logs.push(`La prochaine capacité de ${target.name} devient de type Électrik !`); } else fail();
+  }
+  if(eff.ionDeluge && bsE){ bsE.ionDeluge = true; logs.push('Une pluie de plasma transforme les capacités Normal en Électrik !'); }
+  if(eff.powder){ target.powdered = true; logs.push(`${target.name} est couvert de poudre explosive !`); }
+  if(eff.happyHour && bsE){ bsE.happyHour = true; logs.push('L\'argent gagné sera doublé !'); }
+  if(eff.revive && bsE && userSide){
+    const roster = userSide==='player' ? bsE.player : bsE.foe;
+    const fallen = roster.find(c=>c.hp<=0);
+    if(fallen){ fallen.hp = Math.max(1, Math.floor(fallen.maxHp/2)); fallen.status = null; logs.push(`${fallen.name} revient à la vie !`); } else fail();
+  }
+  if(eff.tidyUp && bsE){
+    clearHazards('player', logs); clearHazards('foe', logs);
+    [...alivePlayerCombatants(), ...aliveFoeCombatants()].forEach(c=>{ c.substitute = 0; });
+  }
+  if(eff.dragonCheer && userSide){
+    const mates = (userSide==='player' ? alivePlayerCombatants() : aliveFoeCombatants()).filter(c=>c!==user);
+    if(mates.length){ mates[0].critBoost = true; logs.push(`${mates[0].name} est galvanisé et vise les points faibles !`); } else fail();
+  }
+  if(eff.healTarget) healPercent(target, eff.healTarget, logs);
   if(eff.mimic){
-    const slot = user.moves.indexOf(move);
+    const known = user.moves || user.moveObjs || [];
+    const slot = known.indexOf(move);
     if(target.lastMoveUsed && slot!==-1){
-      user.moves[slot] = target.lastMoveUsed;
+      known[slot] = target.lastMoveUsed;
       logs.push(`${user.name} copie ${target.lastMoveUsed.name} !`);
     } else {
       logs.push(`Ça ne marche pas, il n'y a rien à copier !`);
@@ -342,6 +810,7 @@ function applyStatusEffect(user, target, move, logs){
     if(Math.random() < successChance){
       user.protected = true;
       user.punishOnContact = !!move.punishContact;
+      user.protectPunish = eff.protectPunish || null;
       user.protectChain = chain + 1;
       logs.push(`${user.name} se met à l'abri !`);
     } else {
@@ -531,6 +1000,15 @@ function endOfTurnStatus(battler, logs){
     const dmg = Math.max(1, Math.round(battler.maxHp/16));
     battler.hp = Math.max(0, battler.hp-dmg);
     logs.push(`${battler.name} souffre de sa brûlure (${dmg} dégâts).`);
+  }
+  if(battler.nightmare){
+    if(battler.status==='sommeil'){
+      const dmg = Math.max(1, Math.round(battler.maxHp/4));
+      battler.hp = Math.max(0, battler.hp-dmg);
+      logs.push(`${battler.name} est tourmenté par son cauchemar (${dmg} dégâts).`);
+    } else {
+      battler.nightmare = false;
+    }
   }
   const weather = weatherNullified() ? null : (battleState ? battleState.weather : null);
   if(weather && battler.hp>0){

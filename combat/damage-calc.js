@@ -16,10 +16,45 @@ function accuracyStageMultiplier(stage){
 }
 const CRIT_CHANCE = 1/16;
 // Tire au sort si le coup est critique (chance de base 1/16, modifiée par talents/objets).
-function rollCrit(attacker, defender){
+// Type d'attaque imposé par la Plaque (Jugement) ou la Mémoire (Multi-Coups) tenue ; null sinon.
+const ITEM_TYPE_KEYS = {
+  fire:'feu', water:'eau', grass:'plante', electric:'electrik', ice:'glace', fighting:'combat', poison:'poison', ground:'sol',
+  flying:'vol', psychic:'psy', bug:'insecte', rock:'roche', ghost:'fantome', dragon:'dragon', dark:'tenebres', steel:'acier', fairy:'fee',
+  flame:'feu', splash:'eau', meadow:'plante', zap:'electrik', sky:'vol', toxic:'poison', earth:'sol', stone:'roche', insect:'insecte',
+  spooky:'fantome', iron:'acier', mind:'psy', icicle:'glace', fist:'combat', draco:'dragon', dread:'tenebres', pixie:'fee',
+  shock:'electrik', burn:'feu', chill:'glace', douse:'eau'
+};
+// kind : 'plate' (Jugement), 'memory' (Coup Varia-Type) ou 'drive' (Techno-Buster) ; seul l'objet du bon genre compte.
+function itemMoveType(item, kind){
+  if(!item || !item.sprite) return null;
+  const m = String(item.sprite).match(/([a-z]+)-(plate|memory|drive)/);
+  if(!m || (kind && kind!==true && m[2]!==kind)) return null;
+  return ITEM_TYPE_KEYS[m[1]] || null;
+}
+// Type de Puissance Cachée : calculé à partir des IV du combattant (31 partout = Ténèbres), ou d'après son nom s'il n'en a pas.
+const HIDDEN_POWER_TYPES = ['combat','vol','poison','sol','roche','insecte','fantome','acier','feu','eau','plante','electrik','psy','glace','dragon','tenebres'];
+function hiddenPowerType(c){
+  const iv = c.ivs;
+  if(iv){
+    const bit = k => (iv[k]===undefined ? 31 : iv[k]) % 2;
+    const n = bit('hp') + 2*bit('atk') + 4*bit('def') + 8*bit('spe') + 16*bit('spa') + 32*bit('spd');
+    return HIDDEN_POWER_TYPES[Math.floor(n*15/63)];
+  }
+  let h = 0; for(const ch of String(c.name)) h = (h*31 + ch.charCodeAt(0)) % 997;
+  return HIDDEN_POWER_TYPES[h % 16];
+}
+// Poids en kg d'un combattant (table POKEMON_WEIGHT en hectogrammes ; 50 kg par défaut).
+function weightKg(c){
+  const w = (typeof POKEMON_WEIGHT!=='undefined') ? POKEMON_WEIGHT[c.name] : null;
+  return Math.max(0.1, (w||500)/10);
+}
+function rollCrit(attacker, defender, move){
   if(defender.ability==='Coque Armure' || defender.ability==='Armurbaston') return false;
+  if(battleState && battleState.luckyChant){ const cl = locateActiveSlot(defender); if(cl && battleState.luckyChant[cl.side]>0) return false; }
+  if(move && move.alwaysCrit) return true;
   if(attacker.ability==='Sans Pitié' && defender.status==='poison') return true;
   let chance = CRIT_CHANCE;
+  if(move && move.critRate) chance = [CRIT_CHANCE, 1/8, 1/2, 1][Math.min(3, move.critRate)];
   if(attacker.ability==='Sniper') chance *= 1;
   if(defender.ability==='Écaille Spéciale') chance *= 4;
   if(attacker.critBoost) chance *= 4;
@@ -52,7 +87,7 @@ function protoBoostStat(c){
 }
 // Multiplicateur d'efficacité de type d'un coup, avec les cas spéciaux : superEffectiveVs forcé,
 // bypassTypeImmunity (ex. Mille Flèches), et Querelleur (Normal/Combat touche les Spectre).
-function moveEffectiveness(move, defTypes, attacker){
+function moveEffectiveness(move, defTypes, attacker, defender){
   const atkTypes = move.type2 ? [move.type, move.type2] : [move.type];
   let eff = 1;
   defTypes.forEach(dt=>{
@@ -64,6 +99,9 @@ function moveEffectiveness(move, defTypes, attacker){
     });
     if(move.bypassTypeImmunity && v===0) v = 1;
     if(attacker && attacker.ability==='Querelleur' && dt==='fantome' && (move.type==='normal'||move.type==='combat') && v===0) v = 1;
+    if(defender && defender.foresighted && dt==='fantome' && (move.type==='normal'||move.type==='combat') && v===0) v = 1;
+    if(defender && defender.miracleEyed && dt==='tenebres' && move.type==='psy' && v===0) v = 1;
+    if(defender && (defender.smackDown || (battleState && battleState.gravityTurns>0)) && dt==='vol' && move.type==='sol' && v===0) v = 1;
     eff *= v;
   });
   return eff;
@@ -74,12 +112,17 @@ function computeDamage(attacker, move, defender){
   if(move.fixedDamage){
     return { dmg: move.fixedDamage, eff: 1, crit:false };
   }
-  const crit = rollCrit(attacker, defender);
-  const atkBase = move.useDefenseForAtk ? attacker.stats.def : (move.cat==='phys' ? attacker.stats.atk : attacker.stats.spa);
-  const defBase = move.cat==='phys' ? defender.stats.def : defender.stats.spd;
-  let atkStage = move.useDefenseForAtk ? attacker.stages.def : (move.cat==='phys' ? attacker.stages.atk : attacker.stages.spa);
-  let defStage = move.cat==='phys' ? defender.stages.def : defender.stages.spd;
+  if(move.metalBurst) return { dmg: Math.max(1, Math.round(1.5*((attacker.lastPhysDamage||0)+(attacker.lastSpecDamage||0)))), eff:1, crit:false };
+  if(move.finalGambit) return { dmg: Math.max(1, attacker.hp), eff:1, crit:false };
+  const crit = rollCrit(attacker, defender, move);
+  const atkBase = move.useTargetAtk ? defender.stats.atk : (move.useDefenseForAtk ? attacker.stats.def : (move.cat==='phys' ? attacker.stats.atk : attacker.stats.spa));
+  const wonderRoom = !!(battleState && battleState.wonderRoomTurns>0);
+  const targetPhysDef = (move.cat==='phys' || move.targetDefStat==='def') !== wonderRoom;
+  const defBase = targetPhysDef ? defender.stats.def : defender.stats.spd;
+  let atkStage = move.useTargetAtk ? defender.stages.atk : (move.useDefenseForAtk ? attacker.stages.def : (move.cat==='phys' ? attacker.stages.atk : attacker.stages.spa));
+  let defStage = targetPhysDef ? defender.stages.def : defender.stages.spd;
   if(crit){ atkStage = Math.max(0, atkStage); defStage = Math.min(0, defStage); }
+  if(move.ignoreTargetStages) defStage = 0;
   const ruinAtkStat = move.cat==='phys' ? 'atk' : 'spa';
   const ruinAtkAbility = ruinAtkStat==='atk' ? 'Fléau Tablette' : 'Fléau Récipient';
   const ruinAtkMult = otherActiveHasAbility(ruinAtkAbility, attacker) ? 0.75 : 1;
@@ -98,7 +141,7 @@ function computeDamage(attacker, move, defender){
   const hasStab = atkTypes.includes(move.type) || (move.type2 && atkTypes.includes(move.type2));
   const teraStabBonus = attacker.teraActive && attacker.types.includes(move.type);
   const stab = hasStab ? (attacker.ability==='Adaptabilité' || teraStabBonus ? 2 : 1.5) : 1;
-  const eff = moveEffectiveness(move, defTypes, attacker);
+  const eff = moveEffectiveness(move, defTypes, attacker, defender);
   const variance = 0.85 + Math.random()*0.3;
   const burnPenalty = (attacker.status==='brulure' && move.cat==='phys' && attacker.ability!=='Cran') ? 0.5 : 1;
   const critMult = crit ? (attacker.ability==='Sniper' ? 2.25 : 1.5) : 1;
@@ -113,7 +156,7 @@ function computeDamage(attacker, move, defender){
     if(attacker.ability==='Essaim' && move.type==='insecte') abilityMult *= 1.5;
   }
   if(attacker.ability==='Technicien' && move.power>0 && move.power<=60) abilityMult *= 1.5;
-  if(attacker.ability==='Poing de Fer' && move.name.includes('Poing')) abilityMult *= 1.2;
+  if(attacker.ability==='Poing de Fer' && /Poing|Punch|Poings|Pisto-Poing|Poing-Éclair/i.test(move.name)) abilityMult *= 1.2;
   if(attacker.ability==='Torche' && move.type==='feu' && attacker.torchActivated) abilityMult *= 1.5;
   if(defender.ability==='Isograisse' && (move.type==='feu'||move.type==='glace')) abilityMult *= 0.5;
   if(defender.ability==='Filtre' && eff>1) abilityMult *= 0.75;
@@ -162,6 +205,9 @@ function computeDamage(attacker, move, defender){
     }
   }
 
+  if(battleState && battleState.waterSportTurns>0 && move.type==='feu') weatherMult *= 0.33;
+  if(battleState && battleState.mudSportTurns>0 && move.type==='electrik') weatherMult *= 0.33;
+
   let terrainMult = 1;
   const terrain = battleState ? battleState.terrain : null;
   if(terrain){
@@ -181,6 +227,51 @@ function computeDamage(attacker, move, defender){
     effectivePower = Math.max(1, Math.round(move.power * hpFrac));
   }
   if(move.facadeBoost && attacker.status) effectivePower *= 2;
+  if(move.escalate) effectivePower *= Math.pow(2, attacker.streak||0);
+  if(move.echoed) effectivePower = Math.min(200, move.power*(1+(attacker.streak||0)));
+  if(move.targetHpPower) effectivePower = Math.max(1, Math.floor(move.targetHpPower*defender.hp/defender.maxHp));
+  if(move.boostPower){
+    const raised = ['atk','def','spa','spd','spe','acc','eva'].reduce((a,k)=>a+Math.max(0,attacker.stages[k]||0),0);
+    effectivePower = move.power + move.boostPower*raised;
+  }
+  if(move.punishmentPower){
+    const raised = ['atk','def','spa','spd','spe','acc','eva'].reduce((a,k)=>a+Math.max(0,defender.stages[k]||0),0);
+    effectivePower = Math.min(200, 60+20*raised);
+  }
+  if(move.hitsPower) effectivePower = Math.min(350, 50+50*(attacker.hitsTaken||0));
+  if(move.powerChance && Math.random()<move.powerChance) effectivePower *= 2;
+  if(move.roundBoost && battleState && battleState.roundUsed) effectivePower *= 2;
+  if(move.fusion && battleState && battleState.fusionUsed && battleState.fusionUsed!==move.fusion) effectivePower *= 2;
+  if(move.ppPower){
+    const list = attacker.moveObjs || attacker.moves || [];
+    const idx = list.indexOf(move);
+    const left = (attacker.ppCur && idx>=0) ? attacker.ppCur[idx] : 0;
+    effectivePower = [200,80,60,50,40][Math.max(0,Math.min(4,left))];
+  }
+  if(move.weightPower){
+    const wu = weightKg(attacker), wt = weightKg(defender);
+    if(move.weightPower==='heavy'){ const r = wu/wt; effectivePower = r>=5?120:r>=4?100:r>=3?80:r>=2?60:40; }
+    else effectivePower = wt>=200?120:wt>=100?100:wt>=50?80:wt>=25?60:wt>=10?40:20;
+  }
+  if(attacker.helped) effectivePower *= 1.5;
+  if(move.powerIf){
+    const terr = battleState && battleState.terrain ? battleState.terrain.type : null;
+    const cond = {
+      targetStatus: !!defender.status, targetPoisoned: defender.status==='poison', targetParalyzed: defender.status==='paralysie',
+      targetAsleep: defender.status==='sommeil', targetHalfHp: defender.hp <= defender.maxHp/2, userNoItem: !attacker.heldItem,
+      targetDynamaxed: !!defender.dynamaxed, electricTerrain: terr==='electric', mistyTerrain: terr==='misty',
+      userFirst: !!attacker.movedFirst, userHit: !!attacker.hitThisTurn,
+      psychicTerrain: terr==='psychic', gravity: !!(battleState && battleState.gravityTurns>0),
+      userLastFailed: !!attacker.prevMoveFailed, userStatLowered: !!attacker.loweredThisTurn,
+      allyFainted: (()=>{ if(!battleState||!battleState.faintTurn) return false; const al = locateActiveSlot(attacker); return !!(al && battleState.faintTurn[al.side]===(battleState.turnNo||0)-1); })()
+    }[move.powerIf];
+    if(cond) effectivePower *= (move.powerMult || 2);
+  }
+  if(move.speedPower){
+    const us = Math.max(1, effectiveSpeed(attacker)), them = Math.max(1, effectiveSpeed(defender));
+    if(move.speedPower==='gyro') effectivePower = Math.min(150, Math.floor(25*them/us)+1);
+    else { const r = us/them; effectivePower = r>=4 ? 150 : r>=3 ? 120 : r>=2 ? 80 : r>=1 ? 60 : 40; }
+  }
   if(move.variablePower){
     effectivePower = 30 + Math.floor(Math.random()*61);
   }
@@ -195,6 +286,8 @@ function effectiveSpeed(c){
   if(c.status && c.ability==='Pied Véloce') spe *= 1.5;
   else if(c.status==='paralysie') spe *= 0.5;
   if(c.heldItem==='mouchoirChoix') spe *= 1.5;
+  if(battleState && battleState.tailwind){ const tl = locateActiveSlot(c); if(tl && battleState.tailwind[tl.side]>0) spe *= 2; }
+  if(battleState && battleState.pledgeFx){ const pl = locateActiveSlot(c); if(pl && battleState.pledgeFx[pl.side].swamp>0) spe *= 0.25; }
   if(protoBoostStat(c)==='spe') spe *= 1.5;
   const weather = weatherNullified() ? null : (battleState ? battleState.weather : null);
   if(weather){
