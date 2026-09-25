@@ -156,11 +156,25 @@ const PATCH_NOTES = [
               ]
             },
             {
+              icon: '🧠', label: 'IA & équipes des étages avancés',
+              items: [
+                "L'IA des dresseurs progresse avec les étages (4 niveaux : étages 1-4, 5-11, 12-24, 25+ ; les Mini-Boss et Boss montent d'un cran). Dès l'étage 5 elle estime les vrais dégâts de chaque capacité, repère les K.O., utilise les capacités prioritaires pour finir un Pokémon plus rapide et évite les capacités inutiles (immunités de type ou de talent comme Lévitation ou Absorbe-Eau)",
+                "Dès l'étage 12, elle joue les capacités de statut au bon moment : elle se soigne quand ce n'est pas vain, monte ses stats seulement quand tu ne peux pas la mettre à mal, pose Piège de Roc / Picots, endort ou paralyse (sans viser les types immunisés), utilise Vampigraine, Clonage, Écrans, Vent Arrière, Distorsion, la météo, Provoc ou Hurlement selon la situation",
+                "Dès l'étage 12 en combat simple, l'adversaire peut rappeler son Pokémon quand le duel est mal engagé (il fait peu de dégâts, en subit beaucoup ou ses stats sont tombées) pour envoyer un coéquipier qui encaisse le coup et prend l'avantage. Il ne change jamais deux tours de suite, en nombre limité, subit les pièges d'entrée et peut être rattrapé par Poursuite. Aux étages 25+ il connaît les capacités de ton Pokémon actif pour anticiper ses dégâts, change plus souvent et se protège face aux capacités à charge",
+                "Le remplaçant envoyé après un K.O. est choisi selon le duel réel (dégâts dans les deux sens) dès l'étage 5, plus seulement selon les types",
+                "Les équipes adverses sont composées plus intelligemment dès l'étage 5 : plusieurs candidats sont tirés puis on garde ceux qui forment la meilleure équipe (stats élevées, faiblesses communes évitées, résistances et couvertures complémentaires, mélange d'attaquants physiques et spéciaux, au moins un Pokémon rapide). Les Pokémon puissants sont de plus en plus favorisés dans les tirages, et l'as de l'équipe passe en dernier à partir de l'étage 10",
+                "Les attaques des adversaires sont mieux choisies : meilleur STAB de chaque type, couverture des types non touchés super efficacement, puis jusqu'à 2 capacités utiles (soin, montée de stats, pièges, statut, Distorsion...) aux étages avancés au lieu de simplement les plus puissantes",
+                "Les adversaires ont des EV et une nature adaptés à leur rôle (attaquant rapide ou Pokémon défensif) et tiennent des objets à partir de l'étage 6 : Orbe Vie, baies, Restes, Ceinture Force, Veste de Combat, et dès l'étage 12 Bandeau / Lunettes / Mouchoir Choix",
+                "Correction : en combat double, quand il ne reste plus qu'un Pokémon d'un camp après un K.O., l'écran plantait et le combat restait bloqué ; le survivant passe maintenant sur le terrain principal"
+              ]
+            },
+            {
               icon: '🪨', label: 'Corrections de combat',
               items: [
                 "Les pièges d'entrée fonctionnent enfin : Piège de Roc (dégâts selon la faiblesse au type Roche), Picots (jusqu'à 3 couches, de plus en plus douloureux), Pics Toxik (jusqu'à 2 couches, nouvelle capacité qui empoisonne) et Toile Gluante (baisse la Vitesse) sont posés sur le camp adverse et touchent chaque Pokémon qui entre ensuite en combat (changement, remplaçant après un K.O., Hurlement, Change-Éclair...)",
                 "Picots, Pics Toxik et Toile Gluante ne touchent pas les Pokémon Vol ni ceux avec Lévitation ; un Pokémon Poison au sol absorbe les Pics Toxik. Tour Rapide et Toupie Éclat éliminent les pièges du camp de leur lanceur. Les pièges posés s'affichent à côté des Poké Balls de chaque camp, et les dresseurs adverses savent maintenant les utiliser",
                 "« Pointes » est renommée Picots, et Pics Toxik est ajoutée à plusieurs Pokémon Poison (Nidoran, Rozbouton, Mimigal, Qwilfish, Rapion, Cradopaud, Miamiasme, Germéclat)",
+                "Les boutons Dynamax, Méga et Téracristal ne disparaissent plus après le premier combat : la colonne des mécaniques restait masquée après un écran de choix (Pokémon suivant après un K.O., cible en combat double, changement de Pokémon) et ne revenait plus pour les combats suivants",
                 "Le gel n'est plus interminable : un Pokémon gelé dégèle toujours au bout de 3 tours perdus au maximum (20 % de chance de dégel à chaque tour comme avant), et les capacités Feu comme Roue de Feu ou Feu Sacré dégèlent leur lanceur"
               ]
             }

@@ -281,14 +281,52 @@ function advanceAfterSlot(slot){
 function finalizeTurn(){
   const bs = battleState;
   bs.locked = true;
+  const level = foeAiLevel(bs);
+  // IA avancée : l'adversaire peut rappeler son Pokémon avant que le tour ne se joue (changement prioritaire).
+  const switchIdx = foeConsiderSwitch(level);
+  if(switchIdx>=0){
+    foeVoluntarySwitch(switchIdx, ()=> runFoeDecisions(level));
+    return;
+  }
+  runFoeDecisions(level);
+}
+// Fait choisir leur coup aux adversaires encore debout puis résout le tour complet.
+function runFoeDecisions(level){
+  const bs = battleState;
   const targets = alivePlayerCombatants();
   const foes = aliveFoeCombatants();
   const excellent = !!((bs.trainer && bs.trainer.boss) || (bs.trainer2 && bs.trainer2.boss));
   const foeActions = foes.map(f=>{
-    const { move, target } = chooseFoeMove(f, targets, excellent);
+    const { move, target } = chooseFoeMove(f, targets, level, excellent);
     return { actor:f, move, target, isPlayer:false };
   });
   resolveTurn([...bs.pendingActions, ...foeActions]);
+}
+// Changement volontaire de l'adversaire (combat simple) : ton Poursuite peut le frapper au départ, les pièges d'entrée et les
+// talents d'entrée s'appliquent au remplaçant, et tes attaques déjà choisies visent désormais le nouveau venu.
+function foeVoluntarySwitch(newIdx, callback){
+  const bs = battleState;
+  const old = bs.foe[bs.fActive];
+  old.chargingMove = null; old.chargingTarget = null; old.invulnType = null;
+  let msg = pursuitBeforeSwitch(old);
+  bs.foeSwitchCount = (bs.foeSwitchCount||0) + 1;
+  bs.foeLastSwitchTurn = bs.turnNo || 0;
+  if(old.hp<=0){
+    // Poursuite l'a mis K.O. avant son départ : il reste sur le terrain, le remplaçant arrive via la gestion des K.O.
+    renderBattle();
+    setLog(`<b>${old.name}</b> allait quitter le combat...${msg}`);
+    setTimeout(callback, 900);
+    return;
+  }
+  const incoming = setActiveSlot('foe', 'A', newIdx);
+  resetBattleFields(incoming);
+  bs.pendingActions.forEach(a=>{ if(a.target===old) a.target = incoming; });
+  alivePlayerCombatants().forEach(p=>{ if(p.chargingTarget===old) p.chargingTarget = incoming; });
+  const opponent = alivePlayerCombatants()[0];
+  const intimMsg = opponent ? (triggerIntimidate(incoming, opponent) + triggerSwitchInAbilities(incoming, opponent)) : '';
+  renderBattle();
+  setLog(`L'adversaire rappelle ${old.name} et envoie ${incoming.name} !${msg}${intimMsg}`);
+  setTimeout(callback, 1100);
 }
 
 // Le joueur choisit une capacité (appelé par l'UI) : résout la cible, transforme le coup en
@@ -1818,6 +1856,16 @@ function handleFaintsAndAdvance(){
     setLog(`<b>${bs.player[playerSlotIdx(slot)].name} est K.O. !</b>`);
     const usedIdx = [bs.pActive, bs.pActive2].filter(x=>x!=null);
     const aliveIdx = bs.player.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
+    if(aliveIdx.length===0){
+      // Personne en réserve : en combat double, le slot K.O. se vide et le survivant passe en slot A.
+      setTimeout(()=>{
+        if(slot==='A'){ bs.pActive = bs.pActive2; bs.pActive2 = null; } else bs.pActive2 = null;
+        bs.selectingSlot = 'A';
+        renderBattle();
+        handleFaintsAndAdvance();
+      }, 700);
+      return;
+    }
     setTimeout(()=> showSwitchPrompt(aliveIdx, slot), 700);
     return;
   }
@@ -1832,13 +1880,14 @@ function replaceFoeSlot(slot, callback){
   document.getElementById(slot==='A' ? 'foeBox' : 'foe2Box').classList.add('faint-fade');
   setLog(`<b>${bs.foe[idx].name} est K.O. !</b>`);
   const usedIdx = [bs.fActive, bs.fActive2].filter(x=>x!=null);
-  const excellent = !!((bs.trainer && bs.trainer.boss) || (bs.trainer2 && bs.trainer2.boss));
+  const aiLevel = foeAiLevel(bs);
   const refPlayer = alivePlayerCombatants()[0];
-  const nextIdx = excellent
-    ? bestFoeSwitchIdx(bs.foe, refPlayer, usedIdx)
+  const nextIdx = aiLevel>=1
+    ? bestFoeSwitchIdx(bs.foe, refPlayer, usedIdx, aiLevel)
     : bs.foe.findIndex((c,i)=> c.hp>0 && !usedIdx.includes(i));
   if(nextIdx===-1){
-    if(slot==='A') bs.fActive = null; else bs.fActive2 = null;
+    // Plus de remplaçant : le slot se vide. Le seul survivant d'un combat double repasse en slot A (le rendu s'appuie sur fActive).
+    if(slot==='A'){ bs.fActive = bs.fActive2; bs.fActive2 = null; } else bs.fActive2 = null;
     setTimeout(callback, 300);
     return;
   }

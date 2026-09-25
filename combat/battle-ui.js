@@ -159,6 +159,10 @@ function renderMoveGrid(){
   mechGrid.innerHTML='';
   document.getElementById('switchGrid').classList.add('hidden');
   grid.classList.remove('hidden');
+  // Les écrans de choix (Pokémon suivant après un K.O., cible, changement, sac) masquent la colonne des
+  // mécaniques : on la réaffiche à chaque retour à la grille d'attaques, sinon Dynamax/Méga/Téra disparaissent
+  // pour tous les combats suivants.
+  mechGrid.classList.remove('hidden');
   header.classList.toggle('hidden', !bs.isDouble);
   if(bs.isDouble) header.textContent = `Choisis l'attaque pour ${p.name}`;
   document.getElementById('battleActionsToggleBtn').classList.remove('hidden');
