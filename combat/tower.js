@@ -407,7 +407,7 @@ function awardBadge(type){
 }
 // Appelé quand toute l'équipe adverse est K.O. : réinitialise l'équipe du joueur (sauf en
 // Difficile), verse la récompense, avance l'étage, puis dirige vers le bon écran suivant
-// (Village si Boss, Centre Soin si Mini-Boss en Difficile, event aléatoire, ou étage suivant).
+// (Campement si Boss ou Mini-Boss, event aléatoire, ou étage suivant).
 function floorCleared(){
   const clearedFloor = towerFloor;
   const wasBoss = battleState.trainer && battleState.trainer.boss;
@@ -430,15 +430,18 @@ function floorCleared(){
   if(battleState.happyHour) reward *= 2;
   reward += battleState.payDayMoney || 0;
   money += reward;
+  runStats.floorsCleared++;
+  runStats.moneyEarned += reward;
+  if(wasBoss) runStats.bosses++; else if(wasMiniBoss) runStats.miniBosses++;
   towerFloor++;
   document.getElementById('screenBattle').classList.add('hidden');
   if(wasBoss){
     const newBadge = bossMasterType ? awardBadge(bossMasterType) : false;
     document.getElementById('screenVillage').classList.remove('hidden');
-    renderVillage(reward, newBadge ? bossMasterType : null);
-  } else if(wasMiniBoss && difficulty==='difficile'){
-    document.getElementById('screenMiniCenter').classList.remove('hidden');
-    renderMiniCenter(reward);
+    renderVillage(reward, newBadge ? bossMasterType : null, 'en battant le Boss');
+  } else if(wasMiniBoss){
+    document.getElementById('screenVillage').classList.remove('hidden');
+    renderVillage(reward, null, 'contre le Mini-Boss');
   } else if(maybeTriggerTowerEvent(reward)){
   } else {
     document.getElementById('screenTower').classList.remove('hidden');

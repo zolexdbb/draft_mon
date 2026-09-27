@@ -179,8 +179,8 @@ function renderMoveGrid(){
     grid.appendChild(btn);
     return;
   }
-  // Colonne fixe de 3 boutons compacts (icône + libellé), toujours affichés dans le même ordre
-  // (Dynamax / Méga / Téracristallisation) pour que la colonne garde toujours la même hauteur et
+  // Colonne fixe de 4 boutons compacts (icône + libellé), toujours affichés dans le même ordre
+  // (Dynamax / Méga / Téracristallisation / Capacité Z) pour que la colonne garde toujours la même hauteur et
   // reste alignée avec le bloc d'attaques — actif/disponible/indisponible plutôt qu'apparaître et
   // disparaître. Le détail va dans le title (tooltip) pour rester compact.
   if(!canDeclareZMove(p, bs) || p.dynamaxed || p.teraActive) bs.declaringZMove = false;
@@ -210,16 +210,17 @@ function renderMoveGrid(){
       ()=>{ bs.declaringTera = !bs.declaringTera; if(bs.declaringTera){ bs.declaringZMove = false; bs.declaringDynamax = false; } renderMoveGrid(); }));
     if(!available) bs.declaringTera = false;
   }
-  // Capacité Z : mécanique plus rare (Cristaux Z), affichée en bandeau au-dessus de la grille
-  // d'attaques uniquement quand elle est utilisable, pour ne pas perturber la colonne fixe.
-  if(canDeclareZMove(p, bs) && !p.dynamaxed && !p.teraActive){
-    const zBtn = document.createElement('button');
-    zBtn.className = 'move-btn zmove-banner' + (bs.declaringZMove ? ' active' : '');
-    zBtn.disabled = bs.locked;
-    zBtn.innerHTML = bs.declaringZMove ? '⚡ Capacité Z activée <small>Clique pour annuler</small>' : '⚡ Déclarer une Capacité Z <small>Choisis ensuite la capacité à surboosster</small>';
-    zBtn.onclick = ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; } renderMoveGrid(); };
-    grid.parentNode.insertBefore(zBtn, grid);
-  }
+  // Capacité Z : bouton de la colonne comme les autres mécaniques, grisé tant qu'aucune capacité offensive
+  // ne correspond au Cristal Z tenu (ou si la Capacité Z a déjà servi ce combat).
+  const zAvailable = canDeclareZMove(p, bs) && !p.dynamaxed && !p.teraActive && !bs.declaringDynamax && !bs.declaringTera;
+  let zTip;
+  if(bs.declaringZMove) zTip = 'Capacité Z activée — clique pour annuler, ou choisis la capacité à surboosster';
+  else if(zAvailable) zTip = 'Choisis ensuite la capacité offensive à transformer en Capacité Z (une fois par combat)';
+  else if(bs.zMoveUsed) zTip = 'Déjà utilisée ce combat';
+  else if(!zCrystalHeldBy(p)) zTip = "Nécessite un Cristal Z en objet tenu, du même type qu'une de tes attaques offensives";
+  else zTip = 'Indisponible : aucune attaque offensive du type du Cristal Z avec des PP restants';
+  mechGrid.appendChild(buildMechButton('⚡','Z', zAvailable || bs.declaringZMove, bs.declaringZMove, zTip,
+    ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; } renderMoveGrid(); }));
   const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
   const dynamaxPreview = bs.declaringDynamax || p.dynamaxed;
   p.moves.forEach((mv, idx)=>{

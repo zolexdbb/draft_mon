@@ -1,7 +1,7 @@
-/* ==== Le Marchand Itinérant du Village (apparaît par chance après un Boss) : vend tous les
-   objets de forme spéciaux (Plaques d'Arceus, Mémoires, Cristaux Z, Méga-Gemmes, objets
-   légendaires...), organisés en groupes affichés avec un titre. ==== */
-const MERCHANT_SPAWN_RATE = 0.2;
+/* ==== Le Marchand Itinérant du Village (apparaît par chance au Campement, après un Boss ou un
+   Mini-Boss) : vend tous les objets de forme spéciaux (Plaques d'Arceus, Mémoires, Cristaux Z,
+   Méga-Gemmes, objets légendaires...), organisés en groupes affichés avec un titre. ==== */
+const MERCHANT_SPAWN_RATE = 0.08;
 const MERCHANT_GROUPS = [
   { label: 'Giratina', tab: '👑 Giratina', keys: ['orbePlatine'] },
   { label: 'Shaymin', tab: '🌸 Shaymin', keys: ['gracidee'] },

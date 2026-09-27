@@ -1,5 +1,4 @@
-/* ==== Centre Pokémon (Village, soin gratuit + accès au PC) et Mini-Centre (halte rapide après
-   un Mini-Boss en mode Difficile, uniquement le soin). ==== */
+/* ==== Centre Pokémon (Village, soin gratuit + accès au PC). ==== */
 // Affiche le panneau du Centre Pokémon (soin gratuit + accès au PC).
 function renderPokecentrePanel(){
   const wrap = document.getElementById('villagePanelContent');
@@ -21,21 +20,4 @@ function renderPokecentrePanel(){
   };
   document.getElementById('openPCBtn').onclick = renderPCPanel;
 }
-
-// Affiche l'écran du Mini-Centre (soin rapide après un Mini-Boss, sans accès au Pokéshop/Ranch).
-function renderMiniCenter(reward){
-  document.getElementById('miniCenterReward').textContent = reward ? `+${reward} 💰 gagnés contre le Mini-Boss !` : '';
-  document.getElementById('miniCenterMsg').textContent = '';
-  saveGame();
-}
-document.getElementById('miniCenterHealBtn').onclick = ()=>{
-  team.forEach(m=>{ m.hp = m.computedStats.hp; m.status=null; m.sleepCounter=0; });
-  saveGame();
-  document.getElementById('miniCenterMsg').textContent = "✓ Ton équipe est en pleine forme !";
-};
-document.getElementById('miniCenterContinueBtn').onclick = ()=>{
-  document.getElementById('screenMiniCenter').classList.add('hidden');
-  document.getElementById('screenTower').classList.remove('hidden');
-  renderTower();
-};
 

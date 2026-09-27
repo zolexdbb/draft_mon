@@ -216,5 +216,6 @@ function finalizeTeamAndGoToTower(){
   document.getElementById('screenBuilder').classList.add('hidden');
   document.getElementById('screenTower').classList.remove('hidden');
   towerFloor = 1;
+  runStats = { bosses:0, miniBosses:0, floorsCleared:0, moneyEarned:0, badgesAtStart: (badges[difficulty]||[]).length };
   renderTower();
 }

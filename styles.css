@@ -53,14 +53,19 @@ body{
   display:block; text-transform:uppercase;
 }
 .site-header::after{ content:none; }
-.music-settings-btn{
+.header-actions{
   position:absolute; top:50%; right:0; transform:translateY(-50%); z-index:2;
+  display:flex; align-items:center; gap:8px;
+}
+.header-icon-btn{
   background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:10px;
   font-size:16px; line-height:1; width:40px; height:40px; cursor:pointer;
-  color:var(--text-main);
+  color:var(--text-main); text-decoration:none;
   display:flex; align-items:center; justify-content:center;
+  box-sizing:border-box; transition:border-color .15s, color .15s;
 }
-.music-settings-btn:hover{ border-color:var(--accent); }
+.header-icon-btn:hover{ border-color:var(--accent); }
+.discord-btn:hover{ border-color:#5865F2; color:#5865F2; }
 /* ---- PANEL ---- */
 .app{ width:100%; max-width:1600px; margin:0 auto; flex:1; display:flex; flex-direction:column; padding:0 24px 40px; box-sizing:border-box; }
 .panel{
@@ -1152,5 +1157,8 @@ input,select{font-size:14px;min-height:44px;}
   .hud-icon-btn, .moves-panel-actions .btn, .moves-panel-actions .btn.secondary{ height:28px; min-height:28px; }
   .hud-icon-btn{ width:28px; }
   .mechanics-col{ gap:3px; }
+  .mech-btn{ gap:0; }
+  .mech-btn .mech-icon{ font-size:12px; line-height:1; }
+  .mech-btn .mech-label{ font-size:5.5px; line-height:1; letter-spacing:0; }
 }
 

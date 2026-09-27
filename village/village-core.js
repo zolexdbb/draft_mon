@@ -1,9 +1,10 @@
-/* ==== Écran central du Campement (affiché après une victoire de Boss) : argent, badge éventuel,
-   apparition aléatoire du Marchand Itinérant, toute l'équipe vivante rassemblée autour du feu de
-   camp, et un aperçu des 3 Pokémon sauvages proposés par le Ranch directement dans son enclos. ==== */
-// Initialise l'écran du Campement à l'arrivée (après un Boss) : récompense, badge, tirage du Marchand.
-function renderVillage(reward, newBadgeType){
-  document.getElementById('villageReward').textContent = reward ? `+${reward} 💰 gagnés en battant le Boss !` : '';
+/* ==== Écran central du Campement (affiché après une victoire de Boss ou de Mini-Boss) : argent,
+   badge éventuel, apparition aléatoire du Marchand Itinérant, toute l'équipe vivante rassemblée
+   autour du feu de camp, et un aperçu des 3 Pokémon sauvages proposés par le Ranch directement
+   dans son enclos. ==== */
+// Initialise l'écran du Campement à l'arrivée (après un Boss ou un Mini-Boss) : récompense, badge, tirage du Marchand.
+function renderVillage(reward, newBadgeType, rewardLabel){
+  document.getElementById('villageReward').textContent = reward ? `+${reward} 💰 gagnés ${rewardLabel || 'en battant le Boss'} !` : '';
   const badgeEl = document.getElementById('villageBadge');
   if(badgeEl){
     badgeEl.innerHTML = newBadgeType ? `🎖️ Nouveau Badge obtenu : ${TYPE_EMOJI[newBadgeType]} ${typeDisplayName(newBadgeType)} !` : '';

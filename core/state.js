@@ -23,4 +23,6 @@ let pcSelectedTeamIdx = null;
 let shopCategory = 'potion';
 let merchantCategory = 0;
 let dexFilters = { search:'', type:'', type2:'', rarity:'' };
+// Statistiques de la run en cours (depuis l'entrée dans la Tour), utilisées pour le résumé affiché à la défaite.
+let runStats = { bosses:0, miniBosses:0, floorsCleared:0, moneyEarned:0, badgesAtStart:0 };
 

@@ -12,6 +12,7 @@
 function gameOver(){
   const earned = tokensForRun(towerFloor, difficulty);
   towerTokens += earned;
+  const summary = buildRunSummary(earned); // avant de vider battleState : c'est lui qui donne le dresseur/Pokémon vainqueur et l'état final de l'équipe
   saveMetaProgress();
   deleteSlot(currentSlot);
   battleState = null;
@@ -21,6 +22,93 @@ function gameOver(){
   document.getElementById('endLabel').textContent = 'DÉFAITE';
   document.getElementById('endFloor').textContent = towerFloor;
   document.getElementById('endTokensLabel').textContent = earned>0 ? `+${earned} 🎫 Jetons de Tour gagnés !` : '';
+  renderRunSummary(summary);
+}
+// Capture l'état de la partie au moment de la défaite : dresseur et Pokémon qui ont eu raison de toi (ou, si
+// toute l'équipe était déjà K.O. en arrivant sur l'étage en mode Difficile, aucun combat n'a eu lieu), l'état
+// final de chaque membre de l'équipe, et les statistiques accumulées depuis le début de la run.
+function buildRunSummary(tokensEarned){
+  const bs = battleState;
+  const teamSnap = (bs && bs.player && bs.player.length)
+    ? bs.player.map(c=>({ name:c.name, unownForm:c.unownForm, hp:Math.max(0,c.hp), maxHp:c.maxHp }))
+    : team.map(m=>{
+        const sp = speciesOf(m);
+        const maxHp = m.computedStats ? m.computedStats.hp : 1;
+        const hp = Math.max(0, (typeof m.hp==='number') ? m.hp : 0);
+        return { name:sp.name, unownForm:m.unownForm, hp, maxHp };
+      });
+  const trainers = bs ? [bs.trainer, bs.trainer2].filter(Boolean) : [];
+  // Seuls les Pokémon adverses sur le terrain au moment du K.O. (pas tout le banc, qui peut encore être plein de vie).
+  const finishers = bs ? [bs.fActive, bs.fActive2].filter(i=>i!=null).map(i=>bs.foe[i]).filter(c=>c && c.hp>0) : [];
+  const newBadges = Math.max(0, (badges[difficulty]||[]).length - (runStats.badgesAtStart||0));
+  return {
+    difficulty, floor: towerFloor, team: teamSnap, trainers, finishers, money, tokensEarned, newBadges,
+    bosses: runStats.bosses, miniBosses: runStats.miniBosses, floorsCleared: runStats.floorsCleared, moneyEarned: runStats.moneyEarned
+  };
+}
+const END_DIFFICULTY_LABEL = { facile:'😊 Facile', normal:'⚔️ Normal', difficile:'💀 Difficile' };
+// Affiche le résumé de la run dans l'écran de défaite (#endSummary) : qui t'a battu, l'état final de ton
+// équipe, et les grandes lignes de la run (étages/Boss/Mini-Boss/argent/badges).
+function renderRunSummary(s){
+  const wrap = document.getElementById('endSummary');
+  if(!wrap) return;
+  const teamRows = s.team.map(c=>{
+    const frac = c.maxHp ? Math.max(0, c.hp/c.maxHp) : 0;
+    const fainted = c.hp<=0;
+    return `
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;${fainted?'opacity:.5;':''}">
+        <div style="width:30px;height:30px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(c.name, c.unownForm)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:9px;color:var(--text-main);">${c.name}${fainted?' 💀':''}</div>
+          <div style="background:#0b0b10;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
+        </div>
+        <div style="font-size:8px;color:var(--text-dim);flex-shrink:0;">${c.hp}/${c.maxHp} PV</div>
+      </div>`;
+  }).join('');
+
+  let finisherHTML;
+  if(s.trainers.length){
+    const trainerNames = s.trainers.map(t=>t.name).join(' & ');
+    const finisherRows = s.finishers.map(f=>`
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:24px;height:24px;flex-shrink:0;">${getSpriteHTML(f.name, f.unownForm)}</div>
+        <div style="font-size:9px;color:var(--text-main);">${f.name} <span style="color:var(--text-dim);">(${f.hp}/${f.maxHp} PV)</span></div>
+      </div>`).join('');
+    finisherHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:12px;margin-bottom:14px;text-align:center;">
+        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Vaincu par</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:${finisherRows?'8px':'0'};">
+          <span style="font-size:22px;">${getTrainerAvatarHTML(s.trainers[0])}</span>
+          <span style="font-size:12px;color:var(--accent-light);font-weight:700;">${trainerNames}</span>
+        </div>
+        ${finisherRows ? `<div style="display:flex;flex-direction:column;gap:5px;align-items:center;">${finisherRows}</div>` : ''}
+      </div>`;
+  } else {
+    finisherHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:12px;margin-bottom:14px;text-align:center;font-size:9px;color:var(--text-dim);">
+        Ton équipe était déjà à terre en arrivant à l'étage ${s.floor}...
+      </div>`;
+  }
+
+  const stats = [['🏆','Étages franchis',s.floorsCleared], ['👑','Boss vaincus',s.bosses], ['⭐','Mini-Boss vaincus',s.miniBosses], ['💰','Argent gagné',s.moneyEarned]];
+  if(s.newBadges>0) stats.push(['🎖️','Nouveaux badges',s.newBadges]);
+  const statsHTML = stats.map(([icon,label,val])=>`
+    <div style="text-align:center;flex:1;min-width:60px;">
+      <div style="font-size:15px;">${icon}</div>
+      <div style="font-size:14px;color:var(--accent-light);font-weight:700;font-family:var(--font-display);">${val}</div>
+      <div style="font-size:7px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">${label}</div>
+    </div>`).join('');
+
+  wrap.innerHTML = `
+    <div style="max-width:460px;margin:0 auto;">
+      <div style="text-align:center;font-size:9px;color:var(--text-dim);margin-bottom:14px;">${END_DIFFICULTY_LABEL[s.difficulty]||''} · 💰 ${s.money} au final</div>
+      ${finisherHTML}
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-around;background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:10px 4px;margin-bottom:14px;gap:6px;">
+        ${statsHTML}
+      </div>
+      <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;text-align:center;">Ton équipe</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">${teamRows}</div>
+    </div>`;
 }
 // Quitte vers le menu en plein combat sans le terminer : le combat reprend exactement où il en était au retour.
 function pauseBattleToMenu(){
@@ -35,10 +123,11 @@ document.getElementById('restartBtn').onclick = ()=>{
   document.getElementById('screenDraft').classList.remove('hidden');
   initDraft();
 };
+document.getElementById('endMenuBtn').onclick = ()=> showScreen('screenMenu');
 
 /* =================== MENU & POKÉDEX =================== */
 function showScreen(id){
-  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenVillage','screenMiniCenter','screenEvent','screenBattle','screenEnd'].forEach(s=>{
+  ['screenMenu','screenDex','screenDraft','screenBuilder','screenTower','screenVillage','screenEvent','screenBattle','screenEnd'].forEach(s=>{
     document.getElementById(s).classList.toggle('hidden', s!==id);
   });
   if(id==='screenMenu') refreshMenuUI();
