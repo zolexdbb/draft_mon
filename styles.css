@@ -436,6 +436,44 @@ select option{
 .csel-opt-name{ flex:1; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .csel-opt-power{ font-size:10px; color:var(--text-dim); min-width:32px; text-align:right; flex-shrink:0; }
 .csel-opt-empty{ color:var(--text-dim); font-style:italic; }
+.shiny-badge{ display:inline-block; filter:drop-shadow(0 0 3px rgba(255,220,120,.8)); animation:shiny-twinkle 1.6s ease-in-out infinite; }
+@keyframes shiny-twinkle{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:.55; transform:scale(.85); } }
+
+/* ---- DEX DETAIL MODAL ---- */
+.dex-chain-row{ display:flex; align-items:center; flex-wrap:wrap; gap:4px; }
+.dex-chain-arrow{ color:var(--text-dim); font-size:14px; flex-shrink:0; }
+.dex-chain-node{
+  background:rgba(255,255,255,.04); border:1px solid var(--line-bright); border-radius:8px;
+  padding:6px 8px 5px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-family:var(--font-body); color:var(--text-main); min-width:64px;
+}
+.dex-chain-node:hover{ border-color:var(--accent); }
+.dex-chain-node.current{ border-color:var(--accent); background:rgba(232,200,74,.1); }
+.dex-chain-name{ font-size:8px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; }
+.dex-move-list{ max-height:280px; overflow-y:auto; border:1px solid var(--line); border-radius:6px; }
+.dex-move-row{
+  display:flex; align-items:center; gap:7px; padding:6px 9px;
+  font-size:11px; border-bottom:1px solid rgba(255,255,255,.04);
+}
+.dex-move-row:last-child{ border-bottom:none; }
+.dex-move-name{ flex:1; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dex-move-power{ font-size:10px; color:var(--text-dim); min-width:24px; text-align:right; flex-shrink:0; }
+.dex-shiny-btn.active, .dex-form-btn.active{ background:rgba(232,178,61,.16); border-color:var(--accent); color:var(--accent-light); }
+.csel-group-label{
+  padding:4px 10px 2px; font-size:8px; text-transform:uppercase; letter-spacing:1px;
+  color:var(--text-dim); background:rgba(0,0,0,.3); border-bottom:1px solid rgba(255,255,255,.04);
+}
+.csel-opt-hidden{ display:none !important; }
+.csel-search-wrap{
+  position:sticky; top:0; z-index:2; background:#14161F;
+  padding:7px 8px; border-bottom:1px solid var(--line-bright);
+}
+.csel-search{
+  width:100%; box-sizing:border-box; background:rgba(255,255,255,.05); border:1px solid var(--line-bright);
+  border-radius:6px; padding:6px 9px; font-size:11px; color:var(--text-main); font-family:var(--font-body);
+}
+.csel-search::placeholder{ color:var(--text-dim); }
+.csel-search:focus{ outline:none; border-color:var(--accent); }
 
 /* Catégorie chips dans dropdown */
 .cat-chip{ font-size:8px; padding:2px 5px; border-radius:2px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; flex-shrink:0; }
@@ -470,7 +508,7 @@ select option{
 .pokeball-icon.active{ box-shadow:0 0 0 2px var(--accent), 0 0 8px rgba(232,178,61,.6); }
 
 .combatant-row{ display:flex; gap:10px; }
-.combatant-row:last-child{ justify-content:flex-start; margin-top:auto; }
+.combatant-row:first-child{ justify-content:flex-start; margin-top:auto; }
 .is-double-battle .combatant-row{ justify-content:center; }
 .combatant{ width:100%; max-width:320px; padding:6px 4px; position:relative; background:none; border:none; box-shadow:none; }
 /* Zone au sol thématisée, centrée automatiquement sous chaque combattant (même axe vertical que
@@ -515,9 +553,66 @@ select option{
 }
 .flash-crit{ background:radial-gradient(circle, rgba(255,255,255,.85) 0%, rgba(232,200,74,.3) 45%, transparent 75%); }
 .flash-superfx{ background:radial-gradient(circle, rgba(255,90,60,.55) 0%, transparent 70%); }
+.battle-flash.flash-custom{ animation-duration:.7s; }
 @keyframes battleFlash{ 0%{opacity:1;} 100%{opacity:0;} }
 .lunge{ animation:lunge .4s ease; }
 @keyframes lunge{ 0%{transform:scale(1) translateY(0);} 35%{transform:scale(1.12) translateY(-6px);} 100%{transform:scale(1) translateY(0);} }
+
+/* ---- Animations d'activation des mécaniques de combat (Dynamax/Méga/Téracristal/Capacité Z),
+   inspirées de Pokémon Showdown : pulsation du sprite + effet de particules autour de lui. ---- */
+.mecha-fx-wrap{ position:absolute; pointer-events:none; z-index:25; transform:translate(-50%,-50%); }
+.mecha-fx-ring{
+  position:absolute; left:0; top:0; border-radius:50%; border:4px solid var(--fx-color);
+  box-shadow:0 0 18px var(--fx-color); animation:mechaFxRing 1s ease-out forwards;
+}
+@keyframes mechaFxRing{
+  0%{ width:10px; height:10px; margin:-5px; opacity:0; }
+  25%{ opacity:.9; }
+  100%{ width:180px; height:180px; margin:-90px; opacity:0; }
+}
+.mecha-fx-shard{
+  position:absolute; left:0; top:0; width:14px; height:14px; margin:-7px;
+  background:var(--fx-color); clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  box-shadow:0 0 8px var(--fx-color); animation:mechaFxShard .85s ease-out forwards;
+}
+@keyframes mechaFxShard{
+  0%{ transform:translate(0,0) scale(0) rotate(0deg); opacity:1; }
+  70%{ opacity:1; }
+  100%{ transform:translate(var(--px),var(--py)) scale(1) rotate(240deg); opacity:0; }
+}
+.dynamax-grow{ animation:dynamaxGrow .8s cubic-bezier(.34,1.56,.64,1); }
+@keyframes dynamaxGrow{
+  0%{ filter:drop-shadow(0 0 0 rgba(255,50,90,0)); }
+  35%{ transform:scale(1.35); filter:drop-shadow(0 0 22px rgba(255,50,90,.9)) saturate(1.4); }
+  60%{ transform:scale(.95); }
+  100%{ transform:scale(1); filter:drop-shadow(0 0 0 rgba(255,50,90,0)); }
+}
+.tera-shine{ animation:teraShine .9s ease; }
+@keyframes teraShine{
+  0%{ filter:brightness(1) drop-shadow(0 0 0 var(--fx-color)); }
+  40%{ filter:brightness(1.9) drop-shadow(0 0 20px var(--fx-color)); }
+  100%{ filter:brightness(1) drop-shadow(0 0 0 var(--fx-color)); }
+}
+.zmove-beam{
+  position:absolute; z-index:24; pointer-events:none; border-radius:50%;
+  background:radial-gradient(circle, #fff 0%, var(--fx-color) 35%, transparent 72%);
+  animation:zmoveBeam .55s cubic-bezier(.2,.9,.3,1) forwards;
+}
+@keyframes zmoveBeam{
+  0%{ transform:translate(-50%,-50%) scale(.1); opacity:0; }
+  25%{ opacity:1; }
+  100%{ transform:translate(-50%,-50%) scale(1); opacity:0; }
+}
+.mega-sparkle{
+  position:absolute; left:0; top:0; width:8px; height:8px; margin:-4px;
+  background:#fff; border-radius:50%; box-shadow:0 0 10px #ffe27a, 0 0 4px #fff;
+  animation:megaSparkle 1.1s ease-out forwards;
+}
+@keyframes megaSparkle{
+  0%{ transform:translate(0,0) scale(0); opacity:1; }
+  20%{ transform:scale(1.4); opacity:1; }
+  100%{ transform:translate(var(--px),var(--py)) scale(0); opacity:0; }
+}
 .move-fx-icon{
   position:absolute; width:34px; height:34px; margin-left:-17px; margin-top:-17px;
   pointer-events:none; z-index:20; color:var(--fx-color);
@@ -668,7 +763,10 @@ select option{
   margin:0; background:rgba(12,10,20,.6); backdrop-filter:blur(6px);
   border:1px solid var(--line-bright); border-radius:10px; padding:8px 12px;
   font-size:12px; color:var(--text-main); line-height:1.5; letter-spacing:.2px;
-  max-height:110px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;
+  /* Hauteur fixe (pas max-height) : l'historique défile en interne dès le premier message au lieu de
+     grandir progressivement, sinon sa croissance vole de la hauteur à .battle-field (flex:1, voir plus
+     bas) à chaque nouveau message et fait "sauter" le sprite du joueur vers le haut à chaque action. */
+  height:110px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;
   position:relative; z-index:3; flex-shrink:0; box-shadow:0 12px 24px rgba(0,0,0,.35);
 }
 .log b{ color:inherit; }
@@ -1079,7 +1177,7 @@ input,select{font-size:14px;min-height:44px;}
   .is-double-battle .combatant-row{ flex-wrap:nowrap; justify-content:center; }
   .is-double-battle .combatant{ max-width:50%; }
   .is-double-battle .sprite, .is-double-battle .combatant.you .sprite{ width:clamp(48px,10dvh,92px); height:clamp(48px,10dvh,92px); font-size:clamp(26px,5.5dvh,50px); }
-  .log{ max-height:clamp(44px,8dvh,84px); font-size:11px; padding:6px 10px; }
+  .log{ height:clamp(44px,8dvh,84px); font-size:11px; padding:6px 10px; }
   .battle-hud-row{ flex-direction:row; gap:8px; }
   .mechanics-col{ flex-direction:column; flex-wrap:nowrap; gap:5px; }
   .mech-btn{ width:50px; min-width:0; border-radius:10px; gap:1px; }
@@ -1089,10 +1187,13 @@ input,select{font-size:14px;min-height:44px;}
   .moves-panel-actions{ flex-wrap:nowrap; height:32px; }
   .moves-panel-actions .btn, .moves-panel-actions .btn.secondary{ width:auto; min-height:32px; height:32px; padding:0 10px; font-size:11px; }
   .hud-icon-btn{ width:32px; height:32px; }
-  .battle-controls .moves{ grid-template-columns:1fr 1fr; grid-template-rows:repeat(2,minmax(46px,7dvh)); gap:6px; }
+  .battle-controls .moves{ grid-template-columns:1fr 1fr; grid-template-rows:repeat(2,minmax(54px,8dvh)); gap:6px; }
   .move-btn{ padding:5px 8px; font-size:12px; min-width:0; overflow:hidden; }
   .move-btn{ white-space:nowrap; }
-  .move-btn small{ font-size:9px; margin-top:1px; overflow:hidden; text-overflow:ellipsis; }
+  /* Le nom de l'attaque reste sur une ligne (ellipsis si besoin), mais son détail (type/catégorie/puissance/PP)
+     passe à la ligne plutôt que d'être coupé : sur mobile il n'y avait pas la place pour tout tenir sur une
+     seule ligne, une partie de l'info (souvent les PP) disparaissait derrière "...". */
+  .move-btn small{ font-size:9px; margin-top:2px; white-space:normal; line-height:1.35; overflow:visible; text-overflow:clip; }
   .switch-grid{ grid-template-columns:1fr 1fr; gap:6px; max-height:34dvh; overflow-y:auto; }
   .zmove-banner{ min-height:34px; padding:6px 10px; font-size:12px; }
   .trainer-banner.twin-banner{ overflow:hidden; }
@@ -1113,8 +1214,8 @@ input,select{font-size:14px;min-height:44px;}
   .combatant.you .sprite{ width:clamp(54px,12dvh,144px); height:clamp(54px,12dvh,144px); font-size:clamp(30px,6.4dvh,78px); }
   .combatant.foe .hp-text{ display:none; }
   .name-row{ margin-bottom:2px; }
-  .log{ max-height:32px; padding:4px 8px; }
-  .battle-controls .moves{ grid-template-rows:repeat(2,42px); gap:5px; }
+  .log{ height:32px; padding:4px 8px; }
+  .battle-controls .moves{ grid-template-rows:repeat(2,minmax(50px,15dvh)); gap:5px; }
   .moves-panel-actions, .hud-icon-btn, .moves-panel-actions .btn, .moves-panel-actions .btn.secondary{ height:28px; min-height:28px; }
   .hud-icon-btn{ width:28px; }
   .battle-trackers{ margin-bottom:4px; }
@@ -1124,7 +1225,7 @@ input,select{font-size:14px;min-height:44px;}
   .sprite{ width:clamp(90px,19dvh,170px); height:clamp(90px,19dvh,170px); font-size:clamp(48px,10dvh,90px); }
   .combatant.you .sprite{ width:clamp(100px,22dvh,200px); height:clamp(100px,22dvh,200px); font-size:clamp(54px,11.5dvh,104px); }
   .name-row{ font-size:14px; }
-  .log{ max-height:clamp(60px,10dvh,110px); font-size:12px; }
+  .log{ height:clamp(60px,10dvh,110px); font-size:12px; }
   .battle-controls .moves{ grid-template-rows:repeat(2,minmax(58px,8dvh)); }
   .mech-btn{ width:62px; }
 }
@@ -1133,7 +1234,7 @@ input,select{font-size:14px;min-height:44px;}
   .battle-topbar{ margin-bottom:4px; }
   .battle-trackers{ margin-bottom:4px; flex-wrap:nowrap; }
   .battle-main{ flex-direction:row; gap:10px; padding:6px; }
-  .battle-controls{ display:flex; flex-direction:column; width:min(48%,400px); flex-shrink:0; gap:4px; overflow:hidden; }
+  .battle-controls{ display:flex; flex-direction:column; width:min(48%,400px); flex-shrink:0; gap:4px; overflow-y:auto; overflow-x:hidden; }
   .foe-row-top-right, .battle-field, .battle-hud-bottom{ order:0; }
   .battle-field{ flex:1; }
   .battle-hud-bottom{ margin-top:auto; gap:4px; }
@@ -1149,9 +1250,10 @@ input,select{font-size:14px;min-height:44px;}
   .hp-text{ font-size:9px; margin-top:1px; }
   .sprite{ margin-top:0; width:clamp(40px,17dvh,80px); height:clamp(40px,17dvh,80px); font-size:clamp(22px,9dvh,44px); }
   .combatant.you .sprite{ width:clamp(44px,20dvh,96px); height:clamp(44px,20dvh,96px); font-size:clamp(24px,10.5dvh,52px); }
-  .log{ max-height:28px; padding:4px 8px; font-size:10px; }
-  .battle-controls .moves{ grid-template-rows:repeat(2,minmax(32px,10dvh)); gap:4px; }
+  .log{ height:28px; padding:4px 8px; font-size:10px; }
+  .battle-controls .moves{ grid-template-rows:repeat(2,minmax(40px,15dvh)); gap:4px; }
   .move-btn{ padding:2px 8px; font-size:11px; }
+  .move-btn small{ font-size:8px; margin-top:1px; line-height:1.2; }
   .moves-panel{ gap:4px; }
   .moves-panel-actions{ height:28px; }
   .hud-icon-btn, .moves-panel-actions .btn, .moves-panel-actions .btn.secondary{ height:28px; min-height:28px; }

@@ -89,7 +89,8 @@ function defaultMember(lineId, initialStage, branch){
     ability:null,
     moves:[null,null,null,null],
     heldItem: null,
-    unownForm: pickFormSprite(sp.name)
+    unownForm: pickFormSprite(sp.name),
+    shiny: false
   };
 }
 
@@ -127,7 +128,7 @@ function renderDraftTeamStrip(){
     if(team[i]){
       const sp = speciesOf(team[i]);
       slot.className = 'draft-team-slot filled';
-      slot.innerHTML = `<div class="emoji">${getSpriteHTML(sp.name, team[i].unownForm)}</div><div class="pname">${sp.name}</div>`;
+      slot.innerHTML = `<div class="emoji">${getSpriteHTML(sp.name, team[i].unownForm, 'front', false, team[i].shiny)}</div><div class="pname">${sp.name}${team[i].shiny?shinyBadgeHTML():''}</div>`;
     } else {
       slot.className = 'draft-team-slot';
       slot.innerHTML = `<div class="emoji">?</div><div class="pname">Vide</div>`;
@@ -147,6 +148,9 @@ function nextDraftRound(){
   const isFacile = difficulty==='facile';
   const candidates = isFacile ? buildFacileCandidates(draftedIds) : buildDraftCandidates(draftedIds);
   currentChoices = weightedSampleCandidates(candidates, 3);
+  // Chance de chromatique tirée pour chaque carte proposée ce tour (visible avant de choisir) ; conservée
+  // pour toujours si le joueur choisit cette carte, oubliée sinon.
+  currentChoices.forEach(c=>{ c.shiny = rollShiny(); });
   renderDraftProgress();
   renderDraftTeamStrip();
   document.getElementById('draftSub').textContent = `Choisis un Pokémon pour ton équipe (${draftRound+1}/6)`;
@@ -177,8 +181,8 @@ function nextDraftRound(){
     card.className='poke-card';
     card.innerHTML = `
       <span class="rarity-badge ${rarity.css}">${rarity.label}</span>
-      <div class="emoji">${getSpriteHTML(sp.name)}</div>
-      <div class="pname">${sp.name}</div>
+      <div class="emoji">${getSpriteHTML(sp.name, null, 'front', false, choice.shiny)}</div>
+      <div class="pname">${sp.name}${choice.shiny?shinyBadgeHTML():''}</div>
       <div class="evoline">${evoline}</div>
       <div class="types-row">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:6px 0;background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:6px;">
@@ -194,11 +198,11 @@ function nextDraftRound(){
       <div class="dex-rate">Taux d'apparition : ${rateLabel}%</div>
     `;
     card.onclick = ()=>{
-      if(isFacile){
-        team.push(autoBuildMember(choice.lineId, choice.stage, choice.branch));
-      } else {
-        team.push(defaultMember(choice.lineId, choice.stage));
-      }
+      const newMember = isFacile
+        ? autoBuildMember(choice.lineId, choice.stage, choice.branch)
+        : defaultMember(choice.lineId, choice.stage);
+      newMember.shiny = !!choice.shiny;
+      team.push(newMember);
       draftRound++;
       nextDraftRound();
     };

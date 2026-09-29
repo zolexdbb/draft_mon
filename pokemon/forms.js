@@ -30,6 +30,17 @@ const SPRITE_SOURCES = {
     id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${id}.png`
   ]
 };
+// Mêmes sprites statiques, en version chromatique (shiny).
+const SPRITE_SOURCES_SHINY = {
+  front: [
+    id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/shiny/${id}.png`,
+    id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${id}.png`
+  ],
+  back: [
+    id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/back/shiny/${id}.png`,
+    id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/${id}.png`
+  ]
+};
 // Sprites animés (Showdown), utilisés en priorité quand animated=true.
 const ANIMATED_SPRITE_SOURCES = {
   front: [
@@ -39,6 +50,16 @@ const ANIMATED_SPRITE_SOURCES = {
   back: [
     id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/showdown/back/${id}.gif`,
     id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/${id}.gif`
+  ]
+};
+const ANIMATED_SPRITE_SOURCES_SHINY = {
+  front: [
+    id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/showdown/shiny/${id}.gif`,
+    id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/${id}.gif`
+  ],
+  back: [
+    id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/showdown/back/shiny/${id}.gif`,
+    id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/${id}.gif`
   ]
 };
 // Repli si la source animée principale échoue (sprites animés Noir & Blanc officiels).
@@ -52,6 +73,33 @@ const ANIMATED_SPRITE_SOURCES_FALLBACK = {
     id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/back/${id}.gif`
   ]
 };
+const ANIMATED_SPRITE_SOURCES_FALLBACK_SHINY = {
+  front: [
+    id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${id}.gif`,
+    id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${id}.gif`
+  ],
+  back: [
+    id => `https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/versions/generation-v/black-white/animated/back/shiny/${id}.gif`,
+    id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/back/shiny/${id}.gif`
+  ]
+};
+// Ids PokeAPI des sprites Gigamax (formes cosmétiques du Dynamax, mêmes stats/types que la forme de
+// base — seuls le nom affiché et le sprite changent), utilisés uniquement pour l'aperçu dans la fiche
+// du Dex (voir openDexDetail). GIGAMAX_LINES (combat/dynamax.js) reste la seule source de vérité pour
+// savoir quelles lignées peuvent Gigamax en combat.
+const GIGAMAX_SPRITE_IDS = {
+  'Florizarre':10195, 'Dracaufeu':10196, 'Tortank':10197, 'Ronflex':10206, 'Ectoplasma':10202,
+  'Gorythmic':10209, 'Pyrobut':10210, 'Lézargus':10211, 'Corvaillus':10212, 'Torgamord':10214,
+  'Monthracite':10215, 'Scolocendre':10220, 'Angoliath':10222, 'Pachyradjah':10224, 'Duralugon':10225,
+  'Salarsen':10219, 'Salaquin':10228
+};
+// Chance qu'un Pokémon choisi au draft ou recruté au Ranch soit chromatique (shiny) : tirée une
+// seule fois, au moment où il est proposé au joueur (carte de draft / candidat du Ranch), et
+// conservée pour toujours s'il est choisi — jamais retirée après coup.
+const SHINY_CHANCE = 0.002;
+function rollShiny(){ return Math.random() < SHINY_CHANCE; }
+// Petit badge "✨" à placer à côté du nom d'un Pokémon chromatique, partout où son sprite est affiché.
+function shinyBadgeHTML(){ return `<span class="shiny-badge" title="Chromatique !">✨</span>`; }
 const SPRITE_MAX_ATTEMPTS = 8;
 const SPRITE_RETRY_DELAYS = [300, 600, 1200, 2000, 3000, 4000, 5000];
 // Ids PokeAPI dédiés (10000+) pour les formes sans numéro de Pokédex propre : Méga-Évolutions,
@@ -84,6 +132,7 @@ const FORM_SPRITE_IDS = {
   'Amovénus (Totémique)':10249,
   'Tauros de Paldea (Race Combative)':10250, 'Tauros de Paldea (Race Flamboyante)':10251,
   'Tauros de Paldea (Race Aquatique)':10252, 'Axoloto de Paldea':10253,
+  'Éthernatos Infinimax':10190,
   // ---- Méga-Évolutions de Pokémon Légendes Z-A (v0.10.1) ----
   'Méga-Mélodelfe':10278, 'Méga-Empiflor':10279, 'Méga-Staross':10280, 'Méga-Dracolosse':10281,
   'Méga-Méganium':10282, 'Méga-Aligatueur':10283, 'Méga-Airmure':10284, 'Méga-Momartik':10285,
@@ -101,8 +150,15 @@ const FORM_SPRITE_IDS = {
   'Méga-Flagadoss':10071, 'Méga-Steelix':10072, 'Méga-Roucarnage':10073, 'Méga-Oniglali':10074,
   'Méga-Camérupt':10087, 'Méga-Lockpin':10088, 'Méga-Drattak':10089, 'Méga-Dardargnan':10090
 };
-// Choisit la liste de sources à essayer (animées d'abord si demandé, puis repli, puis statique).
-function getSpriteSourceList(facing, animated){
+// Choisit la liste de sources à essayer (animées d'abord si demandé, puis repli, puis statique ;
+// version chromatique si shiny, avec repli sur la version normale si jamais une forme n'a pas de
+// sprite shiny dédié).
+function getSpriteSourceList(facing, animated, shiny){
+  if(shiny){
+    return animated
+      ? [...ANIMATED_SPRITE_SOURCES_SHINY[facing], ...ANIMATED_SPRITE_SOURCES_FALLBACK_SHINY[facing], ...SPRITE_SOURCES_SHINY[facing], ...ANIMATED_SPRITE_SOURCES[facing], ...SPRITE_SOURCES[facing]]
+      : [...SPRITE_SOURCES_SHINY[facing], ...SPRITE_SOURCES[facing]];
+  }
   return animated ? [...ANIMATED_SPRITE_SOURCES[facing], ...ANIMATED_SPRITE_SOURCES_FALLBACK[facing], ...SPRITE_SOURCES[facing]] : SPRITE_SOURCES[facing];
 }
 // Grossissement/réduction manuels pour les espèces dont la taille ne suit pas la progression
@@ -161,10 +217,16 @@ function applySpriteNaturalScale(img){
 // Point d'entrée principal : construit le <img> du sprite d'une espèce (nom affiché) pour une
 // orientation donnée. Résout l'id via FORM_SPRITE_IDS, les préfixes de noms à parenthèses
 // (Arceus/Lougaroc/Plumeline), Zarbi/Météno (aléatoire), sinon DEX_NUMBERS. Repli "?" si introuvable.
-function getSpriteHTML(name, unownForm, facing, animated){
+// `shiny` affiche la version chromatique (voir rollShiny/SHINY_CHANCE) : uniquement pour un Pokémon
+// possédé par le joueur (m.shiny), jamais pour une simple référence d'espèce (Dex, aperçu d'évolution...).
+// `idOverride` force un id PokeAPI précis (aperçu Gigamax dans la fiche du Dex : GIGAMAX_SPRITE_IDS
+// n'est pas indexé par nom affiché comme FORM_SPRITE_IDS, donc la résolution normale ne s'applique pas).
+function getSpriteHTML(name, unownForm, facing, animated, shiny, idOverride){
   facing = facing==='back' ? 'back' : 'front';
   let id;
-  if(name==='Zarbi'){
+  if(idOverride){
+    id = idOverride;
+  } else if(name==='Zarbi'){
     id = unownForm || pickRandomZarbiForm();
   } else if(FORM_SPRITE_IDS[name]){
     id = FORM_SPRITE_IDS[name];
@@ -182,17 +244,18 @@ function getSpriteHTML(name, unownForm, facing, animated){
   }
   const manualScale = POKEMON_SCALE[name];
   const scaleStyle = (animated && manualScale!==undefined) ? `transform:scale(${manualScale});` : '';
-  const sources = getSpriteSourceList(facing, !!animated);
+  const sources = getSpriteSourceList(facing, !!animated, !!shiny);
   const url = sources[0](id);
   const onload = (animated && manualScale===undefined) ? ' onload="applySpriteNaturalScale(this)"' : '';
-  return `<img src="${url}" alt="${name}" data-sprite-id="${id}" data-sprite-facing="${facing}" data-sprite-animated="${animated ? '1' : '0'}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;${scaleStyle}" onerror="handleSpriteError(this)"${onload}>`;
+  return `<img src="${url}" alt="${name}" data-sprite-id="${id}" data-sprite-facing="${facing}" data-sprite-animated="${animated ? '1' : '0'}" data-sprite-shiny="${shiny ? '1' : '0'}" style="width:100%;height:100%;object-fit:contain;image-rendering:pixelated;${scaleStyle}" onerror="handleSpriteError(this)"${onload}>`;
 }
 // onerror du <img> : retente une autre source avec délai croissant, abandonne vers "?" après SPRITE_MAX_ATTEMPTS.
 function handleSpriteError(img){
   const id = img.dataset.spriteId;
   const facing = img.dataset.spriteFacing==='back' ? 'back' : 'front';
   const animated = img.dataset.spriteAnimated === '1';
-  const sources = getSpriteSourceList(facing, animated);
+  const shiny = img.dataset.spriteShiny === '1';
+  const sources = getSpriteSourceList(facing, animated, shiny);
   const attempt = parseInt(img.dataset.spriteAttempt || '0', 10) + 1;
   img.dataset.spriteAttempt = String(attempt);
   if(!id || attempt >= SPRITE_MAX_ATTEMPTS){

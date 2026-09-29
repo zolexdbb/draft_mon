@@ -8,8 +8,11 @@ function buildFacileCandidates(excludedLineIds){
     if(excludedLineIds.includes(line.id)) return;
     const w = lineWeight(line);
     if(line.branches && line.branches.length){
+      // Une branche peut définir son propre rarityWeight pour être bien plus rare que le reste de sa
+      // lignée (ex. Éthernatos Infinimax, plus rare qu'un légendaire normal) ; sinon elle hérite du
+      // poids habituel de la lignée, comme les autres branches.
       line.branches.forEach((b,bi)=>{
-        candidates.push({lineId:line.id, stage:line.stages.length-1, branch:bi, w});
+        candidates.push({lineId:line.id, stage:line.stages.length-1, branch:bi, w: b.rarityWeight!==undefined ? b.rarityWeight : w});
       });
     } else {
       candidates.push({lineId:line.id, stage:line.stages.length-1, branch:null, w});
@@ -24,7 +27,8 @@ function facileAppearanceRate(w){
   return (w/TOTAL_FACILE_WEIGHT*100);
 }
 // Construit un membre "prêt à combattre" pour le mode Facile : IV max, EV tout misés sur la
-// meilleure stat offensive + Vitesse, nature assortie, et les 4 meilleures attaques (pickSmartMoves).
+// meilleure stat offensive + Vitesse (max par stat 32, max au total 66), nature assortie, et les 4
+// meilleures attaques (pickSmartMoves).
 function autoBuildMember(lineId, stage, branch){
   const line = lineOf(lineId);
   const sp = branch!==null && branch!==undefined ? line.branches[branch] : line.stages[stage];
@@ -33,8 +37,8 @@ function autoBuildMember(lineId, stage, branch){
   const isPhysical = sp.base.atk >= sp.base.spa;
   const primary = isPhysical ? 'atk' : 'spa';
   const opposite = isPhysical ? 'spa' : 'atk';
-  const evs = {hp:4,atk:0,def:0,spa:0,spd:0,spe:252};
-  evs[primary] = 252;
+  const evs = {hp:EV_TOTAL_MAX-EV_MAX*2,atk:0,def:0,spa:0,spd:0,spe:EV_MAX};
+  evs[primary] = EV_MAX;
   let nature = NATURES.find(n=>n.plus===primary && n.minus===opposite);
   if(!nature) nature = NATURES.find(n=>n.plus===primary) || NATURES[0];
   const member = {
@@ -43,7 +47,8 @@ function autoBuildMember(lineId, stage, branch){
     ability: abilities[0],
     moves:[null,null,null,null],
     heldItem: null,
-    unownForm: pickFormSprite(sp.name)
+    unownForm: pickFormSprite(sp.name),
+    shiny: false
   };
   const movepool = movepoolFor(member);
   member.moves = pickSmartMoves(movepool, sp, 5);

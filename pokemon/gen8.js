@@ -64,9 +64,10 @@ const LINES_GEN8 = [
   {name:'Monthracite',types:['roche','feu'],base:st(110,80,120,80,90,30),abilities:['Turbo Vapeur','Corps Ardent','Torche']}]},
 {id:'verpom',abilities:['Mûrissement','Gloutonnerie','Anti-Bombe'],moveIds:['appleacid','gravapple','dragonpulse','protect','endure','hyperbeam','solarbeam','facade','sleeptalk','rest','sunnyday','takedown','raindance','bodyslam','bulldoze','gigadrain','scaryface','earthquake','aerialace','zenheadbutt','outrage','bulletseed','lightscreen','magicalleaf','curse','withdraw','astonish','wingattack','fly','growth','dragonbreath','twister','recycle','irondefense','dragondance','stomp','headbutt','recover','sweetscent','dracometeor','grassyglide','defensecurl','rollout','suckerpunch','dualwingbeat','terablast','pounce','leechseed','substitute','seedbomb','dragonrush','energyball','gigaimpact','leafstorm','grassknot','heavyslam','acidspray','round','acrobatics','helpinghand','gyroball','payback','dragontail'],
  stages:[
-  {name:'Verpom',types:['plante','dragon'],base:st(40,40,80,40,40,20)},
+  {name:'Verpom',types:['plante','dragon'],base:st(40,40,80,40,40,20)}], branches:[
   {name:'Pomdrapi',types:['plante','dragon'],base:st(70,110,80,95,60,70),abilities:['Mûrissement','Gloutonnerie','Agitation']},
-  {name:'Dratatin',types:['plante','dragon'],base:st(110,85,80,100,80,30),abilities:['Mûrissement','Gloutonnerie','Isograisse']}]},
+  {name:'Dratatin',types:['plante','dragon'],base:st(110,85,80,100,80,30),abilities:['Mûrissement','Gloutonnerie','Isograisse']}
+ ]},
 {id:'dunaja',abilities:['Crache-Sable','Mue','Voile Sable'],moveIds:['glare','bulldoze','earthquake','stoneedge','protect','endure','hyperbeam','facade','sleeptalk','rest','takedown','bodyslam','rockslide','rocktomb','dig','sandstorm','stealthrock','mudslap','mudshot','scaryface','ironhead','zenheadbutt','slam','sandattack','headbutt','wrap','minimize','sandtomb','brutalswing','firefang','thunderfang','scaleshot','skittersmack','scorchingsands','poisontail','belch','substitute','lastresort','dragonrush','earthpower','coil','round','drillrun','terablast','gigaimpact'],
  stages:[
   {name:'Dunaja',types:['sol'],base:st(52,57,75,35,50,46)},
@@ -80,8 +81,10 @@ const LINES_GEN8 = [
   {name:'Hastacuda',types:['eau'],base:st(61,123,60,60,50,136)}]},
 {id:'toxizap',abilities:['Phobique','Statik','Maladresse'],moveIds:['overdrive','sludgebomb','poisonjab','thunderbolt','protect','swift','endure','hyperbeam','facade','sleeptalk','rest','raindance','sunnyday','takedown','thief','thunder','thunderwave','scaryface','brickbreak','taunt','toxic','thunderpunch','growl','acid','flail','belch','tearfullook','leer','thundershock','screech','swagger','spark','charge','shockwave','discharge','shiftgear','nobleroar','boomburst','thunderfang','firepunch','endeavor','poweruppunch','risingvoltage','substitute','round','nuzzle','terablast','helpinghand','payback','fling','drainpunch','gigaimpact','gunkshot','chargebeam','venoshock','sludgewave','electroball','acidspray','storedpower','hex','voltswitch','electroweb','wildcharge','snarl'],
  stages:[
-  {name:'Toxizap',types:['electrik','poison'],base:st(40,38,35,54,35,40)},
-  {name:'Salarsen',types:['electrik','poison'],base:st(75,98,70,114,70,75),abilities:['Punk Rock','Plus','Technicien']}]},
+  {name:'Toxizap',types:['electrik','poison'],base:st(40,38,35,54,35,40)}], branches:[
+  {name:'Salarsen',types:['electrik','poison'],base:st(75,98,70,114,70,75),abilities:['Punk Rock','Plus','Technicien']},
+  {name:'Salaquin',types:['electrik','poison'],base:st(75,98,70,114,70,75),abilities:['Punk Rock','Minus','Technicien']}
+ ]},
 {id:'grillepattes',abilities:['Torche','Écran Fumée','Corps Ardent'],moveIds:['ember','lunge','firelash','flamethrower','leechlife','protect','endure','hyperbeam','facade','sleeptalk','rest','sunnyday','solarbeam','fireblast','heatwave','willowisp','overheat','firespin','slam','wrap','bite','smokescreen','flamewheel','crunch','bugbite','burnup','firefang','thunderfang','skittersmack','scorchingsands','defensecurl','rollout','knockoff','substitute','bugbuzz','powerwhip','venoshock','coil','round','scald','strugglebug','heatcrash','flareblitz','xscissor','gigaimpact','inferno'],
  stages:[
   {name:'Grillepattes',types:['feu','insecte'],base:st(50,65,45,50,50,45)},
@@ -169,7 +172,13 @@ const LINES_GEN8 = [
   }}]},
 {id:'ethernatos',abilities:['Pression'],moveIds:['sludgebomb','dynamaxcannon','dragonpulse','poisonjab','flamethrower','protect','endure','hyperbeam','facade','sleeptalk','rest','recover','sunnyday','raindance','takedown','bodyslam','scaryface','shadowball','outrage','toxic','solarbeam','agility','confuseray','cosmicpower','poisontail','dragondance','dracometeor','meteorbeam','substitute','gravity','payback','assurance','gigaimpact','crosspoison','gunkshot','venoshock','sludgewave','round','dragontail','terablast'],
  stages:[
-  {name:'Éthernatos',types:['poison','dragon'],base:st(140,85,95,145,95,130)}]},
+  {name:'Éthernatos',types:['poison','dragon'],base:st(140,85,95,145,95,130)}], branches:[
+  // Forme Infinimax (Eternamax) : la forme colossale prise par Éthernatos dans les événements de son
+  // histoire officielle. Traitée comme une forme alternative de la lignée (voir le bouton d'évolution
+  // de l'éditeur), mais rendue bien plus rare qu'un simple légendaire au tirage du draft (rarityWeight,
+  // voir buildFacileCandidates) : lineWeight des légendaires = 0.5, celui-ci est 10 fois plus rare.
+  {name:'Éthernatos Infinimax',types:['poison','dragon'],base:st(255,115,250,125,250,130),abilities:['Pression'],rarityWeight:0.05}
+ ]},
 {id:'wushours',abilities:['Attention'],moveIds:['closecombat','protect','endure','facade','sleeptalk','rest','bulkup','takedown','bodyslam','brickbreak','doubleedge','scaryface','dig','zenheadbutt','swordsdance','headbutt','leer','counter','focusenergy','detect','dynamicpunch','rocksmash','focuspunch','aerialace','ironhead','firepunch','icepunch','thunderpunch','coaching','substitute','helpinghand','fling','lowsweep','round','acrobatics','retaliate','workup','terablast'],
  stages:[
   {name:'Wushours',types:['combat'],base:st(60,90,60,53,50,72)}],
@@ -268,7 +277,7 @@ const DEX_NUMBERS_GEN8 = {
   'Dunaja':843,'Dunaconda':844,
   'Nigosier':845,
   'Embrochet':846,'Hastacuda':847,
-  'Toxizap':848,'Salarsen':849,
+  'Toxizap':848,'Salarsen':849,'Salaquin':849,
   'Grillepattes':850,'Scolocendre':851,
   'Poulpaf':852,'Krakos':853,
   'Théffroi':854,'Polthégeist':855,
@@ -295,7 +304,8 @@ const DEX_NUMBERS_GEN8 = {
   'Zacian':888,
   'Zamazenta':889,
   'Éthernatos':890,
-  'Wushours':891,
+  'Éthernatos Infinimax':890,
+  'Wushours':891,'Shifours (Style Farouche)':892,'Shifours (Style Aqua)':892,
   'Zarude':893,
   'Régieleki':894,
   'Régidrago':895,

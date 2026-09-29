@@ -28,8 +28,8 @@ function renderRanchPanel(){
     const card = document.createElement('div');
     card.style.cssText = 'background:#0b0b10;border:1px solid var(--line);border-radius:4px;padding:10px;text-align:center;cursor:pointer;';
     card.innerHTML = `
-      <div style="width:60px;height:60px;margin:0 auto 6px;">${getSpriteHTML(sp.name)}</div>
-      <div style="font-size:10px;color:var(--text-main);margin-bottom:4px;">${sp.name}</div>
+      <div style="width:60px;height:60px;margin:0 auto 6px;">${getSpriteHTML(sp.name, null, 'front', false, choice.shiny)}</div>
+      <div style="font-size:10px;color:var(--text-main);margin-bottom:4px;">${sp.name}${choice.shiny?shinyBadgeHTML():''}</div>
       <div class="types-row" style="justify-content:center;">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
     `;
     card.onclick = ()=> renderRanchRecruit(choice, sp);
@@ -41,8 +41,8 @@ function renderRanchRecruit(choice, sp){
   const wrap = document.getElementById('villagePanelContent');
   wrap.innerHTML = `
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
-      <div style="width:70px;height:70px;margin:0 auto 8px;">${getSpriteHTML(sp.name)}</div>
-      <div style="font-size:12px;color:var(--text-main);margin-bottom:4px;">${sp.name}</div>
+      <div style="width:70px;height:70px;margin:0 auto 8px;">${getSpriteHTML(sp.name, null, 'front', false, choice.shiny)}</div>
+      <div style="font-size:12px;color:var(--text-main);margin-bottom:4px;">${sp.name}${choice.shiny?shinyBadgeHTML():''}</div>
       <div class="types-row" style="justify-content:center;margin-bottom:12px;">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
       <div style="font-size:10px;color:var(--text-dim);margin-bottom:12px;">Où veux-tu l'envoyer ?</div>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
@@ -53,9 +53,11 @@ function renderRanchRecruit(choice, sp){
       <div id="ranchTeamPicker" style="margin-top:14px;"></div>
     </div>`;
   const buildMember = ()=>{
-    return difficulty==='facile'
+    const member = difficulty==='facile'
       ? autoBuildMember(choice.lineId, choice.stage, choice.branch)
       : defaultMember(choice.lineId, choice.stage);
+    member.shiny = !!choice.shiny;
+    return member;
   };
   document.getElementById('ranchCancelBtn').onclick = renderRanchPanel;
   document.getElementById('ranchToPCBtn').onclick = ()=>{
@@ -75,7 +77,7 @@ function renderRanchRecruit(choice, sp){
       const btn = document.createElement('button');
       btn.className = 'btn secondary';
       btn.style.cssText = 'width:100%;text-align:left;padding:8px;margin-bottom:6px;display:flex;align-items:center;gap:8px;';
-      btn.innerHTML = `<span style="width:26px;height:26px;display:inline-block;">${getSpriteHTML(msp.name, m.unownForm)}</span><span style="font-size:10px;">${msp.name}</span>`;
+      btn.innerHTML = `<span style="width:26px;height:26px;display:inline-block;">${getSpriteHTML(msp.name, m.unownForm, 'front', false, m.shiny)}</span><span style="font-size:10px;">${msp.name}${m.shiny?shinyBadgeHTML():''}</span>`;
       btn.onclick = ()=>{
         const newMember = buildMember();
         const replaced = team[i];

@@ -306,7 +306,9 @@ function pickFoeItem(sp, moveIds, floor, bossLike){
 function buildFoeMember(spec, floor, strength, bossLike){
   const { line, id, stage, branch, sp } = spec;
   const ivs = {hp:31,atk:31,def:31,spa:31,spd:31,spe:31};
-  const totalEv = Math.round(510*strength);
+  // Budget total d'EV réparti entre les 6 stats (max 32 chacune, max EV_TOTAL_MAX au total), qui grandit
+  // avec la force du dresseur — comme le budget de 510 des jeux officiels, mais à l'échelle réduite.
+  const totalEv = Math.round(EV_TOTAL_MAX*strength);
   const evs = {hp:0,atk:0,def:0,spa:0,spd:0,spe:0};
   const b = sp.base;
   const phys = b.atk >= b.spa;
@@ -316,19 +318,19 @@ function buildFoeMember(spec, floor, strength, bossLike){
   const optimized = floor >= 5 && Math.random() < Math.min(1, (floor-3)*0.25);
   if(optimized){
     let remaining = totalEv;
-    const give = (k, v)=>{ const g = Math.max(0, Math.min(v, remaining, 252-evs[k])); evs[k] += g; remaining -= g; };
+    const give = (k, v)=>{ const g = Math.max(0, Math.min(v, remaining, EV_MAX-evs[k])); evs[k] += g; remaining -= g; };
     const bulky = (b.hp + b.def + b.spd) >= 290 && b.spe < 80;
-    give(main, 252);
-    if(bulky){ give('hp', 252); give(phys ? 'def' : 'spd', 252); }
-    else { give('spe', 252); give('hp', 252); }
+    give(main, EV_MAX);
+    if(bulky){ give('hp', EV_MAX); give(phys ? 'def' : 'spd', EV_MAX); }
+    else { give('spe', EV_MAX); give('hp', EV_MAX); }
     give('hp', remaining); give('def', remaining); give('spd', remaining);
     nature = NATURES.find(n=>n.plus===main && n.minus===opposite) || NATURES.find(n=>n.plus===main) || NATURES[0];
   } else {
     let remaining = totalEv;
     const statKeys = shuffle(['hp','atk','def','spa','spd','spe']);
     statKeys.forEach((k,i)=>{
-      if(i===statKeys.length-1){ evs[k]=Math.min(252,remaining); }
-      else { const give = Math.min(252, Math.round(remaining*(0.2+Math.random()*0.3))); evs[k]=give; remaining-=give; }
+      if(i===statKeys.length-1){ evs[k]=Math.max(0,Math.min(EV_MAX,remaining)); }
+      else { const give = Math.max(0,Math.min(EV_MAX, remaining, Math.round(remaining*(0.2+Math.random()*0.3)))); evs[k]=give; remaining-=give; }
     });
     nature = rand(NATURES.filter(n=>n.plus));
   }

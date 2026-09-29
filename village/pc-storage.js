@@ -3,8 +3,8 @@
 function pcMemberCardHTML(m, extraLabel){
   if(!m) return `<div style="font-size:10px;color:var(--text-dim);text-align:center;padding:10px;">Emplacement vide</div>`;
   const sp = speciesOf(m);
-  return `<div style="width:40px;height:40px;margin:0 auto 4px;">${getSpriteHTML(sp.name, m.unownForm)}</div>
-    <div style="font-size:9px;text-align:center;color:var(--text-main);">${sp.name}${extraLabel||''}</div>`;
+  return `<div style="width:40px;height:40px;margin:0 auto 4px;">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
+    <div style="font-size:9px;text-align:center;color:var(--text-main);">${sp.name}${m.shiny?shinyBadgeHTML():''}${extraLabel||''}</div>`;
 }
 // Affiche l'écran du PC (grille d'équipe + grille de boîte) et branche l'échange par clic (équipe puis PC).
 function renderPCPanel(){

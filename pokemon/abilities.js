@@ -186,6 +186,8 @@ const ABILITY_DESC = {
   'Fourrure':"Réduit de moitié les dégâts des capacités physiques.",
   'Magicien':"Dérobe l'objet tenu de la cible après l'avoir touchée, si le porteur n'en a pas.",
   'Anti-Bombe':"Immunise contre les capacités à base de bombes ou de boulets (Ball'Ombre, Bombe Toxik...).",
+  'Imposteur':"À l'entrée sur le terrain, se transforme automatiquement en copie exacte du Pokémon adverse.",
+  'Fluide Pixie':"Toutes les capacités Normal du porteur deviennent de type Fée, avec une puissance légèrement augmentée.",
   'Compétiteur':"Augmente fortement l'Attaque Spéciale quand une statistique est réduite par l'adversaire.",
   'Mâchouille':"Booste fortement la puissance des capacités de morsure.",
   'Méga-Lanceur':"Booste fortement la puissance des capacités à onde ou aura (Dracochoc, Vibrobscur...).",

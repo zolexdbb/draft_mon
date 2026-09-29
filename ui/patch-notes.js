@@ -181,6 +181,91 @@ const PATCH_NOTES = [
               ]
             }
         ]
+      },
+      {
+        version: 'v0.10.4',
+        title: 'v0.10.4 — Chromatiques, Méga en combat & Infinimax',
+        categories: [
+            {
+              icon: '📖', label: 'Pokédex : Pokémon manquants & fiches détaillées',
+              items: [
+                "Nymphali, l'évolution Fée d'Évoli, était absente de la lignée ; ajoutée aux côtés des 7 autres Évolis",
+                "Métamorph et Tapatoès, totalement absents du jeu, sont ajoutés",
+                "Toxizap n'avait que Salarsen (Forme Ampérée) : Salaquin (Forme Placide) est ajoutée comme seconde évolution possible",
+                "La lignée de Verpom était codée comme une évolution en chaîne (Pomdrapi évoluant en Dratatin) alors que ce sont deux évolutions distinctes de Verpom, comme Flapple/Appletun dans les vrais jeux ; corrigé",
+                "Les deux formes de Shifours (Style Farouche / Style Aqua) n'avaient pas de numéro de Pokédex enregistré, ce qui pouvait casser leur sprite ; corrigé",
+                "Chaque carte du Dex est maintenant cliquable et ouvre une fiche complète : stats de base, talents avec description, chaîne d'évolution cliquable pour naviguer d'un stade à l'autre, et movepool complet",
+                "Le bouton d'évolution de l'éditeur d'équipe affiche maintenant le sprite du stade ou de la branche cible, pas seulement son nom"
+              ]
+            },
+            {
+              icon: '🧬', label: 'Points d’Effort (EV)',
+              items: [
+                "La répartition des EV passe d'une base 252 à une base 32 par statistique (comme sur Pokémon Champion), pour être plus lisible : c'est un raccourci d'affichage, le bonus réel de statistique obtenu au maximum reste rigoureusement identique à avant",
+                "Un plafond global de 66 points d'EV au total s'ajoute au plafond de 32 par statistique, avec un total affiché dans l'éditeur d'équipe"
+              ]
+            },
+            {
+              icon: '✨', label: 'Pokémon Chromatiques (Shiny)',
+              items: [
+                "Chaque Pokémon proposé en draft ou au Ranch a désormais 0,2 % de chance d'apparaître sous sa forme chromatique, tirée au moment même où il est proposé (donc visible avant de le choisir)",
+                "Un Pokémon chromatique choisi le reste pour toujours (sprite et pastille ✨ affichés partout : équipe, combat, Ranch, PC, sac) ; s'il n'est pas choisi, la chance est perdue"
+              ]
+            },
+            {
+              icon: '📖', label: 'Fiche Dex détaillée',
+              items: [
+                "Corrigé : la fiche détaillée d'un Pokémon du Dex ne s'ouvrait plus au clic sur une carte",
+                "Le mode développeur ne demande plus la manipulation cachée (7 clics + code) : il s'active directement via un bouton dans le menu principal",
+                "La fiche Dex permet maintenant de prévisualiser la forme chromatique d'un Pokémon, ainsi que ses formes Méga et Gigamax quand il en possède",
+                "Une barre de recherche est ajoutée à la liste des capacités de la fiche, et le movepool est désormais séparé en trois catégories (Physique / Spéciale / Statut) au lieu d'être mélangé"
+              ]
+            },
+            {
+              icon: '🐲', label: 'Nouveau Pokémon',
+              items: [
+                "Éthernatos Infinimax ajouté comme forme alternative d'Éthernatos, avec un spawn en draft encore plus rare qu'un légendaire"
+              ]
+            },
+            {
+              icon: '🔁', label: 'Métamorph : Morphing & talent Imposteur',
+              items: [
+                "Métamorph n'apprend plus que Morphing, sa seule capacité, au lieu d'un movepool complet, comme dans les vrais jeux",
+                "Morphing copie réellement l'adversaire ciblé : nom, apparence, types, talent, statistiques (hors PV) et ses 4 capacités (5 PP chacune), et ce jusqu'à ce que Métamorph change de camp",
+                "Le talent Imposteur, jusque-là purement descriptif, déclenche désormais cette même transformation automatiquement dès l'entrée en combat de son porteur"
+              ]
+            },
+            {
+              icon: '🔷', label: 'Refonte de la Méga-Évolution',
+              items: [
+                "La Méga-Évolution devient une mécanique de combat au même titre que le Dynamax et la Téracristallisation : le Pokémon doit tenir sa Méga-Gemme et se Méga-Évolue manuellement durant le combat via un bouton dédié, au lieu d'être automatique dès que l'objet est équipé",
+                "Une fois activée, la Méga-Évolution dure jusqu'à la fin du combat, même si le Pokémon change et revient ensuite ; il redevient normal une fois le combat terminé"
+              ]
+            },
+            {
+              icon: '🎬', label: 'Animations d’activation',
+              items: [
+                "Le Dynamax, la Téracristallisation, la Méga-Évolution et les Capacités Z ont désormais chacun une animation dédiée au moment de leur activation (halo, anneaux d'énergie, éclats, particules), inspirée du style de Pokémon Showdown"
+              ]
+            },
+            {
+              icon: '📱', label: 'Combat mobile & confort d’interface',
+              items: [
+                "La puissance et les PP des attaques n'étaient plus coupés par des « ... » faute de place sur mobile : le détail passe à la ligne au lieu d'être tronqué, en portrait comme en paysage ; en paysage très compact, la colonne d'attaques devient défilable en dernier recours pour ne jamais rien cacher",
+                "Une barre de recherche apparaît dans les longs menus déroulants (Nature, Talent, choix d'une attaque...) dès qu'il y a plus de 8 options",
+                "L'écran de défaite affiche maintenant toute l'équipe du dresseur qui t'a vaincu (K.O./grisés comme la tienne, avec un repère sur ceux qui étaient encore sur le terrain), pas seulement ses Pokémon encore debout au moment du K.O.",
+                "Un bouton 🔍 Détails est ajouté sur chaque Pokémon des écrans de changement en combat (volontaire et après un K.O.) et de la fenêtre Équipe : stats réelles, talent, objet tenu, statut et les 4 attaques avec type/catégorie/puissance, sans devoir rouvrir l'éditeur d'équipe"
+              ]
+            },
+            {
+              icon: '🛠️', label: 'Corrections diverses',
+              items: [
+                "Mortier Matcha ne boostait que l'Attaque du lanceur et n'avait aucun autre effet : il draine maintenant la moitié des dégâts infligés et peut brûler la cible, comme dans les vrais jeux",
+                "Le type affiché d'un Pokémon transformé (Téracristallisé, Méga-Évolué...) ne correspondait pas toujours à son type réel du moment dans certains écrans (pastille de type en combat, liste de changement, fenêtre du sac) ; corrigé partout",
+                "Corrigé : jouer une capacité pouvait faire sauter le sprite de ton Pokémon en haut à gauche de l'écran de combat le temps de l'animation, à cause des effets visuels de capacité qui perturbaient sa position ; il reste maintenant bien en place"
+              ]
+            }
+        ]
       }
     ]
   },

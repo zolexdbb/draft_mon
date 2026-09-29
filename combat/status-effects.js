@@ -54,10 +54,39 @@ function triggerIntimidate(incoming, opponent){
   return '';
 }
 // Talents qui déclenchent automatiquement une météo ou un terrain à l'entrée sur le terrain (Crachin, Sécheresse, Sable Volant, Marque Ombre, les 4 talents Surge), et Marque Ombre (piège l'adversaire).
+// Transforme `user` en copie de `target` (nom, apparence, types, talent, stats hors PV, capacités avec 5 PP
+// chacune) — utilisé par la capacité Morphing (eff.transform) et par le talent Imposteur (transformation
+// automatique à l'entrée). Se souvient de l'état d'origine pour le restaurer au changement (resetBattleFields).
+function performTransform(user, target){
+  const targetMoves = target.moveObjs || target.moves || [];
+  const userMovesKey = user.moveObjs ? 'moveObjs' : 'moves';
+  if(!user.transformed){
+    user.origName = user.name;
+    user.origUnownForm = user.unownForm;
+    user.origAbility = user.ability;
+    user.origStats = user.stats;
+    user.origMovesKey = userMovesKey;
+    user.origMovesList = user[userMovesKey];
+    user.origPpCur = user.ppCur;
+  }
+  const fromName = user.transformed ? user.origName : user.name;
+  user.transformed = true;
+  user.name = target.name;
+  user.unownForm = target.unownForm;
+  user.transformedTypes = [...(target.transformedTypes || target.types)];
+  user.ability = target.ability;
+  user.stats = { ...user.origStats, atk:target.stats.atk, def:target.stats.def, spa:target.stats.spa, spd:target.stats.spd, spe:target.stats.spe };
+  user[userMovesKey] = targetMoves.slice();
+  user.ppCur = targetMoves.map(mv=>Math.min(5, basePP(mv)));
+  return `${fromName} se transforme en ${target.name} !`;
+}
 function triggerSwitchInAbilities(incoming, opponent){
   let msg = '';
   if(!battleState) return msg;
   msg += applyEntryHazards(incoming);
+  if(incoming.ability==='Imposteur' && opponent && opponent.hp>0 && !incoming.transformed){
+    msg += ` ${performTransform(incoming, opponent)}`;
+  }
   if(battleState.wishHeal){
     const wl = locateActiveSlot(incoming);
     if(wl && battleState.wishHeal[wl.side] && incoming.hp>0){
@@ -788,9 +817,7 @@ function applyStatusEffect(user, target, move, logs){
     logs.push(`${user.name} se concentre pour améliorer ses chances de coup critique !`);
   }
   if(eff.transform){
-    user.transformedTypes = [...target.types];
-    user.moves = target.moves ? target.moves.slice() : user.moves;
-    logs.push(`${user.name} se transforme en ${target.name} !`);
+    logs.push(performTransform(user, target));
   }
   if(eff.noop){
     logs.push("Mais rien ne se passe...");

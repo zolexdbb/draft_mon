@@ -62,9 +62,9 @@ function renderBench(containerId, roster, activeIdxs, hazards, pledge){
 // changement de stats, sprite, barre et texte de PV.
 function renderCombatantBox(c, prefix){
   document.getElementById(prefix+'Box').classList.remove('faint-fade');
-  document.getElementById(prefix+'Name').textContent = c.name;
+  document.getElementById(prefix+'Name').innerHTML = c.name + (c.shiny ? shinyBadgeHTML() : '');
   const typeTag = document.getElementById(prefix+'Type');
-  typeTag.innerHTML = c.types.map(t=>typeBadgeIconHTML(t)).join('');
+  typeTag.innerHTML = (c.transformedTypes||c.types).map(t=>typeBadgeIconHTML(t)).join('');
 
   const box = document.getElementById(prefix+'Box');
   let badge = box.querySelector('.status-icon-badge');
@@ -94,7 +94,7 @@ function renderCombatantBox(c, prefix){
     statBadgesEl.innerHTML += `<span class="stat-badge nerf">${statusIconHTML('confusion',10)} Confus</span>`;
   }
   const facing = prefix.startsWith('player') ? 'back' : 'front';
-  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.unownForm, facing, true);
+  document.getElementById(prefix+'Sprite').innerHTML = getSpriteHTML(c.name, c.unownForm, facing, true, c.shiny);
   const ratio = Math.max(c.hp,0)/c.maxHp;
   const fill = document.getElementById(prefix+'HpFill');
   fill.style.width = (ratio*100)+'%';
@@ -182,37 +182,50 @@ function renderMoveGrid(){
   // Colonne fixe de 4 boutons compacts (icône + libellé), toujours affichés dans le même ordre
   // (Dynamax / Méga / Téracristallisation / Capacité Z) pour que la colonne garde toujours la même hauteur et
   // reste alignée avec le bloc d'attaques — actif/disponible/indisponible plutôt qu'apparaître et
-  // disparaître. Le détail va dans le title (tooltip) pour rester compact.
-  if(!canDeclareZMove(p, bs) || p.dynamaxed || p.teraActive) bs.declaringZMove = false;
+  // disparaître. Le détail va dans le title (tooltip) pour rester compact. Les 4 mécaniques sont
+  // mutuellement exclusives pour le tour en cours (activer l'une désactive la déclaration des autres) ;
+  // un Pokémon déjà Dynamax/Téracristallisé/Méga-Évolué ne peut pas en déclarer une autre par-dessus.
+  const mechActive = p.dynamaxed || p.teraActive || p.megaEvolved;
+  if(!canDeclareZMove(p, bs) || mechActive) bs.declaringZMove = false;
   // Dynamax
   if(p.dynamaxed){
     mechGrid.appendChild(buildMechIndicator('🔴','Dynamax',`${p.dynamaxTurns} tour${p.dynamaxTurns>1?'s':''} restant${p.dynamaxTurns>1?'s':''}`));
   } else {
-    const available = canDynamax(p, bs) && !bs.declaringZMove && !bs.declaringTera && !p.teraActive;
+    const available = canDynamax(p, bs) && !bs.declaringZMove && !bs.declaringTera && !bs.declaringMega && !mechActive;
     mechGrid.appendChild(buildMechButton('🔴','Dynamax', available, bs.declaringDynamax,
       bs.declaringDynamax ? 'Dynamax activé — clique pour annuler' : (available ? 'Toutes les capacités offensives deviennent Max pendant 3 tours' : (bs.dynamaxUsed ? 'Déjà utilisé ce combat' : 'Indisponible pour le moment')),
-      ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax){ bs.declaringZMove = false; bs.declaringTera = false; } renderMoveGrid(); }));
+      ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax){ bs.declaringZMove = false; bs.declaringTera = false; bs.declaringMega = false; } renderMoveGrid(); }));
     if(!available) bs.declaringDynamax = false;
   }
-  // Méga-Évolution : automatique via l'objet tenu (pas de déclaration en combat dans ce jeu),
-  // affichée active si le Pokémon est déjà sous sa forme Méga, sinon indisponible.
-  const isMega = p.name && p.name.startsWith('Méga-');
-  mechGrid.appendChild(isMega
-    ? buildMechIndicator('💎','Méga','Méga-Évolution active (objet tenu)')
-    : buildMechButton('💎','Méga', false, false, 'La Méga-Évolution est automatique : équipe une Méga-Gemme dans la fenêtre Équipe', null));
+  // Méga-Évolution : se déclare en combat comme le Téracristal (plus une transformation acquise avant le
+  // combat), dure jusqu'à la fin du combat même en cas de changement de Pokémon, une fois par combat.
+  if(p.megaEvolved){
+    mechGrid.appendChild(buildMechIndicator('💎','Méga','Méga-Évolué — jusqu\'à la fin du combat'));
+  } else {
+    const available = canMegaEvolve(p, bs) && !bs.declaringZMove && !bs.declaringDynamax && !bs.declaringTera && !mechActive;
+    let megaTip;
+    if(bs.declaringMega) megaTip = 'Méga-Évolution activée — clique pour annuler';
+    else if(available) megaTip = 'Se Méga-Évolue au prochain coup, pour le reste du combat';
+    else if(bs.megaUsed) megaTip = 'Déjà utilisée ce combat';
+    else if(!p.megaFormData) megaTip = 'Nécessite la Méga-Gemme correspondante en objet tenu';
+    else megaTip = 'Indisponible pour le moment';
+    mechGrid.appendChild(buildMechButton('💎','Méga', available, bs.declaringMega, megaTip,
+      ()=>{ bs.declaringMega = !bs.declaringMega; if(bs.declaringMega){ bs.declaringZMove = false; bs.declaringDynamax = false; bs.declaringTera = false; } renderMoveGrid(); }));
+    if(!available) bs.declaringMega = false;
+  }
   // Téracristallisation
   if(p.teraActive){
     mechGrid.appendChild(buildMechIndicator(typeIconHTML(p.teraType),'Téracristal',`Téracristallisé — Type Tera : ${p.teraType}`));
   } else {
-    const available = canTerastallize(p, bs) && !bs.declaringZMove && !p.dynamaxed;
+    const available = canTerastallize(p, bs) && !bs.declaringZMove && !bs.declaringMega && !p.dynamaxed;
     mechGrid.appendChild(buildMechButton('💠','Téracristal', available, bs.declaringTera,
       bs.declaringTera ? 'Téracristallisation activée — clique pour annuler' : (available ? `Devient mono-type ${p.teraType} pour le reste du combat` : "Nécessite l'Orbe Tera en objet tenu"),
-      ()=>{ bs.declaringTera = !bs.declaringTera; if(bs.declaringTera){ bs.declaringZMove = false; bs.declaringDynamax = false; } renderMoveGrid(); }));
+      ()=>{ bs.declaringTera = !bs.declaringTera; if(bs.declaringTera){ bs.declaringZMove = false; bs.declaringDynamax = false; bs.declaringMega = false; } renderMoveGrid(); }));
     if(!available) bs.declaringTera = false;
   }
   // Capacité Z : bouton de la colonne comme les autres mécaniques, grisé tant qu'aucune capacité offensive
   // ne correspond au Cristal Z tenu (ou si la Capacité Z a déjà servi ce combat).
-  const zAvailable = canDeclareZMove(p, bs) && !p.dynamaxed && !p.teraActive && !bs.declaringDynamax && !bs.declaringTera;
+  const zAvailable = canDeclareZMove(p, bs) && !mechActive && !bs.declaringDynamax && !bs.declaringTera && !bs.declaringMega;
   let zTip;
   if(bs.declaringZMove) zTip = 'Capacité Z activée — clique pour annuler, ou choisis la capacité à surboosster';
   else if(zAvailable) zTip = 'Choisis ensuite la capacité offensive à transformer en Capacité Z (une fois par combat)';
@@ -220,7 +233,7 @@ function renderMoveGrid(){
   else if(!zCrystalHeldBy(p)) zTip = "Nécessite un Cristal Z en objet tenu, du même type qu'une de tes attaques offensives";
   else zTip = 'Indisponible : aucune attaque offensive du type du Cristal Z avec des PP restants';
   mechGrid.appendChild(buildMechButton('⚡','Z', zAvailable || bs.declaringZMove, bs.declaringZMove, zTip,
-    ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; } renderMoveGrid(); }));
+    ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; bs.declaringMega = false; } renderMoveGrid(); }));
   const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
   const dynamaxPreview = bs.declaringDynamax || p.dynamaxed;
   p.moves.forEach((mv, idx)=>{
@@ -311,11 +324,22 @@ function openManualSwitch(){
   sw.innerHTML='';
   aliveIdx.forEach(i=>{
     const c = bs.player[i];
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:4px;';
     const btn = document.createElement('button');
     btn.className='move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>typeTagHTML(t)).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
+    btn.style.flex = '1';
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm, 'front', false, c.shiny)}</span>${c.name}${c.shiny?shinyBadgeHTML():''} <small>${(c.transformedTypes||c.types).map(t=>typeTagHTML(t)).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
     btn.onclick = ()=> doVoluntarySwitch(i, slot);
-    sw.appendChild(btn);
+    const detailBtn = document.createElement('button');
+    detailBtn.className = 'move-btn';
+    detailBtn.style.cssText = 'flex:0 0 auto;width:34px;font-size:14px;';
+    detailBtn.title = 'Voir les détails';
+    detailBtn.textContent = '🔍';
+    detailBtn.onclick = (e)=>{ e.stopPropagation(); openBattlerDetail(battlerDetailView(c)); };
+    row.appendChild(btn);
+    row.appendChild(detailBtn);
+    sw.appendChild(row);
   });
 }
 // Referme l'écran de switch/cible/sac et réaffiche la grille de capacités normale.
@@ -349,7 +373,7 @@ function openBag(){
     any = true;
     const btn = document.createElement('button');
     btn.className='move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.hp} / ${c.maxHp} PV</small>`;
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm, 'front', false, c.shiny)}</span>${c.name}${c.shiny?shinyBadgeHTML():''} <small>${c.hp} / ${c.maxHp} PV</small>`;
     btn.onclick = ()=> useBagPotion(i);
     sw.appendChild(btn);
   });
@@ -371,13 +395,15 @@ function lungeBox(id){
   if(!box) return;
   box.classList.remove('lunge'); void box.offsetWidth; box.classList.add('lunge');
 }
-// Flash plein écran (coup critique ou coup super efficace).
-function flashScreen(kind){
+// Flash plein écran (coup critique, coup super efficace, ou couleur libre pour une mécanique activée
+// — Dynamax/Téracristal/Capacité Z, voir combat/move-fx.js).
+function flashScreen(kind, color){
   const flash = document.createElement('div');
-  flash.className = kind==='crit' ? 'battle-flash flash-crit' : 'battle-flash flash-superfx';
+  flash.className = kind==='crit' ? 'battle-flash flash-crit' : kind==='superfx' ? 'battle-flash flash-superfx' : 'battle-flash flash-custom';
+  if(kind==='custom' && color) flash.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
   const arena = document.getElementById('screenBattle');
   arena.appendChild(flash);
-  setTimeout(()=> flash.remove(), 400);
+  setTimeout(()=> flash.remove(), 700);
 }
 
 // Texte affiché après les dégâts selon l'efficacité de type (super efficace / peu efficace / aucun effet).

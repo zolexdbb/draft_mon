@@ -45,7 +45,7 @@ function renderVillageTeamRing(){
     el.className = 'village-team-mon';
     el.title = sp.name;
     el.style.cssText = `left:${pos.x}%;top:${pos.y-4}%;animation-delay:${-(i*0.6)}s;`;
-    el.innerHTML = getSpriteHTML(sp.name, m.unownForm, 'front', true);
+    el.innerHTML = getSpriteHTML(sp.name, m.unownForm, 'front', true, m.shiny) + (m.shiny ? shinyBadgeHTML() : '');
     wrap.appendChild(el);
   });
 }
@@ -57,6 +57,9 @@ function ensureRanchChoices(){
   const isFacile = difficulty==='facile';
   const pool = isFacile ? buildFacileCandidates(excluded) : buildDraftCandidates(excluded);
   ranchChoices = weightedSampleCandidates(pool, 3);
+  // Même principe qu'au draft : chance de chromatique tirée une fois par candidat, visible avant de
+  // recruter, conservée pour toujours si ce candidat est choisi.
+  ranchChoices.forEach(c=>{ c.shiny = rollShiny(); });
 }
 // Affiche les 3 candidats du Ranch (déjà tirés par ensureRanchChoices) directement dans son enclos sur la carte.
 function renderVillageRanchPen(){
@@ -73,7 +76,7 @@ function renderVillageRanchPen(){
     el.className = 'village-pen-mon';
     el.title = sp.name;
     el.style.cssText = `left:${spots[i].left};animation-delay:${-(i*0.8)}s;`;
-    el.innerHTML = getSpriteHTML(sp.name, null, 'front', true);
+    el.innerHTML = getSpriteHTML(sp.name, null, 'front', true, choice.shiny) + (choice.shiny ? shinyBadgeHTML() : '');
     wrap.appendChild(el);
   });
 }

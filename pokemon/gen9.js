@@ -55,6 +55,9 @@ const LINES_GEN9 = [
   {name:'Olivini',types:['plante','normal'],base:st(41,35,50,55,50,25)},
   {name:'Olivado',types:['plante','normal'],base:st(52,53,60,78,78,44)},
   {name:'Arboliva',types:['plante','normal'],base:st(78,69,90,125,109,39),abilities:['Semeur de Graines','Récolte']}]},
+{id:'tapatoes',abilities:['Intimidation','Agitation','Cran'],moveIds:['peck','growl','sandattack','furyattack','wingattack','pursuit','screech','agility','aerialace','featherdance','roost','uturn','assurance','knockoff','foulplay','payback','partingshot','taunt','torment','swagger','protect','endure','hyperbeam','facade','sleeptalk','rest','substitute','doubleedge','takedown','bodyslam','quickattack','doublehit','tripleaxel','bravebird','hurricane','airslash','dualwingbeat','uproar','spite','snarl','throatchop','lashout','round','retaliate','workup','terablast','defog','tailwind','mudslap','rockslide','stoneedge','gigaimpact'],
+ stages:[
+  {name:'Tapatoès',types:['normal','vol'],base:st(82,96,51,45,51,92)}]},
 {id:'nacli',abilities:['Sel Purifiant','Fermeté','Corps Sain'],moveIds:['tackle','rockthrow','stoneedge','stealthrock','irondefense','bodypress','protect','endure','hyperbeam','facade','sleeptalk','rest','raindance','sunnyday','rockslide','rocktomb','takedown','bulldoze','bodyslam','sandstorm','earthquake','dig','doubleedge','curse','brickbreak','ancientpower','ironhead','rockblast','zenheadbutt','headbutt','recover','harden','mudshot','saltcure','explosion','block','firepunch','icepunch','thunderpunch','fissure','substitute','helpinghand','rockpolish','powergem','earthpower','smackdown','heavyslam','terablast','gigaimpact','gravity','hammerarm','fling','avalanche','wideguard','hardpress'],
  stages:[
   {name:'Selutin',types:['roche'],base:st(55,55,100,35,37,5)},
@@ -301,6 +304,7 @@ const DEX_NUMBERS_GEN9 = {
   'Compagnol':924,'Famignol':925,
   'Pâtachiot':926,'Briochien':927,
   'Olivini':928,'Olivado':929,'Arboliva':930,
+  'Tapatoès':931,
   'Selutin':932,'Amassel':933,'Gigansel':934,
   'Charbambin':935,'Carmadura':936,'Malvalame':937,
   'Têtampoule':938,'Ampibidou':939,

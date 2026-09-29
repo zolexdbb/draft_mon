@@ -34,9 +34,9 @@ function renderTeamGrid(){
     card.className = 'team-card' + (configured ? ' configured' : '');
     card.innerHTML = `
       <div class="team-card-header">
-        <div class="team-card-sprite">${getSpriteHTML(sp.name, m.unownForm)}</div>
+        <div class="team-card-sprite">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
         <div class="team-card-info">
-          <div class="pname">${sp.name}</div>
+          <div class="pname">${sp.name}${m.shiny?shinyBadgeHTML():''}</div>
           <div class="types-row" style="justify-content:flex-start;margin:3px 0;">
             ${sp.types.map(t=>typeTagHTML(t)).join('')}
           </div>
@@ -104,26 +104,33 @@ function openEditor(idx){
       <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%;background:${statBarColor(val)};"></div></div>
     </div>`;
   };
+  // Bouton d'évolution avec le sprite du stade/de la branche cible, pour voir à quoi ressemble le Pokémon avant d'évoluer.
+  const evolveBtnHTML = (targetName, label, extraClass, extraAttrs) => `
+    <button class="btn secondary evolve-btn-sprite${extraClass?' '+extraClass:''}" ${extraAttrs||''} style="margin:3px;font-size:10px;display:inline-flex;align-items:center;gap:6px;">
+      <span style="width:26px;height:26px;flex-shrink:0;">${getSpriteHTML(targetName, null)}</span>
+      <span>${label}</span>
+    </button>`;
   const evolveSection = line.branches ? `
     <div class="editor-section">
       <div class="editor-section-title">Évolution</div>
       ${isBranched
         ? `<button class="btn secondary" disabled style="font-size:10px;">Déjà évolué en ${sp.name}</button>`
-        : line.branches.map((b,bi)=>`<button class="btn secondary evolveBranchBtn" data-branch="${bi}" style="margin:3px;font-size:10px;">→ ${b.name}</button>`).join('')
+        : line.branches.map((b,bi)=>evolveBtnHTML(b.name, `→ ${b.name}`, 'evolveBranchBtn', `data-branch="${bi}"`)).join('')
       }
     </div>` : (line.stages.length>1 ? `
     <div class="editor-section">
       <div class="editor-section-title">Évolution</div>
-      <button class="btn secondary" id="evolveBtn" ${!hasNextStage?'disabled':''} style="font-size:10px;">
-        ${hasNextStage ? `→ Évoluer en ${line.stages[m.stage+1].name}` : `Stade final — ${sp.name}`}
-      </button>
+      ${hasNextStage
+        ? evolveBtnHTML(line.stages[m.stage+1].name, `→ Évoluer en ${line.stages[m.stage+1].name}`, '', `id="evolveBtn"`)
+        : `<button class="btn secondary" disabled style="font-size:10px;">Stade final — ${sp.name}</button>`
+      }
     </div>` : '');
 
   ed.innerHTML = `
     <div class="editor-topbar">
-      <div class="editor-sprite">${getSpriteHTML(sp.name, m.unownForm)}</div>
+      <div class="editor-sprite">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
       <div class="editor-ident">
-        <h3>${sp.name}</h3>
+        <h3>${sp.name}${m.shiny?shinyBadgeHTML():''}</h3>
         <div class="types-row" style="justify-content:flex-start;margin-bottom:4px;">
           ${sp.types.map(t=>typeTagHTML(t)).join('')}
         </div>
@@ -168,9 +175,9 @@ function openEditor(idx){
             <div class="iv-grid" id="ivGrid"></div>
           </div>
           <div class="editor-section">
-            <div class="editor-section-title">EV (0–252 · 510 max)</div>
+            <div class="editor-section-title">EV (0–32 par stat · ${EV_TOTAL_MAX} max au total)</div>
             <div class="ev-grid" id="evGrid"></div>
-            <div class="ev-total" id="evTotal">${evTotal} / 510</div>
+            <div class="ev-total" id="evTotal">${evTotal} / ${EV_TOTAL_MAX}</div>
           </div>
         </div>
       </div>
@@ -201,18 +208,18 @@ function openEditor(idx){
   const evGrid = document.getElementById('evGrid');
   ['hp','atk','def','spa','spd','spe'].forEach(stat=>{
     const row = document.createElement('div'); row.className='ev-row';
-    row.innerHTML = `<label>${STAT_LABEL[stat]}</label><input type="number" min="0" max="252" step="4" value="${m.evs[stat]}" data-stat="${stat}" class="evInput">`;
+    row.innerHTML = `<label>${STAT_LABEL[stat]}</label><input type="number" min="0" max="${EV_MAX}" step="1" value="${m.evs[stat]}" data-stat="${stat}" class="evInput">`;
     evGrid.appendChild(row);
   });
   function refreshEvTotal(){
     const total = Object.values(m.evs).reduce((a,b)=>a+b,0);
     const el = document.getElementById('evTotal');
-    el.textContent = `${total} / 510 utilisés`;
-    el.className = 'ev-total' + (total>510 ? ' over' : '');
+    el.textContent = `${total} / ${EV_TOTAL_MAX}`;
+    el.className = 'ev-total' + (total>EV_TOTAL_MAX ? ' over' : '');
   }
   evGrid.querySelectorAll('.evInput').forEach(inp=>{
     inp.onchange = ()=>{
-      let v = Math.max(0, Math.min(252, parseInt(inp.value)||0));
+      let v = Math.max(0, Math.min(EV_MAX, parseInt(inp.value)||0));
       m.evs[inp.dataset.stat] = v;
       inp.value = v;
       refreshEvTotal();
@@ -257,8 +264,35 @@ function openEditor(idx){
     const dropdown = document.createElement('div');
     dropdown.className='csel-dropdown';
 
+    // Barre de recherche (filtre les attaques par nom, masque les groupes Physique/Spéciale/Statut vidés par le filtre).
+    const searchWrap = document.createElement('div');
+    searchWrap.className = 'csel-search-wrap';
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.className = 'csel-search';
+    searchInput.placeholder = 'Rechercher une attaque...';
+    searchWrap.appendChild(searchInput);
+    dropdown.appendChild(searchWrap);
+    searchInput.onclick = (e)=> e.stopPropagation();
+    searchInput.oninput = ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      let curGroup = null, groupHasVisible = false;
+      dropdown.querySelectorAll('.csel-opt, .csel-group-label').forEach(el=>{
+        if(el.classList.contains('csel-group-label')){
+          if(curGroup) curGroup.classList.toggle('csel-opt-hidden', !groupHasVisible);
+          curGroup = el; groupHasVisible = false;
+          return;
+        }
+        if(el.classList.contains('csel-opt-empty-row')) return;
+        const visible = !q || el.textContent.toLowerCase().includes(q);
+        el.classList.toggle('csel-opt-hidden', !visible);
+        if(visible) groupHasVisible = true;
+      });
+      if(curGroup) curGroup.classList.toggle('csel-opt-hidden', !groupHasVisible);
+    };
+
     const emptyOpt = document.createElement('div');
-    emptyOpt.className='csel-opt' + (!currentId?' selected':'');
+    emptyOpt.className='csel-opt csel-opt-empty-row' + (!currentId?' selected':'');
     emptyOpt.innerHTML=`<span class="csel-opt-empty">— Aucune attaque —</span>`;
     emptyOpt.onclick=()=>{
       m.moves[slot]=null;
@@ -275,6 +309,7 @@ function openEditor(idx){
       const catMoves = options.filter(mid=>MOVES[mid].cat===cat);
       if(!catMoves.length) return;
       const sep = document.createElement('div');
+      sep.className = 'csel-group-label';
       const catLabel = cat==='phys'?'⚔️ Physiques':cat==='spec'?'✨ Spéciales':'🌀 Statut';
       sep.style.cssText='padding:4px 10px 2px;font-size:8px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.04);';
       sep.textContent=catLabel;
@@ -308,7 +343,11 @@ function openEditor(idx){
       const wasOpen=dropdown.classList.contains('open');
       document.querySelectorAll('.csel-dropdown.open').forEach(d=>d.classList.remove('open'));
       document.querySelectorAll('.csel-trigger.open').forEach(d=>d.classList.remove('open'));
-      if(!wasOpen){ dropdown.classList.add('open'); trigger.classList.add('open'); }
+      if(!wasOpen){
+        dropdown.classList.add('open'); trigger.classList.add('open');
+        searchInput.value=''; dropdown.querySelectorAll('.csel-opt-hidden').forEach(o=>o.classList.remove('csel-opt-hidden'));
+        setTimeout(()=>searchInput.focus(), 0);
+      }
     };
 
     csel.appendChild(trigger);

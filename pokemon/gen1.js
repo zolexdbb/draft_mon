@@ -328,8 +328,12 @@ const LINES_GEN1 = [
   {name:'Mentali',types:['psy'],base:st(65,65,60,130,95,110),abilities:['Synchro','Rebond'],extraMoveIds:['confusion','psychic','psybeam']},
   {name:'Noctali',types:['tenebres'],base:st(95,65,110,60,130,65),abilities:['Synchro','Attention'],extraMoveIds:['crunch','darkpulse','suckerpunch']},
   {name:'Phyllali',types:['plante'],base:st(65,110,130,60,65,95),abilities:['Feuille Garde','Chlorophylle'],extraMoveIds:['razorleaf','solarbeam','gigadrain','leafblade']},
-  {name:'Givrali',types:['glace'],base:st(65,60,110,130,95,65),abilities:['Rideau Neige','Corps Gel'],extraMoveIds:['icebeam','blizzard','icefang','icywind']}
+  {name:'Givrali',types:['glace'],base:st(65,60,110,130,95,65),abilities:['Rideau Neige','Corps Gel'],extraMoveIds:['icebeam','blizzard','icefang','icywind']},
+  {name:'Nymphali',types:['fee'],base:st(95,65,65,110,130,60),abilities:['Joli Sourire','Fluide Pixie'],extraMoveIds:['moonblast','dazzlinggleam','mysticalfire','drainingkiss','playrough','disarmingvoice']}
  ]},
+{id:'metamorph',abilities:['Imposteur'],moveIds:['transform'],
+ stages:[
+  {name:'Métamorph',types:['normal'],base:st(48,48,48,48,48,48)}]},
 {id:'porygon',abilities:['Calque','Télécharge','Analyste'],moveIds:['charge','conversion','tackle','eerieimpulse','thundershock','psybeam','conversion2','agility','recover','discharge','zapcannon','hyperbeam','headbutt','thunderwave','icebeam','protect','swift','reflect','endure','doubleedge','zenheadbutt','psychic','solarbeam','thunderbolt','shadowball','irontail','darkpulse','blizzard','thunder','facade','skullbash','triattack','defensecurl','recycle','takedown','thief','icywind','sunnyday','raindance','sleeptalk','rest','trick','uproar','lockon','mimic','dreameater','nightmare','snore','swagger','painsplit','psychup','magiccoat','signalbeam','shockwave','substitute','gravity','naturalgift','powerswap','guardswap','lastresort','magnetrise','gigaimpact','trickroom','chargebeam','wonderroom','psyshock','telekinesis','foulplay','round','allyswitch','electroweb','terablast','embargo','nastyplot'],
  stages:[
   {name:'Porygon',types:['normal'],base:st(65,60,70,85,75,40)},
@@ -446,11 +450,13 @@ const DEX_NUMBERS_GEN1 = {
   'Tauros':128,
   'Magicarpe':129,'Léviator':130,
   'Lokhlass':131,
+  'Métamorph':132,
   'Évoli':133,
   'Aquali':134,
   'Voltali':135,
   'Pyroli':136,
   'Mentali':196,
+  'Nymphali':700,
   'Noctali':197,
   'Phyllali':470,
   'Givrali':471,

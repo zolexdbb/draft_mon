@@ -3,11 +3,16 @@
    combat, draft, éditeur, dex... ==== */
 // Retrouve la lignée (pokemon/gen*.js) à partir de son id.
 function lineOf(id){ return LINES.find(l=>l.id===id); }
-// Résout un membre vers son espèce actuelle : gère stage vs branche, puis les formes liées à un objet tenu (Plaques, Mémoires, Méga-Pierres...).
+// Résout un membre vers son espèce actuelle : gère stage vs branche, puis les formes liées à un objet
+// tenu (Plaques, Mémoires...). Les Méga-Gemmes (ITEMS[x].megaStone) ne comptent PAS ici : la Méga-
+// Évolution ne se déclenche plus qu'en combat (voir combat/megaevolution.js) et ne dure que le temps
+// du combat, donc hors combat (équipe, Dex, PC...) le Pokémon reste affiché sous sa forme normale
+// même s'il tient déjà sa Méga-Gemme.
 function speciesOf(member){
   const line = lineOf(member.lineId);
   const base = (line.branches && member.branch!==undefined && member.branch!==null) ? line.branches[member.branch] : line.stages[member.stage];
-  if(base.forms && member.heldItem && base.forms[member.heldItem]) return base.forms[member.heldItem];
+  const item = member.heldItem && ITEMS[member.heldItem];
+  if(base.forms && member.heldItem && !(item && item.megaStone) && base.forms[member.heldItem]) return base.forms[member.heldItem];
   return base;
 }
 // Talents disponibles pour un membre (ceux du stade/branche s'ils existent, sinon ceux de la lignée).

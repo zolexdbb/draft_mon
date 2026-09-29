@@ -47,6 +47,16 @@ function resetBattleFields(c){
   c.shieldsBroken = false;
   restoreStashedItem(c);
   if(c.roosted){ c.transformedTypes = c.roostTypes || null; c.roosted = false; }
+  if(c.transformed){
+    c.name = c.origName;
+    c.unownForm = c.origUnownForm;
+    c.ability = c.origAbility;
+    c.stats = c.origStats;
+    c[c.origMovesKey] = c.origMovesList;
+    c.ppCur = c.origPpCur;
+    c.transformed = false;
+    c.origName = c.origUnownForm = c.origAbility = c.origStats = c.origMovesKey = c.origMovesList = c.origPpCur = null;
+  }
   c.substitute = 0; c.helped = false; c.aquaRing = false; c.magnetRise = 0; c.telekinesis = 0; c.healBlock = 0; c.embargoTurns = 0;
   c.smackDown = false; c.miracleEyed = false; c.electrified = false; c.powdered = false; c.quickGuard = false; c.wideGuard = false;
   c.hitsTaken = 0; c.usedMoveNames = null; c.protectPunish = null;
@@ -183,11 +193,18 @@ function startBattle(){
     const hp = m.eventBlocked ? 0 : ((hardMode && typeof m.hp==='number') ? m.hp : maxHp);
     const status = hardMode ? (m.status||null) : null;
     const sleepCounter = hardMode ? (m.sleepCounter||0) : 0;
+    // Forme Méga-Évolution disponible ce combat, si le porteur tient la bonne Méga-Gemme : precalculée ici
+    // (nom/types/talent/stats), déclenchée en combat via activateMegaEvolve (voir combat/megaevolution.js).
+    // L'affichage hors combat reste sous la forme normale (speciesOf ignore les Méga-Gemmes, voir helpers.js).
+    const megaForm = sp.forms && m.heldItem && sp.forms[m.heldItem];
+    const megaFormData = megaForm ? { name: megaForm.name, types: megaForm.types, abilities: megaForm.abilities } : null;
+    const megaStats = megaForm ? calcStats(megaForm.base, m.ivs, m.evs, m.nature) : null;
     return {
-      lineId:m.lineId, name:sp.name, types:sp.types, unownForm:m.unownForm, moves:m.moves.map(mid=>MOVES[mid]), ppCur: m.moves.map(mid=>basePP(MOVES[mid])),
+      lineId:m.lineId, name:sp.name, types:sp.types, unownForm:m.unownForm, shiny:!!m.shiny, moves:m.moves.map(mid=>MOVES[mid]), ppCur: m.moves.map(mid=>basePP(MOVES[mid])),
       ability: m.ability || (sp.abilities||lineOf(m.lineId).abilities)[0],
       heldItem: m.heldItem || null, itemUsed:false, teraType: m.teraType || sp.types[0],
       stats:m.computedStats, ivs:m.ivs, maxHp, hp,
+      megaFormData, megaStats, megaEvolved:false,
       stages:{atk:0,def:0,spa:0,spd:0,spe:0,acc:0,eva:0}, status, sleepCounter, confuseCounter:0, flinched:false, protectChain:0
     };
   });
@@ -205,7 +222,7 @@ function startBattle(){
     pActive: aliveIdxs[0], pActive2: (isDouble && aliveIdxs.length>1) ? aliveIdxs[1] : null,
     fActive: 0, fActive2: (isDouble && enemyTeam.length>1) ? 1 : null,
     locked:false, trainer, trainer2, isDouble: !!isDouble, weather:null, terrain:null, hazards: freshHazards(), pledgeFx: freshPledgeFx(),
-    pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false, dynamaxUsed:false, declaringDynamax:false, teraUsed:false, declaringTera:false
+    pendingActions: [], selectingSlot: 'A', zMoveUsed:false, declaringZMove:false, dynamaxUsed:false, declaringDynamax:false, teraUsed:false, declaringTera:false, megaUsed:false, declaringMega:false
   };
   battleInProgress = true;
   document.getElementById('screenTower').classList.add('hidden');
@@ -355,13 +372,21 @@ function playerAttack(moveIdx, targetIdx){
     p.dynamaxed = true;
     p.dynamaxTurns = 3;
     bs.dynamaxUsed = true;
+    playDynamaxFx(boxIdFor(p).replace('Box',''));
   }
   bs.declaringDynamax = false;
   if(bs.declaringTera && moveIdx>=0 && canTerastallize(p, bs)){
     activateTera(p);
     bs.teraUsed = true;
+    playTeraFx(boxIdFor(p).replace('Box',''), p.teraType);
   }
   bs.declaringTera = false;
+  if(bs.declaringMega && moveIdx>=0 && canMegaEvolve(p, bs)){
+    activateMegaEvolve(p);
+    bs.megaUsed = true;
+    playMegaEvolveFx(boxIdFor(p).replace('Box',''));
+  }
+  bs.declaringMega = false;
   if(p.dynamaxed && (move.cat==='phys' || move.cat==='spec')){
     move = buildMaxMove(move, p, bs, target);
   }
@@ -1047,6 +1072,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   }
   lungeBox(boxIdFor(actor));
   playMoveFx(move, actorIsPlayer);
+  if(move.isZMove) playZMoveFx(boxIdFor(actor).replace('Box',''), move.type);
   if(Math.random() > acc){
     let missMsg = '';
     if(move.crashOnMiss){
@@ -1921,9 +1947,12 @@ function showSwitchPrompt(aliveIdx, slot){
   setLog(`Choisis ton prochain Pokémon !`);
   aliveIdx.forEach(i=>{
     const c = bs.player[i];
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:4px;';
     const btn = document.createElement('button');
     btn.className = 'move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm)}</span>${c.name} <small>${c.types.map(t=>typeTagHTML(t)).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
+    btn.style.flex = '1';
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm, 'front', false, c.shiny)}</span>${c.name}${c.shiny?shinyBadgeHTML():''} <small>${(c.transformedTypes||c.types).map(t=>typeTagHTML(t)).join(' ')} · ${c.hp} / ${c.maxHp} PV<br>${c.moves.map(mv=>mv.name).join(' · ')}</small>`;
     btn.onclick = ()=>{
       if(slot==='A') bs.pActive = i; else bs.pActive2 = i;
       resetBattleFields(c);
@@ -1935,6 +1964,14 @@ function showSwitchPrompt(aliveIdx, slot){
       renderBattle();
       handleFaintsAndAdvance();
     };
-    sw.appendChild(btn);
+    const detailBtn = document.createElement('button');
+    detailBtn.className = 'move-btn';
+    detailBtn.style.cssText = 'flex:0 0 auto;width:34px;font-size:14px;';
+    detailBtn.title = 'Voir les détails';
+    detailBtn.textContent = '🔍';
+    detailBtn.onclick = (e)=>{ e.stopPropagation(); openBattlerDetail(battlerDetailView(c)); };
+    row.appendChild(btn);
+    row.appendChild(detailBtn);
+    sw.appendChild(row);
   });
 }

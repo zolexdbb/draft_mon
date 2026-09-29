@@ -616,7 +616,7 @@ const MOVES = {
   electrodrift:{pp:5,name:"Turbo Volt",type:'electrik',cat:'spec',power:100,accuracy:1,superEffBoost:true,desc:"Fonce à toute vitesse en libérant de l'électricité ; l'impact s'intensifie si le coup est super efficace."},
   supercellslam:{pp:15,name:"Volt Assaut",type:'electrik',cat:'phys',power:100,crashOnMiss:true,accuracy:0.95,desc:"Charge la cible en émettant de l'électricité ; un échec blesserait le lanceur."},
   jetpunch:{pp:15,name:"Poing Sonique",type:'eau',cat:'phys',power:60,accuracy:1,priority:1,desc:"Enroule un jet d'eau autour de son poing et frappe à une vitesse fulgurante."},
-  matchablade:{pp:15,name:"Mortier Matcha",type:'plante',cat:'spec',power:80,accuracy:1,secondarySelfBoost:{stat:'atk',stages:1,chance:1},desc:"Une lame enduite de thé matcha qui booste toujours l'Attaque du lanceur."},
+  matchablade:{pp:15,name:"Mortier Matcha",type:'plante',cat:'spec',power:80,accuracy:0.9,drain:0.5,secondaryStatus:{status:'brulure',chance:0.2},desc:"Un jet de thé matcha bouillant. Le lanceur récupère la moitié des dégâts infligés et peut brûler la cible."},
   saltcure:{pp:15,name:"Salaison",type:'roche',cat:'phys',power:40,accuracy:1,trap:true,trapDamage:true,desc:"Recouvre la cible de sel corrosif qui inflige des dégâts à chaque tour."},
   hydrosteam:{pp:15,name:"Hydrovapeur",type:'eau',cat:'spec',power:80,accuracy:1,desc:"Projette une vapeur d'eau brûlante sur la cible."},
   armorcannon:{pp:5,name:"Canon Blindé",type:'feu',cat:'spec',power:120,accuracy:1,selfBoost:[{stat:'def',stages:-1},{stat:'spd',stages:-1}],desc:"Tire sa propre armure enflammée en projectiles, sacrifiant sa Défense et sa Défense Spéciale."},

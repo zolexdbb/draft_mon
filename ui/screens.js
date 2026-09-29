@@ -30,19 +30,21 @@ function gameOver(){
 function buildRunSummary(tokensEarned){
   const bs = battleState;
   const teamSnap = (bs && bs.player && bs.player.length)
-    ? bs.player.map(c=>({ name:c.name, unownForm:c.unownForm, hp:Math.max(0,c.hp), maxHp:c.maxHp }))
+    ? bs.player.map(c=>({ name:c.name, unownForm:c.unownForm, shiny:c.shiny, hp:Math.max(0,c.hp), maxHp:c.maxHp }))
     : team.map(m=>{
         const sp = speciesOf(m);
         const maxHp = m.computedStats ? m.computedStats.hp : 1;
         const hp = Math.max(0, (typeof m.hp==='number') ? m.hp : 0);
-        return { name:sp.name, unownForm:m.unownForm, hp, maxHp };
+        return { name:sp.name, unownForm:m.unownForm, shiny:m.shiny, hp, maxHp };
       });
   const trainers = bs ? [bs.trainer, bs.trainer2].filter(Boolean) : [];
-  // Seuls les Pokémon adverses sur le terrain au moment du K.O. (pas tout le banc, qui peut encore être plein de vie).
-  const finishers = bs ? [bs.fActive, bs.fActive2].filter(i=>i!=null).map(i=>bs.foe[i]).filter(c=>c && c.hp>0) : [];
+  // Toute l'équipe adverse (pas seulement les Pokémon sur le terrain au moment du K.O.), avec ceux encore
+  // actifs sur le terrain repérés à part.
+  const activeFoeIdx = new Set(bs ? [bs.fActive, bs.fActive2].filter(i=>i!=null) : []);
+  const foeTeam = bs ? bs.foe.map((c,i)=>({ name:c.name, unownForm:c.unownForm, hp:Math.max(0,c.hp), maxHp:c.maxHp, active:activeFoeIdx.has(i) })) : [];
   const newBadges = Math.max(0, (badges[difficulty]||[]).length - (runStats.badgesAtStart||0));
   return {
-    difficulty, floor: towerFloor, team: teamSnap, trainers, finishers, money, tokensEarned, newBadges,
+    difficulty, floor: towerFloor, team: teamSnap, trainers, foeTeam, money, tokensEarned, newBadges,
     bosses: runStats.bosses, miniBosses: runStats.miniBosses, floorsCleared: runStats.floorsCleared, moneyEarned: runStats.moneyEarned
   };
 }
@@ -57,9 +59,9 @@ function renderRunSummary(s){
     const fainted = c.hp<=0;
     return `
       <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;${fainted?'opacity:.5;':''}">
-        <div style="width:30px;height:30px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(c.name, c.unownForm)}</div>
+        <div style="width:30px;height:30px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(c.name, c.unownForm, 'front', false, c.shiny)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:9px;color:var(--text-main);">${c.name}${fainted?' 💀':''}</div>
+          <div style="font-size:9px;color:var(--text-main);">${c.name}${c.shiny?shinyBadgeHTML():''}${fainted?' 💀':''}</div>
           <div style="background:#0b0b10;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
         </div>
         <div style="font-size:8px;color:var(--text-dim);flex-shrink:0;">${c.hp}/${c.maxHp} PV</div>
@@ -69,19 +71,31 @@ function renderRunSummary(s){
   let finisherHTML;
   if(s.trainers.length){
     const trainerNames = s.trainers.map(t=>t.name).join(' & ');
-    const finisherRows = s.finishers.map(f=>`
-      <div style="display:flex;align-items:center;gap:6px;">
-        <div style="width:24px;height:24px;flex-shrink:0;">${getSpriteHTML(f.name, f.unownForm)}</div>
-        <div style="font-size:9px;color:var(--text-main);">${f.name} <span style="color:var(--text-dim);">(${f.hp}/${f.maxHp} PV)</span></div>
-      </div>`).join('');
-    finisherHTML = `
-      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:12px;margin-bottom:14px;text-align:center;">
-        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Vaincu par</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:${finisherRows?'8px':'0'};">
-          <span style="font-size:22px;">${getTrainerAvatarHTML(s.trainers[0])}</span>
-          <span style="font-size:12px;color:var(--accent-light);font-weight:700;">${trainerNames}</span>
+    // Toute l'équipe adverse, comme la liste "Ton équipe" plus bas : K.O./grisé, et un repère sur les Pokémon
+    // encore sur le terrain au moment de la défaite.
+    const foeRows = s.foeTeam.map(f=>{
+      const frac = f.maxHp ? Math.max(0, f.hp/f.maxHp) : 0;
+      const fainted = f.hp<=0;
+      return `
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:3px;${fainted?'opacity:.5;':''}${f.active?'border-color:var(--accent);':''}">
+        <div style="width:26px;height:26px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(f.name, f.unownForm)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:9px;color:var(--text-main);">${f.name}${fainted?' 💀':(f.active?' <span style="color:var(--accent-light);">· sur le terrain</span>':'')}</div>
+          <div style="background:#0b0b10;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
         </div>
-        ${finisherRows ? `<div style="display:flex;flex-direction:column;gap:5px;align-items:center;">${finisherRows}</div>` : ''}
+        <div style="font-size:8px;color:var(--text-dim);flex-shrink:0;">${f.hp}/${f.maxHp} PV</div>
+      </div>`;
+    }).join('');
+    finisherHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:12px;margin-bottom:14px;">
+        <div style="text-align:center;margin-bottom:${foeRows?'10px':'0'};">
+          <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Vaincu par</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+            <span style="font-size:22px;">${getTrainerAvatarHTML(s.trainers[0])}</span>
+            <span style="font-size:12px;color:var(--accent-light);font-weight:700;">${trainerNames}</span>
+          </div>
+        </div>
+        ${foeRows ? `<div style="display:flex;flex-direction:column;gap:6px;">${foeRows}</div>` : ''}
       </div>`;
   } else {
     finisherHTML = `
@@ -301,6 +315,81 @@ document.getElementById('scoreBtn').onclick = openScoreModal;
 document.getElementById('menuPatchNotesBtn').onclick = ()=> openPatchNotes();
 
 function hpBarColor(frac){ return frac>0.5 ? 'var(--good)' : (frac>0.2 ? '#e0a940' : '#e04040'); }
+// Fenêtre de détail complète d'un Pokémon (stats, talent, objet tenu, statut, et ses 4 attaques avec
+// type/catégorie/puissance) : ouverte à la demande depuis la fenêtre Équipe et les écrans de choix de
+// Pokémon en combat (changement volontaire, remplaçant après K.O.), pour ne pas devoir rouvrir
+// l'éditeur d'équipe pour retrouver cette information en pleine Tour.
+function openBattlerDetail(view){
+  const overlay = document.createElement('div');
+  overlay.className = 'patchnotes-overlay';
+  const frac = view.maxHp ? Math.max(0, view.hp/view.maxHp) : 0;
+  const statRows = [['hp','PV'],['atk','Atq'],['def','Déf'],['spa','AtqSp'],['spd','DéfSp'],['spe','Vit']]
+    .map(([k,label])=> dexStatBarHTML(label, Math.round(view.stats[k]))).join('');
+  const item = view.heldItem ? ITEMS[view.heldItem] : null;
+  const movesHTML = view.moves.map(mv=> mv ? `
+    <div class="dex-move-row">
+      ${typeTagHTML(mv.type, {style:'font-size:8px;padding:2px 7px;flex-shrink:0;'})}
+      <span class="dex-move-name">${mv.name}</span>
+      <span class="cat-chip cat-${mv.cat}">${mv.cat==='phys'?'Phys':mv.cat==='spec'?'Spéc':'Statut'}</span>
+      <span class="dex-move-power">${mv.cat!=='status'?mv.power:'—'}</span>
+      ${mv.pp!=null ? `<span class="dex-move-power">${mv.pp}/${mv.ppMax} PP</span>` : ''}
+    </div>` : `<div class="dex-move-row"><span class="dex-move-name" style="color:var(--text-dim);font-style:italic;">— Aucune —</span></div>`
+  ).join('');
+  overlay.innerHTML = `
+    <div class="patchnotes-modal" style="max-width:420px;position:relative;">
+      <button class="patchnotes-close" id="battlerDetailCloseBtn">✕</button>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <div style="width:56px;height:56px;flex-shrink:0;">${getSpriteHTML(view.name, view.unownForm, 'front', false, view.shiny)}</div>
+        <div>
+          <h2 style="margin:0;">${view.name}${view.shiny?shinyBadgeHTML():''} ${view.status?statusIconHTML(view.status,14):''}</h2>
+          <div class="types-row" style="margin:4px 0;">${view.types.map(t=>typeTagHTML(t)).join('')}</div>
+          <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;width:160px;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
+          <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">${view.hp}/${view.maxHp} PV</div>
+        </div>
+      </div>
+      <div class="editor-section">
+        <div class="editor-section-title">Stats</div>
+        <div class="stat-bars">${statRows}</div>
+      </div>
+      <div class="editor-section">
+        <div class="editor-section-title">Talent</div>
+        <div><b style="color:var(--text-main);font-size:11px;">${view.ability||'—'}</b><div class="effect-desc" style="margin-top:2px;">${ABILITY_DESC[view.ability]||''}</div></div>
+      </div>
+      ${item ? `
+      <div class="editor-section">
+        <div class="editor-section-title">Objet tenu</div>
+        <div><b style="color:var(--text-main);font-size:11px;">${item.name}</b><div class="effect-desc" style="margin-top:2px;">${item.desc||''}</div></div>
+      </div>` : ''}
+      <div class="editor-section">
+        <div class="editor-section-title">Attaques</div>
+        <div class="dex-move-list">${movesHTML}</div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const close = ()=> overlay.remove();
+  document.getElementById('battlerDetailCloseBtn').onclick = close;
+  overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
+}
+// Construit la vue normalisée attendue par openBattlerDetail() à partir d'un membre d'équipe (hors combat, fenêtre Équipe/éditeur).
+function teamMemberDetailView(m){
+  const sp = speciesOf(m);
+  const hp = (typeof m.hp==='number') ? m.hp : m.computedStats.hp;
+  return {
+    name: sp.name, unownForm: m.unownForm, shiny: m.shiny, types: sp.types, stats: m.computedStats,
+    ability: m.ability || abilitiesFor(m)[0], heldItem: m.heldItem, status: m.status,
+    hp, maxHp: m.computedStats.hp,
+    moves: m.moves.map(id=> id ? { name:MOVES[id].name, type:MOVES[id].type, cat:MOVES[id].cat, power:MOVES[id].power } : null)
+  };
+}
+// Construit la vue normalisée attendue par openBattlerDetail() à partir d'un combattant de battleState (en combat).
+function battlerDetailView(c){
+  const moveList = c.moveObjs || c.moves || [];
+  return {
+    name: c.name, unownForm: c.unownForm, shiny: c.shiny, types: c.transformedTypes || c.types, stats: c.stats,
+    ability: c.ability, heldItem: c.heldItem, status: c.status, hp: c.hp, maxHp: c.maxHp,
+    moves: moveList.map((mv,i)=> mv ? { name:mv.name, type:mv.type, cat:mv.cat, power:mv.power, pp:c.ppCur?c.ppCur[i]:null, ppMax:basePP(mv) } : null)
+  };
+}
 // Fenêtre "Équipe" (accessible depuis la Tour/le Village) : PV, statut, objet tenu (échangeable
 // avec le sac), et changement de leader (le membre en position 0, celui envoyé en premier).
 function openTeamModal(){
@@ -314,16 +403,19 @@ function openTeamModal(){
     const frac = Math.max(0, hp/maxHp);
     rows += `
       <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;margin-bottom:8px;">
-        <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(sp.name, m.unownForm)}</div>
+        <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:10px;color:var(--text-main);">${i===0?'👑 ':''}${sp.name} ${m.status?statusIconHTML(m.status,12):''}</div>
+          <div style="font-size:10px;color:var(--text-main);">${i===0?'👑 ':''}${sp.name}${m.shiny?shinyBadgeHTML():''} ${m.status?statusIconHTML(m.status,12):''}</div>
           <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
           <div style="font-size:8px;color:var(--text-dim);">${hp}/${maxHp} PV</div>
           <div id="teamHeldSel${i}" style="margin-top:4px;max-width:180px;"></div>
           <div style="font-size:8px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-top:5px;">Téracristal</div>
           <div id="teamTeraSel${i}" style="margin-top:2px;max-width:180px;"></div>
         </div>
-        <button class="btn secondary teamLeadBtn" data-idx="${i}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 8px;font-size:9px;white-space:nowrap;" ${i===0?'disabled':''}>${i===0?'Leader':'Nommer leader'}</button>
+        <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;">
+          <button class="btn secondary teamDetailBtn" data-idx="${i}" style="width:auto;min-height:0;padding:6px 8px;font-size:9px;white-space:nowrap;" title="Voir les détails">🔍 Détails</button>
+          <button class="btn secondary teamLeadBtn" data-idx="${i}" style="width:auto;min-height:0;padding:6px 8px;font-size:9px;white-space:nowrap;" ${i===0?'disabled':''}>${i===0?'Leader':'Nommer leader'}</button>
+        </div>
       </div>`;
   });
   overlay.innerHTML = `
@@ -336,6 +428,9 @@ function openTeamModal(){
   const close = ()=> overlay.remove();
   document.getElementById('teamCloseBtn').onclick = close;
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
+  overlay.querySelectorAll('.teamDetailBtn').forEach(btn=>{
+    btn.onclick = ()=> openBattlerDetail(teamMemberDetailView(team[parseInt(btn.dataset.idx)]));
+  });
   overlay.querySelectorAll('.teamLeadBtn').forEach(btn=>{
     btn.onclick = ()=>{
       const idx = parseInt(btn.dataset.idx);
