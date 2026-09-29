@@ -146,6 +146,10 @@
       <div class="floor-label">TOUR DE COMBAT</div>
       <div class="floor-num" id="floorNum">1</div>
       <div class="floor-label" id="floorDesc">Un dresseur t'attend...</div>
+      <div class="currency-row" style="margin-top:10px;">
+        <span class="currency-pill cp-money"><span class="cp-icon">💰</span><span id="floorMoneyVal">0</span></span>
+        <span class="currency-pill cp-candy"><span class="cp-icon">🍬</span><span id="floorCandyVal">0</span></span>
+      </div>
       <div class="dex-rate" id="floorReward" style="margin-top:8px;color:var(--good);"></div>
       <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
         <button class="btn" id="fightBtn">Combattre</button>
@@ -163,7 +167,10 @@
         <div class="dex-rate" id="villageBadge" style="color:var(--accent);margin-top:2px;"></div>
       </div>
       <div class="village-topbar-right">
-        <div class="dex-rate" id="villageMoney" style="margin:0;">💰 0</div>
+        <div class="currency-row" id="villageMoney">
+          <span class="currency-pill cp-money"><span class="cp-icon">💰</span><span id="villageMoneyVal">0</span></span>
+          <span class="currency-pill cp-candy"><span class="cp-icon">🍬</span><span id="villageCandyVal">0</span></span>
+        </div>
         <button class="village-hamburger-btn" id="villageHamburgerBtn" aria-label="Menu">☰</button>
         <div class="village-hamburger-menu hidden" id="villageHamburgerMenu">
           <button class="btn secondary" id="villageMenuTeamBtn">👥 Modifier l'équipe</button>

@@ -212,6 +212,19 @@ body{
   padding:20px 24px; border-radius:14px; background:rgba(255,255,255,.03);
   border:1px solid var(--line); max-width:420px;
 }
+
+/* ---- Pastilles de monnaie (argent/Bonbons d'Affinité) : mises en évidence partout où elles comptent
+   (étage de la Tour, Campement, menu) pour bien lire que ce sont des ressources importantes, pas du
+   texte informatif ordinaire. ---- */
+.currency-row{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.currency-pill{
+  display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px;
+  font-family:var(--font-mono); font-size:13px; font-weight:800; border:1.5px solid;
+  box-shadow:0 2px 10px rgba(0,0,0,.3); white-space:nowrap;
+}
+.currency-pill .cp-icon{ font-size:15px; }
+.currency-pill.cp-money{ background:rgba(232,178,61,.14); border-color:rgba(232,178,61,.55); color:var(--accent-light); }
+.currency-pill.cp-candy{ background:rgba(255,111,168,.14); border-color:rgba(255,111,168,.55); color:#FF9FC4; }
 /* Escalier + dresseur : collé au bas/à droite de la fenêtre (SVG, les pieds du dresseur tombent
    exactement sur des marches). Les marches hautes s'estompent dans le noir. */
 .menu-illustration{

@@ -10,7 +10,8 @@ function renderVillage(reward, newBadgeType, rewardLabel, candyReward){
   if(badgeEl){
     badgeEl.innerHTML = newBadgeType ? `🎖️ Nouveau Badge obtenu : ${TYPE_EMOJI[newBadgeType]} ${typeDisplayName(newBadgeType)} !` : '';
   }
-  document.getElementById('villageMoney').textContent = `💰 ${money} · 🍬 ${affinityCandy}`;
+  document.getElementById('villageMoneyVal').textContent = money;
+  document.getElementById('villageCandyVal').textContent = affinityCandy;
   document.getElementById('villagePanelContent').innerHTML = '';
   ranchChoices = null;
   ranchRecruited = false;
@@ -94,7 +95,8 @@ function setVillageMsg(text){
   if(el) el.textContent = text;
 }
 function refreshVillageMoney(){
-  document.getElementById('villageMoney').textContent = `💰 ${money} · 🍬 ${affinityCandy}`;
+  document.getElementById('villageMoneyVal').textContent = money;
+  document.getElementById('villageCandyVal').textContent = affinityCandy;
 }
 // La scène du Campement est maintenant plein écran : le panneau d'un bâtiment (Centre/Mart/Ranch/
 // Marchand) s'affiche donc en superposition plutôt qu'inséré sous la carte. On observe simplement

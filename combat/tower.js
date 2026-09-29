@@ -147,7 +147,9 @@ function renderTower(reward, candyReward){
   let size = sizes[Math.min(towerFloor-1, sizes.length-1)];
   if(isBossFloor(towerFloor)) size = Math.min(6, size+1);
   const badge = isBossFloor(towerFloor) ? ' · 👑 ÉTAGE BOSS !' : (isMiniBossFloor(towerFloor) ? ' · ⭐ Mini-Boss' : '');
-  document.getElementById('floorDesc').innerHTML = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor}${badge}<br>Meilleur étage : ${currentBestFloor()} · Mode : ${difficulty==='facile'?'😊 Facile':(difficulty==='difficile'?'💀 Difficile':'⚔️ Normal')} · 💰 ${money} · 🍬 ${affinityCandy}`;
+  document.getElementById('floorDesc').innerHTML = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor}${badge}<br>Meilleur étage : ${currentBestFloor()} · Mode : ${difficulty==='facile'?'😊 Facile':(difficulty==='difficile'?'💀 Difficile':'⚔️ Normal')}`;
+  document.getElementById('floorMoneyVal').textContent = money;
+  document.getElementById('floorCandyVal').textContent = affinityCandy;
   const rewardEl = document.getElementById('floorReward');
   if(rewardEl){
     rewardEl.textContent = reward ? `+${reward} 💰${candyReward ? ` et +${candyReward} 🍬` : ''} gagnés au combat précédent !` : '';
