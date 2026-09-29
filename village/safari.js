@@ -101,28 +101,44 @@ function spawnSafariFxEl(cls, ttl){
   return el;
 }
 // Animation de lancer de Safari Ball façon jeux officiels : la Ball vole jusqu'au Pokémon, l'absorbe,
-// tombe au sol et vacille trois fois, puis éclate en étincelles (capture réussie) ou s'ouvre pour le
-// laisser ressortir en rebondissant (échec) — `done` est appelé une fois l'animation terminée.
+// tombe au sol et vacille — 3 fois si la capture réussit, 0 à 2 fois au hasard sinon (0 secousse = le
+// Pokémon s'échappe tout de suite, davantage = on est passé près), avec un léger temps d'attente entre
+// chaque secousse — puis éclate en étincelles (capture réussie) ou s'ouvre pour le laisser ressortir en
+// rebondissant (échec) — `done` est appelé une fois l'animation terminée.
 function playSafariBallFx(success, done){
   const sprite = document.getElementById('safariSpriteWrap');
   spawnSafariFxEl('safari-fx-ball safari-fx-ball-throw', 340);
   setTimeout(()=>{
     if(sprite) sprite.classList.add('safari-suck-in');
-    spawnSafariFxEl('safari-fx-ball safari-fx-ball-drop', 1100);
-  }, 320);
-  setTimeout(()=>{
-    if(success){
-      spawnSafariFxEl('safari-fx-sparkle', 650);
-      setTimeout(done, 600);
-    } else {
-      if(sprite){
-        sprite.classList.remove('safari-suck-in');
-        sprite.classList.add('safari-pop-out');
-        setTimeout(()=> sprite && sprite.classList.remove('safari-pop-out'), 460);
+    const layer = document.getElementById('safariFxLayer');
+    const ball = document.createElement('div');
+    ball.className = 'safari-fx-ball safari-ball-land';
+    if(layer) layer.appendChild(ball);
+    const shakes = success ? 3 : Math.floor(Math.random()*3);
+    const shakeDur = 260, shakeGap = 140;
+    let i = 0;
+    const nextShake = ()=>{
+      if(i>=shakes){
+        ball.remove();
+        if(success){
+          spawnSafariFxEl('safari-fx-sparkle', 650);
+          setTimeout(done, 600);
+        } else {
+          if(sprite){
+            sprite.classList.remove('safari-suck-in');
+            sprite.classList.add('safari-pop-out');
+            setTimeout(()=> sprite && sprite.classList.remove('safari-pop-out'), 460);
+          }
+          setTimeout(done, 300);
+        }
+        return;
       }
-      setTimeout(done, 300);
-    }
-  }, 320+1050);
+      ball.classList.remove('safari-ball-shake'); void ball.offsetWidth; ball.classList.add('safari-ball-shake');
+      i++;
+      setTimeout(nextShake, shakeDur + shakeGap);
+    };
+    setTimeout(nextShake, 150 + shakeGap);
+  }, 320);
 }
 // Animation d'un Caillou (impact + agitation) ou d'un Appât (rebond joyeux + petits cœurs) lancé sur le Pokémon.
 function playSafariItemFx(type, done){

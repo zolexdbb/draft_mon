@@ -1108,8 +1108,11 @@ select option{
   0%{ bottom:-10px; transform:scale(.6) rotate(0deg); opacity:1; }
   100%{ bottom:50%; transform:scale(1) rotate(300deg); opacity:1; }
 }
-.safari-fx-ball-drop{ bottom:50%; animation:safariBallLand .15s ease-out forwards, safariWobble .3s ease-in-out .15s 3; }
+.safari-ball-land{ bottom:50%; animation:safariBallLand .15s ease-out forwards; }
 @keyframes safariBallLand{ 0%{ bottom:50%; } 100%{ bottom:38%; } }
+/* Une secousse = une seule occurrence de l'animation, rejouée par JS (playSafariBallFx) avec un léger
+   temps d'attente entre chacune — le nombre de secousses dépend du résultat de la capture. */
+.safari-ball-shake{ animation:safariWobble .26s ease-in-out; }
 @keyframes safariWobble{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-16deg); } 75%{ transform:rotate(16deg); } }
 .safari-fx-rock, .safari-fx-berry{
   position:absolute; left:50%; bottom:-10px; width:15px; height:14px; margin-left:-7px;
