@@ -1,8 +1,9 @@
 /* ==== Écran central du Campement (affiché après une victoire de Boss ou de Mini-Boss) : argent,
-   badge éventuel, apparition aléatoire du Marchand Itinérant, toute l'équipe vivante rassemblée
-   autour du feu de camp, et un aperçu des 3 Pokémon sauvages proposés par le Ranch directement
-   dans son enclos. ==== */
-// Initialise l'écran du Campement à l'arrivée (après un Boss ou un Mini-Boss) : récompense, badge, tirage du Marchand.
+   badge éventuel, apparition aléatoire du Marchand Itinérant et de la Maison Safari (tirages
+   indépendants), toute l'équipe vivante rassemblée autour du feu de camp, et un aperçu des 3
+   Pokémon sauvages proposés par le Ranch directement dans son enclos. ==== */
+// Initialise l'écran du Campement à l'arrivée (après un Boss ou un Mini-Boss) : récompense, badge,
+// tirage du Marchand et du Safari (nouvelle visite à chaque apparition, voir village/safari.js).
 function renderVillage(reward, newBadgeType, rewardLabel, candyReward){
   document.getElementById('villageReward').textContent = reward ? `+${reward} 💰${candyReward ? ` et +${candyReward} 🍬` : ''} gagnés ${rewardLabel || 'en battant le Boss'} !` : '';
   const badgeEl = document.getElementById('villageBadge');
@@ -15,6 +16,14 @@ function renderVillage(reward, newBadgeType, rewardLabel, candyReward){
   ranchRecruited = false;
   merchantPresent = Math.random() < MERCHANT_SPAWN_RATE;
   document.getElementById('villageMerchantBtn').classList.toggle('hidden', !merchantPresent);
+  safariPresent = Math.random() < SAFARI_SPAWN_RATE;
+  safariActive = false;
+  safariBallsLeft = 0;
+  safariEncounter = null;
+  safariEffect = null;
+  safariOutcome = null;
+  safariRunStats = null;
+  document.getElementById('villageSafariBtn').classList.toggle('hidden', !safariPresent);
   ensureRanchChoices();
   renderVillageTeamRing();
   renderVillageRanchPen();

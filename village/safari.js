@@ -1,0 +1,220 @@
+/* ==== SOMMAIRE ====
+   La Maison Safari du Campement (apparaît par chance, comme le Marchand Itinérant — voir
+   SAFARI_SPAWN_RATE/safariPresent, tirage indépendant du Marchand dans village/village-core.js).
+   Le joueur y reçoit 10 Safari Balls pour capturer des Pokémon sauvages un par un ; ils ne sont
+   JAMAIS gardés (ni équipe ni PC) — le Professeur les récupère pour ses recherches et donne des
+   Bonbons d'Affinité en échange (voir meta/affinity.js). Repères :
+   - L.14-25 : SAFARI_TIERS — raretés propres au Safari (chance d'apparition/capture/bonbons)
+   - L.27-fin(47): tirage d'une rencontre (safariTierOf/safariLinesByTier/rollSafariEncounter)
+   - L.49-fin(60): safariFleeChance/safariCatchChance — modifiées par l'effet Caillou/Appât en cours
+   - État transitoire (safariActive/safariBallsLeft/safariEncounter/safariEffect/safariOutcome/
+     safariRunStats), remis à zéro à chaque nouvelle apparition du Safari (une seule visite par
+     Campement — voir renderVillage dans village/village-core.js)
+   - renderSafariPanel/safariAction : l'écran (intro → rencontre → issue → résumé final)
+==== */
+const SAFARI_SPAWN_RATE = 0.15;
+// Raretés propres au Safari (différentes de celles du draft) : chance d'apparition de la rencontre,
+// taux de capture de base, et Bonbons d'Affinité donnés par le Professeur en cas de capture. Vise
+// ~8 bonbons en moyenne par visite, avec un vrai jackpot sur les rencontres rares.
+const SAFARI_TIERS = [
+  { key:'commun',     chance:0.70, catchRate:0.70, candy:1,  label:'Commun' },
+  { key:'rare',       chance:0.20, catchRate:0.40, candy:3,  label:'Rare' },
+  { key:'pseudo',     chance:0.07, catchRate:0.25, candy:5,  label:'Pseudo-légendaire' },
+  { key:'legendaire', chance:0.03, catchRate:0.10, candy:10, label:'Légendaire' }
+];
+function safariTierOf(line){
+  if(LEGENDARY_IDS.includes(line.id)) return 'legendaire';
+  if(PSEUDO_IDS.includes(line.id)) return 'pseudo';
+  if(RARE_IDS.includes(line.id)) return 'rare';
+  return 'commun';
+}
+// Regroupe les lignées par catégorie de rareté du Safari, calculé une seule fois (LINES ne change jamais en cours de partie).
+let SAFARI_LINES_BY_TIER = null;
+function safariLinesByTier(){
+  if(!SAFARI_LINES_BY_TIER){
+    SAFARI_LINES_BY_TIER = { commun:[], rare:[], pseudo:[], legendaire:[] };
+    LINES.forEach(l=> SAFARI_LINES_BY_TIER[safariTierOf(l)].push(l));
+  }
+  return SAFARI_LINES_BY_TIER;
+}
+// Tire une nouvelle rencontre : catégorie de rareté (SAFARI_TIERS), puis une lignée au hasard dedans,
+// puis un stade/branche pondéré comme au draft (stageMultiplier — les stades précoces sortent plus souvent).
+function rollSafariEncounter(){
+  const r = Math.random();
+  let acc = 0, tier = SAFARI_TIERS[SAFARI_TIERS.length-1];
+  for(const t of SAFARI_TIERS){ acc += t.chance; if(r<acc){ tier = t; break; } }
+  const pool = safariLinesByTier()[tier.key];
+  const line = rand(pool.length ? pool : LINES);
+  const entries = [
+    ...line.stages.map((sp,i)=>({sp, stage:i, branch:null, w:stageMultiplier(i)})),
+    ...(line.branches ? line.branches.map((sp,bi)=>({sp, stage:null, branch:bi, w:stageMultiplier(line.stages.length-1)})) : [])
+  ];
+  const totalW = entries.reduce((a,e)=>a+e.w,0);
+  let roll = Math.random()*totalW, chosen = entries[0];
+  for(const e of entries){ roll -= e.w; if(roll<=0){ chosen = e; break; } }
+  return { lineId:line.id, stage:chosen.stage, branch:chosen.branch, sp:chosen.sp, tier: tier.key };
+}
+// Chance de fuite de ce tour (≈ Vitesse de base / 4, en %), bonus pour les légendaires, modifiée par
+// l'effet Caillou (×2) ou Appât (÷4) en cours.
+function safariFleeChance(sp, tierKey){
+  let c = (sp.base.spe/4)/100;
+  if(tierKey==='legendaire') c += 0.15;
+  if(safariEffect && safariEffect.type==='rock') c *= 2;
+  else if(safariEffect && safariEffect.type==='bait') c /= 4;
+  return Math.max(0.03, Math.min(0.75, c));
+}
+// Taux de capture de ce tour, modifié par l'effet Caillou (×2) ou Appât (÷2) en cours.
+function safariCatchChance(tierKey){
+  const tier = SAFARI_TIERS.find(t=>t.key===tierKey);
+  let c = tier.catchRate;
+  if(safariEffect && safariEffect.type==='rock') c *= 2;
+  else if(safariEffect && safariEffect.type==='bait') c /= 2;
+  return Math.max(0.02, Math.min(0.95, c));
+}
+
+// État transitoire d'une visite du Safari (remis à zéro à chaque nouvelle apparition, voir renderVillage).
+let safariPresent = false;
+let safariActive = false;
+let safariBallsLeft = 0;
+let safariEncounter = null; // rencontre en cours (rollSafariEncounter()), ou null entre deux rencontres
+let safariEffect = null; // { type:'rock'|'bait', turnsLeft } en cours, ou null
+let safariOutcome = null; // texte de la dernière action, affiché avant la rencontre suivante ou dans le résumé
+let safariRunStats = null; // { captures, candy } de la visite en cours
+
+// Décompte la durée de l'effet Caillou/Appât en cours d'un tour (appelé seulement si la rencontre continue).
+function tickSafariEffect(){
+  if(!safariEffect) return;
+  safariEffect.turnsLeft--;
+  if(safariEffect.turnsLeft<=0) safariEffect = null;
+}
+// Résout une action du joueur face à la rencontre en cours (Ball/Caillou/Appât/Fuite).
+function safariAction(action){
+  const enc = safariEncounter;
+  if(!enc) return;
+  if(action==='flee'){
+    safariOutcome = `Tu t'éloignes tranquillement de ${enc.sp.name}.`;
+    safariEncounter = null; safariEffect = null;
+  } else if(action==='rock' || action==='bait'){
+    safariEffect = { type:action, turnsLeft: 1+Math.floor(Math.random()*5) };
+    const reaction = action==='rock' ? `${enc.sp.name} a l'air agité !` : `${enc.sp.name} se calme...`;
+    const fled = Math.random() < safariFleeChance(enc.sp, enc.tier);
+    if(fled){
+      safariOutcome = `Tu lances ${action==='rock'?'un Caillou':'un Appât'} ! ${reaction} ...et ${enc.sp.name} en profite pour s'enfuir !`;
+      safariEncounter = null; safariEffect = null;
+    } else {
+      safariOutcome = `Tu lances ${action==='rock'?'un Caillou':'un Appât'} ! ${reaction}`;
+      tickSafariEffect();
+    }
+  } else if(action==='ball'){
+    if(safariBallsLeft<=0) return;
+    safariBallsLeft--;
+    const tier = SAFARI_TIERS.find(t=>t.key===enc.tier);
+    if(Math.random() < safariCatchChance(enc.tier)){
+      affinityCandy += tier.candy;
+      saveAffinityProgress();
+      refreshVillageMoney();
+      safariRunStats.captures++;
+      safariRunStats.candy += tier.candy;
+      safariOutcome = `✓ ${enc.sp.name} capturé ! Confié au Professeur contre ${tier.candy} 🍬 Bonbons d'Affinité.`;
+      safariEncounter = null; safariEffect = null;
+    } else {
+      const fled = Math.random() < safariFleeChance(enc.sp, enc.tier);
+      if(fled){
+        safariOutcome = `${enc.sp.name} évite la Safari Ball... et s'enfuit !`;
+        safariEncounter = null; safariEffect = null;
+      } else {
+        safariOutcome = `${enc.sp.name} évite la Safari Ball !`;
+        tickSafariEffect();
+      }
+    }
+  }
+  saveGame();
+  renderSafariPanel();
+}
+// Affiche l'écran du Safari : intro (pas encore entré), rencontre active (4 actions), issue d'une
+// rencontre (avant la suivante), ou résumé final une fois les 10 Balls épuisées.
+function renderSafariPanel(){
+  const wrap = document.getElementById('villagePanelContent');
+  if(!safariActive){
+    wrap.innerHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">🌿</div>
+        <h2 style="margin:0 0 8px;">Maison Safari</h2>
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;">Le Professeur t'accueille : « J'étudie les Pokémon sauvages de cette zone. Capture-en pour moi avec ces Safari Balls, je te donnerai des Bonbons d'Affinité en échange — je ne peux malheureusement pas te laisser les garder, ils doivent rester ici pour mes recherches. »</div>
+        <button class="btn" id="safariEnterBtn">▶ Entrer avec 10 Safari Balls</button>
+      </div>`;
+    document.getElementById('safariEnterBtn').onclick = ()=>{
+      safariActive = true;
+      safariBallsLeft = 10;
+      safariRunStats = { captures:0, candy:0 };
+      safariEffect = null;
+      safariOutcome = null;
+      safariEncounter = rollSafariEncounter();
+      saveGame();
+      renderSafariPanel();
+    };
+    return;
+  }
+  if(!safariEncounter && safariBallsLeft<=0){
+    wrap.innerHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">🔬</div>
+        <h2 style="margin:0 0 8px;">Safari terminé !</h2>
+        ${safariOutcome ? `<div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">${safariOutcome}</div>` : ''}
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;">Le Professeur remercie chaleureusement les ${safariRunStats.captures} Pokémon confiés pour ses recherches.</div>
+        <div style="font-size:14px;color:var(--accent);margin-bottom:14px;">+${safariRunStats.candy} 🍬 Bonbons d'Affinité au total</div>
+        <button class="btn secondary" id="safariCloseBtn">Fermer</button>
+      </div>`;
+    document.getElementById('safariCloseBtn').onclick = ()=>{ document.getElementById('villagePanelContent').innerHTML=''; };
+    return;
+  }
+  if(!safariEncounter){
+    wrap.innerHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">🌿</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:14px;">${safariOutcome||''}</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;">🔴 Safari Balls restantes : <b style="color:var(--text-main);">${safariBallsLeft}</b></div>
+        <button class="btn" id="safariNextBtn">Chercher un autre Pokémon →</button>
+        <button class="btn secondary" id="safariLeaveBtn" style="margin-top:8px;">Quitter le Safari</button>
+      </div>`;
+    document.getElementById('safariNextBtn').onclick = ()=>{
+      safariEncounter = rollSafariEncounter();
+      safariEffect = null; safariOutcome = null;
+      saveGame();
+      renderSafariPanel();
+    };
+    document.getElementById('safariLeaveBtn').onclick = ()=>{ document.getElementById('villagePanelContent').innerHTML=''; };
+    return;
+  }
+  const enc = safariEncounter;
+  const tier = SAFARI_TIERS.find(t=>t.key===enc.tier);
+  const rarityCss = enc.tier==='legendaire' ? 'rarity-legendaire' : enc.tier==='pseudo' ? 'rarity-pseudo' : enc.tier==='rare' ? 'rarity-rare' : 'rarity-commun';
+  const catchPct = Math.round(safariCatchChance(enc.tier)*100);
+  const fleePct = Math.round(safariFleeChance(enc.sp, enc.tier)*100);
+  wrap.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:10px;color:var(--text-dim);">
+        <span>🔴 Safari Balls : <b style="color:var(--text-main);">${safariBallsLeft}</b></span>
+        <span class="rarity-badge ${rarityCss}">${tier.label}</span>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:96px;height:96px;margin:0 auto;">${getSpriteHTML(enc.sp.name, null, 'front', true)}</div>
+        <div style="font-size:14px;font-weight:700;margin:6px 0 2px;">${enc.sp.name}</div>
+        <div class="types-row" style="justify-content:center;">${enc.sp.types.map(t=>typeTagHTML(t)).join('')}</div>
+      </div>
+      ${safariEffect ? `<div style="text-align:center;font-size:10px;color:var(--accent);margin:8px 0;">${safariEffect.type==='rock'?'🪨 Excité par le Caillou':"🍡 Calmé par l'Appât"} (encore ${safariEffect.turnsLeft} tour${safariEffect.turnsLeft>1?'s':''})</div>` : ''}
+      <div style="font-size:9px;color:var(--text-dim);text-align:center;margin:8px 0;">Capture ≈ ${catchPct}% · Fuite ≈ ${fleePct}%</div>
+      ${safariOutcome ? `<div class="dex-rate" style="text-align:center;margin-bottom:8px;">${safariOutcome}</div>` : ''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">
+        <button class="btn secondary" id="safariBallBtn" ${safariBallsLeft<=0?'disabled':''}>🔴 Safari Ball</button>
+        <button class="btn secondary" id="safariRockBtn">🪨 Caillou</button>
+        <button class="btn secondary" id="safariBaitBtn">🍡 Appât</button>
+        <button class="btn secondary" id="safariFleeBtn">🏃 Fuite</button>
+      </div>
+    </div>`;
+  document.getElementById('safariBallBtn').onclick = ()=> safariAction('ball');
+  document.getElementById('safariRockBtn').onclick = ()=> safariAction('rock');
+  document.getElementById('safariBaitBtn').onclick = ()=> safariAction('bait');
+  document.getElementById('safariFleeBtn').onclick = ()=> safariAction('flee');
+}
+document.getElementById('villageSafariBtn').onclick = ()=>{ renderSafariPanel(); };
