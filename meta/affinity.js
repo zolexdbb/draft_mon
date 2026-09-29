@@ -4,30 +4,39 @@
    aux recrues de combat. Les Bonbons d'Affinité (monnaie dédiée, gagnée en combat et à la Maison
    Safari — voir combat/battle-flow.js et village/safari.js) servent à faire monter ce niveau via
    le Professeur. Repères :
-   - L.13-fin(26): sauvegarde/chargement de l'affinité et du solde de bonbons (localStorage, suit le
-     modèle de meta/rewards.js)
-   - L.28-fin : affinityLevel/affinityMultiplier — niveau d'une lignée et son bonus de tirage
+   - L.13-fin(30): sauvegarde/chargement de l'affinité, du solde de bonbons et de la progression en
+     cours (localStorage, suit le modèle de meta/rewards.js)
+   - affinityLevel/affinityMultiplier : niveau d'une lignée et son bonus de tirage
+   - affinityNextCost/affinityProgressFor : coût du prochain palier et bonbons déjà investis dedans
+   - affinityCandyReward : bonbons gagnés du dresseur vaincu après un combat
    ==== */
 const AFFINITY_KEY = 'draftArenaAffinity';
 const AFFINITY_CANDY_KEY = 'draftArenaAffinityCandy';
+const AFFINITY_PROGRESS_KEY = 'draftArenaAffinityProgress';
 const AFFINITY_MAX = 5;
 // { [lineId]: niveau (0-5) }, permanent entre toutes les parties.
 let affinity = {};
 // Solde de Bonbons d'Affinité, permanent entre toutes les parties.
 let affinityCandy = 0;
+// { [lineId]: bonbons déjà investis dans le palier EN COURS de cette lignée } — remis à 0 dès que le
+// palier est rempli et que le niveau monte (voir investAffinityCandy, bloc 5/Professeur).
+let affinityProgress = {};
 
-// Charge l'affinité et le solde de bonbons depuis localStorage (appelé une fois au démarrage).
+// Charge l'affinité, le solde de bonbons et la progression en cours depuis localStorage (appelé une fois au démarrage).
 function loadAffinityProgress(){
   try {
     affinity = JSON.parse(localStorage.getItem(AFFINITY_KEY) || '{}') || {};
     affinityCandy = parseInt(localStorage.getItem(AFFINITY_CANDY_KEY), 10) || 0;
-  } catch(e){ affinity = {}; affinityCandy = 0; }
+    affinityProgress = JSON.parse(localStorage.getItem(AFFINITY_PROGRESS_KEY) || '{}') || {};
+  } catch(e){ affinity = {}; affinityCandy = 0; affinityProgress = {}; }
 }
-// Sauvegarde l'affinité et le solde de bonbons (persiste entre toutes les parties, contrairement à la sauvegarde de partie).
+// Sauvegarde l'affinité, le solde de bonbons et la progression en cours (persiste entre toutes les
+// parties, contrairement à la sauvegarde de partie).
 function saveAffinityProgress(){
   try {
     localStorage.setItem(AFFINITY_KEY, JSON.stringify(affinity));
     localStorage.setItem(AFFINITY_CANDY_KEY, String(affinityCandy));
+    localStorage.setItem(AFFINITY_PROGRESS_KEY, JSON.stringify(affinityProgress));
   } catch(e){}
 }
 loadAffinityProgress();
@@ -47,6 +56,26 @@ function affinityMultiplier(lineId){
 function recalcDraftWeights(){
   recalcCandidateWeight();
   recalcFacileWeight();
+}
+// Coût en bonbons de chaque palier (niveau 0→1, 1→2, 2→3, 3→4, 4→5) pour une lignée commune.
+const AFFINITY_TIER_COSTS = [3,5,8,12,17];
+// Multiplicateur de coût selon la rareté de la lignée (les listes LEGENDARY_IDS/PSEUDO_IDS/RARE_IDS
+// viennent de draft/draft-core.js, chargé après ce fichier — sans importance, seulement lu à l'appel).
+function affinityCostMultiplier(lineId){
+  if(LEGENDARY_IDS.includes(lineId)) return 3;
+  if(PSEUDO_IDS.includes(lineId)) return 2;
+  if(RARE_IDS.includes(lineId)) return 1.5;
+  return 1;
+}
+// Coût en bonbons pour faire passer une lignée de son niveau actuel au suivant (null si déjà au niveau max).
+function affinityNextCost(lineId){
+  const lvl = affinityLevel(lineId);
+  if(lvl>=AFFINITY_MAX) return null;
+  return Math.round(AFFINITY_TIER_COSTS[lvl] * affinityCostMultiplier(lineId));
+}
+// Bonbons déjà investis dans le palier en cours d'une lignée (0 si jamais investie ou déjà au niveau max).
+function affinityProgressFor(lineId){
+  return affinityProgress[lineId] || 0;
 }
 // Bonbons d'Affinité gagnés du dresseur vaincu après un combat gagné (voir floorCleared dans
 // combat/tower.js) : un combat normal donne 0 à 3 bonbons (0/1 fréquents, 3 rare, ~1 en moyenne) ;

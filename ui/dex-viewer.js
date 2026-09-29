@@ -1,10 +1,13 @@
 /* ==== SOMMAIRE ====
    Le Pokédex consultable (écran Dex) : grille de toutes les espèces/formes/branches avec filtres
-   (recherche, type, rareté). Sert aussi d'écran de sélection en mode développeur. Repères :
+   (recherche, type, rareté, lignées boostées par affinité). Sert aussi d'écran de sélection en mode
+   développeur. Repères :
    - L.10-16 : rarityKey — catégorie de rareté utilisée par le filtre (distinct de rarityInfo)
-   - L.18-fin(71): renderDex — construit la grille filtrée (une carte par stade/branche de chaque lignée)
-   - L.75-fin : filtres (listes d'options type/rareté + les 3 menus déroulants + réinitialisation)
-   - openDexDetail : fenêtre de détail d'une carte (stats, talents, chaîne d'évolution, movepool complet)
+   - renderDex — construit la grille filtrée (une carte par stade/branche de chaque lignée), avec un
+     indicateur de niveau d'affinité sur chaque carte boostée et le compteur de lignées boostées
+   - dexAffinityPipsHTML — les 5 pastilles de niveau d'affinité, réutilisées carte + fiche détail
+   - filtres (listes d'options type/rareté + les menus déroulants + réinitialisation)
+   - openDexDetail : fenêtre de détail d'une carte (stats, talents, affinité, chaîne d'évolution, movepool)
 ==== */
 function rarityKey(line, stageIdx){
   if(LEGENDARY_IDS.includes(line.id)) return 'legendaire';
@@ -13,6 +16,16 @@ function rarityKey(line, stageIdx){
   if(stageIdx === 0) return 'commun';
   return 'evo';
 }
+// Les 5 pastilles de niveau d'affinité d'une lignée (pleines jusqu'au niveau actuel), avec le
+// multiplicateur de tirage en info-bulle. `size` en px (plus petit sur la carte, plus grand en fiche détail).
+function dexAffinityPipsHTML(lineId, size){
+  const lvl = affinityLevel(lineId);
+  const px = size || 10;
+  const pips = Array.from({length:AFFINITY_MAX}).map((_,i)=>
+    `<span style="font-size:${px}px;color:${i<lvl?'var(--accent)':'var(--line-bright)'};">${i<lvl?'♥':'♡'}</span>`
+  ).join('');
+  return `<span title="Affinité ×${affinityMultiplier(lineId).toFixed(1)}" style="display:inline-flex;gap:1px;">${pips}</span>`;
+}
 
 // Construit la grille du Dex : une carte par stade normal + par branche de chaque lignée,
 // filtrée selon dexFilters ; en mode développeur, les cartes deviennent cliquables pour la sélection libre.
@@ -20,8 +33,10 @@ function renderDex(){
   const grid = document.getElementById('dexGrid');
   grid.innerHTML='';
   let count = 0;
+  const boostedLines = new Set();
 
   LINES.forEach(line=>{
+    if(affinityLevel(line.id)>0) boostedLines.add(line.id);
     const allStages = [
       ...line.stages.map((sp,i)=>({sp,stageIdx:i,isBranch:false,branchIdx:null})),
       ...(line.branches ? line.branches.map((sp,bi)=>({sp,stageIdx:null,isBranch:true,branchIdx:bi})) : [])
@@ -34,6 +49,7 @@ function renderDex(){
         const key = isBranch ? 'evo' : rarityKey(line, stageIdx);
         if(key !== dexFilters.rarity) return;
       }
+      if(dexFilters.boosted && affinityLevel(line.id)<=0) return;
 
       const rarity = isBranch ? {label:'Évolution', css:'rarity-evo'} : rarityInfo(line, stageIdx);
       let rateText;
@@ -55,6 +71,7 @@ function renderDex(){
         <div class="stat-line">PV ${sp.base.hp} · Atq ${sp.base.atk} · Déf ${sp.base.def}</div>
         <div class="stat-line">AtqSp ${sp.base.spa} · DéfSp ${sp.base.spd} · Vit ${sp.base.spe}</div>
         <div class="dex-rate">${rateText}</div>
+        ${affinityLevel(line.id)>0 ? `<div style="margin-top:4px;">${dexAffinityPipsHTML(line.id)}</div>` : ''}
       `;
       // Comportement par défaut : ouvre la fiche détail (voir openDexDetail). En mode développeur, le hook
       // peut le remplacer (sélection libre d'équipe) — mais seulement quand il le veut vraiment, sinon la
@@ -70,7 +87,7 @@ function renderDex(){
     });
   });
 
-  document.getElementById('dexCount').textContent = `${count} Pokémon affichés`;
+  document.getElementById('dexCount').textContent = `${count} Pokémon affichés · 💖 ${boostedLines.size} lignée${boostedLines.size>1?'s':''} boostée${boostedLines.size>1?'s':''}`;
 }
 
 document.getElementById('dexSearch').oninput = (e)=>{ dexFilters.search = e.target.value; renderDex(); };
@@ -127,12 +144,23 @@ function renderDexRarityFilter(){
 renderDexTypeFilter();
 renderDexTypeFilter2();
 renderDexRarityFilter();
+// Bouton "💖 Boostées" : bascule l'affichage entre toutes les lignées et seulement celles avec de l'affinité.
+function refreshDexBoostedFilterBtn(){
+  document.getElementById('dexBoostedFilter').classList.toggle('diff-active', dexFilters.boosted);
+}
+document.getElementById('dexBoostedFilter').onclick = ()=>{
+  dexFilters.boosted = !dexFilters.boosted;
+  refreshDexBoostedFilterBtn();
+  renderDex();
+};
+refreshDexBoostedFilterBtn();
 document.getElementById('dexResetFilter').onclick = ()=>{
-  dexFilters = {search:'', type:'', type2:'', rarity:''};
+  dexFilters = {search:'', type:'', type2:'', rarity:'', boosted:false};
   document.getElementById('dexSearch').value = '';
   renderDexTypeFilter();
   renderDexTypeFilter2();
   renderDexRarityFilter();
+  refreshDexBoostedFilterBtn();
   renderDex();
 };
 
@@ -226,6 +254,38 @@ function openDexDetail(line, stageIdx, branchIdx){
       ${gigamaxSpriteId ? btn('gigamax', 'Gigamax', '🔴') : ''}
     </div>`;
   }
+  // Section Affinité de la fiche : niveau (5 pastilles), multiplicateur, taux d'apparition avant/après
+  // boost, et la progression des bonbons déjà investis vers le prochain palier (voir meta/affinity.js).
+  function affinityDetailHTML(){
+    const lineId = line.id;
+    const lvl = affinityLevel(lineId);
+    const mult = affinityMultiplier(lineId);
+    let boostedRate;
+    if(isBranch){
+      const b = line.branches[branchIdx];
+      const w = (b.rarityWeight!==undefined ? b.rarityWeight : lineWeight(line)) * mult;
+      boostedRate = facileAppearanceRate(w);
+    } else {
+      boostedRate = appearanceRate(line, stageIdx);
+    }
+    const baseRate = mult>0 ? boostedRate/mult : boostedRate;
+    const cost = affinityNextCost(lineId);
+    const progress = affinityProgressFor(lineId);
+    const barPct = cost ? Math.min(100, Math.round(progress/cost*100)) : 100;
+    return `
+      <div class="editor-section">
+        <div class="editor-section-title">Affinité</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          ${dexAffinityPipsHTML(lineId, 16)}
+          <span style="font-size:12px;color:var(--accent);font-weight:700;">×${mult.toFixed(1)}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">Taux d'apparition : ${baseRate.toFixed(2)}% → <b style="color:var(--text-main);">${boostedRate.toFixed(2)}%</b></div>
+        ${cost ? `
+          <div class="stat-bar-track" style="height:8px;"><div class="stat-bar-fill" style="width:${barPct}%;background:var(--accent);"></div></div>
+          <div style="font-size:9px;color:var(--text-dim);margin-top:3px;">${progress} / ${cost} 🍬 pour le palier ${lvl+1}</div>
+        ` : `<div style="font-size:10px;color:var(--good);">✓ Niveau d'affinité maximum atteint !</div>`}
+      </div>`;
+  }
   function topHTML(){
     const v = resolveView();
     return `
@@ -257,7 +317,8 @@ function openDexDetail(line, stageIdx, branchIdx){
         <div style="display:flex;flex-direction:column;gap:6px;">
           ${v.abilities.map(a=>`<div><b style="color:var(--text-main);font-size:11px;">${a}</b><div class="effect-desc" style="margin-top:2px;">${ABILITY_DESC[a]||''}</div></div>`).join('')}
         </div>
-      </div>`;
+      </div>
+      ${affinityDetailHTML()}`;
   }
   function bindTop(){
     document.getElementById('dexShinyToggleBtn').onclick = ()=>{ viewShiny = !viewShiny; refreshTop(); };
