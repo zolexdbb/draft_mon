@@ -1080,6 +1080,65 @@ select option{
   background:repeating-linear-gradient(45deg, #6B4FA0 0px, #6B4FA0 8px, #4A3868 8px, #4A3868 16px); opacity:.94;
 }
 
+/* ---- Animations de la Maison Safari (jet de Ball/Caillou/Appât, capture, fuite) : jouées dans
+   #safariFxLayer et sur #safariSpriteWrap (village/safari.js), inspirées des animations des vrais
+   jeux mais simplifiées pour ce rendu en DOM/CSS. ---- */
+.safari-suck-in{ animation:safariSuckIn .3s ease-in forwards; }
+@keyframes safariSuckIn{ 0%{ transform:scale(1); opacity:1; } 100%{ transform:scale(.15) translateY(10px); opacity:0; } }
+.safari-pop-out{ animation:safariPopOut .45s cubic-bezier(.34,1.56,.64,1); }
+@keyframes safariPopOut{ 0%{ transform:scale(.15) translateY(10px); opacity:0; } 60%{ transform:scale(1.15); opacity:1; } 100%{ transform:scale(1); opacity:1; } }
+.safari-shake{ animation:safariShake .4s ease; }
+@keyframes safariShake{
+  0%,100%{ transform:translateX(0) rotate(0deg); }
+  20%{ transform:translateX(-6px) rotate(-4deg); } 40%{ transform:translateX(5px) rotate(3deg); }
+  60%{ transform:translateX(-4px) rotate(-2deg); } 80%{ transform:translateX(3px) rotate(2deg); }
+}
+.safari-bounce-happy{ animation:safariBounceHappy .4s ease; }
+@keyframes safariBounceHappy{ 0%,100%{ transform:scale(1) translateY(0); } 50%{ transform:scale(1.12) translateY(-8px); } }
+.safari-flee-out{ animation:safariFleeOut .5s ease-in forwards; }
+@keyframes safariFleeOut{ 0%{ transform:translateX(0) scale(1); opacity:1; } 100%{ transform:translateX(70px) scale(.4); opacity:0; } }
+
+.safari-fx-ball{
+  position:absolute; left:50%; width:22px; height:22px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0 15%, #E5484D 16% 48%, #14161F 48% 52%, #ECE7DD 52% 100%);
+  box-shadow:0 2px 6px rgba(0,0,0,.4); margin-left:-11px;
+}
+.safari-fx-ball-throw{ bottom:-10px; animation:safariBallThrow .32s ease-out forwards; }
+@keyframes safariBallThrow{
+  0%{ bottom:-10px; transform:scale(.6) rotate(0deg); opacity:1; }
+  100%{ bottom:50%; transform:scale(1) rotate(300deg); opacity:1; }
+}
+.safari-fx-ball-drop{ bottom:50%; animation:safariBallLand .15s ease-out forwards, safariWobble .3s ease-in-out .15s 3; }
+@keyframes safariBallLand{ 0%{ bottom:50%; } 100%{ bottom:38%; } }
+@keyframes safariWobble{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-16deg); } 75%{ transform:rotate(16deg); } }
+.safari-fx-rock, .safari-fx-berry{
+  position:absolute; left:50%; bottom:-10px; width:15px; height:14px; margin-left:-7px;
+  box-shadow:0 2px 4px rgba(0,0,0,.4); animation:safariThrowArc .32s ease-out forwards;
+}
+.safari-fx-rock{ border-radius:40% 60% 55% 45%; background:#8a7a68; }
+.safari-fx-berry{ border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffb3d1,#ff5f96); }
+@keyframes safariThrowArc{
+  0%{ bottom:-10px; transform:scale(.5) rotate(0deg); opacity:1; }
+  100%{ bottom:48%; transform:scale(1) rotate(220deg); opacity:1; }
+}
+.safari-fx-sparkle{ position:absolute; left:50%; top:38%; width:70px; height:70px; transform:translate(-50%,-50%); }
+.safari-fx-sparkle::before, .safari-fx-sparkle::after{
+  content:'✦'; position:absolute; color:#F6D888; font-size:20px; opacity:0;
+  animation:safariSparkle .6s ease-out forwards;
+}
+.safari-fx-sparkle::before{ left:0; top:10px; }
+.safari-fx-sparkle::after{ right:0; bottom:10px; animation-delay:.1s; }
+@keyframes safariSparkle{ 0%{ transform:scale(0) rotate(0deg); opacity:0; } 40%{ opacity:1; } 100%{ transform:scale(1.6) rotate(90deg); opacity:0; } }
+.safari-fx-heart{ position:absolute; left:50%; bottom:38%; margin-left:-6px; font-size:13px; color:#ff6fa8; opacity:0; animation:safariHeartRise .7s ease-out forwards; }
+.safari-fx-heart::before{ content:'♥'; }
+.safari-fx-heart-0{ margin-left:-20px; } .safari-fx-heart-2{ margin-left:8px; }
+@keyframes safariHeartRise{ 0%{ transform:translateY(0) scale(.6); opacity:0; } 30%{ opacity:1; } 100%{ transform:translateY(-34px) scale(1); opacity:0; } }
+.safari-fx-dust{
+  position:absolute; left:50%; bottom:20%; width:30px; height:14px; margin-left:-15px; border-radius:50%;
+  background:rgba(200,190,170,.5); opacity:.7; animation:safariDust .5s ease-out forwards;
+}
+@keyframes safariDust{ 0%{ opacity:.7; transform:scale(.6); } 100%{ opacity:0; transform:scale(1.8); } }
+
 /* Maison Safari : portique d'entrée en bois (deux poteaux + panneau vert), présence aléatoire */
 .village-b-safari{ width:120px; height:140px; }
 .village-b-safari .vbd-gate-post{ position:absolute; bottom:0; width:10px; height:96px; background:#5C4A2E; border-radius:2px; }

@@ -10,6 +10,9 @@
    - État transitoire (safariActive/safariBallsLeft/safariEncounter/safariEffect/safariOutcome/
      safariRunStats), remis à zéro à chaque nouvelle apparition du Safari (une seule visite par
      Campement — voir renderVillage dans village/village-core.js)
+   - playSafariBallFx/playSafariItemFx/playSafariFleeFx : animations jouées dans #safariFxLayer
+     (jet de Ball façon jeux officiels avec vacillement + capture/échec, impact du Caillou, rebond
+     joyeux de l'Appât, fuite) avant que safariAction n'applique le résultat et ne ré-affiche l'écran
    - renderSafariPanel/safariAction : l'écran (intro → rencontre → issue → résumé final)
 ==== */
 const SAFARI_SPAWN_RATE = 0.15;
@@ -87,49 +90,119 @@ function tickSafariEffect(){
   safariEffect.turnsLeft--;
   if(safariEffect.turnsLeft<=0) safariEffect = null;
 }
-// Résout une action du joueur face à la rencontre en cours (Ball/Caillou/Appât/Fuite).
+// Élément d'effet temporaire ajouté dans la zone du sprite (#safariFxLayer), retiré après sa durée (ms).
+function spawnSafariFxEl(cls, ttl){
+  const layer = document.getElementById('safariFxLayer');
+  if(!layer) return null;
+  const el = document.createElement('div');
+  el.className = cls;
+  layer.appendChild(el);
+  setTimeout(()=> el.remove(), ttl);
+  return el;
+}
+// Animation de lancer de Safari Ball façon jeux officiels : la Ball vole jusqu'au Pokémon, l'absorbe,
+// tombe au sol et vacille trois fois, puis éclate en étincelles (capture réussie) ou s'ouvre pour le
+// laisser ressortir en rebondissant (échec) — `done` est appelé une fois l'animation terminée.
+function playSafariBallFx(success, done){
+  const sprite = document.getElementById('safariSpriteWrap');
+  spawnSafariFxEl('safari-fx-ball safari-fx-ball-throw', 340);
+  setTimeout(()=>{
+    if(sprite) sprite.classList.add('safari-suck-in');
+    spawnSafariFxEl('safari-fx-ball safari-fx-ball-drop', 1100);
+  }, 320);
+  setTimeout(()=>{
+    if(success){
+      spawnSafariFxEl('safari-fx-sparkle', 650);
+      setTimeout(done, 600);
+    } else {
+      if(sprite){
+        sprite.classList.remove('safari-suck-in');
+        sprite.classList.add('safari-pop-out');
+        setTimeout(()=> sprite && sprite.classList.remove('safari-pop-out'), 460);
+      }
+      setTimeout(done, 300);
+    }
+  }, 320+1050);
+}
+// Animation d'un Caillou (impact + agitation) ou d'un Appât (rebond joyeux + petits cœurs) lancé sur le Pokémon.
+function playSafariItemFx(type, done){
+  const sprite = document.getElementById('safariSpriteWrap');
+  spawnSafariFxEl(type==='rock' ? 'safari-fx-rock' : 'safari-fx-berry', 340);
+  setTimeout(()=>{
+    if(sprite) sprite.classList.add(type==='rock' ? 'safari-shake' : 'safari-bounce-happy');
+    if(type==='bait'){ for(let i=0;i<3;i++) setTimeout(()=> spawnSafariFxEl('safari-fx-heart safari-fx-heart-'+i, 700), i*90); }
+    setTimeout(()=>{ if(sprite) sprite.classList.remove('safari-shake','safari-bounce-happy'); done(); }, 400);
+  }, 320);
+}
+// Animation de fuite : le Pokémon détale sur le côté avec un petit nuage de poussière.
+function playSafariFleeFx(done){
+  const sprite = document.getElementById('safariSpriteWrap');
+  if(sprite) sprite.classList.add('safari-flee-out');
+  spawnSafariFxEl('safari-fx-dust', 500);
+  setTimeout(done, 520);
+}
+// Résout une action du joueur face à la rencontre en cours (Ball/Caillou/Appât/Fuite) : joue d'abord
+// l'animation correspondante, puis applique le résultat et ne ré-affiche l'écran qu'une fois terminée.
 function safariAction(action){
   const enc = safariEncounter;
   if(!enc) return;
+  if(action==='ball' && safariBallsLeft<=0) return;
+  document.querySelectorAll('#villagePanelContent button').forEach(b=> b.disabled = true);
+  const finish = ()=>{ saveGame(); renderSafariPanel(); };
+
   if(action==='flee'){
-    safariOutcome = `Tu t'éloignes tranquillement de ${enc.sp.name}.`;
-    safariEncounter = null; safariEffect = null;
+    playSafariFleeFx(()=>{
+      safariOutcome = `Tu t'éloignes tranquillement de ${enc.sp.name}.`;
+      safariEncounter = null; safariEffect = null;
+      finish();
+    });
   } else if(action==='rock' || action==='bait'){
-    safariEffect = { type:action, turnsLeft: 1+Math.floor(Math.random()*5) };
-    const reaction = action==='rock' ? `${enc.sp.name} a l'air agité !` : `${enc.sp.name} se calme...`;
-    const fled = Math.random() < safariFleeChance(enc.sp, enc.tier);
-    if(fled){
-      safariOutcome = `Tu lances ${action==='rock'?'un Caillou':'un Appât'} ! ${reaction} ...et ${enc.sp.name} en profite pour s'enfuir !`;
-      safariEncounter = null; safariEffect = null;
-    } else {
-      safariOutcome = `Tu lances ${action==='rock'?'un Caillou':'un Appât'} ! ${reaction}`;
-      tickSafariEffect();
-    }
-  } else if(action==='ball'){
-    if(safariBallsLeft<=0) return;
-    safariBallsLeft--;
-    const tier = SAFARI_TIERS.find(t=>t.key===enc.tier);
-    if(Math.random() < safariCatchChance(enc.tier)){
-      affinityCandy += tier.candy;
-      saveAffinityProgress();
-      refreshVillageMoney();
-      safariRunStats.captures++;
-      safariRunStats.candy += tier.candy;
-      safariOutcome = `✓ ${enc.sp.name} capturé ! Confié au Professeur contre ${tier.candy} 🍬 Bonbons d'Affinité.`;
-      safariEncounter = null; safariEffect = null;
-    } else {
+    playSafariItemFx(action, ()=>{
+      safariEffect = { type:action, turnsLeft: 1+Math.floor(Math.random()*5) };
+      const reaction = action==='rock' ? `${enc.sp.name} a l'air agité !` : `${enc.sp.name} se calme...`;
       const fled = Math.random() < safariFleeChance(enc.sp, enc.tier);
       if(fled){
-        safariOutcome = `${enc.sp.name} évite la Safari Ball... et s'enfuit !`;
-        safariEncounter = null; safariEffect = null;
+        playSafariFleeFx(()=>{
+          safariOutcome = `Tu lances ${action==='rock'?'un Caillou':'un Appât'} ! ${reaction} ...et ${enc.sp.name} en profite pour s'enfuir !`;
+          safariEncounter = null; safariEffect = null;
+          finish();
+        });
       } else {
-        safariOutcome = `${enc.sp.name} évite la Safari Ball !`;
+        safariOutcome = `Tu lances ${action==='rock'?'un Caillou':'un Appât'} ! ${reaction}`;
         tickSafariEffect();
+        finish();
       }
-    }
+    });
+  } else if(action==='ball'){
+    safariBallsLeft--;
+    const tier = SAFARI_TIERS.find(t=>t.key===enc.tier);
+    const success = Math.random() < safariCatchChance(enc.tier);
+    playSafariBallFx(success, ()=>{
+      if(success){
+        affinityCandy += tier.candy;
+        saveAffinityProgress();
+        refreshVillageMoney();
+        safariRunStats.captures++;
+        safariRunStats.candy += tier.candy;
+        safariOutcome = `✓ ${enc.sp.name} capturé ! Confié au Professeur contre ${tier.candy} 🍬 Bonbons d'Affinité.`;
+        safariEncounter = null; safariEffect = null;
+        finish();
+      } else {
+        const fled = Math.random() < safariFleeChance(enc.sp, enc.tier);
+        if(fled){
+          playSafariFleeFx(()=>{
+            safariOutcome = `${enc.sp.name} évite la Safari Ball... et s'enfuit !`;
+            safariEncounter = null; safariEffect = null;
+            finish();
+          });
+        } else {
+          safariOutcome = `${enc.sp.name} évite la Safari Ball !`;
+          tickSafariEffect();
+          finish();
+        }
+      }
+    });
   }
-  saveGame();
-  renderSafariPanel();
 }
 // Affiche l'écran du Safari : intro (pas encore entré), rencontre active (4 actions), issue d'une
 // rencontre (avant la suivante), ou résumé final une fois les 10 Balls épuisées.
@@ -205,8 +278,9 @@ function renderSafariPanel(){
         <span>🔴 Safari Balls : <b style="color:var(--text-main);">${safariBallsLeft}</b></span>
         <span class="rarity-badge ${rarityCss}">${tier.label}</span>
       </div>
-      <div style="text-align:center;">
-        <div style="width:96px;height:96px;margin:0 auto;">${getSpriteHTML(enc.sp.name, null, 'front', true)}</div>
+      <div style="text-align:center;position:relative;">
+        <div id="safariFxLayer" style="position:absolute;left:50%;top:0;width:96px;height:96px;transform:translateX(-50%);pointer-events:none;overflow:visible;z-index:5;"></div>
+        <div id="safariSpriteWrap" style="width:96px;height:96px;margin:0 auto;position:relative;">${getSpriteHTML(enc.sp.name, null, 'front', true)}</div>
         <div style="font-size:14px;font-weight:700;margin:6px 0 2px;">${enc.sp.name}</div>
         <div class="types-row" style="justify-content:center;">${enc.sp.types.map(t=>typeTagHTML(t)).join('')}</div>
       </div>
