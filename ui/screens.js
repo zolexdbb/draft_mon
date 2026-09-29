@@ -273,9 +273,11 @@ document.getElementById('dexBackBtn').onclick = ()=>{
 document.getElementById('draftHomeBtn').onclick = ()=> showScreen('screenMenu');
 document.getElementById('builderHomeBtn').onclick = ()=> showScreen('screenMenu');
 
-// Met à jour les éléments du menu principal qui dépendent de l'état global (badge de Jetons de Tour).
+// Met à jour les éléments du menu principal qui dépendent de l'état global (badges de Jetons de
+// Tour et de Bonbons d'Affinité — tous deux permanents entre toutes les parties).
 function refreshMenuUI(){
   document.getElementById('menuTokensBadge').textContent = `🎫 ${towerTokens} Jetons de Tour`;
+  document.getElementById('menuCandyBadge').textContent = `🍬 ${affinityCandy} Bonbons d'Affinité`;
 }
 // Ligne d'un mode de difficulté dans la fenêtre "Meilleurs étages" (meilleur étage + badges de Maître de Type obtenus).
 function scoreDiffRowHTML(label, floor, diffKey){

@@ -48,3 +48,26 @@ function recalcDraftWeights(){
   recalcCandidateWeight();
   recalcFacileWeight();
 }
+// Bonbons d'Affinité gagnés du dresseur vaincu après un combat gagné (voir floorCleared dans
+// combat/tower.js) : un combat normal donne 0 à 3 bonbons (0/1 fréquents, 3 rare, ~1 en moyenne) ;
+// Mini-Boss et Boss donnent davantage (Boss : au moins 2), pour ~1 bonbon/combat en moyenne visée
+// (~30 sur une run complète jusqu'à l'étage 20).
+function affinityCandyReward(isMiniBoss, isBoss){
+  const r = Math.random();
+  if(isBoss){
+    if(r<0.40) return 2;
+    if(r<0.75) return 3;
+    if(r<0.95) return 4;
+    return 5;
+  }
+  if(isMiniBoss){
+    if(r<0.30) return 1;
+    if(r<0.70) return 2;
+    if(r<0.90) return 3;
+    return 4;
+  }
+  if(r<0.35) return 0;
+  if(r<0.75) return 1;
+  if(r<0.95) return 2;
+  return 3;
+}

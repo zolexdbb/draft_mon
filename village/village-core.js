@@ -3,13 +3,13 @@
    autour du feu de camp, et un aperçu des 3 Pokémon sauvages proposés par le Ranch directement
    dans son enclos. ==== */
 // Initialise l'écran du Campement à l'arrivée (après un Boss ou un Mini-Boss) : récompense, badge, tirage du Marchand.
-function renderVillage(reward, newBadgeType, rewardLabel){
-  document.getElementById('villageReward').textContent = reward ? `+${reward} 💰 gagnés ${rewardLabel || 'en battant le Boss'} !` : '';
+function renderVillage(reward, newBadgeType, rewardLabel, candyReward){
+  document.getElementById('villageReward').textContent = reward ? `+${reward} 💰${candyReward ? ` et +${candyReward} 🍬` : ''} gagnés ${rewardLabel || 'en battant le Boss'} !` : '';
   const badgeEl = document.getElementById('villageBadge');
   if(badgeEl){
     badgeEl.innerHTML = newBadgeType ? `🎖️ Nouveau Badge obtenu : ${TYPE_EMOJI[newBadgeType]} ${typeDisplayName(newBadgeType)} !` : '';
   }
-  document.getElementById('villageMoney').textContent = `💰 ${money}`;
+  document.getElementById('villageMoney').textContent = `💰 ${money} · 🍬 ${affinityCandy}`;
   document.getElementById('villagePanelContent').innerHTML = '';
   ranchChoices = null;
   ranchRecruited = false;
@@ -85,7 +85,7 @@ function setVillageMsg(text){
   if(el) el.textContent = text;
 }
 function refreshVillageMoney(){
-  document.getElementById('villageMoney').textContent = `💰 ${money}`;
+  document.getElementById('villageMoney').textContent = `💰 ${money} · 🍬 ${affinityCandy}`;
 }
 // La scène du Campement est maintenant plein écran : le panneau d'un bâtiment (Centre/Mart/Ranch/
 // Marchand) s'affiche donc en superposition plutôt qu'inséré sous la carte. On observe simplement

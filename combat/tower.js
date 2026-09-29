@@ -140,17 +140,17 @@ function generateTwinTrainers(floor){
 }
 
 // Affiche l'écran de la Tour (étage courant, taille d'équipe adverse à venir, meilleur étage, argent).
-function renderTower(reward){
+function renderTower(reward, candyReward){
   document.getElementById('floorNum').textContent = towerFloor;
   updateBestFloor(towerFloor);
   const sizes = [3,3,4,4,5,6];
   let size = sizes[Math.min(towerFloor-1, sizes.length-1)];
   if(isBossFloor(towerFloor)) size = Math.min(6, size+1);
   const badge = isBossFloor(towerFloor) ? ' · 👑 ÉTAGE BOSS !' : (isMiniBossFloor(towerFloor) ? ' · ⭐ Mini-Boss' : '');
-  document.getElementById('floorDesc').innerHTML = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor}${badge}<br>Meilleur étage : ${currentBestFloor()} · Mode : ${difficulty==='facile'?'😊 Facile':(difficulty==='difficile'?'💀 Difficile':'⚔️ Normal')} · 💰 ${money}`;
+  document.getElementById('floorDesc').innerHTML = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor}${badge}<br>Meilleur étage : ${currentBestFloor()} · Mode : ${difficulty==='facile'?'😊 Facile':(difficulty==='difficile'?'💀 Difficile':'⚔️ Normal')} · 💰 ${money} · 🍬 ${affinityCandy}`;
   const rewardEl = document.getElementById('floorReward');
   if(rewardEl){
-    rewardEl.textContent = reward ? `+${reward} 💰 gagnés au combat précédent !` : '';
+    rewardEl.textContent = reward ? `+${reward} 💰${candyReward ? ` et +${candyReward} 🍬` : ''} gagnés au combat précédent !` : '';
   }
   if(window.DEV_HOOKS) window.DEV_HOOKS.renderTowerPanel();
   saveGame();
@@ -432,6 +432,11 @@ function floorCleared(){
   if(battleState.happyHour) reward *= 2;
   reward += battleState.payDayMoney || 0;
   money += reward;
+  // Le dresseur vaincu donne aussi des Bonbons d'Affinité (voir meta/affinity.js), qui financeront
+  // plus tard un investissement chez le Professeur (bloc 5) pour faire monter l'affinité d'une lignée.
+  const candyGain = affinityCandyReward(wasMiniBoss, wasBoss);
+  affinityCandy += candyGain;
+  saveAffinityProgress();
   runStats.floorsCleared++;
   runStats.moneyEarned += reward;
   if(wasBoss) runStats.bosses++; else if(wasMiniBoss) runStats.miniBosses++;
@@ -440,13 +445,13 @@ function floorCleared(){
   if(wasBoss){
     const newBadge = bossMasterType ? awardBadge(bossMasterType) : false;
     document.getElementById('screenVillage').classList.remove('hidden');
-    renderVillage(reward, newBadge ? bossMasterType : null, 'en battant le Boss');
+    renderVillage(reward, newBadge ? bossMasterType : null, 'en battant le Boss', candyGain);
   } else if(wasMiniBoss){
     document.getElementById('screenVillage').classList.remove('hidden');
-    renderVillage(reward, null, 'contre le Mini-Boss');
-  } else if(maybeTriggerTowerEvent(reward)){
+    renderVillage(reward, null, 'contre le Mini-Boss', candyGain);
+  } else if(maybeTriggerTowerEvent(reward, candyGain)){
   } else {
     document.getElementById('screenTower').classList.remove('hidden');
-    renderTower(reward);
+    renderTower(reward, candyGain);
   }
 }

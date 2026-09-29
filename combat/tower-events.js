@@ -185,11 +185,13 @@ const TOWER_EVENTS = [
 
 let currentTowerEvent = null;
 let pendingFloorReward = 0;
+let pendingCandyReward = 0;
 
 // Appelé après chaque combat gagné : tire si un event se déclenche (25%), et si oui affiche l'écran d'event à la place du prochain étage.
-function maybeTriggerTowerEvent(reward){
+function maybeTriggerTowerEvent(reward, candyReward){
   if(Math.random() >= TOWER_EVENT_CHANCE) return false;
   pendingFloorReward = reward;
+  pendingCandyReward = candyReward || 0;
   currentTowerEvent = rand(TOWER_EVENTS);
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenEvent').classList.remove('hidden');
@@ -201,6 +203,7 @@ function triggerTowerEventById(id){
   const ev = TOWER_EVENTS.find(e=>e.id===id);
   if(!ev) return false;
   pendingFloorReward = 0;
+  pendingCandyReward = 0;
   currentTowerEvent = ev;
   document.getElementById('screenTower').classList.add('hidden');
   document.getElementById('screenEvent').classList.remove('hidden');
@@ -235,6 +238,7 @@ function renderTowerEvent(){
 document.getElementById('eventContinueBtn').onclick = ()=>{
   document.getElementById('screenEvent').classList.add('hidden');
   document.getElementById('screenTower').classList.remove('hidden');
-  renderTower(pendingFloorReward);
+  renderTower(pendingFloorReward, pendingCandyReward);
   pendingFloorReward = 0;
+  pendingCandyReward = 0;
 };
