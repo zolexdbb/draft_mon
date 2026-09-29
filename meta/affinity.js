@@ -8,6 +8,7 @@
      cours (localStorage, suit le modèle de meta/rewards.js)
    - affinityLevel/affinityMultiplier : niveau d'une lignée et son bonus de tirage
    - affinityNextCost/affinityProgressFor : coût du prochain palier et bonbons déjà investis dedans
+   - investAffinityCandy : dépense des bonbons chez le Professeur pour faire monter une lignée
    - affinityCandyReward : bonbons gagnés du dresseur vaincu après un combat
    ==== */
 const AFFINITY_KEY = 'draftArenaAffinity';
@@ -76,6 +77,30 @@ function affinityNextCost(lineId){
 // Bonbons déjà investis dans le palier en cours d'une lignée (0 si jamais investie ou déjà au niveau max).
 function affinityProgressFor(lineId){
   return affinityProgress[lineId] || 0;
+}
+// Investit `amount` Bonbons d'Affinité dans une lignée (Professeur — voir village/safari.js) : remplit
+// le(s) palier(s) en cours, fait monter le niveau dès qu'un palier est rempli (le surplus est reporté
+// sur le suivant, pas perdu), s'arrête au niveau max ou si le solde de bonbons est épuisé. Renvoie true
+// si au moins un niveau a été gagné (pour savoir s'il faut recalculer les poids de tirage).
+function investAffinityCandy(lineId, amount){
+  let remaining = Math.max(0, Math.min(amount, affinityCandy));
+  let leveledUp = false;
+  while(remaining>0 && affinityLevel(lineId) < AFFINITY_MAX){
+    const cost = affinityNextCost(lineId);
+    const have = affinityProgressFor(lineId);
+    const give = Math.min(cost - have, remaining);
+    affinityProgress[lineId] = have + give;
+    affinityCandy -= give;
+    remaining -= give;
+    if(affinityProgress[lineId] >= cost){
+      affinity[lineId] = affinityLevel(lineId) + 1;
+      affinityProgress[lineId] = 0;
+      leveledUp = true;
+    }
+  }
+  saveAffinityProgress();
+  if(leveledUp) recalcDraftWeights();
+  return leveledUp;
 }
 // Bonbons d'Affinité gagnés du dresseur vaincu après un combat gagné (voir floorCleared dans
 // combat/tower.js) : un combat normal donne 0 à 3 bonbons (0/1 fréquents, 3 rare, ~1 en moyenne) ;

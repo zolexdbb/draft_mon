@@ -140,8 +140,11 @@ function renderSafariPanel(){
       <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
         <div style="font-size:32px;margin-bottom:8px;">🌿</div>
         <h2 style="margin:0 0 8px;">Maison Safari</h2>
-        <div style="font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;">Le Professeur t'accueille : « J'étudie les Pokémon sauvages de cette zone. Capture-en pour moi avec ces Safari Balls, je te donnerai des Bonbons d'Affinité en échange — je ne peux malheureusement pas te laisser les garder, ils doivent rester ici pour mes recherches. »</div>
-        <button class="btn" id="safariEnterBtn">▶ Entrer avec 10 Safari Balls</button>
+        <div style="font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;">Le Professeur t'accueille : « J'étudie les Pokémon sauvages de cette zone. Capture-en pour moi avec ces Safari Balls, je te donnerai des Bonbons d'Affinité en échange — je ne peux malheureusement pas te laisser les garder, ils doivent rester ici pour mes recherches. Si tu préfères, je peux aussi t'en investir directement sur les lignées qui te tiennent à cœur. »</div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn" id="safariEnterBtn">▶ Entrer avec 10 Safari Balls</button>
+          <button class="btn secondary" id="safariProfessorBtn">🔬 Voir le Professeur (${affinityCandy} 🍬)</button>
+        </div>
       </div>`;
     document.getElementById('safariEnterBtn').onclick = ()=>{
       safariActive = true;
@@ -153,6 +156,7 @@ function renderSafariPanel(){
       saveGame();
       renderSafariPanel();
     };
+    document.getElementById('safariProfessorBtn').onclick = ()=> renderProfessorPanel();
     return;
   }
   if(!safariEncounter && safariBallsLeft<=0){
@@ -163,8 +167,12 @@ function renderSafariPanel(){
         ${safariOutcome ? `<div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">${safariOutcome}</div>` : ''}
         <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;">Le Professeur remercie chaleureusement les ${safariRunStats.captures} Pokémon confiés pour ses recherches.</div>
         <div style="font-size:14px;color:var(--accent);margin-bottom:14px;">+${safariRunStats.candy} 🍬 Bonbons d'Affinité au total</div>
-        <button class="btn secondary" id="safariCloseBtn">Fermer</button>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn" id="safariProfessorBtn">🔬 Investir chez le Professeur</button>
+          <button class="btn secondary" id="safariCloseBtn">Fermer</button>
+        </div>
       </div>`;
+    document.getElementById('safariProfessorBtn').onclick = ()=> renderProfessorPanel();
     document.getElementById('safariCloseBtn').onclick = ()=>{ document.getElementById('villagePanelContent').innerHTML=''; };
     return;
   }
@@ -217,4 +225,103 @@ function renderSafariPanel(){
   document.getElementById('safariBaitBtn').onclick = ()=> safariAction('bait');
   document.getElementById('safariFleeBtn').onclick = ()=> safariAction('flee');
 }
+
+/* ---- Le Professeur : investit les Bonbons d'Affinité dans la lignée de son choix (tout le Pokédex,
+   avec recherche/filtre) — accessible depuis l'écran d'accueil du Safari et depuis son résumé final. ---- */
+let professorFilter = { search:'', rarity:'' };
+function professorRarityKey(lineId){
+  if(LEGENDARY_IDS.includes(lineId)) return 'legendaire';
+  if(PSEUDO_IDS.includes(lineId)) return 'pseudo';
+  if(RARE_IDS.includes(lineId)) return 'rare';
+  return 'commun';
+}
+const PROFESSOR_RARITY_LABEL = { legendaire:'Légendaire', pseudo:'Pseudo-légendaire', rare:'Rare', commun:'Commun' };
+const PROFESSOR_RARITY_CSS = { legendaire:'rarity-legendaire', pseudo:'rarity-pseudo', rare:'rarity-rare', commun:'rarity-commun' };
+// Étiquette d'une lignée entière (chaîne complète + nombre de formes à embranchement, ex. Évoli).
+function professorLineLabel(line){
+  const chain = line.stages.map(s=>s.name).join(' → ');
+  return (line.branches && line.branches.length) ? `${chain} (+${line.branches.length} forme${line.branches.length>1?'s':''})` : chain;
+}
+function professorRowHTML(line){
+  const key = professorRarityKey(line.id);
+  const cost = affinityNextCost(line.id);
+  const progress = affinityProgressFor(line.id);
+  const lastStage = line.stages[line.stages.length-1];
+  const disabled = affinityCandy<1 || !cost;
+  return `<div style="display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;">
+    <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(lastStage.name, null)}</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:10px;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><b>${professorLineLabel(line)}</b></div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+        <span class="rarity-badge ${PROFESSOR_RARITY_CSS[key]}" style="margin:0;">${PROFESSOR_RARITY_LABEL[key]}</span>
+        ${dexAffinityPipsHTML(line.id, 10)}
+      </div>
+      ${cost ? `
+        <div class="stat-bar-track" style="height:5px;margin-top:4px;"><div class="stat-bar-fill" style="width:${Math.min(100,Math.round(progress/cost*100))}%;background:var(--accent);"></div></div>
+        <div style="font-size:8px;color:var(--text-dim);margin-top:2px;">${progress} / ${cost} 🍬</div>
+      ` : `<div style="font-size:8px;color:var(--good);margin-top:4px;">✓ Niveau maximum</div>`}
+    </div>
+    ${cost ? `
+      <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
+        <button class="btn secondary professorInvestBtn" data-line="${line.id}" data-amount="1" style="width:auto;min-height:0;padding:5px 8px;font-size:9px;" ${disabled?'disabled':''}>+1 🍬</button>
+        <button class="btn secondary professorInvestBtn" data-line="${line.id}" data-amount="max" style="width:auto;min-height:0;padding:5px 8px;font-size:9px;" ${disabled?'disabled':''}>Max</button>
+      </div>` : ''}
+  </div>`;
+}
+// Affiche l'écran du Professeur : recherche/filtre par rareté, puis la liste investissable.
+function renderProfessorPanel(){
+  const wrap = document.getElementById('villagePanelContent');
+  wrap.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <button class="btn secondary" id="professorBackBtn" style="width:auto;min-height:0;padding:6px 10px;font-size:10px;">← Retour</button>
+        <div id="professorBalance" style="font-size:12px;color:var(--accent);font-weight:700;">🍬 ${affinityCandy}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:10px;line-height:1.5;">« Investis tes Bonbons d'Affinité dans les lignées que tu apprécies : plus leur niveau monte, plus tu as de chances de les croiser au draft, au Ranch et parmi les recrues. »</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;">
+        <input type="text" id="professorSearch" placeholder="Rechercher une lignée..." value="${professorFilter.search}" style="flex:1;min-width:0;background:#0b0b10;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 10px;font-family:inherit;font-size:11px;">
+        <div id="professorRarityFilter" style="width:150px;flex-shrink:0;"></div>
+      </div>
+      <div id="professorList" style="display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto;"></div>
+    </div>`;
+  document.getElementById('professorBackBtn').onclick = ()=> renderSafariPanel();
+  document.getElementById('professorSearch').oninput = (e)=>{ professorFilter.search = e.target.value; renderProfessorList(); };
+  document.getElementById('professorRarityFilter').appendChild(createCustomSelect({
+    options: [
+      {value:'', label:'Toutes raretés'},
+      {value:'commun', label:'Commun', css:'rarity-commun'},
+      {value:'rare', label:'Rare', css:'rarity-rare'},
+      {value:'pseudo', label:'Pseudo-légendaire', css:'rarity-pseudo'},
+      {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'}
+    ].map(o=> o.value ? {...o, html: rarityOptionHTML(o.css, o.label)} : o),
+    value: professorFilter.rarity,
+    onChange: (val)=>{ professorFilter.rarity = val; renderProfessorList(); }
+  }));
+  renderProfessorList();
+}
+// Reconstruit seulement la liste (recherche/filtre/investissement), sans re-créer la barre de recherche.
+function renderProfessorList(){
+  const list = document.getElementById('professorList');
+  if(!list) return;
+  const q = professorFilter.search.trim().toLowerCase();
+  const filtered = LINES.filter(line=>{
+    if(q && !professorLineLabel(line).toLowerCase().includes(q)) return false;
+    if(professorFilter.rarity && professorRarityKey(line.id)!==professorFilter.rarity) return false;
+    return true;
+  });
+  list.innerHTML = filtered.length ? filtered.map(professorRowHTML).join('') : `<div class="dex-rate" style="text-align:center;">Aucune lignée ne correspond.</div>`;
+  list.querySelectorAll('.professorInvestBtn').forEach(btn=>{
+    btn.onclick = ()=>{
+      const lineId = btn.dataset.line;
+      const cost = affinityNextCost(lineId);
+      const amount = btn.dataset.amount==='max' ? Math.max(1, cost - affinityProgressFor(lineId)) : 1;
+      investAffinityCandy(lineId, amount);
+      renderProfessorList();
+      const balanceEl = document.getElementById('professorBalance');
+      if(balanceEl) balanceEl.textContent = `🍬 ${affinityCandy}`;
+      refreshVillageMoney();
+    };
+  });
+}
+
 document.getElementById('villageSafariBtn').onclick = ()=>{ renderSafariPanel(); };
