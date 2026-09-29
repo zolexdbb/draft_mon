@@ -266,6 +266,49 @@ const PATCH_NOTES = [
               ]
             }
         ]
+      },
+      {
+        version: 'v0.10.5',
+        title: 'v0.10.5 — Affinité, Bonbons & Maison Safari',
+        categories: [
+            {
+              icon: '🧬', label: 'Système d’Affinité',
+              items: [
+                "Chaque lignée a désormais un niveau d'Affinité (0 à 5, acquis pour toujours) qui augmente ses chances d'apparaître au draft, au Ranch et parmi les recrues de combat, jusqu'à ×2 au niveau maximum",
+                "L'Affinité profite à toute la lignée, branches comprises (ex. faire monter Évoli boost les 8 Évolitions en même temps)",
+                "Les équipes adverses de la Tour ne sont pas concernées : l'Affinité ne joue que sur ce que le joueur peut recruter"
+              ]
+            },
+            {
+              icon: '🍬', label: 'Bonbons d’Affinité',
+              items: [
+                "Nouvelle monnaie permanente (entre toutes les parties, comme les Jetons de Tour) : chaque combat gagné en rapporte 0 à 3 (davantage contre un Mini-Boss ou un Boss), affichée et mise en évidence sur l'écran d'étage et au Campement",
+                "L'argent et les Bonbons sont maintenant présentés dans des pastilles colorées bien visibles plutôt que noyés dans le texte, pour bien montrer que ce sont des ressources importantes"
+              ]
+            },
+            {
+              icon: '🌿', label: 'Maison Safari',
+              items: [
+                "Nouveau bâtiment du Campement à apparition aléatoire (indépendante du Marchand Itinérant) : 10 Safari Balls offertes par visite pour capturer des Pokémon sauvages un par un",
+                "4 actions à chaque rencontre : Safari Ball, Caillou (double la capture et la fuite pendant quelques tours), Appât (les divise), ou Fuite — le Pokémon peut aussi s'enfuir de lui-même à chaque tour",
+                "Les Pokémon capturés ne sont jamais gardés : le Professeur les récupère pour ses recherches et donne des Bonbons d'Affinité en échange (davantage pour les captures rares, pseudo-légendaires ou légendaires)"
+              ]
+            },
+            {
+              icon: '🔬', label: 'Le Professeur',
+              items: [
+                "Depuis la Maison Safari, investis tes Bonbons d'Affinité dans la lignée de ton choix parmi tout le Pokédex (recherche et filtre par rareté) pour la faire monter en niveau, un peu à la fois",
+                "Le coût augmente avec la rareté de la lignée (Rare, Pseudo-légendaire, Légendaire) et avec le niveau déjà atteint"
+              ]
+            },
+            {
+              icon: '📖', label: 'Pokédex',
+              items: [
+                "Chaque fiche affiche maintenant le niveau d'Affinité de la lignée, son multiplicateur, le taux d'apparition avant/après boost, et la progression vers le prochain niveau",
+                "Nouveau filtre « Boostées » et compteur du nombre de lignées boostées dans le Pokédex"
+              ]
+            }
+        ]
       }
     ]
   },
