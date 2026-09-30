@@ -49,22 +49,22 @@ const ITEMS = {
   herbeMental:    { name:'Herbe Mental',       sprite:ITEM_SPRITE('mental-herb'),   price:250, kind:'held', category:'strat', desc:"Objet tenu : soigne les effets de Provoc et Entrave. Se consomme après usage." },
   reste:          { name:'Reste',              sprite:ITEM_SPRITE('leftovers'),     price:200, kind:'held', category:'strat', desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
   ceintureForce:  { name:'Ceinture Force',     sprite:ITEM_SPRITE('focus-sash'),    price:250, kind:'held', category:'strat', desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." },
-  plumeFeerique:  { name:'Plume Enchantée',    sprite:ITEM_SPRITE('fairy-feather'), price:300, kind:'held', category:'strat', typeBoost:'fee', desc:"Objet tenu : augmente la puissance des capacités de type Fée du porteur." },
+  plumeFeerique:  { name:'Plume Enchantée',    sprite:ITEM_SPRITE('gen9/fairy-feather'), price:300, kind:'held', category:'strat', typeBoost:'fee', desc:"Objet tenu : augmente la puissance des capacités de type Fée du porteur." },
   evoluroc:       { name:'Évoluroc',           sprite:ITEM_SPRITE('eviolite'),      price:350, kind:'held', category:'strat', desc:"Objet tenu : augmente la Défense et la Défense Spéciale de 50% si le porteur n'est pas encore totalement évolué." },
   casqueBrutal:   { name:'Casque Brut',        sprite:ITEM_SPRITE('rocky-helmet'),  price:300, kind:'held', category:'strat', desc:"Objet tenu : blesse l'assaillant d'1/6 de ses PV max lors d'une attaque physique au contact." },
-  bottesCavalieres:{ name:'Grosses Bottes',    sprite:ITEM_SPRITE('heavy-duty-boots'), price:300, kind:'held', category:'strat', desc:"Objet tenu : le porteur est totalement épargné par les pièges d'entrée (Piège de Roc, Picots, Pics Toxik, Toile Gluante)." },
+  bottesCavalieres:{ name:'Grosses Bottes',    sprite:ITEM_SPRITE('gen8/heavy-duty-boots'), price:300, kind:'held', category:'strat', desc:"Objet tenu : le porteur est totalement épargné par les pièges d'entrée (Piège de Roc, Picots, Pics Toxik, Toile Gluante)." },
   seveNoire:      { name:'Boue Noire',         sprite:ITEM_SPRITE('black-sludge'),  price:250, kind:'held', category:'strat', desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour si le porteur est de type Poison, sinon lui fait perdre ce montant." },
   politiqueFaible:{ name:'Vulné-Assurance',    sprite:ITEM_SPRITE('weakness-policy'), price:300, kind:'held', category:'strat', desc:"Objet tenu : augmente fortement l'Attaque et l'Attaque Spéciale dès que le porteur subit un coup super efficace. Se consomme après usage." },
-  energieImpulsive:{ name:'Énergie Booster',   sprite:ITEM_SPRITE('booster-energy'), price:300, kind:'held', category:'strat', desc:"Objet tenu : active immédiatement Protosynthèse ou Quark Chargée à l'entrée en combat, même sans le climat ou le terrain requis. Se consomme après usage." },
+  energieImpulsive:{ name:'Énergie Booster',   sprite:ITEM_SPRITE('gen9/booster-energy'), price:300, kind:'held', category:'strat', desc:"Objet tenu : active immédiatement Protosynthèse ou Quark Chargée à l'entrée en combat, même sans le climat ou le terrain requis. Se consomme après usage." },
   argileClaire:   { name:'Lumargile',          sprite:ITEM_SPRITE('light-clay'),    price:200, kind:'held', category:'strat', desc:"Objet tenu : Protection et Mur Lumière posés par le porteur durent 8 tours au lieu de 5." },
   ceintureExperte:{ name:'Ceinture Pro',       sprite:ITEM_SPRITE('expert-belt'),   price:300, kind:'held', category:'strat', desc:"Objet tenu : augmente de 20% les dégâts infligés par une capacité super efficace." },
   ballonAir:      { name:'Ballon',             sprite:ITEM_SPRITE('air-balloon'),   price:250, kind:'held', category:'strat', desc:"Objet tenu : rend le porteur immunisé aux capacités de type Sol tant qu'il n'a pas subi de coup. Éclate au premier coup reçu." },
   // ---- Objets de forme (tenus, vendus uniquement par le Marchand Itinérant) ----
   orbePlatine:    { name:'Orbe Platiné',      sprite:ITEM_SPRITE('griseous-orb'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Giratina en Forme Originelle." },
   gracidee:       { name:'Gracidée',          sprite:ITEM_SPRITE('gracidea'),     price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Shaymin en Forme Ciel." },
-  masqueSource:   { name:'Masque du Puits',    sprite:ITEM_SPRITE('wellspring-mask'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Ogerpon en Masque du Puits (Plante/Eau)." },
-  masqueBraise:   { name:'Masque du Fourneau', sprite:ITEM_SPRITE('hearthflame-mask'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Ogerpon en Masque du Fourneau (Plante/Feu)." },
-  masqueAngle:    { name:'Masque de la Pierre', sprite:ITEM_SPRITE('cornerstone-mask'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Ogerpon en Masque de la Pierre (Plante/Roche)." },
+  masqueSource:   { name:'Masque du Puits',    sprite:ITEM_SPRITE('gen9/wellspring-mask'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Ogerpon en Masque du Puits (Plante/Eau)." },
+  masqueBraise:   { name:'Masque du Fourneau', sprite:ITEM_SPRITE('gen9/hearthflame-mask'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Ogerpon en Masque du Fourneau (Plante/Feu)." },
+  masqueAngle:    { name:'Masque de la Pierre', sprite:ITEM_SPRITE('gen9/cornerstone-mask'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Ogerpon en Masque de la Pierre (Plante/Roche)." },
   miroirSacre:    { name:'Miroir Sacré',      sprite:ITEM_SPRITE('reveal-glass'), price:2000, kind:'held', category:'forme', formItem:true, emoji:'🪞', desc:"Objet tenu : fait passer Boréas, Fulguris ou Démétéros en Forme Totémique." },
   appareilChauffe:  { name:'Four à Micro-ondes', sprite:ITEM_SPRITE('heat-rotom'), iconUrl:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10008.png', price:1500, kind:'held', category:'forme', formItem:true, emoji:'🔥', desc:"Objet tenu : fait passer Motisma en Motisma Chauffe (Électrik/Feu)." },
   appareilLavage:   { name:'Machine à Laver',    sprite:ITEM_SPRITE('wash-rotom'), iconUrl:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10009.png', price:1500, kind:'held', category:'forme', formItem:true, emoji:'💧', desc:"Objet tenu : fait passer Motisma en Motisma Lavage (Électrik/Eau)." },
@@ -221,7 +221,7 @@ const ITEM_SPRITE_MAX_ATTEMPTS = 8;
 const ITEM_SPRITE_RETRY_DELAYS = [300, 600, 1200, 2000, 3000, 4000, 5000];
 // Extrait le slug d'objet (ex. "potion") depuis une URL de sprite, pour retenter d'autres sources en cas d'échec.
 function itemSlugFromSprite(url){
-  const m = url.match(/items\/([^/]+)\.png$/);
+  const m = url.match(/items\/(.+)\.png$/);
   return m ? m[1] : null;
 }
 // Génère le <img> d'icône d'un objet (avec repli automatique vers l'emoji si le sprite ne charge jamais).
