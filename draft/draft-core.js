@@ -152,12 +152,14 @@ function buildPreviewHTML(member){
   };
   const statBar = (stat)=>{
     const val = stats[stat];
+    const ev = member.evs[stat]||0;
     const cls = member.nature.plus===stat ? 'nature-plus' : member.nature.minus===stat ? 'nature-minus' : '';
     const pct = Math.min(100, Math.round(val/255*100));
     return `<div class="stat-bar-row ${cls}">
       <span class="stat-bar-label">${STAT_LABEL[stat]}</span>
       <span class="stat-bar-val">${val}</span>
       <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%;background:${statBarColor(val)};"></div></div>
+      <span style="width:38px;flex-shrink:0;font-size:8px;text-align:right;color:${ev>0?'var(--accent)':'var(--text-dim)'};">${ev>0?`${ev} EV`:''}</span>
     </div>`;
   };
   const natureNote = member.nature.plus
@@ -174,6 +176,7 @@ function buildPreviewHTML(member){
     <div style="background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:8px;margin:6px 0;text-align:left;">
       ${itemHTML}
       <div style="font-size:8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Nature : <span style="color:var(--text-main);text-transform:none;letter-spacing:0;">${member.nature.name}</span>${natureNote}</div>
+      <div style="font-size:8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Stats (répartition des EV)</div>
       <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:6px;">
         ${statBar('hp')}${statBar('atk')}${statBar('def')}${statBar('spa')}${statBar('spd')}${statBar('spe')}
       </div>
@@ -226,6 +229,18 @@ function nextDraftRound(){
       ? [...line.stages.map(s=>s.name), sp.name].join(' → ')
       : line.stages.map(s=>s.name).join(' → ');
     const rateLabel = isFacile ? facileAppearanceRate(choice.w).toFixed(2) : appearanceRate(line, choice.stage).toFixed(2);
+    // Mode Facile : le membre est déjà construit (EV/nature) donc la grille de stats de base brutes
+    // n'apprend plus rien d'utile — buildPreviewHTML affiche à la place les stats finales avec leur
+    // répartition d'EV. Normal/Difficile : pas encore de build, la grille de stats de base reste utile.
+    const baseStatsGridHTML = isFacile ? '' : `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:6px 0;background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:6px;">
+        <div style="text-align:center;font-size:10px;color:var(--text-dim);">PV<br><b style="color:var(--text-main);font-size:13px;">${sp.base.hp}</b></div>
+        <div style="text-align:center;font-size:10px;color:var(--text-dim);">Atq<br><b style="color:var(--text-main);font-size:13px;">${sp.base.atk}</b></div>
+        <div style="text-align:center;font-size:10px;color:var(--text-dim);">Déf<br><b style="color:var(--text-main);font-size:13px;">${sp.base.def}</b></div>
+        <div style="text-align:center;font-size:10px;color:var(--text-dim);">AtqSp<br><b style="color:var(--text-main);font-size:13px;">${sp.base.spa}</b></div>
+        <div style="text-align:center;font-size:10px;color:var(--text-dim);">DéfSp<br><b style="color:var(--text-main);font-size:13px;">${sp.base.spd}</b></div>
+        <div style="text-align:center;font-size:10px;color:var(--text-dim);">Vit<br><b style="color:var(--text-main);font-size:13px;">${sp.base.spe}</b></div>
+      </div>`;
     const card = document.createElement('div');
     card.className='poke-card';
     card.innerHTML = `
@@ -234,14 +249,7 @@ function nextDraftRound(){
       <div class="pname">${sp.name}${choice.shiny?shinyBadgeHTML():''}</div>
       <div class="evoline">${evoline}</div>
       <div class="types-row">${sp.types.map(t=>typeTagHTML(t)).join('')}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:6px 0;background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:6px;">
-        <div style="text-align:center;font-size:10px;color:var(--text-dim);">PV<br><b style="color:var(--text-main);font-size:13px;">${sp.base.hp}</b></div>
-        <div style="text-align:center;font-size:10px;color:var(--text-dim);">Atq<br><b style="color:var(--text-main);font-size:13px;">${sp.base.atk}</b></div>
-        <div style="text-align:center;font-size:10px;color:var(--text-dim);">Déf<br><b style="color:var(--text-main);font-size:13px;">${sp.base.def}</b></div>
-        <div style="text-align:center;font-size:10px;color:var(--text-dim);">AtqSp<br><b style="color:var(--text-main);font-size:13px;">${sp.base.spa}</b></div>
-        <div style="text-align:center;font-size:10px;color:var(--text-dim);">DéfSp<br><b style="color:var(--text-main);font-size:13px;">${sp.base.spd}</b></div>
-        <div style="text-align:center;font-size:10px;color:var(--text-dim);">Vit<br><b style="color:var(--text-main);font-size:13px;">${sp.base.spe}</b></div>
-      </div>
+      ${baseStatsGridHTML}
       <div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">Talent : ${ability}</div>
       <div style="font-size:9px;color:var(--text-dim);margin-bottom:5px;line-height:1.4;">${ABILITY_DESC[ability]||''}</div>
       ${isFacile ? buildPreviewHTML(choice.previewMember) : ''}
