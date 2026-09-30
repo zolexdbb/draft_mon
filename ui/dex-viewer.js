@@ -11,6 +11,7 @@
 ==== */
 function rarityKey(line, stageIdx){
   if(LEGENDARY_IDS.includes(line.id)) return 'legendaire';
+  if(FABULEUX_IDS.includes(line.id)) return 'fabuleux';
   if(RARE_IDS.includes(line.id)) return 'rare';
   if(PSEUDO_IDS.includes(line.id) && stageIdx === line.stages.length-1) return 'pseudo';
   if(stageIdx === 0) return 'commun';
@@ -127,7 +128,7 @@ const DEX_RARITY_OPTIONS = [
   {value:'', label:'Toutes raretés'},
   {value:'commun', label:'Commun', css:'rarity-commun'},{value:'evo', label:'Évolution', css:'rarity-evo'},
   {value:'rare', label:'Rare', css:'rarity-rare'},{value:'pseudo', label:'Pseudo-légendaire', css:'rarity-pseudo'},
-  {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'}
+  {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'},{value:'fabuleux', label:'Fabuleux', css:'rarity-fabuleux'}
 ].map(o=> o.value ? {...o, html: rarityOptionHTML(o.css, o.label)} : o);
 // Affiche le menu déroulant de filtre par type principal.
 function renderDexTypeFilter(){
@@ -278,7 +279,7 @@ function openDexDetail(line, stageIdx, branchIdx){
     let boostedRate;
     if(isBranch){
       const b = line.branches[branchIdx];
-      const w = (b.rarityWeight!==undefined ? b.rarityWeight : lineWeight(line)) * mult;
+      const w = b.draftable===false ? 0 : (b.rarityWeight!==undefined ? b.rarityWeight : lineWeight(line)) * mult;
       boostedRate = facileAppearanceRate(w);
     } else {
       boostedRate = appearanceRate(line, stageIdx);

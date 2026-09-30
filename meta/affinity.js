@@ -63,7 +63,7 @@ const AFFINITY_TIER_COSTS = [3,5,8,12,17];
 // Multiplicateur de coût selon la rareté de la lignée (les listes LEGENDARY_IDS/PSEUDO_IDS/RARE_IDS
 // viennent de draft/draft-core.js, chargé après ce fichier — sans importance, seulement lu à l'appel).
 function affinityCostMultiplier(lineId){
-  if(LEGENDARY_IDS.includes(lineId)) return 3;
+  if(LEGENDARY_IDS.includes(lineId) || FABULEUX_IDS.includes(lineId)) return 3;
   if(PSEUDO_IDS.includes(lineId)) return 2;
   if(RARE_IDS.includes(lineId)) return 1.5;
   return 1;

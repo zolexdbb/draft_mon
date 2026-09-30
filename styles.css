@@ -1191,6 +1191,7 @@ select option{
 .rarity-rare     { background:rgba(63,169,201,.14); color:#7ecbe0; border:1px solid rgba(63,169,201,.4); }
 .rarity-pseudo   { background:rgba(107,79,160,.16); color:#c3aee6; border:1px solid rgba(107,79,160,.5); }
 .rarity-legendaire{ background:rgba(240,96,92,.14); color:#F0605C; border:1px solid rgba(240,96,92,.4); }
+.rarity-fabuleux { background:rgba(230,103,175,.16); color:#E667AF; border:1px solid rgba(230,103,175,.45); }
 .dex-rate{ font-size:11px; color:var(--text-dim); margin-top:4px; }
 
 .move-select-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }

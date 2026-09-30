@@ -13,12 +13,16 @@
      (3 cartes à choisir, barre de progression, reroll gratuit)
    - L.208-fin : finalizeTeamAndGoToTower — calcule les stats finales et lance la Tour
 ==== */
-const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','mew','raikou','entei','suicune','lugia','hooh','celebi','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','jirachi','deoxys','uxie','mesprit','azelf','dialga','palkia','heatran','regigigas','giratina','cresselia','phione','manaphy','darkrai','shaymin','arceus','victini','cobalion','terrakion','virizion','tornadus','thundurus','reshiram','zekrom','landorus','kyurem','keldeo','meloetta','genesect','xerneas','yveltal','zygarde','diancie','hoopa','volcanion','tokorico','tokopiyon','tokotoro','tokopisco','cosmog','necrozma','magearna','marshadow','zeraora','vemini','zeroid','mouscoto','cancrelove','cablifere','bamboiselle','katagami','engloutyran','amaama','pierroteknik','zacian','zamazenta','ethernatos','wushours','zarude','regieleki','regidrago','blizzeval','spectreval','sylveroy','amovenus','woochien','chienpao','tinglu','chiyu','okidogi','munkidori','fezandipiti','ogerpon','koraidon','miraidon','terapagos','pecharunt','greattusk','screamtail','brutebonnet','fluttermane','slitherwing','sandyshocks','roaringmoon','ragingbolt','walkingwake','gougingfire','irontreads','ironbundle','ironhands','ironjugulis','ironmoth','ironthorns','ironvaliant','ironleaves','ironboulder','ironcrown'];
+const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','raikou','entei','suicune','lugia','hooh','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','uxie','mesprit','azelf','dialga','palkia','heatran','regigigas','giratina','cresselia','cobalion','terrakion','virizion','tornadus','thundurus','reshiram','zekrom','landorus','kyurem','xerneas','yveltal','zygarde','tokorico','tokopiyon','tokotoro','tokopisco','cosmog','necrozma','vemini','zeroid','mouscoto','cancrelove','cablifere','bamboiselle','katagami','engloutyran','amaama','pierroteknik','zacian','zamazenta','ethernatos','wushours','regieleki','regidrago','blizzeval','spectreval','sylveroy','amovenus','woochien','chienpao','tinglu','chiyu','okidogi','munkidori','fezandipiti','ogerpon','koraidon','miraidon','terapagos','greattusk','screamtail','brutebonnet','fluttermane','slitherwing','sandyshocks','roaringmoon','ragingbolt','walkingwake','gougingfire','irontreads','ironbundle','ironhands','ironjugulis','ironmoth','ironthorns','ironvaliant','ironleaves','ironboulder','ironcrown'];
+// Pokémon Fabuleux (Mythical) : séparés des Légendaires (rareté propre, voir lineWeight), comme dans les jeux officiels.
+const FABULEUX_IDS = ['mew','celebi','jirachi','deoxys','phione','manaphy','darkrai','shaymin','arceus','victini','keldeo','meloetta','genesect','diancie','hoopa','volcanion','magearna','marshadow','zeraora','zarude','pecharunt'];
 const PSEUDO_IDS = ['dratini','larvitar','bagon','gible','axew','deino','goomy','bebecaille','fantyrm','frigibax'];
 const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown','absol','relicanth','mawile','beldum','riolu','spiritomb','rotom','zorua','larvesta','druddigon','tirtouga','archen','tyrunt','amaura','galvagon','galvagla','hydragon','hydragla','gimmighoul','archaludon','dipplin','cyclizar','dondozo','tatsugiri','poltchageist'];
-// Poids de tirage d'une lignée selon sa rareté (légendaire = très rare, pseudo-légendaire/rare = moins fréquent, sinon commun).
+// Poids de tirage d'une lignée selon sa rareté (légendaire = la plus rare, fabuleux un peu moins,
+// pseudo-légendaire/rare = moins fréquent, sinon commun).
 function lineWeight(line){
-  if(LEGENDARY_IDS.includes(line.id)) return 0.5;
+  if(LEGENDARY_IDS.includes(line.id)) return 0.25;
+  if(FABULEUX_IDS.includes(line.id)) return 0.5;
   if(PSEUDO_IDS.includes(line.id)) return 3;
   if(RARE_IDS.includes(line.id)) return 6;
   return 10;
@@ -27,6 +31,7 @@ const TOTAL_WEIGHT = LINES.reduce((a,l)=>a+lineWeight(l),0);
 // Détermine le badge de rareté à afficher sur une carte de draft (mode Classic/Normal/Difficile).
 function rarityInfo(line, stageIdx){
   if(LEGENDARY_IDS.includes(line.id)) return {label:'Légendaire', css:'rarity-legendaire'};
+  if(FABULEUX_IDS.includes(line.id)) return {label:'Fabuleux', css:'rarity-fabuleux'};
   if(PSEUDO_IDS.includes(line.id) && stageIdx===line.stages.length-1) return {label:'Pseudo-légendaire', css:'rarity-pseudo'};
   if(RARE_IDS.includes(line.id)) return {label:'Rare', css:'rarity-rare'};
   if(stageIdx===0) return {label:'Commun', css:'rarity-commun'};
@@ -221,8 +226,8 @@ function nextDraftRound(){
     const hasBranch = choice.branch!==undefined && choice.branch!==null;
     const sp = hasBranch ? line.branches[choice.branch] : line.stages[choice.stage];
     const rarity = isFacile
-      ? {label: LEGENDARY_IDS.includes(line.id)?'Légendaire':(PSEUDO_IDS.includes(line.id)?'Pseudo-légendaire':(RARE_IDS.includes(line.id)?'Rare':'Commun')),
-         css: LEGENDARY_IDS.includes(line.id)?'rarity-legendaire':(PSEUDO_IDS.includes(line.id)?'rarity-pseudo':(RARE_IDS.includes(line.id)?'rarity-rare':'rarity-commun'))}
+      ? {label: LEGENDARY_IDS.includes(line.id)?'Légendaire':(FABULEUX_IDS.includes(line.id)?'Fabuleux':(PSEUDO_IDS.includes(line.id)?'Pseudo-légendaire':(RARE_IDS.includes(line.id)?'Rare':'Commun'))),
+         css: LEGENDARY_IDS.includes(line.id)?'rarity-legendaire':(FABULEUX_IDS.includes(line.id)?'rarity-fabuleux':(PSEUDO_IDS.includes(line.id)?'rarity-pseudo':(RARE_IDS.includes(line.id)?'rarity-rare':'rarity-commun')))}
       : rarityInfo(line, choice.stage);
     const ability = isFacile ? choice.previewMember.ability : (sp.abilities || line.abilities)[0];
     const evoline = hasBranch

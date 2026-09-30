@@ -8,14 +8,20 @@ function buildFacileCandidates(excludedLineIds){
   LINES.forEach(line=>{
     if(excludedLineIds.includes(line.id)) return;
     const w = lineWeight(line)*affinityMultiplier(line.id);
-    if(line.branches && line.branches.length){
-      // Une branche peut définir son propre rarityWeight pour être bien plus rare que le reste de sa
-      // lignée (ex. Éthernatos Infinimax, plus rare qu'un légendaire normal) ; sinon elle hérite du
-      // poids habituel de la lignée, comme les autres branches. L'affinité s'applique dans les deux cas.
+    // Une branche peut définir draftable:false pour ne jamais être proposée directement au tirage
+    // (ex. Éthernatos Infinimax, uniquement accessible en faisant évoluer Éthernatos depuis
+    // l'éditeur) ; elle peut aussi définir son propre rarityWeight pour être plus rare que le reste
+    // de sa lignée, sinon elle hérite du poids habituel de la lignée comme les autres branches.
+    // L'affinité s'applique dans les deux cas.
+    const draftableBranches = line.branches ? line.branches.filter(b=>b.draftable!==false) : [];
+    if(draftableBranches.length){
       line.branches.forEach((b,bi)=>{
+        if(b.draftable===false) return;
         candidates.push({lineId:line.id, stage:line.stages.length-1, branch:bi, w: (b.rarityWeight!==undefined ? b.rarityWeight : lineWeight(line))*affinityMultiplier(line.id)});
       });
     } else {
+      // Aucune branche draftable (lignée sans embranchement, ou toutes ses branches exclues) :
+      // on propose son dernier stade normal à la place.
       candidates.push({lineId:line.id, stage:line.stages.length-1, branch:null, w});
     }
   });

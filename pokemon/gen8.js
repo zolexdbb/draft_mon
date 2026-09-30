@@ -174,10 +174,10 @@ const LINES_GEN8 = [
  stages:[
   {name:'Éthernatos',types:['poison','dragon'],base:st(140,85,95,145,95,130)}], branches:[
   // Forme Infinimax (Eternamax) : la forme colossale prise par Éthernatos dans les événements de son
-  // histoire officielle. Traitée comme une forme alternative de la lignée (voir le bouton d'évolution
-  // de l'éditeur), mais rendue bien plus rare qu'un simple légendaire au tirage du draft (rarityWeight,
-  // voir buildFacileCandidates) : lineWeight des légendaires = 0.5, celui-ci est 10 fois plus rare.
-  {name:'Éthernatos Infinimax',types:['poison','dragon'],base:st(255,115,250,125,250,130),abilities:['Pression'],rarityWeight:0.05}
+  // histoire officielle. Reste accessible comme forme alternative via le bouton d'évolution de
+  // l'éditeur une fois Éthernatos drafté, mais draftable:false l'exclut des candidats proposés au
+  // tirage (voir buildFacileCandidates) : elle n'apparaît donc jamais directement sur une carte de draft.
+  {name:'Éthernatos Infinimax',types:['poison','dragon'],base:st(255,115,250,125,250,130),abilities:['Pression'],draftable:false}
  ]},
 {id:'wushours',abilities:['Attention'],moveIds:['closecombat','protect','endure','facade','sleeptalk','rest','bulkup','takedown','bodyslam','brickbreak','doubleedge','scaryface','dig','zenheadbutt','swordsdance','headbutt','leer','counter','focusenergy','detect','dynamicpunch','rocksmash','focuspunch','aerialace','ironhead','firepunch','icepunch','thunderpunch','coaching','substitute','helpinghand','fling','lowsweep','round','acrobatics','retaliate','workup','terablast'],
  stages:[

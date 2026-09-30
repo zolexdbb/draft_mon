@@ -26,7 +26,7 @@ const SAFARI_TIERS = [
   { key:'legendaire', chance:0.03, catchRate:0.10, candy:10, label:'Légendaire' }
 ];
 function safariTierOf(line){
-  if(LEGENDARY_IDS.includes(line.id)) return 'legendaire';
+  if(LEGENDARY_IDS.includes(line.id) || FABULEUX_IDS.includes(line.id)) return 'legendaire';
   if(PSEUDO_IDS.includes(line.id)) return 'pseudo';
   if(RARE_IDS.includes(line.id)) return 'rare';
   return 'commun';
@@ -320,7 +320,7 @@ function renderSafariPanel(){
    avec recherche/filtre) — accessible depuis l'écran d'accueil du Safari et depuis son résumé final. ---- */
 let professorFilter = { search:'', rarity:'' };
 function professorRarityKey(lineId){
-  if(LEGENDARY_IDS.includes(lineId)) return 'legendaire';
+  if(LEGENDARY_IDS.includes(lineId) || FABULEUX_IDS.includes(lineId)) return 'legendaire';
   if(PSEUDO_IDS.includes(lineId)) return 'pseudo';
   if(RARE_IDS.includes(lineId)) return 'rare';
   return 'commun';
