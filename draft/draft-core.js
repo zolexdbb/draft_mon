@@ -136,17 +136,49 @@ function renderDraftTeamStrip(){
     strip.appendChild(slot);
   }
 }
-// Aperçu du build complet d'un membre en mode Facile (objet tenu s'il y en a un, et les 4 attaques
-// déjà choisies), affiché sur la carte de draft pour aider à choisir sans deviner ce qu'on va obtenir.
+// Aperçu du build complet d'un membre en mode Facile (objet tenu, nature, répartition des stats
+// finales après EV/nature, et les 4 attaques déjà choisies), affiché sur la carte de draft pour
+// aider à choisir sans deviner ce qu'on va obtenir. Les barres de stats reprennent le même code
+// couleur/mise en avant nature-plus/nature-minus que l'éditeur d'équipe (ui/editor.js).
 function buildPreviewHTML(member){
+  const sp = speciesOf(member);
+  const stats = calcStats(sp.base, member.ivs, member.evs, member.nature);
+  const statBarColor = (val)=>{
+    if(val>=150) return '#6F35FC';
+    if(val>=110) return '#EE8130';
+    if(val>=80)  return '#7AC74C';
+    if(val>=50)  return '#F7D02C';
+    return '#C22E28';
+  };
+  const statBar = (stat)=>{
+    const val = stats[stat];
+    const cls = member.nature.plus===stat ? 'nature-plus' : member.nature.minus===stat ? 'nature-minus' : '';
+    const pct = Math.min(100, Math.round(val/255*100));
+    return `<div class="stat-bar-row ${cls}">
+      <span class="stat-bar-label">${STAT_LABEL[stat]}</span>
+      <span class="stat-bar-val">${val}</span>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%;background:${statBarColor(val)};"></div></div>
+    </div>`;
+  };
+  const natureNote = member.nature.plus
+    ? ` (<span style="color:var(--good);">+${STAT_LABEL[member.nature.plus]}</span> / <span style="color:var(--low);">-${STAT_LABEL[member.nature.minus]}</span>)`
+    : ' (neutre)';
   const itemHTML = member.heldItem
-    ? `<div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text-dim);margin-bottom:4px;"><span style="width:16px;height:16px;display:inline-block;">${itemIconHTML(member.heldItem, 16)}</span>${ITEMS[member.heldItem].name}</div>`
+    ? `<div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text-dim);margin-bottom:6px;"><span style="width:16px;height:16px;display:inline-block;">${itemIconHTML(member.heldItem, 16)}</span>${ITEMS[member.heldItem].name}</div>`
     : '';
-  const movesHTML = member.moves.filter(Boolean).map(id=>MOVES[id].name).join(' · ');
+  const movesHTML = member.moves.filter(Boolean).map(id=>{
+    const mv = MOVES[id];
+    return `<div style="display:flex;align-items:center;gap:6px;margin:3px 0;">${typeTagHTML(mv.type,{style:'font-size:8px;padding:2px 6px;flex-shrink:0;'})}<span style="font-size:9px;color:var(--text-main);">${mv.name}</span></div>`;
+  }).join('');
   return `
-    <div style="background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:6px;margin:6px 0;">
+    <div style="background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:8px;margin:6px 0;text-align:left;">
       ${itemHTML}
-      <div style="font-size:9px;color:var(--text-dim);line-height:1.5;">${movesHTML}</div>
+      <div style="font-size:8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Nature : <span style="color:var(--text-main);text-transform:none;letter-spacing:0;">${member.nature.name}</span>${natureNote}</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:6px;">
+        ${statBar('hp')}${statBar('atk')}${statBar('def')}${statBar('spa')}${statBar('spd')}${statBar('spe')}
+      </div>
+      <div style="font-size:8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Attaques</div>
+      ${movesHTML}
     </div>`;
 }
 // Lance un tour de draft : tire 3 candidats (Facile = formes finales, sinon tous stades), affiche
