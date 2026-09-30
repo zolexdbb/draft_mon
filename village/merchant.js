@@ -5,6 +5,7 @@ const MERCHANT_SPAWN_RATE = 0.08;
 const MERCHANT_GROUPS = [
   { label: 'Giratina', tab: '👑 Giratina', keys: ['orbePlatine'] },
   { label: 'Shaymin', tab: '🌸 Shaymin', keys: ['gracidee'] },
+  { label: 'Ogerpon', tab: '🎭 Ogerpon', keys: ['masqueSource','masqueBraise','masqueAngle'] },
   { label: 'Motisma', tab: '🔌 Motisma', keys: ['appareilChauffe','appareilLavage','appareilFrigo','appareilVentilo','appareilTondeuse'] },
   { label: 'Boréas / Fulguris / Démétéros / Amovénus', tab: '🌀 Forces de la Nature', keys: ['miroirSacre'] },
   { label: 'Arceus', tab: '💠 Arceus', keys: ['plaqueFlamme','plaqueHydro','plaqueHerbe','plaqueVolt','plaqueCiel','plaqueToxicite','plaqueTerre','plaqueInsecte','plaquePoing','plaqueGlace','plaqueEsprit','plaqueFantome','plaqueRoc','plaqueDraco','plaqueFer','plaqueOmbre'] },

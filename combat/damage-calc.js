@@ -7,6 +7,13 @@
      ici que sont branchés presque tous les multiplicateurs liés aux talents/objets/météo/terrain)
    - effectiveSpeed : vitesse réelle d'un combattant (talents/objets/statut/météo inclus)
 ==== */
+// Vrai si le combattant n'est pas encore totalement évolué (Évoluroc) : une branche est toujours une forme finale.
+function isNFE(c){
+  if(!c || !c.lineId) return false;
+  if(c.branch!=null) return false;
+  const line = lineOf(c.lineId);
+  return !!line && c.stage < line.stages.length-1;
+}
 function statMultiplier(stage){
   return stage>=0 ? (2+stage)/2 : 2/(2-stage);
 }
@@ -74,10 +81,12 @@ function otherActiveHasAbility(name, exclude){
   return [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(c=>c!==exclude && c.ability===name);
 }
 // Stat (atk/def/spa/spd/spe) boostée de 30% (Protosynthèse sous Zénith / Quark Chargée sous Zone
-// Électrique) : celle qui a la plus haute valeur de base parmi les 5 (hors PV) chez ce combattant.
+// Électrique, ou avec l'Énergie Impulsive — voir triggerSwitchInAbilities) : celle qui a la plus
+// haute valeur de base parmi les 5 (hors PV) chez ce combattant.
 function protoBoostStat(c){
   if(!c || !c.ability) return null;
-  const active = (c.ability==='Protosynthèse' && battleState && !weatherNullified() && battleState.weather && battleState.weather.type==='soleil')
+  const active = c.boosterEnergyActive
+    || (c.ability==='Protosynthèse' && battleState && !weatherNullified() && battleState.weather && battleState.weather.type==='soleil')
     || (c.ability==='Quark Chargée' && battleState && battleState.terrain && battleState.terrain.type==='electric');
   if(!active) return null;
   const keys = ['atk','def','spa','spd','spe'];
@@ -135,7 +144,7 @@ function computeDamage(attacker, move, defender){
   const ruinDefMult = otherActiveHasAbility(ruinDefAbility, defender) ? 0.75 : 1;
   const protoDefStat = protoBoostStat(defender);
   const protoDefMult = protoDefStat===ruinDefStat ? 1.3 : 1;
-  const defStat = defBase * statMultiplier(defStage) * (defender.heldItem==='vesteCombat' && move.cat==='spec' ? 1.5 : 1) * (defender.ability==='Robe Feuillue' && terrainNow && terrainNow.type==='grassy' ? 1.5 : 1) * ruinDefMult * protoDefMult;
+  const defStat = defBase * statMultiplier(defStage) * (defender.heldItem==='vesteCombat' && move.cat==='spec' ? 1.5 : 1) * (defender.heldItem==='evoluroc' && isNFE(defender) ? 1.5 : 1) * (defender.ability==='Robe Feuillue' && terrainNow && terrainNow.type==='grassy' ? 1.5 : 1) * ruinDefMult * protoDefMult;
   const atkTypes = attacker.transformedTypes || attacker.types;
   const defTypes = defender.transformedTypes || defender.types;
   const hasStab = atkTypes.includes(move.type) || (move.type2 && atkTypes.includes(move.type2));
@@ -181,6 +190,7 @@ function computeDamage(attacker, move, defender){
   if(attacker.ability==='Incisif' && move.slicing) abilityMult *= 1.5;
   if(defender.ability==='Sel Purifiant' && move.type==='fantome') abilityMult *= 0.5;
   if(move.superEffBoost && eff>1) abilityMult *= 1.33;
+  if(attacker.heldItem==='ceintureExperte' && eff>1) abilityMult *= 1.2;
   if(battleState){
     const fieldMons = [...alivePlayerCombatants(), ...aliveFoeCombatants()];
     const auraBreak = fieldMons.some(c=>c.ability==='Rupture Aura');

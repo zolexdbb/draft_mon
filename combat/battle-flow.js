@@ -45,6 +45,7 @@ function resetBattleFields(c){
   c.disguiseBroken = false;
   c.schoolBroken = false;
   c.shieldsBroken = false;
+  c.boosterEnergyActive = false;
   restoreStashedItem(c);
   if(c.roosted){ c.transformedTypes = c.roostTypes || null; c.roosted = false; }
   if(c.transformed){
@@ -1211,6 +1212,13 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     setTimeout(callback, 900);
     return;
   }
+  if(defender.heldItem==='ballonAir' && move.type==='sol' && !move.bypassTypeImmunity && !(battleState && battleState.gravityTurns>0)){
+    defender.heldItem = null; defender.itemUsed = true;
+    renderBattle();
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Ballon d'Air) ! Le ballon éclate !`);
+    setTimeout(callback, 900);
+    return;
+  }
   if(defender.ability==='Anti-Bombe' && move.ballBomb){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Anti-Bombe protège totalement ${defender.name} !`);
@@ -1419,6 +1427,16 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     applyStatBoost(defender, [{stat:'spe',stages:6}], klogs);
     msg += ` ${defender.name} active sa Turbo Vapeur !`;
   }
+  if(defender.heldItem==='ballonAir' && actualDmg>0){
+    defender.heldItem = null; defender.itemUsed = true;
+    msg += ` Le Ballon d'Air de ${defender.name} éclate !`;
+  }
+  if(defender.heldItem==='politiqueFaible' && !defender.itemUsed && actualDmg>0 && eff>1 && defender.hp>0){
+    defender.itemUsed = true;
+    let plogs = [];
+    applyStatBoost(defender, [{stat:'atk',stages:2},{stat:'spa',stages:2}], plogs);
+    msg += ` La Politique du Faible de ${defender.name} augmente son Attaque et son Attaque Spéciale !`;
+  }
   if(defender.ability==='Crache-Sable' && actualDmg>0 && battleState && (!battleState.weather || battleState.weather.type!=='sable')){
     battleState.weather = { type:'sable', turns:5 };
     msg += ` ${defender.name} déclenche une tempête de sable grâce à Crache-Sable !`;
@@ -1568,6 +1586,11 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       const rdmg = Math.max(1, Math.round(actor.maxHp/8));
       actor.hp = Math.max(0, actor.hp-rdmg);
       msg += ` ${actor.name} est blessé par Peau Dure (${rdmg} dégâts) !`;
+    }
+    if(defender.heldItem==='casqueBrutal'){
+      const rdmg = Math.max(1, Math.round(actor.maxHp/6));
+      actor.hp = Math.max(0, actor.hp-rdmg);
+      msg += ` ${actor.name} est blessé par le Casque Brutal de ${defender.name} (${rdmg} dégâts) !`;
     }
     if(defender.ability==='Point Gluant'){
       let glogs = [];

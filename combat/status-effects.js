@@ -87,6 +87,11 @@ function triggerSwitchInAbilities(incoming, opponent){
   if(incoming.ability==='Imposteur' && opponent && opponent.hp>0 && !incoming.transformed){
     msg += ` ${performTransform(incoming, opponent)}`;
   }
+  if((incoming.ability==='Protosynthèse' || incoming.ability==='Quark Chargée') && incoming.heldItem==='energieImpulsive' && !incoming.itemUsed && !protoBoostStat(incoming)){
+    incoming.itemUsed = true;
+    incoming.boosterEnergyActive = true;
+    msg += ` ${incoming.name} active son Énergie Impulsive !`;
+  }
   if(battleState.wishHeal){
     const wl = locateActiveSlot(incoming);
     if(wl && battleState.wishHeal[wl.side] && incoming.hp>0){
@@ -271,6 +276,7 @@ function clearHazards(side, logs){
 // Applique les pièges du camp du Pokémon qui vient d'entrer (dégâts, poison, Vitesse) et renvoie le texte à ajouter au journal.
 function applyEntryHazards(incoming){
   if(!battleState || !incoming || incoming.hp<=0) return '';
+  if(incoming.heldItem==='bottesCavalieres') return '';
   const loc = locateActiveSlot(incoming);
   if(!loc) return '';
   const h = hazardsOf(loc.side);
@@ -446,11 +452,11 @@ function applyStatusEffect(user, target, move, logs){
     logs.push(`${user.name} s'enveloppe de Brume !`);
   }
   if(eff.lightScreen){
-    user.lightScreenTurns = 5;
+    user.lightScreenTurns = user.heldItem==='argileClaire' ? 8 : 5;
     logs.push(`${user.name} s'abrite derrière un Mur Lumière !`);
   }
   if(eff.reflect){
-    user.reflectTurns = 5;
+    user.reflectTurns = user.heldItem==='argileClaire' ? 8 : 5;
     logs.push(`${user.name} s'abrite derrière une Protection !`);
   }
   if(eff.haze){
@@ -1076,6 +1082,17 @@ function endOfTurnStatus(battler, logs){
     const heal = Math.max(1, Math.round(battler.maxHp*0.06));
     battler.hp = Math.min(battler.maxHp, battler.hp+heal);
     logs.push(`${battler.name} récupère un peu de PV grâce à son Reste.`);
+  }
+  if(battler.hp>0 && battler.heldItem==='seveNoire'){
+    const amount = Math.max(1, Math.round(battler.maxHp*0.06));
+    const types = battler.transformedTypes || battler.types || [];
+    if(types.includes('poison') && battler.hp<battler.maxHp){
+      battler.hp = Math.min(battler.maxHp, battler.hp+amount);
+      logs.push(`${battler.name} récupère un peu de PV grâce à sa Sève Noire.`);
+    } else if(!types.includes('poison')){
+      battler.hp = Math.max(0, battler.hp-amount);
+      logs.push(`${battler.name} est blessé par sa Sève Noire (${amount} dégâts) !`);
+    }
   }
   if(battler.hp>0 && battler.status && battler.ability==='Mue' && Math.random()<0.3){
     logs.push(`${battler.name} change de peau et guérit de son altération d'état grâce à Mue !`);
