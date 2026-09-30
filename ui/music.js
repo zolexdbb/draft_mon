@@ -43,6 +43,15 @@ const MUSIC_FADE_MS = 700;
 
 let musicVolume = parseFloat(localStorage.getItem('draftArenaMusicVolume'));
 if(isNaN(musicVolume)) musicVolume = 0.4;
+// Affiche ou non un repère d'efficacité (super efficace/peu efficace/aucun effet) sur les boutons
+// d'attaque en combat (voir buildEffectivenessBadgeHTML dans combat/battle-ui.js) — activé par défaut.
+let showMoveEffectiveness = localStorage.getItem('draftArenaShowEffectiveness');
+showMoveEffectiveness = showMoveEffectiveness===null ? true : showMoveEffectiveness==='1';
+function setShowMoveEffectiveness(val){
+  showMoveEffectiveness = !!val;
+  try { localStorage.setItem('draftArenaShowEffectiveness', showMoveEffectiveness ? '1' : '0'); } catch(e){}
+  if(typeof battleState!=='undefined' && battleState && !document.getElementById('screenBattle').classList.contains('hidden') && typeof renderMoveGrid==='function') renderMoveGrid();
+}
 let musicUnlocked = false;
 let currentTrackKey = null;
 let playlistState = null;
@@ -184,12 +193,18 @@ function openMusicSettingsModal(){
         <input type="range" id="musicVolumeSlider" min="0" max="100" value="${Math.round(musicVolume*100)}" style="flex:1;">
         <span style="font-size:14px;">🔊</span>
       </div>
+      <div style="font-size:10px;color:var(--text-dim);margin:16px 0 8px;">Combat</div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-main);cursor:pointer;">
+        <input type="checkbox" id="effectivenessToggle" ${showMoveEffectiveness?'checked':''}>
+        Afficher l'efficacité des attaques (super efficace/peu efficace/aucun effet)
+      </label>
     </div>`;
   document.body.appendChild(overlay);
   const close = ()=> overlay.remove();
   document.getElementById('musicSettingsCloseBtn').onclick = close;
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
   document.getElementById('musicVolumeSlider').oninput = (e)=> setMusicVolume(parseInt(e.target.value)/100);
+  document.getElementById('effectivenessToggle').onchange = (e)=> setShowMoveEffectiveness(e.target.checked);
 }
 window.addEventListener('pointerdown', unlockMusic, { once:true, capture:true });
 window.addEventListener('keydown', unlockMusic, { once:true, capture:true });

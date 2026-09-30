@@ -1142,6 +1142,16 @@ select option{
 }
 @keyframes safariDust{ 0%{ opacity:.7; transform:scale(.6); } 100%{ opacity:0; transform:scale(1.8); } }
 
+.eff-badge{ font-size:10px; font-weight:800; }
+.eff-badge.eff-super{ color:#4ADE80; }
+.eff-badge.eff-weak{ color:#F87171; }
+.eff-badge.eff-none{ color:var(--text-dim); }
+
+/* Petit effet d'apparition quand un Pokémon est envoyé au combat (changement volontaire, remplaçant
+   après K.O., ou l'IA adverse qui change — voir playSwitchInFx dans combat/move-fx.js). */
+.switch-in-fx{ animation:switchPokeIn .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes switchPokeIn{ 0%{ transform:scale(.3) translateY(14px); opacity:0; } 60%{ transform:scale(1.12); opacity:1; } 100%{ transform:scale(1) translateY(0); opacity:1; } }
+
 /* Maison Safari : portique d'entrée en bois (deux poteaux + panneau vert), présence aléatoire */
 .village-b-safari{ width:120px; height:140px; }
 .village-b-safari .vbd-gate-post{ position:absolute; bottom:0; width:10px; height:96px; background:#5C4A2E; border-radius:2px; }

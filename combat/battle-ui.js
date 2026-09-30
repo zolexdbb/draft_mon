@@ -8,6 +8,17 @@
    - L.159-fin(295): gestion des clics — choix d'attaque (avec choix de cible en double), switch
      manuel, sac (Potion), et les petites animations (shakeBox/lungeBox/flashScreen)
 ==== */
+// Repère visuel d'efficacité de type sur un bouton d'attaque (▲ super efficace, ▼ peu efficace, ✖
+// aucun effet) — rien si neutre, si la capacité n'inflige pas de dégâts, ou si aucune cible sans
+// ambiguïté n'est fournie (voir effTarget dans renderMoveGrid, désactivable dans les Paramètres).
+function moveEffectivenessBadgeHTML(move, defender){
+  if(!defender || move.cat==='status' || !move.power) return '';
+  const eff = getMult(move.type, defender.transformedTypes || defender.types);
+  if(eff===1) return '';
+  if(eff===0) return ' <span class="eff-badge eff-none" title="Aucun effet">✖</span>';
+  if(eff>1) return ` <span class="eff-badge eff-super" title="Super efficace">▲${eff>=4?'▲':''}</span>`;
+  return ` <span class="eff-badge eff-weak" title="Peu efficace">▼${eff<=0.25?'▼':''}</span>`;
+}
 function clearLog(){ document.getElementById('log').innerHTML = ''; }
 // Ajoute une ligne au journal de combat (garde au plus 60 lignes, scroll auto vers le bas).
 function setLog(html){
@@ -236,6 +247,10 @@ function renderMoveGrid(){
     ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; bs.declaringMega = false; } renderMoveGrid(); }));
   const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
   const dynamaxPreview = bs.declaringDynamax || p.dynamaxed;
+  // Repère d'efficacité (désactivable dans les Paramètres — voir ui/music.js) : seulement quand la
+  // cible est sans ambiguïté (un seul ennemi vivant), sinon on ne devine pas laquelle sera visée.
+  const foesNow = aliveFoeCombatants();
+  const effTarget = (showMoveEffectiveness && foesNow.length===1) ? foesNow[0] : null;
   p.moves.forEach((mv, idx)=>{
     const btn = document.createElement('button');
     btn.className='move-btn';
@@ -250,12 +265,12 @@ function renderMoveGrid(){
     btn.disabled = bs.locked || isDisabled || isLockedOut || noPP || zBlocked;
     if(zReady){
       const zPreview = buildZMove(mv);
-      btn.innerHTML = `⚡ ${zPreview.name} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${zPreview.power} · via ${mv.name}</small>`;
+      btn.innerHTML = `⚡ ${zPreview.name}${moveEffectivenessBadgeHTML(zPreview, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${zPreview.power} · via ${mv.name}</small>`;
     } else if(maxReady){
       const maxPreview = buildMaxMove(mv, p, null, null);
-      btn.innerHTML = `🔴 ${maxPreview.name} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${maxPreview.power} · via ${mv.name}</small>`;
+      btn.innerHTML = `🔴 ${maxPreview.name}${moveEffectivenessBadgeHTML(maxPreview, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${maxPreview.power} · via ${mv.name}</small>`;
     } else {
-      btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?(p.encoreTurns>0?' · Encore':" · Bloqué par l'objet"):''}</small>`;
+      btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''}${moveEffectivenessBadgeHTML(mv, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?(p.encoreTurns>0?' · Encore':" · Bloqué par l'objet"):''}</small>`;
     }
     btn.onclick = ()=> handleMoveChoice(idx);
     grid.appendChild(btn);

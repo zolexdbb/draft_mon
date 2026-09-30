@@ -342,6 +342,7 @@ function foeVoluntarySwitch(newIdx, callback){
   const opponent = alivePlayerCombatants()[0];
   const intimMsg = opponent ? (triggerIntimidate(incoming, opponent) + triggerSwitchInAbilities(incoming, opponent)) : '';
   renderBattle();
+  pulseSprite('foe', 'switch-in-fx');
   setLog(`L'adversaire rappelle ${old.name} et envoie ${incoming.name} !${msg}${intimMsg}`);
   setTimeout(callback, 1100);
 }
@@ -464,6 +465,7 @@ function doVoluntarySwitch(i, slot){
   bs.locked = true;
   closeManualSwitch();
   renderBattle();
+  pulseSprite(slot==='A' ? 'player' : 'player2', 'switch-in-fx');
   const incoming = bs.player[i];
   const opponent = aliveFoeCombatants()[0];
   const intimidateMsg = opponent ? (triggerIntimidate(incoming, opponent) + triggerSwitchInAbilities(incoming, opponent)) : '';
@@ -1925,6 +1927,7 @@ function replaceFoeSlot(slot, callback){
     const intimMsg = p ? (triggerIntimidate(newFoe, p) + triggerSwitchInAbilities(newFoe, p)) : '';
     setLog(`L'adversaire envoie ${newFoe.name} !${intimMsg}`);
     renderBattle();
+    pulseSprite(slot==='A' ? 'foe' : 'foe2', 'switch-in-fx');
     callback();
   }, 900);
 }
@@ -1958,6 +1961,7 @@ function showSwitchPrompt(aliveIdx, slot){
       resetBattleFields(c);
       sw.classList.add('hidden');
       renderBattle();
+      pulseSprite(slot==='A' ? 'player' : 'player2', 'switch-in-fx');
       const opponent = aliveFoeCombatants()[0];
       const intimMsg = opponent ? (triggerIntimidate(c, opponent) + triggerSwitchInAbilities(c, opponent)) : '';
       setLog(`Tu envoies ${c.name} !${intimMsg}`);
