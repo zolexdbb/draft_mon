@@ -8,16 +8,18 @@
    - L.159-fin(295): gestion des clics — choix d'attaque (avec choix de cible en double), switch
      manuel, sac (Potion), et les petites animations (shakeBox/lungeBox/flashScreen)
 ==== */
-// Repère visuel d'efficacité de type sur un bouton d'attaque (▲ super efficace, ▼ peu efficace, ✖
-// aucun effet) — rien si neutre, si la capacité n'inflige pas de dégâts, ou si aucune cible sans
-// ambiguïté n'est fournie (voir effTarget dans renderMoveGrid, désactivable dans les Paramètres).
+// Repère visuel d'efficacité de type sur un bouton d'attaque (▲▲ hyper efficace ×4, ▲ super efficace
+// ×2, ▼ peu efficace, ▼▼ très peu efficace ×0.25, ✖ aucun effet) — rien si neutre, si la capacité
+// n'inflige pas de dégâts, ou si aucune cible sans ambiguïté n'est fournie (voir effTarget dans
+// renderMoveGrid, désactivable dans les Paramètres).
 function moveEffectivenessBadgeHTML(move, defender){
   if(!defender || move.cat==='status' || !move.power) return '';
   const eff = getMult(move.type, defender.transformedTypes || defender.types);
   if(eff===1) return '';
   if(eff===0) return ' <span class="eff-badge eff-none" title="Aucun effet">✖</span>';
-  if(eff>1) return ` <span class="eff-badge eff-super" title="Super efficace">▲${eff>=4?'▲':''}</span>`;
-  return ` <span class="eff-badge eff-weak" title="Peu efficace">▼${eff<=0.25?'▼':''}</span>`;
+  if(eff>=4) return ` <span class="eff-badge eff-hyper" title="Hyper efficace (×${eff})">▲▲</span>`;
+  if(eff>1) return ` <span class="eff-badge eff-super" title="Super efficace (×${eff})">▲</span>`;
+  return ` <span class="eff-badge eff-weak" title="${eff<=0.25?'Très peu efficace':'Peu efficace'} (×${eff})">▼${eff<=0.25?'▼':''}</span>`;
 }
 function clearLog(){ document.getElementById('log').innerHTML = ''; }
 // Ajoute une ligne au journal de combat (garde au plus 60 lignes, scroll auto vers le bas).

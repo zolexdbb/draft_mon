@@ -39,9 +39,9 @@ function tokensForRun(floorReached, diff){
 }
 
 const BOOSTS = [
-  { id:'startMoney1',   name:'Bourse de départ',     emoji:'💰', cost:30,  desc:"+50 argent au début de chaque partie.", effect:{startMoney:50} },
-  { id:'startMoney2',   name:'Grosse bourse',        emoji:'💰', cost:70,  desc:"+100 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:100}, requires:'startMoney1' },
-  { id:'startMoney3',   name:'Coffre au trésor',     emoji:'💰', cost:130, desc:"+150 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:150}, requires:'startMoney2' },
+  { id:'startMoney1',   name:'Bourse de départ',     emoji:'💰', cost:15,  desc:"+50 argent au début de chaque partie.", effect:{startMoney:50} },
+  { id:'startMoney2',   name:'Grosse bourse',        emoji:'💰', cost:40,  desc:"+100 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:100}, requires:'startMoney1' },
+  { id:'startMoney3',   name:'Coffre au trésor',     emoji:'💰', cost:80,  desc:"+150 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:150}, requires:'startMoney2' },
   { id:'startPotion',   name:'Trousse de secours',   emoji:'💊', cost:25,  desc:"Commence chaque partie avec une Potion dans le sac.", effect:{startItem:'potion'} },
   { id:'startAntidote', name:'Pharmacie de poche',   emoji:'🧪', cost:30,  desc:"Commence chaque partie avec un Total Soin dans le sac (soigne toutes les altérations de statut).", effect:{startItem:'totalSoin'} },
   { id:'startBerry',    name:'Panier de baies',      emoji:'🍑', cost:35,  desc:"Commence chaque partie avec une Baie Sitrus dans le sac.", effect:{startItem:'baieSitrus'} },

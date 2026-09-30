@@ -1145,6 +1145,7 @@ select option{
 @keyframes safariDust{ 0%{ opacity:.7; transform:scale(.6); } 100%{ opacity:0; transform:scale(1.8); } }
 
 .eff-badge{ font-size:10px; font-weight:800; }
+.eff-badge.eff-hyper{ color:#FFD24A; }
 .eff-badge.eff-super{ color:#4ADE80; }
 .eff-badge.eff-weak{ color:#F87171; }
 .eff-badge.eff-none{ color:var(--text-dim); }
