@@ -275,7 +275,7 @@ function computeDamage(attacker, move, defender){
   if(move.variablePower){
     effectivePower = 30 + Math.floor(Math.random()*61);
   }
-  const base = ((2*LEVEL/5+2) * effectivePower * (atkStat/defStat)) / 50 + 2;
+  const base = ((2*(attacker.level||LEVEL)/5+2) * effectivePower * (atkStat/defStat)) / 50 + 2;
   const dmg = Math.max(1, Math.round(base * stab * eff * variance * burnPenalty * critMult * abilityMult * weatherMult * terrainMult));
   return { dmg, eff, crit };
 }

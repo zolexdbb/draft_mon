@@ -24,6 +24,24 @@ function moneyReward(floor, isTwin){
   else if(isTwin) base *= 1.3;
   return Math.round(base);
 }
+// Palier de difficulté stratégique (talents/objets/EV optimisés, cohérence de la compo, niveau d'IA en
+// combat...) : regroupé par tranche de 10 étages, il n'augmente qu'après avoir battu le Maître de Type
+// du palier précédent (reste donc identique du début à la fin d'un palier). Ça évite un pic de puissance
+// adverse trop rapide comparé à la progression du joueur, pour qu'il ait une vraie chance de battre
+// chaque Maître de Type et d'arriver jusqu'à la Ligue.
+function difficultyFloor(floor){
+  return Math.floor((floor-1)/10)*10 + 1;
+}
+// Numéro du palier (0 pour les étages 1-10, 1 pour 11-20, 2 pour 21-30...).
+function difficultyTier(floor){
+  return Math.floor((difficultyFloor(floor)-1)/10);
+}
+// Niveau des Pokémon adverses : +5% par palier de 10 étages (donc après chaque Maître de Type battu),
+// sans plafond — contrairement au reste de la difficulté stratégique (qui finit par plafonner), le
+// niveau doit continuer à grimper indéfiniment pour que la Tour reste un défi croissant sur la durée.
+function foeLevelFor(floor){
+  return LEVEL + Math.round(LEVEL * difficultyTier(floor) * 0.05);
+}
 
 const TRAINER_ARCHETYPES = [
   {title:'Randonneur',     emoji:'🥾', theme:null,       minFloor:1, dialogue:"J'adore explorer les chemins de campagne !"},
@@ -143,9 +161,8 @@ function generateTwinTrainers(floor){
 function renderTower(reward, candyReward){
   document.getElementById('floorNum').textContent = towerFloor;
   updateBestFloor(towerFloor);
-  const sizes = [3,3,4,4,5,6];
-  let size = sizes[Math.min(towerFloor-1, sizes.length-1)];
-  if(isBossFloor(towerFloor)) size = Math.min(6, size+1);
+  const towerTier = difficultyTier(towerFloor);
+  const size = isBossFloor(towerFloor) ? 6 : (isMiniBossFloor(towerFloor) ? Math.min(6, 3+towerTier) : Math.min(6, 2+towerTier));
   const badge = isBossFloor(towerFloor) ? ' · 👑 ÉTAGE BOSS !' : (isMiniBossFloor(towerFloor) ? ' · ⭐ Mini-Boss' : '');
   document.getElementById('floorDesc').innerHTML = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor}${badge}<br>Meilleur étage : ${currentBestFloor()} · Mode : ${difficulty==='facile'?'😊 Facile':(difficulty==='difficile'?'💀 Difficile':'⚔️ Normal')}`;
   document.getElementById('floorMoneyVal').textContent = money;
@@ -227,7 +244,7 @@ function rollFoeSpecies(line, floor, trainerTheme, isBoss){
 /* ---- Composition des équipes adverses (étage 5+) : on tire plus de candidats que nécessaire puis on garde ceux qui
    forment la meilleure équipe : stats brutes élevées, faiblesses communes évitées, résistances et couverture de types
    complémentaires, mélange d'attaquants physiques/spéciaux et au moins un Pokémon rapide. ---- */
-function foeCandidateScore(team, c, statWeight){
+function foeCandidateScore(team, c, statWeight, synergyWeight){
   const b = c.sp.base;
   const ctypes = c.sp.types;
   let s = (speciesBst(c.sp) - 480) / 60 * statWeight;
@@ -236,39 +253,44 @@ function foeCandidateScore(team, c, statWeight){
     const teamWeak = team.filter(m=>getMult(t, m.sp.types)>=2).length;
     const teamRes = team.filter(m=>getMult(t, m.sp.types)<1).length;
     if(mult>=2){
-      if(teamWeak>=2) s -= 1.2*(teamWeak-1);
-      else if(teamWeak===1 && teamRes===0) s -= 0.5;
+      if(teamWeak>=2) s -= 1.2*(teamWeak-1)*synergyWeight;
+      else if(teamWeak===1 && teamRes===0) s -= 0.5*synergyWeight;
     } else if(mult<1){
-      if(teamWeak>=1 && teamRes===0) s += 0.6;
-      else if(teamRes===0) s += 0.15;
+      if(teamWeak>=1 && teamRes===0) s += 0.6*synergyWeight;
+      else if(teamRes===0) s += 0.15*synergyWeight;
     }
   });
   const covered = new Set();
   team.forEach(m=>m.sp.types.forEach(t=>AI_TYPES.forEach(d=>{ if(getMult(t,[d])>1) covered.add(d); })));
   let gain = 0;
   ctypes.forEach(t=>AI_TYPES.forEach(d=>{ if(getMult(t,[d])>1 && !covered.has(d)){ covered.add(d); gain++; } }));
-  s += gain*0.35;
+  s += gain*0.35*synergyWeight;
   const phys = b.atk >= b.spa;
-  if(b.spe>=95 && !team.some(m=>m.sp.base.spe>=95)) s += 0.6;
+  if(b.spe>=95 && !team.some(m=>m.sp.base.spe>=95)) s += 0.6*synergyWeight;
   if(team.length>=2){
     const physCount = team.filter(m=>m.sp.base.atk>=m.sp.base.spa).length;
-    if(phys && physCount>=team.length) s -= 0.5;
-    if(!phys && physCount===0) s -= 0.5;
+    if(phys && physCount>=team.length) s -= 0.5*synergyWeight;
+    if(!phys && physCount===0) s -= 0.5*synergyWeight;
   }
   const dupes = team.filter(m=>m.sp.types[0]===ctypes[0]).length;
-  s -= 0.5 * dupes * (c.themed ? 0.4 : 1);
-  return s + Math.random()*0.4;
+  s -= 0.5*synergyWeight * dupes * (c.themed ? 0.4 : 1);
+  // Moins de hasard dans le choix à mesure que la compo devient plus réfléchie (étages élevés).
+  const noise = Math.max(0.08, 0.4 - synergyWeight*0.15);
+  return s + Math.random()*noise;
 }
 // Choisit `size` candidats formant la meilleure équipe (avec un quota de Pokémon thématiques / libres si donné).
 function selectFoeTeam(cands, size, floor, quota){
   const statWeight = Math.min(1.5, 0.3 + floor*0.06);
+  // La cohérence de la compo (couverture de types, faiblesses partagées évitées, mélange
+  // physique/spécial, Pokémon rapide...) compte de plus en plus en montant dans la Tour.
+  const synergyWeight = Math.min(1.6, 0.35 + floor*0.07);
   const pool = [...cands];
   const chosen = [];
   while(chosen.length<size && pool.length){
     let best = null, bestScore = -Infinity;
     pool.forEach(c=>{
       if(quota && ((c.themed && quota.themed<=0) || (!c.themed && quota.other<=0))) return;
-      const sc = foeCandidateScore(chosen, c, statWeight);
+      const sc = foeCandidateScore(chosen, c, statWeight, synergyWeight);
       if(sc>bestScore){ bestScore = sc; best = c; }
     });
     if(!best) best = pool[0];
@@ -305,7 +327,11 @@ function pickFoeItem(sp, moveIds, floor, bossLike){
 }
 
 // Construit un combattant adverse complet : stats (EV et nature optimisés avec la progression), attaques, talent, objet.
-function buildFoeMember(spec, floor, strength, bossLike){
+// Plus l'étage est élevé, plus ce Pokémon a de chances d'utiliser un vrai set compétitif curé (à la
+// Smogon/Coup Critique — voir pokemon/competitive-sets.js) : talent, objet, nature, EV et moveset
+// signature, plutôt que la logique générique ci-dessous (qui reste utilisée pour les espèces non
+// couvertes par un set curé, ou tôt dans la Tour).
+function buildFoeMember(spec, floor, strength, bossLike, level){
   const { line, id, stage, branch, sp } = spec;
   const ivs = {hp:31,atk:31,def:31,spa:31,spd:31,spe:31};
   // Budget total d'EV réparti entre les 6 stats (max 32 chacune, max EV_TOTAL_MAX au total), qui grandit
@@ -315,36 +341,47 @@ function buildFoeMember(spec, floor, strength, bossLike){
   const b = sp.base;
   const phys = b.atk >= b.spa;
   const main = phys ? 'atk' : 'spa', opposite = phys ? 'spa' : 'atk';
-  let nature;
-  // À partir de l'étage 5, de plus en plus d'adversaires ont une répartition d'EV et une nature pensées pour leur rôle.
-  const optimized = floor >= 5 && Math.random() < Math.min(1, (floor-3)*0.25);
-  if(optimized){
-    let remaining = totalEv;
-    const give = (k, v)=>{ const g = Math.max(0, Math.min(v, remaining, EV_MAX-evs[k])); evs[k] += g; remaining -= g; };
-    const bulky = (b.hp + b.def + b.spd) >= 290 && b.spe < 80;
-    give(main, EV_MAX);
-    if(bulky){ give('hp', EV_MAX); give(phys ? 'def' : 'spd', EV_MAX); }
-    else { give('spe', EV_MAX); give('hp', EV_MAX); }
-    give('hp', remaining); give('def', remaining); give('spd', remaining);
-    nature = NATURES.find(n=>n.plus===main && n.minus===opposite) || NATURES.find(n=>n.plus===main) || NATURES[0];
-  } else {
-    let remaining = totalEv;
-    const statKeys = shuffle(['hp','atk','def','spa','spd','spe']);
-    statKeys.forEach((k,i)=>{
-      if(i===statKeys.length-1){ evs[k]=Math.max(0,Math.min(EV_MAX,remaining)); }
-      else { const give = Math.max(0,Math.min(EV_MAX, remaining, Math.round(remaining*(0.2+Math.random()*0.3)))); evs[k]=give; remaining-=give; }
-    });
-    nature = rand(NATURES.filter(n=>n.plus));
-  }
-  const stats = calcStats(sp.base, ivs, evs, nature);
   const movepool = movepoolFor({lineId:id, stage, branch});
-  const moveIds = floor >= 4
-    ? pickSmartMoves(movepool, sp, floor)
-    : shuffle(movepool).slice(0,4);
+  const curatedChance = Math.min(1, Math.max(0, (floor-4)*0.1));
+  const curated = floor >= 5 && Math.random() < curatedChance ? competitiveSetFor(sp, line) : null;
+  let nature, ability, moveIds;
+  if(curated){
+    nature = natureFor(curated.plus, curated.minus);
+    const fullEvs = convertRealEvs(curated.evs);
+    const fullTotal = Object.values(fullEvs).reduce((a,v)=>a+v,0) || 1;
+    const scale = Math.min(1, totalEv/fullTotal);
+    Object.keys(evs).forEach(k=>{ evs[k] = Math.min(EV_MAX, Math.round(fullEvs[k]*scale)); });
+    ability = curated.ability;
+    moveIds = resolveSetMoves(curated, movepool, sp, floor);
+  } else {
+    // À partir de l'étage 5, de plus en plus d'adversaires ont une répartition d'EV et une nature pensées pour leur rôle.
+    const optimized = floor >= 5 && Math.random() < Math.min(1, (floor-3)*0.25);
+    if(optimized){
+      let remaining = totalEv;
+      const give = (k, v)=>{ const g = Math.max(0, Math.min(v, remaining, EV_MAX-evs[k])); evs[k] += g; remaining -= g; };
+      const bulky = (b.hp + b.def + b.spd) >= 290 && b.spe < 80;
+      give(main, EV_MAX);
+      if(bulky){ give('hp', EV_MAX); give(phys ? 'def' : 'spd', EV_MAX); }
+      else { give('spe', EV_MAX); give('hp', EV_MAX); }
+      give('hp', remaining); give('def', remaining); give('spd', remaining);
+      nature = NATURES.find(n=>n.plus===main && n.minus===opposite) || NATURES.find(n=>n.plus===main) || NATURES[0];
+    } else {
+      let remaining = totalEv;
+      const statKeys = shuffle(['hp','atk','def','spa','spd','spe']);
+      statKeys.forEach((k,i)=>{
+        if(i===statKeys.length-1){ evs[k]=Math.max(0,Math.min(EV_MAX,remaining)); }
+        else { const give = Math.max(0,Math.min(EV_MAX, remaining, Math.round(remaining*(0.2+Math.random()*0.3)))); evs[k]=give; remaining-=give; }
+      });
+      nature = rand(NATURES.filter(n=>n.plus));
+    }
+    ability = rand(sp.abilities || line.abilities);
+    moveIds = floor >= 4 ? pickSmartMoves(movepool, sp, floor) : shuffle(movepool).slice(0,4);
+  }
+  const stats = calcStats(sp.base, ivs, evs, nature, level);
   return {
     lineId:id, stage, branch, name:sp.name, types:sp.types, unownForm: pickFormSprite(sp.name), moveObjs: moveIds.map(mid=>MOVES[mid]), ppCur: moveIds.map(mid=>basePP(MOVES[mid])),
-    ability: rand(sp.abilities || line.abilities),
-    heldItem: pickFoeItem(sp, moveIds, floor, bossLike), itemUsed:false,
+    ability, level: level||LEVEL,
+    heldItem: (curated && curated.item) || pickFoeItem(sp, moveIds, floor, bossLike), itemUsed:false,
     stats, maxHp: stats.hp, hp: stats.hp, ...freshBattleFields()
   };
 }
@@ -354,18 +391,26 @@ function buildFoeMember(spec, floor, strength, bossLike){
 // la Tour), puis, dès l'étage 5, garde les candidats qui forment l'équipe la plus solide (voir selectFoeTeam).
 // Chaque combattant reçoit ses stats (force croissante avec l'étage), ses 4 attaques, son talent et un objet éventuel.
 function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
-  const sizes = [3,3,4,4,5,6];
-  let size = sizes[Math.min(floor-1, sizes.length-1)];
+  // Taille d'équipe : un dresseur normal commence à 2 Pokémon, un Mini-Boss à 3, un Boss a toujours
+  // son équipe complète de 6 — et la base (normal/Mini-Boss) grandit de 1 par palier de 10 étages
+  // (même rythme que le reste de la difficulté, voir difficultyTier) jusqu'au plafond de 6.
+  const tier = difficultyTier(floor);
+  let size = isBossFloor(floor) ? 6 : (isMiniBossFloor(floor) ? Math.min(6, 3+tier) : Math.min(6, 2+tier));
   let strength = Math.min(1, 0.3 + floor*0.1);
-  if(isBossFloor(floor)){ size = Math.min(6, size+1); strength = Math.min(1, strength+0.25); }
-  else if(isMiniBossFloor(floor)){ strength = Math.min(1, strength+0.12); }
+  if(isBossFloor(floor)) strength = Math.min(1, strength+0.25);
+  else if(isMiniBossFloor(floor)) strength = Math.min(1, strength+0.12);
   if(maxSize) size = Math.min(size, maxSize);
   const bossLike = isBossFloor(floor) || isMiniBossFloor(floor);
+  // Toute la sophistication stratégique (biais vers les espèces fortes, évolutions, cohérence de la
+  // compo, sets curés...) utilise le palier de difficulté (dFloor), pas l'étage réel : elle ne progresse
+  // donc que par palier de 10, après un Maître de Type — voir difficultyFloor.
+  const dFloor = difficultyFloor(floor);
+  const foeLevel = foeLevelFor(floor);
 
-  const optimize = floor >= 5;
-  const over = !optimize ? 1 : (floor >= 10 ? 3 : 2);
-  const sample = (lines, n) => weightedSampleLines(lines, Math.min(lines.length, n*over), optimize ? floor : 0);
-  const rolled = (lines, themed) => lines.map(l=>({ ...rollFoeSpecies(l, floor, trainerTheme, isBoss), themed }));
+  const optimize = dFloor >= 5;
+  const over = !optimize ? 1 : (dFloor >= 10 ? 3 : 2);
+  const sample = (lines, n) => weightedSampleLines(lines, Math.min(lines.length, n*over), optimize ? dFloor : 0);
+  const rolled = (lines, themed) => lines.map(l=>({ ...rollFoeSpecies(l, dFloor, trainerTheme, isBoss), themed }));
   const themedLines = trainerTheme ? LINES.filter(l =>
     l.stages.some(s => s.types.includes(trainerTheme)) ||
     (l.branches && l.branches.some(b => b.types.includes(trainerTheme)))
@@ -387,18 +432,18 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
     cands = rolled(sample(LINES, size), false);
   }
 
-  let chosen = optimize ? selectFoeTeam(cands, size, floor, quota) : cands.slice(0, size);
+  let chosen = optimize ? selectFoeTeam(cands, size, dFloor, quota) : cands.slice(0, size);
   if(chosen.length < size){
     const usedIds = chosen.map(c=>c.id);
     const extra = shuffle(LINES.filter(l => !usedIds.includes(l.id))).slice(0, size - chosen.length);
     chosen = [...chosen, ...rolled(extra, false)];
   }
-  // Aux étages avancés, le Pokémon le plus puissant est gardé pour la fin (l'as de l'équipe).
-  if(floor >= 10 && chosen.length>=3){
+  // Aux paliers avancés, le Pokémon le plus puissant est gardé pour la fin (l'as de l'équipe).
+  if(dFloor >= 10 && chosen.length>=3){
     const ace = chosen.reduce((best,c)=> speciesBst(c.sp)>speciesBst(best.sp) ? c : best);
     chosen = [...chosen.filter(c=>c!==ace), ace];
   }
-  return chosen.map(spec => buildFoeMember(spec, floor, strength, bossLike));
+  return chosen.map(spec => buildFoeMember(spec, dFloor, strength, bossLike, foeLevel));
 }
 
 // Ajoute un badge de Maître de Type obtenu (par mode de difficulté) et sauvegarde. Retourne vrai si c'est un nouveau badge.

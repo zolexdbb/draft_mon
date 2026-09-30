@@ -1,11 +1,13 @@
 /* ==== IA des dresseurs adverses : choix des 4 attaques d'un Pokémon généré, choix du coup/de la
    cible à chaque tour, changements de Pokémon volontaires et remplaçants après un K.O. ====
-   Le comportement dépend d'un niveau d'IA (foeAiLevel) qui monte avec l'étage :
-   - 0 : étages 1-4, tirage au sort pondéré par un score simple (efficacité, STAB, puissance)
-   - 1 : étages 5-9, dégâts réellement estimés (computeDamage), repère les K.O., favorise fortement le meilleur coup
-   - 2 : étages 10-19 (et Mini-Boss / Boss dès leur premier passage), choisit presque toujours le meilleur coup,
+   Le comportement dépend d'un niveau d'IA (foeAiLevel) qui monte par palier de 10 étages (voir
+   difficultyFloor dans combat/tower.js), donc seulement après avoir battu le Maître de Type du
+   palier précédent, pour ne pas monter plus vite que la progression du joueur :
+   - 0 : palier 1-10, tirage au sort pondéré par un score simple (efficacité, STAB, puissance)
+   - 1 : palier 11-20, dégâts réellement estimés (computeDamage), repère les K.O., favorise fortement le meilleur coup
+   - 2 : palier 21-30 (et Mini-Boss / Boss dès leur premier passage), choisit presque toujours le meilleur coup,
          monte ses stats / soigne / pose pièges et statuts intelligemment, et change de Pokémon quand il est mal placé
-   - 3 : étages 20+ (et Boss avancés), connaît les capacités de ton Pokémon actif pour anticiper les dégâts, change
+   - 3 : palier 31+ (et Boss avancés), connaît les capacités de ton Pokémon actif pour anticiper les dégâts, change
          plus souvent et plus finement, protège son Pokémon face aux capacités à charge
    ==== */
 const AI_TYPES = ['normal','feu','eau','plante','electrik','vol','poison','sol','insecte','combat','glace','psy','fantome','roche','dragon','acier','tenebres','fee'];
@@ -14,7 +16,8 @@ const AI_TYPES = ['normal','feu','eau','plante','electrik','vol','poison','sol',
 function foeAiLevel(bs){
   bs = bs || battleState;
   const floor = (typeof towerFloor!=='undefined' && towerFloor) ? towerFloor : 1;
-  let lvl = floor<5 ? 0 : (floor<12 ? 1 : (floor<25 ? 2 : 3));
+  const tier = Math.floor((difficultyFloor(floor)-1)/10);
+  let lvl = Math.min(3, tier);
   const boss = !!(bs && ((bs.trainer && bs.trainer.boss) || (bs.trainer2 && bs.trainer2.boss)));
   const mini = !!(bs && ((bs.trainer && bs.trainer.miniBoss) || (bs.trainer2 && bs.trainer2.miniBoss)));
   if(boss) lvl = Math.min(3, Math.max(2, lvl+1));

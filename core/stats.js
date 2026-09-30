@@ -18,12 +18,15 @@ function evBonus(ev){
   return Math.min(EV_BONUS_MAX, Math.round(clamped * EV_BONUS_MAX / EV_MAX));
 }
 // Calcule les 6 statistiques finales d'un membre d'équipe à partir de ses stats de base + IV/EV/nature.
-function calcStats(base, ivs, evs, nature){
+// `level` est optionnel (LEVEL=50 par défaut, toujours le cas pour l'équipe du joueur) : la Tour s'en
+// sert pour faire monter le niveau des adversaires par palier (voir foeLevelFor dans combat/tower.js).
+function calcStats(base, ivs, evs, nature, level){
+  level = level || LEVEL;
   const stats = {};
   ['hp','atk','def','spa','spd','spe'].forEach(stat=>{
     const iv = ivs[stat];
-    const core = Math.floor((2*base[stat] + iv + evBonus(evs[stat])) * LEVEL / 100);
-    if(stat==='hp'){ stats.hp = core + LEVEL + 10; return; }
+    const core = Math.floor((2*base[stat] + iv + evBonus(evs[stat])) * level / 100);
+    if(stat==='hp'){ stats.hp = core + level + 10; return; }
     let mod = 1;
     if(nature.plus===stat) mod = 1.1;
     if(nature.minus===stat) mod = 0.9;
