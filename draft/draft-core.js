@@ -136,6 +136,19 @@ function renderDraftTeamStrip(){
     strip.appendChild(slot);
   }
 }
+// Aperçu du build complet d'un membre en mode Facile (objet tenu s'il y en a un, et les 4 attaques
+// déjà choisies), affiché sur la carte de draft pour aider à choisir sans deviner ce qu'on va obtenir.
+function buildPreviewHTML(member){
+  const itemHTML = member.heldItem
+    ? `<div style="display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text-dim);margin-bottom:4px;"><span style="width:16px;height:16px;display:inline-block;">${itemIconHTML(member.heldItem, 16)}</span>${ITEMS[member.heldItem].name}</div>`
+    : '';
+  const movesHTML = member.moves.filter(Boolean).map(id=>MOVES[id].name).join(' · ');
+  return `
+    <div style="background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:6px;margin:6px 0;">
+      ${itemHTML}
+      <div style="font-size:9px;color:var(--text-dim);line-height:1.5;">${movesHTML}</div>
+    </div>`;
+}
 // Lance un tour de draft : tire 3 candidats (Facile = formes finales, sinon tous stades), affiche
 // leurs cartes complètes (stats, types, talent, taux d'apparition) ; termine le draft au 6e Pokémon.
 function nextDraftRound(){
@@ -151,6 +164,10 @@ function nextDraftRound(){
   // Chance de chromatique tirée pour chaque carte proposée ce tour (visible avant de choisir) ; conservée
   // pour toujours si le joueur choisit cette carte, oubliée sinon.
   currentChoices.forEach(c=>{ c.shiny = rollShiny(); });
+  // Mode Facile : le build complet (talent/objet/moveset réel) est calculé une seule fois ici, à la fois
+  // pour l'aperçu affiché sur la carte et pour le membre final choisi au clic (évite un recalcul qui
+  // donnerait un moveset différent de celui montré, pour les lignées sans set curé où le choix est randomisé).
+  if(isFacile) currentChoices.forEach(c=>{ c.previewMember = autoBuildMember(c.lineId, c.stage, c.branch); });
   renderDraftProgress();
   renderDraftTeamStrip();
   document.getElementById('draftSub').textContent = `Choisis un Pokémon pour ton équipe (${draftRound+1}/6)`;
@@ -172,7 +189,7 @@ function nextDraftRound(){
       ? {label: LEGENDARY_IDS.includes(line.id)?'Légendaire':(PSEUDO_IDS.includes(line.id)?'Pseudo-légendaire':(RARE_IDS.includes(line.id)?'Rare':'Commun')),
          css: LEGENDARY_IDS.includes(line.id)?'rarity-legendaire':(PSEUDO_IDS.includes(line.id)?'rarity-pseudo':(RARE_IDS.includes(line.id)?'rarity-rare':'rarity-commun'))}
       : rarityInfo(line, choice.stage);
-    const ability = (sp.abilities || line.abilities)[0];
+    const ability = isFacile ? choice.previewMember.ability : (sp.abilities || line.abilities)[0];
     const evoline = hasBranch
       ? [...line.stages.map(s=>s.name), sp.name].join(' → ')
       : line.stages.map(s=>s.name).join(' → ');
@@ -195,11 +212,12 @@ function nextDraftRound(){
       </div>
       <div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">Talent : ${ability}</div>
       <div style="font-size:9px;color:var(--text-dim);margin-bottom:5px;line-height:1.4;">${ABILITY_DESC[ability]||''}</div>
+      ${isFacile ? buildPreviewHTML(choice.previewMember) : ''}
       <div class="dex-rate">Taux d'apparition : ${rateLabel}%</div>
     `;
     card.onclick = ()=>{
       const newMember = isFacile
-        ? autoBuildMember(choice.lineId, choice.stage, choice.branch)
+        ? choice.previewMember
         : defaultMember(choice.lineId, choice.stage);
       newMember.shiny = !!choice.shiny;
       team.push(newMember);
