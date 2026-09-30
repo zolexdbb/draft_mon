@@ -81,7 +81,7 @@ function otherActiveHasAbility(name, exclude){
   return [...alivePlayerCombatants(), ...aliveFoeCombatants()].some(c=>c!==exclude && c.ability===name);
 }
 // Stat (atk/def/spa/spd/spe) boostée de 30% (Protosynthèse sous Zénith / Quark Chargée sous Zone
-// Électrique, ou avec l'Énergie Impulsive — voir triggerSwitchInAbilities) : celle qui a la plus
+// Électrique, ou avec l'Énergie Booster — voir triggerSwitchInAbilities) : celle qui a la plus
 // haute valeur de base parmi les 5 (hors PV) chez ce combattant.
 function protoBoostStat(c){
   if(!c || !c.ability) return null;

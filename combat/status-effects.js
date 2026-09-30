@@ -90,7 +90,7 @@ function triggerSwitchInAbilities(incoming, opponent){
   if((incoming.ability==='Protosynthèse' || incoming.ability==='Quark Chargée') && incoming.heldItem==='energieImpulsive' && !incoming.itemUsed && !protoBoostStat(incoming)){
     incoming.itemUsed = true;
     incoming.boosterEnergyActive = true;
-    msg += ` ${incoming.name} active son Énergie Impulsive !`;
+    msg += ` ${incoming.name} active son Énergie Booster !`;
   }
   if(battleState.wishHeal){
     const wl = locateActiveSlot(incoming);
@@ -1088,10 +1088,10 @@ function endOfTurnStatus(battler, logs){
     const types = battler.transformedTypes || battler.types || [];
     if(types.includes('poison') && battler.hp<battler.maxHp){
       battler.hp = Math.min(battler.maxHp, battler.hp+amount);
-      logs.push(`${battler.name} récupère un peu de PV grâce à sa Sève Noire.`);
+      logs.push(`${battler.name} récupère un peu de PV grâce à sa Boue Noire.`);
     } else if(!types.includes('poison')){
       battler.hp = Math.max(0, battler.hp-amount);
-      logs.push(`${battler.name} est blessé par sa Sève Noire (${amount} dégâts) !`);
+      logs.push(`${battler.name} est blessé par sa Boue Noire (${amount} dégâts) !`);
     }
   }
   if(battler.hp>0 && battler.status && battler.ability==='Mue' && Math.random()<0.3){

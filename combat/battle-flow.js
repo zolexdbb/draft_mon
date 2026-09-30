@@ -1215,7 +1215,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(defender.heldItem==='ballonAir' && move.type==='sol' && !move.bypassTypeImmunity && !(battleState && battleState.gravityTurns>0)){
     defender.heldItem = null; defender.itemUsed = true;
     renderBattle();
-    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Ballon d'Air) ! Le ballon éclate !`);
+    setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Ballon) ! Le ballon éclate !`);
     setTimeout(callback, 900);
     return;
   }
@@ -1429,13 +1429,13 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   }
   if(defender.heldItem==='ballonAir' && actualDmg>0){
     defender.heldItem = null; defender.itemUsed = true;
-    msg += ` Le Ballon d'Air de ${defender.name} éclate !`;
+    msg += ` Le Ballon de ${defender.name} éclate !`;
   }
   if(defender.heldItem==='politiqueFaible' && !defender.itemUsed && actualDmg>0 && eff>1 && defender.hp>0){
     defender.itemUsed = true;
     let plogs = [];
     applyStatBoost(defender, [{stat:'atk',stages:2},{stat:'spa',stages:2}], plogs);
-    msg += ` La Politique du Faible de ${defender.name} augmente son Attaque et son Attaque Spéciale !`;
+    msg += ` La Vulné-Assurance de ${defender.name} augmente son Attaque et son Attaque Spéciale !`;
   }
   if(defender.ability==='Crache-Sable' && actualDmg>0 && battleState && (!battleState.weather || battleState.weather.type!=='sable')){
     battleState.weather = { type:'sable', turns:5 };
@@ -1590,7 +1590,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     if(defender.heldItem==='casqueBrutal'){
       const rdmg = Math.max(1, Math.round(actor.maxHp/6));
       actor.hp = Math.max(0, actor.hp-rdmg);
-      msg += ` ${actor.name} est blessé par le Casque Brutal de ${defender.name} (${rdmg} dégâts) !`;
+      msg += ` ${actor.name} est blessé par le Casque Brut de ${defender.name} (${rdmg} dégâts) !`;
     }
     if(defender.ability==='Point Gluant'){
       let glogs = [];
