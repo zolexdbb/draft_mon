@@ -49,6 +49,7 @@ const ITEMS = {
   herbeMental:    { name:'Herbe Mental',       sprite:ITEM_SPRITE('mental-herb'),   price:250, kind:'held', category:'strat', desc:"Objet tenu : soigne les effets de Provoc et Entrave. Se consomme après usage." },
   reste:          { name:'Reste',              sprite:ITEM_SPRITE('leftovers'),     price:200, kind:'held', category:'strat', desc:"Objet tenu : restaure environ 6% des PV max à la fin de chaque tour." },
   ceintureForce:  { name:'Ceinture Force',     sprite:ITEM_SPRITE('focus-sash'),    price:250, kind:'held', category:'strat', desc:"Objet tenu : survit à 1 PV si un coup l'aurait mis K.O. alors qu'il était à PV max. Se consomme après usage." },
+  plumeFeerique:  { name:'Plume Féerique',     sprite:ITEM_SPRITE('fairy-feather'), price:300, kind:'held', category:'strat', typeBoost:'fee', desc:"Objet tenu : augmente la puissance des capacités de type Fée du porteur." },
   // ---- Objets de forme (tenus, vendus uniquement par le Marchand Itinérant) ----
   orbePlatine:    { name:'Orbe Platiné',      sprite:ITEM_SPRITE('griseous-orb'), price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Giratina en Forme Originelle." },
   gracidee:       { name:'Gracidée',          sprite:ITEM_SPRITE('gracidea'),     price:2000, kind:'held', category:'forme', formItem:true, desc:"Objet tenu : fait passer Shaymin en Forme Ciel." },

@@ -173,6 +173,7 @@ function computeDamage(attacker, move, defender){
   if(defender.reflectTurns>0 && move.cat==='phys') abilityMult *= 0.5;
   if(defender.lightScreenTurns>0 && move.cat==='spec') abilityMult *= 0.5;
   if(attacker.heldItem==='orbeVie' && move.power>0) abilityMult *= 1.3;
+  if(attacker.heldItem && ITEMS[attacker.heldItem] && ITEMS[attacker.heldItem].typeBoost===move.type) abilityMult *= 1.2;
   if(defender.ability==='Fourrure' && move.cat==='phys') abilityMult *= 0.5;
   if(attacker.ability==='Mâchouille' && move.bite) abilityMult *= 1.5;
   if(attacker.ability==='Méga-Lanceur' && move.pulse) abilityMult *= 1.5;
