@@ -360,7 +360,10 @@ function openBattlerDetail(view){
       ${item ? `
       <div class="editor-section">
         <div class="editor-section-title">Objet tenu</div>
-        <div><b style="color:var(--text-main);font-size:11px;">${item.name}</b><div class="effect-desc" style="margin-top:2px;">${item.desc||''}</div></div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="flex-shrink:0;">${itemIconHTML(view.heldItem, 24)}</div>
+          <div><b style="color:var(--text-main);font-size:11px;">${item.name}</b><div class="effect-desc" style="margin-top:2px;">${item.desc||''}</div></div>
+        </div>
       </div>` : ''}
       <div class="editor-section">
         <div class="editor-section-title">Attaques</div>
@@ -447,7 +450,7 @@ function openTeamModal(){
     const heldOptions = [{value:'', label:'Aucun objet'}];
     Object.entries(ITEMS).filter(([k,it])=>it.kind==='held').forEach(([key,item])=>{
       const available = (bag[key]||0) + (m.heldItem===key ? 1 : 0);
-      if(available>0) heldOptions.push({value:key, label:`${item.name} (${available})`});
+      if(available>0) heldOptions.push({value:key, label:`${item.name} (${available})`, html:`${itemIconHTML(key,16)} ${item.name} (${available})`});
     });
     document.getElementById(`teamHeldSel${i}`).appendChild(createCustomSelect({
       options: heldOptions,

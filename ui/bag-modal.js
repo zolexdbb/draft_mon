@@ -1,5 +1,5 @@
-/* ==== Fenêtre "Sac" hors combat (depuis la Tour) : liste des objets consommables possédés et
-   utilisation sur un membre de l'équipe (soin de PV/statut). ==== */
+/* ==== Fenêtre "Sac" hors combat (depuis la Tour) : liste tous les objets possédés (consommables
+   et tenus) et permet de les utiliser/équiper sur un membre de l'équipe. ==== */
 // Ouvre la fenêtre modale du sac.
 function openBagModal(){
   const overlay = document.createElement('div');
@@ -17,11 +17,11 @@ function openBagModal(){
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
   renderBagItemList();
 }
-// Liste les objets consommables possédés avec un bouton "Utiliser" chacun.
+// Liste tous les objets possédés (consommables et tenus) avec un bouton "Utiliser"/"Équiper" chacun.
 function renderBagItemList(){
   const list = document.getElementById('bagItemList');
   list.innerHTML = '';
-  const owned = Object.entries(ITEMS).filter(([k,it])=> it.kind==='consumable' && (bag[k]||0)>0);
+  const owned = Object.entries(ITEMS).filter(([k,it])=> (it.kind==='consumable'||it.kind==='held') && (bag[k]||0)>0);
   if(owned.length===0){
     list.innerHTML = `<div class="dex-rate" style="text-align:center;">Ton sac est vide. Achète des objets au Village !</div>`;
     return;
@@ -35,7 +35,7 @@ function renderBagItemList(){
         <div style="font-size:10px;color:var(--text-main);"><b>${item.name}</b> (${bag[key]})</div>
         <div style="font-size:8px;color:var(--text-dim);">${item.desc}</div>
       </div>
-      <button class="btn secondary useBagItemBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:9px;">Utiliser</button>
+      <button class="btn secondary useBagItemBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:9px;">${item.kind==='held' ? 'Équiper' : 'Utiliser'}</button>
     `;
     list.appendChild(row);
   });
@@ -43,7 +43,8 @@ function renderBagItemList(){
     btn.onclick = ()=> renderBagTargetList(btn.dataset.key);
   });
 }
-// Liste l'équipe pour choisir la cible d'un objet (grisé si le membre n'en a pas besoin : PV déjà pleins, pas le bon statut...).
+// Liste l'équipe pour choisir la cible d'un objet. Consommable : grisé si le membre n'en a pas besoin
+// (PV déjà pleins, pas le bon statut...). Objet tenu : équipe le membre choisi (rend l'ancien objet tenu au sac).
 function renderBagTargetList(key){
   const item = ITEMS[key];
   const list = document.getElementById('bagItemList');
@@ -52,15 +53,30 @@ function renderBagTargetList(key){
     const sp = speciesOf(m);
     const hp = (typeof m.hp==='number') ? m.hp : m.computedStats.hp;
     const maxHp = m.computedStats.hp;
-    const needsHeal = item.heal && hp<maxHp;
-    const needsCure = item.cureStatus && m.status && (item.cureStatus==='all' || item.cureStatus===m.status);
-    const usable = needsHeal || needsCure;
+    let usable, extraLabel = '';
+    if(item.kind==='held'){
+      usable = m.heldItem !== key;
+      extraLabel = m.heldItem ? ` <span style="color:var(--text-dim);">(tient ${itemIconHTML(m.heldItem,12)} ${ITEMS[m.heldItem].name})</span>` : '';
+    } else {
+      const needsHeal = item.heal && hp<maxHp;
+      const needsCure = item.cureStatus && m.status && (item.cureStatus==='all' || item.cureStatus===m.status);
+      usable = needsHeal || needsCure;
+    }
     const btn = document.createElement('button');
     btn.className = 'btn secondary';
     btn.disabled = !usable;
     btn.style.cssText = 'width:100%;text-align:left;padding:8px;margin-bottom:6px;display:flex;align-items:center;gap:8px;';
-    btn.innerHTML = `<span style="width:28px;height:28px;display:inline-block;">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</span><span style="font-size:10px;">${sp.name}${m.shiny?shinyBadgeHTML():''} — ${hp}/${maxHp} PV ${m.status?statusIconHTML(m.status,12):''}</span>`;
+    btn.innerHTML = `<span style="width:28px;height:28px;display:inline-block;">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</span><span style="font-size:10px;">${sp.name}${m.shiny?shinyBadgeHTML():''} — ${hp}/${maxHp} PV ${m.status?statusIconHTML(m.status,12):''}${extraLabel}</span>`;
     btn.onclick = ()=>{
+      if(item.kind==='held'){
+        if(m.heldItem){ bag[m.heldItem] = (bag[m.heldItem]||0)+1; }
+        bag[key] = Math.max(0, (bag[key]||0)-1);
+        m.heldItem = key;
+        saveGame();
+        document.getElementById('bagMsg').textContent = `✓ ${item.name} équipé sur ${sp.name} !`;
+        renderBagItemList();
+        return;
+      }
       if(item.heal) m.hp = Math.min(maxHp, hp + Math.round(maxHp*item.heal));
       if(item.cureStatus){ m.status = null; m.sleepCounter = 0; }
       bag[key] = Math.max(0, (bag[key]||0)-1);
