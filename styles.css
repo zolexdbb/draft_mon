@@ -308,6 +308,8 @@ body{
   border-bottom:1px solid var(--line);
 }
 .team-card-sprite{ width:52px; height:52px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:36px; }
+/* Pokémon pas encore évolué (peut encore évoluer) : sprite agrandi pour se démarquer dans la grille d'équipe. */
+.team-card-sprite-lg{ width:68px; height:68px; font-size:48px; }
 .team-card-info{ flex:1; min-width:0; }
 .team-card-info .pname{ font-weight:700; font-size:13px; margin:0 0 3px; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .team-card-footer{

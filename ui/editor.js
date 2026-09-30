@@ -30,11 +30,13 @@ function renderTeamGrid(){
     const configured = isConfigured(m);
     const nature = m.nature && m.nature.name !== 'Hardi' ? m.nature.name : '';
     const ability = m.ability || (abilitiesFor(m)[0]||'');
+    // Encore évolutif (pas déjà au dernier stade ni sur une branche) : sprite agrandi pour bien le repérer d'un coup d'œil.
+    const canEvolve = (m.branch===null || m.branch===undefined) && m.stage < lineOf(m.lineId).stages.length-1;
     const card = document.createElement('div');
     card.className = 'team-card' + (configured ? ' configured' : '');
     card.innerHTML = `
       <div class="team-card-header">
-        <div class="team-card-sprite">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
+        <div class="team-card-sprite${canEvolve?' team-card-sprite-lg':''}">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
         <div class="team-card-info">
           <div class="pname">${sp.name}${m.shiny?shinyBadgeHTML():''}</div>
           <div class="types-row" style="justify-content:flex-start;margin:3px 0;">
