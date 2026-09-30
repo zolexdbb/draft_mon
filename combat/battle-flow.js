@@ -333,7 +333,7 @@ function foeVoluntarySwitch(newIdx, callback){
     // Poursuite l'a mis K.O. avant son départ : il reste sur le terrain, le remplaçant arrive via la gestion des K.O.
     renderBattle();
     setLog(`<b>${old.name}</b> allait quitter le combat...${msg}`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   const incoming = setActiveSlot('foe', 'A', newIdx);
@@ -345,7 +345,7 @@ function foeVoluntarySwitch(newIdx, callback){
   renderBattle();
   pulseSprite('foe', 'switch-in-fx');
   setLog(`L'adversaire rappelle ${old.name} et envoie ${incoming.name} !${msg}${intimMsg}`);
-  setTimeout(callback, 1100);
+  setTimeout(callback, btDelay(1100));
 }
 
 // Le joueur choisit une capacité (appelé par l'UI) : résout la cible, transforme le coup en
@@ -474,7 +474,7 @@ function doVoluntarySwitch(i, slot){
   setLog(`Tu rappelles ton Pokémon et envoies ${incoming.name} !${switchMsg}${intimidateMsg}`);
   renderBattle();
   // Si les pièges mettent K.O. le seul Pokémon actif, on passe directement à la gestion des K.O. (choix d'un remplaçant).
-  setTimeout(()=>{ if(hazardKO) handleFaintsAndAdvance(); else advanceAfterSlot(slot); }, 1000);
+  setTimeout(()=>{ if(hazardKO) handleFaintsAndAdvance(); else advanceAfterSlot(slot); }, btDelay(1000));
 }
 
 // Utilise une Potion du sac sur un Pokémon de l'équipe pendant le combat.
@@ -489,7 +489,7 @@ function useBagPotion(i){
   bs.locked = true;
   renderBattle();
   setLog(`Tu utilises une Potion sur ${c.name} ! Il récupère ${heal} PV.`);
-  setTimeout(()=> advanceAfterSlot(slot), 1000);
+  setTimeout(()=> advanceAfterSlot(slot), btDelay(1000));
 }
 
 // Vérifie si un Pokémon peut effectivement agir ce tour avant de résoudre son coup (recul de peur,
@@ -794,17 +794,17 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(!canMove){
     actor.contMove = null; actor.contTurns = 0;
     setLog(logs.join(' '));
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(actor.disabledMove && actor.disabledMove.name===move.name){
     setLog(`<b>${actor.name}</b> ne peut pas utiliser ${move.name}, c'est entravé !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(actor.tormented && actor.lastMoveUsed && actor.lastMoveUsed.name===move.name && move.name!==STRUGGLE_MOVE.name){
     setLog(`<b>${actor.name}</b> ne peut pas utiliser ${move.name} deux fois de suite, il est tourmenté !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(battleState){
@@ -812,7 +812,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const jailer = foesOfActor.find(c=>c.imprisoning && (c.moves||c.moveObjs||[]).some(mm=>mm && mm.name===move.name));
     if(jailer){
       setLog(`<b>${actor.name}</b> ne peut pas utiliser ${move.name}, ${jailer.name} l'a scellée avec Possessif !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
   }
@@ -827,7 +827,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     actor.contMove = null; actor.contTurns = 0;
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name}... ${why}`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
   };
   if(move.firstTurnOnly && !firstAction){ failMove('mais ça échoue !'); return; }
   if(move.suckerPunch){
@@ -876,10 +876,10 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const last = bsx && bsx.lastMoveAny;
     if(last && !(last.effect && (last.effect.copycat || last.effect.meFirst))){
       setLog(`<b>${actor.name}</b> utilise ${move.name} et copie ${last.name} !`);
-      setTimeout(()=> runStep(actor, last, defender, actorIsPlayer, callback), 900);
+      setTimeout(()=> runStep(actor, last, defender, actorIsPlayer, callback), btDelay(900));
     } else {
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
     }
     return;
   }
@@ -888,10 +888,10 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     if(tgtAction && tgtAction.move.cat!=='status' && tgtAction.move.power>0){
       const boosted = { ...tgtAction.move, power: Math.round(tgtAction.move.power*1.5) };
       setLog(`<b>${actor.name}</b> utilise ${move.name} et prend la capacité ${tgtAction.move.name} !`);
-      setTimeout(()=> runStep(actor, boosted, defender, actorIsPlayer, callback), 900);
+      setTimeout(()=> runStep(actor, boosted, defender, actorIsPlayer, callback), btDelay(900));
     } else {
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
     }
     return;
   }
@@ -900,14 +900,14 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       actor.contMove = move; actor.contTurns = 2; actor.bideStored = 0;
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name} ! Il accumule de l'énergie...`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     actor.contTurns--;
     if(actor.contTurns>0){
       renderBattle();
       setLog(`<b>${actor.name}</b> accumule toujours de l'énergie...`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     const stored = actor.bideStored||0;
@@ -915,7 +915,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     if(stored<=0 || defender.hp<=0){
       renderBattle();
       setLog(`<b>${actor.name}</b> libère son énergie... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     const bdmg = Math.min(defender.hp, stored*2);
@@ -924,7 +924,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     shakeBox(boxIdFor(defender), false);
     setLog(`<b>${actor.name}</b> libère l'énergie accumulée ! ${defender.name} subit ${bdmg} dégâts !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.escalate || move.echoed){
@@ -937,7 +937,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     actor.forcedMove = null;
     if(forced.name!==move.name){
       setLog(`<b>${actor.name}</b> est forcé de réutiliser ${forced.name} !`);
-      setTimeout(()=> runStep(actor, forced, defender, actorIsPlayer, callback), 900);
+      setTimeout(()=> runStep(actor, forced, defender, actorIsPlayer, callback), btDelay(900));
       return;
     }
   }
@@ -984,16 +984,16 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     const pool = Object.values(MOVES).filter(m=>!m.metronome && !m.mirrorMove && !m.mimic && m.name!=='Struggle');
     const picked = rand(pool);
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Le doigt s'agite... ${picked.name} est invoqué !`);
-    setTimeout(()=> runStep(actor, picked, defender, actorIsPlayer, callback), 900);
+    setTimeout(()=> runStep(actor, picked, defender, actorIsPlayer, callback), btDelay(900));
     return;
   }
   if(move.mirrorMove){
     if(defender.lastMoveUsed){
       setLog(`<b>${actor.name}</b> utilise ${move.name} et copie ${defender.lastMoveUsed.name} !`);
-      setTimeout(()=> runStep(actor, defender.lastMoveUsed, defender, actorIsPlayer, callback), 900);
+      setTimeout(()=> runStep(actor, defender.lastMoveUsed, defender, actorIsPlayer, callback), btDelay(900));
     } else {
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
     }
     return;
   }
@@ -1008,17 +1008,17 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   }
   if(move.requiresAteBerry && !actor.ateBerry){
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(move.requiresWeather && (!battleState || !battleState.weather || battleState.weather.type!==move.requiresWeather)){
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(move.priority>0 && move.target!=='self' && battleState && battleState.terrain && battleState.terrain.type==='psychic'){
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais le Terrain Psychique bloque les attaques prioritaires !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(move.charge){
@@ -1032,7 +1032,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
         if(move.semiInvuln) actor.invulnType = move.semiInvuln;
         renderBattle();
         setLog(`<b>${actor.name}</b> ${move.chargeMsg||'se prépare à attaquer'} !`);
-        setTimeout(callback, 900);
+        setTimeout(callback, btDelay(900));
         return;
       }
     } else {
@@ -1063,14 +1063,14 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     } else {
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ${defender.name} est hors d'atteinte !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
   }
   if(defender.quickGuard && move.target!=='self' && actor!==defender && effectivePriority(actor, move)>0){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ${defender.name} est protégé par Prévention !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   lungeBox(boxIdFor(actor));
@@ -1087,7 +1087,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais rate son coup !${missMsg}`);
     actor.guaranteedHit = false;
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   actor.guaranteedHit = false;
@@ -1105,7 +1105,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     }
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} se protège de l'attaque !${punishMsg}`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(move.counter){
@@ -1113,14 +1113,14 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     if(cdmg<=0){
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     defender.hp = Math.max(0, defender.hp-cdmg);
     renderBattle();
     shakeBox(boxIdFor(defender), false);
     setLog(`<b>${actor.name}</b> utilise ${move.name} et renvoie ${cdmg} dégâts en représailles !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.mirrorCoat){
@@ -1128,46 +1128,46 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     if(mdmg<=0){
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     defender.hp = Math.max(0, defender.hp-mdmg);
     renderBattle();
     shakeBox(boxIdFor(defender), false);
     setLog(`<b>${actor.name}</b> utilise ${move.name} et renvoie ${mdmg} dégâts en représailles !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.cat==='status'){
     if(defender.substitute>0 && move.target==='foe' && actor!==defender && !move.sound && !(move.effect && (move.effect.substitute || move.effect.protect))){
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais le clone de ${defender.name} bloque la capacité !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     if(move.requiresStatus && defender.status!==move.requiresStatus){
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     if(actor.tauntTurns>0){
       renderBattle();
       setLog(`<b>${actor.name}</b> est provoqué et ne peut pas utiliser ${move.name} !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     if(actor.heldItem==='vesteCombat'){
       renderBattle();
       setLog(`<b>${actor.name}</b> ne peut pas utiliser ${move.name} à cause de sa Veste de Combat !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     if(move.yawn){
       if(defender.status){
         renderBattle();
         setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça n'a aucun effet, ${defender.name} a déjà un problème de statut !`);
-        setTimeout(callback, 900);
+        setTimeout(callback, btDelay(900));
         return;
       }
       const bs = battleState;
@@ -1175,7 +1175,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       bs.pendingYawn.push({ target: defender, turnsLeft: 1 });
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} baîlle...`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     const rivals = actorIsPlayer ? aliveFoeCombatants() : alivePlayerCombatants();
@@ -1195,7 +1195,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     if(move.target==='foe') shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${logs.join(' ')}`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if((defender.ability==='Absorbe-Eau' && move.type==='eau') || (defender.ability==='Absorbe-Volt' && move.type==='electrik')){
@@ -1203,33 +1203,33 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     defender.hp = Math.min(defender.maxHp, defender.hp+heal);
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Le talent ${defender.ability} de ${defender.name} absorbe l'attaque et récupère ${heal} PV !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if((defender.ability==='Lévitation' || defender.magnetRise>0) && move.type==='sol' && !move.bypassTypeImmunity && !defender.smackDown && !(battleState && battleState.gravityTurns>0)){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Lévitation) !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(defender.heldItem==='ballonAir' && move.type==='sol' && !move.bypassTypeImmunity && !(battleState && battleState.gravityTurns>0)){
     defender.heldItem = null; defender.itemUsed = true;
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Ballon) ! Le ballon éclate !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(defender.ability==='Anti-Bombe' && move.ballBomb){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Anti-Bombe protège totalement ${defender.name} !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(defender.ability==='Torche' && move.type==='feu'){
     defender.torchActivated = true;
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Torche absorbe la chaleur, ${defender.name} n'est pas affecté et enflamme ses prochaines attaques Feu !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(defender.ability==='Corps Cuit' && move.type==='feu'){
@@ -1237,13 +1237,13 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     applyStatBoost(defender, [{stat:'def',stages:2}], cclogs);
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Corps Cuit protège ${defender.name} de la chaleur ! ${cclogs.join(' ')}`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(defender.ability==="Cœur d'Or" && move.cat==='status' && move.target!=='self'){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Ça n'affecte pas ${defender.name} (Cœur d'Or) !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   let thawMsg = '';
@@ -1256,7 +1256,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     if(defender.ability==='Fermeté'){
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} résiste grâce à Fermeté !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     defender.hp = 0;
@@ -1264,19 +1264,19 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     shakeBox(boxIdFor(defender), true);
     flashScreen('crit');
     setLog(`<b>${actor.name}</b> utilise ${move.name} !${thawMsg} Coup K.O. direct sur ${defender.name} !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.sleepOnly && defender.status!=='sommeil'){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ${defender.name} n'est pas endormi, ça échoue !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(move.selfSleepOnly && actor.status!=='sommeil'){
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue (il faut dormir) !`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(move.halfHp){
@@ -1285,14 +1285,14 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} perd la moitié de ses PV actuels (${hdmg} dégâts) !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.endeavor){
     if(defender.hp<=actor.hp){
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name}... mais ça échoue !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     const edmg = defender.hp - actor.hp;
@@ -1300,7 +1300,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! ${defender.name} tombe au même niveau de PV (${edmg} dégâts) !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.psywave){
@@ -1309,7 +1309,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Une décharge d'intensité aléatoire inflige ${pdmg} dégâts !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.present){
@@ -1318,7 +1318,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
       defender.hp = Math.min(defender.maxHp, defender.hp+heal);
       renderBattle();
       setLog(`<b>${actor.name}</b> offre un Cadeau ! ${defender.name} récupère ${heal} PV !`);
-      setTimeout(callback, 1000);
+      setTimeout(callback, btDelay(1000));
       return;
     }
     const pdmg = Math.max(1, Math.round(20 + Math.random()*40));
@@ -1326,7 +1326,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     shakeBox(boxIdFor(defender));
     setLog(`<b>${actor.name}</b> offre un Cadeau piégé ! ${defender.name} subit ${pdmg} dégâts !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   if(move.futureSight){
@@ -1336,14 +1336,14 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     bs.pendingFutureSight.push({ target: defender, turnsLeft:2, dmg: fsDmg, moveName: move.name });
     renderBattle();
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Une force mystérieuse rôde autour de ${defender.name}...`);
-    setTimeout(callback, 900);
+    setTimeout(callback, btDelay(900));
     return;
   }
   if(move.multiHit){
     if(defender.ability==='Garde Mystik'){
       renderBattle();
       setLog(`<b>${actor.name}</b> utilise ${move.name} ! Garde Mystik protège ${defender.name} !`);
-      setTimeout(callback, 900);
+      setTimeout(callback, btDelay(900));
       return;
     }
     const { min, max } = move.multiHit;
@@ -1378,7 +1378,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     shakeBox(boxIdFor(defender), lastCrit);
     if(lastCrit) flashScreen('crit');
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Touché ${actualHits} fois pour un total de ${total} dégâts !${extraMsg}`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   const { dmg, eff, crit } = computeDamage(actor, move, defender);
@@ -1414,7 +1414,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     renderBattle();
     shakeBox(boxIdFor(defender), crit);
     setLog(`<b>${actor.name}</b> utilise ${move.name} ! Le clone de ${defender.name} encaisse ${absorbed} dégâts${broke?' et disparaît':''} !`);
-    setTimeout(callback, 1000);
+    setTimeout(callback, btDelay(1000));
     return;
   }
   defender.hp = Math.max(0, defender.hp-actualDmg);
@@ -1671,7 +1671,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
   if(crit) flashScreen('crit');
   else if(eff>1) flashScreen('superfx');
   setLog(msg);
-  setTimeout(callback, 1000);
+  setTimeout(callback, btDelay(1000));
 }
 
 /* ---- Fin de tour, K.O. et remplacements ---- */
@@ -1887,8 +1887,8 @@ function endTurn(){
 // le tour suivant.
 function handleFaintsAndAdvance(){
   const bs = battleState;
-  if(allFainted(bs.player)){ setTimeout(()=> gameOver(), 700); return; }
-  if(allFainted(bs.foe)){ setTimeout(()=> floorCleared(), 900); return; }
+  if(allFainted(bs.player)){ setTimeout(()=> gameOver(), btDelay(700)); return; }
+  if(allFainted(bs.foe)){ setTimeout(()=> floorCleared(), btDelay(900)); return; }
 
   const foeFaintedSlots = [];
   if(bs.fActive!=null && bs.foe[bs.fActive].hp<=0) foeFaintedSlots.push('A');
@@ -1914,10 +1914,10 @@ function handleFaintsAndAdvance(){
         bs.selectingSlot = 'A';
         renderBattle();
         handleFaintsAndAdvance();
-      }, 700);
+      }, btDelay(700));
       return;
     }
-    setTimeout(()=> showSwitchPrompt(aliveIdx, slot), 700);
+    setTimeout(()=> showSwitchPrompt(aliveIdx, slot), btDelay(700));
     return;
   }
 
@@ -1939,7 +1939,7 @@ function replaceFoeSlot(slot, callback){
   if(nextIdx===-1){
     // Plus de remplaçant : le slot se vide. Le seul survivant d'un combat double repasse en slot A (le rendu s'appuie sur fActive).
     if(slot==='A'){ bs.fActive = bs.fActive2; bs.fActive2 = null; } else bs.fActive2 = null;
-    setTimeout(callback, 300);
+    setTimeout(callback, btDelay(300));
     return;
   }
   setActiveSlot('foe', slot, nextIdx);
@@ -1952,7 +1952,7 @@ function replaceFoeSlot(slot, callback){
     renderBattle();
     pulseSprite(slot==='A' ? 'foe' : 'foe2', 'switch-in-fx');
     callback();
-  }, 900);
+  }, btDelay(900));
 }
 
 // Affiche l'écran de choix forcé du prochain Pokémon après un K.O. du joueur.

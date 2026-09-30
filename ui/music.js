@@ -52,6 +52,17 @@ function setShowMoveEffectiveness(val){
   try { localStorage.setItem('draftArenaShowEffectiveness', showMoveEffectiveness ? '1' : '0'); } catch(e){}
   if(typeof battleState!=='undefined' && battleState && !document.getElementById('screenBattle').classList.contains('hidden') && typeof renderMoveGrid==='function') renderMoveGrid();
 }
+// Vitesse du jeu (x1/x1.5/x2) : raccourcit les délais entre chaque étape d'un combat (combat/battle-flow.js,
+// via btDelay). Ne touche pas aux effets visuels liés à une durée d'animation CSS (combat/move-fx.js,
+// flashScreen dans combat/battle-ui.js) pour ne pas les désynchroniser de leur animation.
+const GAME_SPEEDS = [1, 1.5, 2];
+let gameSpeed = parseFloat(localStorage.getItem('draftArenaGameSpeed'));
+if(!GAME_SPEEDS.includes(gameSpeed)) gameSpeed = 1;
+function setGameSpeed(val){
+  gameSpeed = GAME_SPEEDS.includes(val) ? val : 1;
+  try { localStorage.setItem('draftArenaGameSpeed', String(gameSpeed)); } catch(e){}
+}
+function btDelay(ms){ return Math.round(ms / gameSpeed); }
 let musicUnlocked = false;
 let currentTrackKey = null;
 let playlistState = null;
@@ -194,10 +205,12 @@ function openMusicSettingsModal(){
         <span style="font-size:14px;">🔊</span>
       </div>
       <div style="font-size:10px;color:var(--text-dim);margin:16px 0 8px;">Combat</div>
-      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-main);cursor:pointer;">
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-main);cursor:pointer;margin-bottom:12px;">
         <input type="checkbox" id="effectivenessToggle" ${showMoveEffectiveness?'checked':''}>
         Afficher l'efficacité des attaques (super efficace/peu efficace/aucun effet)
       </label>
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">Vitesse du jeu</div>
+      <div id="gameSpeedTabs" style="display:flex;gap:6px;"></div>
     </div>`;
   document.body.appendChild(overlay);
   const close = ()=> overlay.remove();
@@ -205,6 +218,19 @@ function openMusicSettingsModal(){
   overlay.onclick = (e)=>{ if(e.target===overlay) close(); };
   document.getElementById('musicVolumeSlider').oninput = (e)=> setMusicVolume(parseInt(e.target.value)/100);
   document.getElementById('effectivenessToggle').onchange = (e)=> setShowMoveEffectiveness(e.target.checked);
+  const speedTabs = document.getElementById('gameSpeedTabs');
+  GAME_SPEEDS.forEach(sp=>{
+    const btn = document.createElement('button');
+    btn.className = 'btn secondary' + (gameSpeed===sp ? ' diff-active' : '');
+    btn.style.cssText = 'padding:6px 10px;font-size:10px;flex:1;';
+    btn.textContent = 'x'+sp;
+    btn.onclick = ()=>{
+      setGameSpeed(sp);
+      speedTabs.querySelectorAll('button').forEach(b=>b.classList.remove('diff-active'));
+      btn.classList.add('diff-active');
+    };
+    speedTabs.appendChild(btn);
+  });
 }
 window.addEventListener('pointerdown', unlockMusic, { once:true, capture:true });
 window.addEventListener('keydown', unlockMusic, { once:true, capture:true });
