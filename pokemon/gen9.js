@@ -10,7 +10,7 @@
    - L.221-fin : DEX_NUMBERS_GEN9 (numéros de Pokédex, utilisés pour résoudre les sprites)
 ==== */
 const LINES_GEN9 = [
-{id:'sprigatito',abilities:['Engrais','Protéen'],moveIds:['scratch','leafage','trailblaze','protect','swift','endure','hyperbeam','solarbeam','facade','sleeptalk','rest','takedown','thief','gigadrain','taunt','knockoff','brickbreak','shadowball','aerialace','bulletseed','darkpulse','magicalleaf','tailwhip','bite','quickattack','slash','uturn','playrough','nightslash','grassyterrain','thunderpunch','suckerpunch','petalblizzard','doubleteam','trick','leechseed','substitute','helpinghand','copycat','worryseed','seedbomb','energyball','nastyplot','leafstorm','grassknot','honeclaws','allyswitch','acrobatics','grasspledge','terablast','fling','lowsweep','powergem','gigaimpact','trickroom','foulplay','flowertrick','chillingwater','tripleaxel'],
+{id:'sprigatito',abilities:['Engrais','Protéen'],moveIds:['scratch','leafage','trailblaze','protect','swift','endure','hyperbeam','solarbeam','facade','sleeptalk','rest','takedown','thief','gigadrain','taunt','knockoff','brickbreak','shadowball','aerialace','bulletseed','darkpulse','magicalleaf','tailwhip','bite','quickattack','slash','uturn','playrough','nightslash','grassyterrain','thunderpunch','suckerpunch','petalblizzard','doubleteam','trick','leechseed','substitute','helpinghand','copycat','worryseed','seedbomb','energyball','nastyplot','leafstorm','grassknot','honeclaws','allyswitch','acrobatics','grasspledge','terablast','fling','lowsweep','powergem','gigaimpact','trickroom','foulplay','flowertrick','chillingwater','tripleaxel','solarblade'],
  stages:[
   {name:'Poussacha',types:['plante'],base:st(40,61,54,45,45,65)},
   {name:'Matourgeon',types:['plante'],base:st(61,80,70,65,60,90)},
