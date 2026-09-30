@@ -16,6 +16,21 @@ function rarityKey(line, stageIdx){
   if(stageIdx === 0) return 'commun';
   return 'evo';
 }
+// Regroupe les faiblesses/résistances/immunités d'un ou deux types contre les 18 types offensifs (fiche détail du Dex).
+function typeMatchupGroups(types){
+  const groups = {4:[], 2:[], 0.5:[], 0.25:[], 0:[]};
+  Object.keys(TYPE_EMOJI).forEach(t=>{
+    const mult = getMult(t, types);
+    if(groups[mult]) groups[mult].push(t); else if(mult===0) groups[0].push(t);
+  });
+  return groups;
+}
+// Affiche les groupes faiblesse/résistance/immunité (une ligne de badges de type par groupe non vide).
+function typeMatchupHTML(types){
+  const g = typeMatchupGroups(types);
+  const row = (label, list) => list.length ? `<div style="margin-bottom:6px;"><span style="font-size:9px;color:var(--text-dim);display:block;margin-bottom:3px;">${label}</span><div class="types-row" style="justify-content:flex-start;">${list.map(t=>typeTagHTML(t)).join('')}</div></div>` : '';
+  return `${row('×4 Faible', g[4])}${row('×2 Faible', g[2])}${row('×0.5 Résiste', g[0.5])}${row('×0.25 Résiste', g[0.25])}${row('Immunisé', g[0])}`;
+}
 // Les 5 pastilles de niveau d'affinité d'une lignée (pleines jusqu'au niveau actuel), avec le
 // multiplicateur de tirage en info-bulle. `size` en px (plus petit sur la carte, plus grand en fiche détail).
 function dexAffinityPipsHTML(lineId, size){
@@ -317,6 +332,10 @@ function openDexDetail(line, stageIdx, branchIdx){
         <div style="display:flex;flex-direction:column;gap:6px;">
           ${v.abilities.map(a=>`<div><b style="color:var(--text-main);font-size:11px;">${a}</b><div class="effect-desc" style="margin-top:2px;">${ABILITY_DESC[a]||''}</div></div>`).join('')}
         </div>
+      </div>
+      <div class="editor-section">
+        <div class="editor-section-title">Faiblesses & résistances</div>
+        ${typeMatchupHTML(v.types)}
       </div>
       ${affinityDetailHTML()}`;
   }
