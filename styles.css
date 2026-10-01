@@ -1187,6 +1187,35 @@ select option{
 .rarity-fabuleux { background:rgba(230,103,175,.16); color:#E667AF; border:1px solid rgba(230,103,175,.45); }
 .dex-rate{ font-size:11px; color:var(--text-dim); margin-top:4px; }
 
+/* ==== Couleurs thématiques des icônes Phosphor (phIcon) ====
+   Chaque icône reprend une couleur liée à son sens, pour retrouver la lisibilité colorée qu'avaient
+   les émojis avant leur remplacement par ces icônes (toutes monochromes par défaut, héritent sinon de
+   la couleur du texte autour). Exclusion volontaire : .ph-x reste neutre (hérite de la couleur du
+   texte) pour garder l'effet de survol doré des boutons de fermeture (voir .patchnotes-close:hover). */
+.ph-coins,.ph-ticket,.ph-trophy,.ph-medal,.ph-crown,.ph-star,.ph-book-open,.ph-scroll,.ph-house,
+.ph-smiley,.ph-sun,.ph-lightning,.ph-plug,.ph-sparkle,.ph-warning,.ph-shopping-cart,.ph-dice-five
+{ color:#FFC94D; }
+.ph-gift,.ph-cookie,.ph-music-notes,.ph-heart,.ph-flower,.ph-mask-happy{ color:#E667AF; }
+.ph-diamond,.ph-shield,.ph-arrows-clockwise,.ph-repeat,.ph-users,.ph-user,.ph-person-simple-run,
+.ph-bicycle,.ph-sneaker,.ph-snowflake{ color:#7ecbe0; }
+.ph-flame,.ph-backpack{ color:#EE8130; }
+.ph-cherries,.ph-first-aid-kit,.ph-prohibit,.ph-target,.ph-boxing-glove{ color:#F0605C; }
+.ph-flask,.ph-test-tube,.ph-pill,.ph-floppy-disk,.ph-check,.ph-dna,.ph-leaf,.ph-plant,.ph-tent,
+.ph-basket{ color:#4ADE80; }
+.ph-sword,.ph-mountains,.ph-shovel,.ph-triangle{ color:#B6A136; }
+.ph-skull,.ph-ghost{ color:#A33EA1; }
+.ph-drop,.ph-person-simple-swim{ color:#6390F0; }
+.ph-moon,.ph-moon-stars,.ph-spiral,.ph-magic-wand,.ph-film-reel,.ph-feather,.ph-fan{ color:#A98FF3; }
+.ph-brain{ color:#F95587; }
+.ph-bug,.ph-asterisk{ color:#A6B91A; }
+.ph-lock-simple,.ph-trash-simple,.ph-magnifying-glass,.ph-eye,.ph-gear,.ph-wrench,.ph-sliders,
+.ph-desktop,.ph-device-mobile,.ph-tag-simple,.ph-speaker-high,.ph-speaker-low,.ph-circle,
+.ph-question,.ph-paw-print{ color:#8891A3; }
+.ph-rainbow{
+  background:linear-gradient(90deg,#F0605C,#FFC94D,#4ADE80,#7ecbe0,#A98FF3);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+
 .move-select-row{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
 .move-select-row select{ font-size:11px; padding:4px 6px; }
 .base-stats-box{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; background:rgba(0,0,0,.25); border:1px solid var(--line); border-radius:10px; padding:10px; margin-bottom:14px; }
