@@ -486,6 +486,7 @@ function openDifficultyChoice(onConfirm){
   overlay.className = 'patchnotes-overlay';
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:380px;text-align:center;">
+      <button class="patchnotes-close" id="diffCloseBtn">${phIcon('x')}</button>
       <h2>◆ CHOISIS TA DIFFICULTÉ ◆</h2>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
         <button class="btn secondary" id="diffFacileBtn" style="padding:10px;font-size:10px;">${phIcon('smiley')} Facile</button>
@@ -508,4 +509,5 @@ function openDifficultyChoice(onConfirm){
   document.getElementById('diffFacileBtn').onclick = ()=> pick('facile');
   document.getElementById('diffNormalBtn').onclick = ()=> pick('normal');
   document.getElementById('diffDifficileBtn').onclick = ()=> pick('difficile');
+  document.getElementById('diffCloseBtn').onclick = ()=> overlay.remove();
 }
