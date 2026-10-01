@@ -62,16 +62,22 @@ function renderDex(){
       if(dexFilters.search && !sp.name.toLowerCase().includes(dexFilters.search.toLowerCase())) return;
       if(dexFilters.type && !sp.types.includes(dexFilters.type)) return;
       if(dexFilters.type2 && !sp.types.includes(dexFilters.type2)) return;
+      // Une branche non-draftable (ex. Éthernatos Infinimax) n'est jamais une rareté en soi : elle
+      // partage juste la rareté de sa lignée, sauf si elle est bloquée au tirage (voir buildFacileCandidates),
+      // auquel cas elle affiche "Injouable" à la place (uniquement accessible via l'éditeur).
+      const isUndraftableBranch = isBranch && sp.draftable===false;
       if(dexFilters.rarity){
-        const key = isBranch ? 'evo' : rarityKey(line);
+        const key = isUndraftableBranch ? 'injouable' : rarityKey(line);
         if(key !== dexFilters.rarity) return;
       }
       if(dexFilters.boosted && affinityLevel(line.id)<=0) return;
 
-      const rarity = isBranch ? {label:'Évolution', css:'rarity-evo'} : rarityInfo(line);
+      const rarity = isUndraftableBranch ? {label:'Injouable', css:'rarity-injouable'} : rarityInfo(line);
       let rateText;
-      if(isBranch){
-        rateText = `Évolution à embranchement — obtenue en faisant évoluer ${line.stages[0].name}`;
+      if(isUndraftableBranch){
+        rateText = `Non draftable — obtenue uniquement en faisant évoluer ${line.stages[0].name} depuis l'éditeur`;
+      } else if(isBranch){
+        rateText = `Forme à embranchement — obtenue en draft (mode Facile) ou en faisant évoluer ${line.stages[0].name}`;
       } else if(stageIdx===0){
         rateText = `Taux d'apparition en draft : ${appearanceRate(line, stageIdx).toFixed(2)}%`;
       } else {
@@ -130,7 +136,7 @@ const DEX_RARITY_OPTIONS = [
   {value:'commun', label:'Commun', css:'rarity-commun'},{value:'peucommun', label:'Peu Commun', css:'rarity-peucommun'},
   {value:'rare', label:'Rare', css:'rarity-rare'},{value:'pseudo', label:'Pseudo-légendaire', css:'rarity-pseudo'},
   {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'},{value:'fabuleux', label:'Fabuleux', css:'rarity-fabuleux'},
-  {value:'evo', label:'Forme à embranchement', css:'rarity-evo'}
+  {value:'injouable', label:'Injouable', css:'rarity-injouable'}
 ].map(o=> o.value ? {...o, html: rarityOptionHTML(o.css, o.label)} : o);
 // Affiche le menu déroulant de filtre par type principal.
 function renderDexTypeFilter(){
