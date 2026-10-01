@@ -112,12 +112,17 @@ function openEditor(idx){
       <span style="width:26px;height:26px;flex-shrink:0;">${getSpriteHTML(targetName, null)}</span>
       <span>${label}</span>
     </button>`;
+  // Les branches draftable:false (ex. Éthernatos Infinimax) ne sont jamais proposées ici non plus :
+  // elles ne doivent être atteignables par aucun chemin, ni le draft/les rencontres, ni l'éditeur.
+  const evolvableBranches = line.branches ? line.branches.map((b,bi)=>({b,bi})).filter(({b})=>b.draftable!==false) : [];
   const evolveSection = line.branches ? `
     <div class="editor-section">
       <div class="editor-section-title">Évolution</div>
       ${isBranched
         ? `<button class="btn secondary" disabled style="font-size:10px;">Déjà évolué en ${sp.name}</button>`
-        : line.branches.map((b,bi)=>evolveBtnHTML(b.name, `→ ${b.name}`, 'evolveBranchBtn', `data-branch="${bi}"`)).join('')
+        : (evolvableBranches.length
+          ? evolvableBranches.map(({b,bi})=>evolveBtnHTML(b.name, `→ ${b.name}`, 'evolveBranchBtn', `data-branch="${bi}"`)).join('')
+          : `<button class="btn secondary" disabled style="font-size:10px;">Stade final — ${sp.name}</button>`)
       }
     </div>` : (line.stages.length>1 ? `
     <div class="editor-section">
@@ -411,7 +416,9 @@ function openEditor(idx){
   if(line.branches){
     ed.querySelectorAll('.evolveBranchBtn').forEach(btn=>{
       btn.onclick = ()=>{
-        m.branch = parseInt(btn.dataset.branch);
+        const bi = parseInt(btn.dataset.branch);
+        if(line.branches[bi].draftable===false) return;
+        m.branch = bi;
         m.stage = 1;
         m.ability = null;
         openEditor(idx);
