@@ -191,10 +191,13 @@ function lineFinalBst(line){
   return LINE_FINAL_BST[line.id];
 }
 // Tire n lignées sans remise, pondérées par lineWeight (réutilise la même rareté que le draft du joueur). Avec un étage
-// (>=5), les lignées aux stats élevées sont de plus en plus favorisées.
+// (>=5), les lignées aux stats élevées sont de plus en plus favorisées. Les Légendaires/Fabuleux restent totalement
+// exclus des équipes adverses avant l'étage 21 (voir aussi la limite à 1 par équipe dans foeCandidateScore) : ils ne
+// doivent apparaître que passé le premier palier de difficulté majeur, jamais en pile aux bas étages.
 function weightedSampleLines(lines, n, floor){
   const exponent = floor ? Math.min(4, Math.max(0, (floor-3)/3)) : 0;
-  let pool = lines.map(l=>({l, w: lineWeight(l) * (exponent>0 ? Math.pow(Math.max(0.5, lineFinalBst(l)/450), exponent) : 1)}));
+  const pool0 = floor>=21 ? lines : lines.filter(l => !LEGENDARY_IDS.includes(l.id) && !FABULEUX_IDS.includes(l.id));
+  let pool = pool0.map(l=>({l, w: lineWeight(l) * (exponent>0 ? Math.pow(Math.max(0.5, lineFinalBst(l)/450), exponent) : 1)}));
   const result = [];
   for(let k=0;k<n && pool.length>0;k++){
     const total = pool.reduce((a,p)=>a+p.w,0);
@@ -251,6 +254,11 @@ function foeCandidateScore(team, c, statWeight, synergyWeight){
   const b = c.sp.base;
   const ctypes = c.sp.types;
   let s = (speciesBst(c.sp) - 480) / 60 * statWeight;
+  // Jamais plus d'un Légendaire/Fabuleux par équipe adverse (voir aussi l'exclusion sous l'étage 21
+  // dans weightedSampleLines) : sans ce garde-fou, leurs stats dominent le score et l'IA en empile
+  // plusieurs dès qu'elle en pioche plus d'un candidat.
+  const isLegendOrFab = LEGENDARY_IDS.includes(c.id) || FABULEUX_IDS.includes(c.id);
+  if(isLegendOrFab && team.some(m => LEGENDARY_IDS.includes(m.id) || FABULEUX_IDS.includes(m.id))) s -= 20;
   AI_TYPES.forEach(t=>{
     const mult = getMult(t, ctypes);
     const teamWeak = team.filter(m=>getMult(t, m.sp.types)>=2).length;
@@ -437,8 +445,21 @@ function generateEnemyTeam(floor, trainerTheme, isBoss, maxSize){
 
   let chosen = optimize ? selectFoeTeam(cands, size, dFloor, quota) : cands.slice(0, size);
   if(chosen.length < size){
+    // Même garde-fou Légendaire/Fabuleux que weightedSampleLines/foeCandidateScore : ce filet de secours
+    // (pool thématique ou candidats insuffisants) ne doit pas les réintroduire en douce, ni en empiler
+    // plusieurs (un tirage au hasard n'a pas le score anti-pile de foeCandidateScore).
     const usedIds = chosen.map(c=>c.id);
-    const extra = shuffle(LINES.filter(l => !usedIds.includes(l.id))).slice(0, size - chosen.length);
+    let hasLegend = chosen.some(c => LEGENDARY_IDS.includes(c.id) || FABULEUX_IDS.includes(c.id));
+    const shuffledPool = shuffle(LINES.filter(l => !usedIds.includes(l.id)
+      && (dFloor>=21 || !(LEGENDARY_IDS.includes(l.id) || FABULEUX_IDS.includes(l.id)))));
+    const extra = [];
+    for(const l of shuffledPool){
+      if(extra.length >= size - chosen.length) break;
+      const isLegendOrFab = LEGENDARY_IDS.includes(l.id) || FABULEUX_IDS.includes(l.id);
+      if(isLegendOrFab && hasLegend) continue;
+      if(isLegendOrFab) hasLegend = true;
+      extra.push(l);
+    }
     chosen = [...chosen, ...rolled(extra, false)];
   }
   // Aux paliers avancés, le Pokémon le plus puissant est gardé pour la fin (l'as de l'équipe).

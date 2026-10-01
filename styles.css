@@ -1179,6 +1179,7 @@ select option{
   font-weight:700;
 }
 .rarity-commun   { background:rgba(74,222,128,.14); color:#4ADE80; border:1px solid rgba(74,222,128,.4); }
+.rarity-peucommun{ background:rgba(232,163,61,.14); color:#E8A33D; border:1px solid rgba(232,163,61,.4); }
 .rarity-evo      { background:rgba(255,201,77,.14); color:#FFE19A; border:1px solid rgba(255,201,77,.4); }
 .rarity-rare     { background:rgba(63,169,201,.14); color:#7ecbe0; border:1px solid rgba(63,169,201,.4); }
 .rarity-pseudo   { background:rgba(107,79,160,.16); color:#c3aee6; border:1px solid rgba(107,79,160,.5); }

@@ -9,13 +9,14 @@
    - filtres (listes d'options type/rareté + les menus déroulants + réinitialisation)
    - openDexDetail : fenêtre de détail d'une carte (stats, talents, affinité, chaîne d'évolution, movepool)
 ==== */
-function rarityKey(line, stageIdx){
+function rarityKey(line){
   if(LEGENDARY_IDS.includes(line.id)) return 'legendaire';
   if(FABULEUX_IDS.includes(line.id)) return 'fabuleux';
-  if(RARE_IDS.includes(line.id)) return 'rare';
-  if(PSEUDO_IDS.includes(line.id) && stageIdx === line.stages.length-1) return 'pseudo';
-  if(stageIdx === 0) return 'commun';
-  return 'evo';
+  if(PSEUDO_IDS.includes(line.id)) return 'pseudo';
+  const bst = lineFinalBST(line);
+  if(bst>=BST_RARE_THRESHOLD) return 'rare';
+  if(bst>=BST_PEU_COMMUN_THRESHOLD) return 'peucommun';
+  return 'commun';
 }
 // Regroupe les faiblesses/résistances/immunités d'un ou deux types contre les 18 types offensifs (fiche détail du Dex).
 function typeMatchupGroups(types){
@@ -62,12 +63,12 @@ function renderDex(){
       if(dexFilters.type && !sp.types.includes(dexFilters.type)) return;
       if(dexFilters.type2 && !sp.types.includes(dexFilters.type2)) return;
       if(dexFilters.rarity){
-        const key = isBranch ? 'evo' : rarityKey(line, stageIdx);
+        const key = isBranch ? 'evo' : rarityKey(line);
         if(key !== dexFilters.rarity) return;
       }
       if(dexFilters.boosted && affinityLevel(line.id)<=0) return;
 
-      const rarity = isBranch ? {label:'Évolution', css:'rarity-evo'} : rarityInfo(line, stageIdx);
+      const rarity = isBranch ? {label:'Évolution', css:'rarity-evo'} : rarityInfo(line);
       let rateText;
       if(isBranch){
         rateText = `Évolution à embranchement — obtenue en faisant évoluer ${line.stages[0].name}`;
@@ -126,9 +127,10 @@ const DEX_TYPE_OPTIONS = [
 const DEX_TYPE_OPTIONS_2 = DEX_TYPE_OPTIONS.map(o=> o.value ? o : {...o, label:'2ème type (optionnel)'});
 const DEX_RARITY_OPTIONS = [
   {value:'', label:'Toutes raretés'},
-  {value:'commun', label:'Commun', css:'rarity-commun'},{value:'evo', label:'Évolution', css:'rarity-evo'},
+  {value:'commun', label:'Commun', css:'rarity-commun'},{value:'peucommun', label:'Peu Commun', css:'rarity-peucommun'},
   {value:'rare', label:'Rare', css:'rarity-rare'},{value:'pseudo', label:'Pseudo-légendaire', css:'rarity-pseudo'},
-  {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'},{value:'fabuleux', label:'Fabuleux', css:'rarity-fabuleux'}
+  {value:'legendaire', label:'Légendaire', css:'rarity-legendaire'},{value:'fabuleux', label:'Fabuleux', css:'rarity-fabuleux'},
+  {value:'evo', label:'Forme à embranchement', css:'rarity-evo'}
 ].map(o=> o.value ? {...o, html: rarityOptionHTML(o.css, o.label)} : o);
 // Affiche le menu déroulant de filtre par type principal.
 function renderDexTypeFilter(){

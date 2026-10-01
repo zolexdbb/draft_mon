@@ -28,7 +28,7 @@ const SAFARI_TIERS = [
 function safariTierOf(line){
   if(LEGENDARY_IDS.includes(line.id) || FABULEUX_IDS.includes(line.id)) return 'legendaire';
   if(PSEUDO_IDS.includes(line.id)) return 'pseudo';
-  if(RARE_IDS.includes(line.id)) return 'rare';
+  if(lineFinalBST(line)>=BST_RARE_THRESHOLD) return 'rare';
   return 'commun';
 }
 // Regroupe les lignées par catégorie de rareté du Safari, calculé une seule fois (LINES ne change jamais en cours de partie).
@@ -322,7 +322,7 @@ let professorFilter = { search:'', rarity:'' };
 function professorRarityKey(lineId){
   if(LEGENDARY_IDS.includes(lineId) || FABULEUX_IDS.includes(lineId)) return 'legendaire';
   if(PSEUDO_IDS.includes(lineId)) return 'pseudo';
-  if(RARE_IDS.includes(lineId)) return 'rare';
+  if(lineFinalBST(lineOf(lineId))>=BST_RARE_THRESHOLD) return 'rare';
   return 'commun';
 }
 const PROFESSOR_RARITY_LABEL = { legendaire:'Légendaire', pseudo:'Pseudo-légendaire', rare:'Rare', commun:'Commun' };

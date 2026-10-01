@@ -1,9 +1,11 @@
 /* ==== SOMMAIRE ====
    Cœur du système de draft : rareté des lignées, écran de choix (3 cartes par tour, 6 tours),
    construction d'un membre par défaut, et movepool progressif par stade. Repères :
-   - L.10-17 : LEGENDARY_IDS/PSEUDO_IDS/RARE_IDS — listes d'ids qui pilotent la rareté au tirage
-   - L.18-23 : lineWeight — poids de tirage d'une lignée (utilisé partout : draft, équipes adverses)
-   - L.29-32 : rarityInfo — badge de rareté affiché sur une carte (mode Classic/Normal/Difficile)
+   - L.10-18 : LEGENDARY_IDS/FABULEUX_IDS/PSEUDO_IDS — listes d'ids pour les catégories officielles ;
+     le reste des lignées est classé Rare/Peu Commun/Commun selon lineFinalBST (stats finales)
+   - L.19-31 : lineFinalBST/lineWeight — poids de tirage d'une lignée (utilisé partout : draft, équipes
+     adverses), toute une lignée partage la même rareté
+   - L.32-41 : rarityInfo — badge de rareté affiché sur une carte (mode Classic/Normal/Difficile)
    - L.33-45 : weightedSampleCandidates — tire N candidats sans remise, pondérés
    - L.46-49 : stageMultiplier — un stade précoce apparaît plus souvent qu'un stade évolué
    - L.51-fin(69) : movepoolForStage — débloque progressivement le movepool selon le stade
@@ -13,30 +15,46 @@
      (3 cartes à choisir, barre de progression, reroll gratuit)
    - L.208-fin : finalizeTeamAndGoToTower — calcule les stats finales et lance la Tour
 ==== */
-const LEGENDARY_IDS = ['articuno','zapdos','moltres','mewtwo','raikou','entei','suicune','lugia','hooh','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','uxie','mesprit','azelf','dialga','palkia','heatran','regigigas','giratina','cresselia','cobalion','terrakion','virizion','tornadus','thundurus','reshiram','zekrom','landorus','kyurem','xerneas','yveltal','zygarde','tokorico','tokopiyon','tokotoro','tokopisco','cosmog','necrozma','vemini','zeroid','mouscoto','cancrelove','cablifere','bamboiselle','katagami','engloutyran','amaama','pierroteknik','zacian','zamazenta','ethernatos','wushours','regieleki','regidrago','blizzeval','spectreval','sylveroy','amovenus','woochien','chienpao','tinglu','chiyu','okidogi','munkidori','fezandipiti','ogerpon','koraidon','miraidon','terapagos','greattusk','screamtail','brutebonnet','fluttermane','slitherwing','sandyshocks','roaringmoon','ragingbolt','walkingwake','gougingfire','irontreads','ironbundle','ironhands','ironjugulis','ironmoth','ironthorns','ironvaliant','ironleaves','ironboulder','ironcrown'];
+const LEGENDARY_IDS = ['articuno','zapdos','moltres','artikodingalar','electhorgalar','sulfuragalar','mewtwo','raikou','entei','suicune','lugia','hooh','regirock','regice','registeel','latias','latios','kyogre','groudon','rayquaza','uxie','mesprit','azelf','dialga','palkia','heatran','regigigas','giratina','cresselia','cobalion','terrakion','virizion','tornadus','thundurus','reshiram','zekrom','landorus','kyurem','xerneas','yveltal','zygarde','tokorico','tokopiyon','tokotoro','tokopisco','cosmog','necrozma','vemini','zeroid','mouscoto','cancrelove','cablifere','bamboiselle','katagami','engloutyran','amaama','pierroteknik','zacian','zamazenta','ethernatos','wushours','regieleki','regidrago','blizzeval','spectreval','sylveroy','amovenus','woochien','chienpao','tinglu','chiyu','okidogi','munkidori','fezandipiti','ogerpon','koraidon','miraidon','terapagos','greattusk','screamtail','brutebonnet','fluttermane','slitherwing','sandyshocks','roaringmoon','ragingbolt','walkingwake','gougingfire','irontreads','ironbundle','ironhands','ironjugulis','ironmoth','ironthorns','ironvaliant','ironleaves','ironboulder','ironcrown'];
 // Pokémon Fabuleux (Mythical) : séparés des Légendaires (rareté propre, voir lineWeight), comme dans les jeux officiels.
 const FABULEUX_IDS = ['mew','celebi','jirachi','deoxys','phione','manaphy','darkrai','shaymin','arceus','victini','keldeo','meloetta','genesect','diancie','hoopa','volcanion','magearna','marshadow','zeraora','zarude','pecharunt'];
 const PSEUDO_IDS = ['dratini','larvitar','bagon','gible','axew','deino','goomy','bebecaille','fantyrm','frigibax'];
-const RARE_IDS = ['lapras','snorlax','aerodactyl','scyther','tauros','kangaskhan','pinsir','heracross','skarmory','miltank','sneasel','houndour','girafarig','qwilfish','unown','absol','relicanth','mawile','beldum','riolu','spiritomb','rotom','zorua','larvesta','druddigon','tirtouga','archen','tyrunt','amaura','galvagon','galvagla','hydragon','hydragla','gimmighoul','archaludon','dipplin','cyclizar','dondozo','tatsugiri','poltchageist'];
+// Total des stats de base d'une espèce — utilisé pour la rareté basée sur les stats finales d'une lignée.
+function rarityBst(sp){
+  const b = sp.base;
+  return b.hp + b.atk + b.def + b.spa + b.spd + b.spe;
+}
+// Meilleures stats de base atteignables par une lignée (dernier stade ou meilleure branche) : toute la
+// lignée partage la même rareté, basée sur cette valeur plutôt que sur le stade en cours (voir rarityInfo).
+function lineFinalBST(line){
+  const finals = [line.stages[line.stages.length-1], ...(line.branches||[])];
+  return Math.max(...finals.map(rarityBst));
+}
+// Seuils de stats finales (hors Légendaire/Fabuleux/Pseudo-légendaire, qui ont leur propre catégorie)
+// séparant Commun / Peu Commun / Rare — calibrés sur la distribution réelle des lignées du jeu.
+const BST_RARE_THRESHOLD = 510, BST_PEU_COMMUN_THRESHOLD = 470;
 // Poids de tirage d'une lignée selon sa rareté (légendaire = la plus rare, fabuleux un peu moins,
-// pseudo-légendaire/rare = moins fréquent, sinon commun).
+// pseudo-légendaire = moins fréquent, puis rare/peu commun/commun selon les stats finales de la lignée).
 function lineWeight(line){
   if(LEGENDARY_IDS.includes(line.id)) return 0.25;
   if(FABULEUX_IDS.includes(line.id)) return 0.5;
   if(PSEUDO_IDS.includes(line.id)) return 3;
-  if(RARE_IDS.includes(line.id)) return 6;
+  const bst = lineFinalBST(line);
+  if(bst>=BST_RARE_THRESHOLD) return 6;
+  if(bst>=BST_PEU_COMMUN_THRESHOLD) return 8;
   return 10;
 }
 const TOTAL_WEIGHT = LINES.reduce((a,l)=>a+lineWeight(l),0);
-// Détermine le badge de rareté à afficher sur une carte de draft (mode Classic/Normal/Difficile).
+// Détermine le badge de rareté à afficher sur une carte de draft (mode Classic/Normal/Difficile) : toute
+// la lignée partage la même rareté (stageIdx n'influence plus le résultat, gardé pour compat d'appel).
 function rarityInfo(line, stageIdx){
   if(LEGENDARY_IDS.includes(line.id)) return {label:'Légendaire', css:'rarity-legendaire'};
   if(FABULEUX_IDS.includes(line.id)) return {label:'Fabuleux', css:'rarity-fabuleux'};
-  if(PSEUDO_IDS.includes(line.id) && stageIdx===line.stages.length-1) return {label:'Pseudo-légendaire', css:'rarity-pseudo'};
-  if(RARE_IDS.includes(line.id)) return {label:'Rare', css:'rarity-rare'};
-  if(stageIdx===0) return {label:'Commun', css:'rarity-commun'};
-  if(stageIdx===line.stages.length-1) return {label:'Évolution finale', css:'rarity-evo'};
-  return {label:'Évolution', css:'rarity-evo'};
+  if(PSEUDO_IDS.includes(line.id)) return {label:'Pseudo-légendaire', css:'rarity-pseudo'};
+  const bst = lineFinalBST(line);
+  if(bst>=BST_RARE_THRESHOLD) return {label:'Rare', css:'rarity-rare'};
+  if(bst>=BST_PEU_COMMUN_THRESHOLD) return {label:'Peu Commun', css:'rarity-peucommun'};
+  return {label:'Commun', css:'rarity-commun'};
 }
 // Tire n candidats sans remise dans une liste pondérée (utilisé pour les 3 cartes de draft proposées à chaque tour).
 function weightedSampleCandidates(candidates, n){
@@ -225,10 +243,8 @@ function nextDraftRound(){
     const line = lineOf(choice.lineId);
     const hasBranch = choice.branch!==undefined && choice.branch!==null;
     const sp = hasBranch ? line.branches[choice.branch] : line.stages[choice.stage];
-    const rarity = isFacile
-      ? {label: LEGENDARY_IDS.includes(line.id)?'Légendaire':(FABULEUX_IDS.includes(line.id)?'Fabuleux':(PSEUDO_IDS.includes(line.id)?'Pseudo-légendaire':(RARE_IDS.includes(line.id)?'Rare':'Commun'))),
-         css: LEGENDARY_IDS.includes(line.id)?'rarity-legendaire':(FABULEUX_IDS.includes(line.id)?'rarity-fabuleux':(PSEUDO_IDS.includes(line.id)?'rarity-pseudo':(RARE_IDS.includes(line.id)?'rarity-rare':'rarity-commun')))}
-      : rarityInfo(line, choice.stage);
+    // Même rareté pour toute la lignée (voir rarityInfo) : plus besoin de distinguer Facile/Normal ici.
+    const rarity = rarityInfo(line);
     const ability = isFacile ? choice.previewMember.ability : (sp.abilities || line.abilities)[0];
     const evoline = hasBranch
       ? [...line.stages.map(s=>s.name), sp.name].join(' → ')

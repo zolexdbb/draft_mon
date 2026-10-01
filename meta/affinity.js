@@ -58,14 +58,17 @@ function recalcDraftWeights(){
   recalcCandidateWeight();
   recalcFacileWeight();
 }
-// Coût en bonbons de chaque palier (niveau 0→1, 1→2, 2→3, 3→4, 4→5) pour une lignée commune.
-const AFFINITY_TIER_COSTS = [3,5,8,12,17];
-// Multiplicateur de coût selon la rareté de la lignée (les listes LEGENDARY_IDS/PSEUDO_IDS/RARE_IDS
-// viennent de draft/draft-core.js, chargé après ce fichier — sans importance, seulement lu à l'appel).
+// Coût en bonbons de chaque palier (niveau 0→1, 1→2, 2→3, 3→4, 4→5) pour une lignée commune — paliers
+// considérablement relevés pour ralentir la progression (les bonbons sont aussi devenus plus rares,
+// voir affinityCandyReward).
+const AFFINITY_TIER_COSTS = [8,15,25,40,60];
+// Multiplicateur de coût selon la rareté de la lignée (les listes LEGENDARY_IDS/FABULEUX_IDS/PSEUDO_IDS
+// et lineFinalBST viennent de draft/draft-core.js, chargé après ce fichier — sans importance, seulement
+// lu à l'appel).
 function affinityCostMultiplier(lineId){
   if(LEGENDARY_IDS.includes(lineId) || FABULEUX_IDS.includes(lineId)) return 3;
   if(PSEUDO_IDS.includes(lineId)) return 2;
-  if(RARE_IDS.includes(lineId)) return 1.5;
+  if(lineFinalBST(lineOf(lineId))>=BST_RARE_THRESHOLD) return 1.5;
   return 1;
 }
 // Coût en bonbons pour faire passer une lignée de son niveau actuel au suivant (null si déjà au niveau max).
@@ -103,25 +106,26 @@ function investAffinityCandy(lineId, amount){
   return leveledUp;
 }
 // Bonbons d'Affinité gagnés du dresseur vaincu après un combat gagné (voir floorCleared dans
-// combat/tower.js) : un combat normal donne 0 à 3 bonbons (0/1 fréquents, 3 rare, ~1 en moyenne) ;
-// Mini-Boss et Boss donnent davantage (Boss : au moins 2), pour ~1 bonbon/combat en moyenne visée
-// (~30 sur une run complète jusqu'à l'étage 20).
+// combat/tower.js) : chances revues à la baisse (0 bonbon le plus fréquent même en Boss) pour
+// compenser la hausse des paliers ci-dessus — environ moitié moins de bonbons qu'avant par combat.
 function affinityCandyReward(isMiniBoss, isBoss){
   const r = Math.random();
   if(isBoss){
-    if(r<0.40) return 2;
-    if(r<0.75) return 3;
-    if(r<0.95) return 4;
-    return 5;
-  }
-  if(isMiniBoss){
-    if(r<0.30) return 1;
-    if(r<0.70) return 2;
-    if(r<0.90) return 3;
+    if(r<0.15) return 0;
+    if(r<0.50) return 1;
+    if(r<0.80) return 2;
+    if(r<0.95) return 3;
     return 4;
   }
-  if(r<0.35) return 0;
-  if(r<0.75) return 1;
-  if(r<0.95) return 2;
+  if(isMiniBoss){
+    if(r<0.35) return 0;
+    if(r<0.70) return 1;
+    if(r<0.90) return 2;
+    if(r<0.98) return 3;
+    return 4;
+  }
+  if(r<0.60) return 0;
+  if(r<0.90) return 1;
+  if(r<0.98) return 2;
   return 3;
 }
