@@ -8,6 +8,58 @@
 ==== */
 const PATCH_NOTES = [
   {
+    version: 'v0.11.1',
+    title: 'v0.11.1 — Habillage & Corrections',
+    categories: [
+      {
+        icon: phIcon('sparkle'), label: 'Identité visuelle',
+        items: [
+          "Refonte complète de l'interface dans un style Pokémon officiel moderne (palette rouge/or chaleureuse, polices Fredoka/Nunito), retrait de toute trace de violet (y compris dans l'arène de combat et les décors du Campement)",
+          "Design aplati : retrait des néons/ombres portées/dot-grid, coins moins arrondis, hover plus discrets",
+          "Toutes les icônes ont désormais une couleur liée à leur sens (pièces en or, soin en vert, poison en violet, eau en bleu...) au lieu d'être monochromes",
+          "Bouton de fermeture agrandi (zone tactile 44×44) sur toutes les fenêtres, et ajouté à la sélection de difficulté qui n'en avait pas",
+          "Sprite principal et boutons d'évolution agrandis dans l'éditeur d'équipe, pour mieux voir le Pokémon sur PC comme sur mobile"
+        ]
+      },
+      {
+        icon: phIcon('diamond'), label: 'Rareté repensée',
+        items: [
+          "La rareté d'une lignée se base désormais sur les stats de base de son évolution finale, et toute la lignée (y compris ses formes à embranchement draftables) partage la même rareté plutôt que de varier selon le stade",
+          "Nouveau palier « Peu Commun » ; la rareté « Évolution » a disparu",
+          "Les oiseaux légendaires de Galar (Artikodin/Électhor/Sulfura) sont enfin classés Légendaire — ils ne figuraient dans aucune liste de rareté",
+          "Les formes non-draftables (ex. Éthernatos Infinimax) affichent un badge « Injouable » dédié, et ne sont plus accessibles ni au draft/aux rencontres, ni même en évoluant depuis l'éditeur"
+        ]
+      },
+      {
+        icon: phIcon('crown'), label: 'Tour de Combat',
+        items: [
+          "Les équipes adverses n'ont plus jamais de Légendaire/Fabuleux avant l'étage 21, et jamais plus d'un par équipe ensuite",
+          "Ciblage des attaques et indicateur d'efficacité corrigés en combat double (2v2)",
+          "L'événement Chemin Instable fait vraiment grimper ou chuter d'étage selon l'issue"
+        ]
+      },
+      {
+        icon: phIcon('repeat'), label: 'Combat',
+        items: [
+          "Possibilité de choisir le Pokémon qui entre après une capacité à self-switch (Demi-Tour, Change Éclair, Relais...)"
+        ]
+      },
+      {
+        icon: phIcon('backpack'), label: 'Objets & Pokédex',
+        items: [
+          "17 objets tenus de boost de type manquants ajoutés (Charbon, Eau Mystique, Aimant, Croc Dragon...)",
+          "Sprites manquants ajoutés pour les formes de Necrozma"
+        ]
+      },
+      {
+        icon: phIcon('cookie'), label: 'Affinité',
+        items: [
+          "Paliers d'affinité considérablement relevés, et bonbons gagnés en combat réduits d'environ moitié pour ralentir la progression"
+        ]
+      }
+    ]
+  },
+  {
     version: 'v0.11',
     title: 'v0.11 — Safari Update',
     categories: [
