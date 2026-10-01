@@ -65,7 +65,7 @@ function renderRanchRecruit(choice, sp){
     depositToPC(buildMember());
     ranchRecruited = true;
     saveGame();
-    setVillageMsg(`✓ ${sp.name} envoyé au PC !`);
+    setVillageMsg(`${phIcon('check')} ${sp.name} envoyé au PC !`);
     renderVillageRanchPen();
     renderRanchPanel();
   };
@@ -84,9 +84,9 @@ function renderRanchRecruit(choice, sp){
         team[i] = newMember;
         if(pcHasSpace()){
           depositToPC(replaced);
-          setVillageMsg(`✓ ${sp.name} rejoint l'équipe ! ${msp.name} est envoyé au PC.`);
+          setVillageMsg(`${phIcon('check')} ${sp.name} rejoint l'équipe ! ${msp.name} est envoyé au PC.`);
         } else {
-          setVillageMsg(`✓ ${sp.name} rejoint l'équipe ! (PC plein, ${msp.name} a été relâché)`);
+          setVillageMsg(`${phIcon('check')} ${sp.name} rejoint l'équipe ! (PC plein, ${msp.name} a été relâché)`);
         }
         ranchRecruited = true;
         saveGame();

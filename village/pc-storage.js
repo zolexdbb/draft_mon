@@ -49,7 +49,7 @@ function renderPCPanel(){
       pcSelectedTeamIdx = null;
       saveGame();
       renderPCPanel();
-      setVillageMsg("✓ Échange effectué !");
+      setVillageMsg(`${phIcon('check')} Échange effectué !`);
     };
     boxGrid.appendChild(cell);
   });

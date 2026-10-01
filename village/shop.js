@@ -1,8 +1,8 @@
 /* ==== Le Pokéshop du Village : achète Potions/Baies/objets stratégiques, avec réduction possible via un boost méta acheté. ==== */
 const SHOP_CATEGORIES = [
-  {key:'potion', label:'💊 Potions'},
-  {key:'baie', label:'🍑 Baies'},
-  {key:'strat', label:'🎗️ Stratégiques'}
+  {key:'potion', label:phIcon('pill')+' Potions'},
+  {key:'baie', label:phIcon('cherries')+' Baies'},
+  {key:'strat', label:phIcon('medal')+' Stratégiques'}
 ];
 // Affiche le Pokéshop (onglets de catégorie + liste d'objets achetables, prix réduit si un boost de fidélité est acheté).
 function renderPokeshopPanel(){
@@ -18,7 +18,7 @@ function renderPokeshopPanel(){
     const btn = document.createElement('button');
     btn.className = 'btn secondary' + (shopCategory===cat.key ? ' diff-active' : '');
     btn.style.cssText = 'padding:6px 10px;font-size:9px;flex:1;';
-    btn.textContent = cat.label;
+    btn.innerHTML = cat.label;
     btn.onclick = ()=>{ shopCategory = cat.key; renderPokeshopPanel(); };
     tabs.appendChild(btn);
   });
@@ -35,7 +35,7 @@ function renderPokeshopPanel(){
         <div style="font-size:11px;color:var(--text-main);"><b>${item.name}</b> <span style="color:var(--text-dim);">(possédé : ${owned})</span></div>
         <div style="font-size:9px;color:var(--text-dim);line-height:1.4;">${item.desc}</div>
       </div>
-      <button class="btn secondary buyBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;">${price} 💰${discount>0?` <span style="text-decoration:line-through;opacity:.5;font-size:8px;">${item.price}</span>`:''}</button>
+      <button class="btn secondary buyBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;">${price} ${phIcon('coins')}${discount>0?` <span style="text-decoration:line-through;opacity:.5;font-size:8px;">${item.price}</span>`:''}</button>
     `;
     list.appendChild(row);
   });
@@ -49,7 +49,7 @@ function renderPokeshopPanel(){
       bag[key] = (bag[key]||0)+1;
       refreshVillageMoney();
       saveGame();
-      setVillageMsg(`✓ ${item.name} acheté !`);
+      setVillageMsg(`${phIcon('check')} ${item.name} acheté !`);
       renderPokeshopPanel();
     };
   });

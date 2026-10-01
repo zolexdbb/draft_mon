@@ -21,7 +21,7 @@ function gameOver(){
   document.getElementById('screenEnd').classList.remove('hidden');
   document.getElementById('endLabel').textContent = 'DÉFAITE';
   document.getElementById('endFloor').textContent = towerFloor;
-  document.getElementById('endTokensLabel').textContent = earned>0 ? `+${earned} 🎫 Jetons de Tour gagnés !` : '';
+  document.getElementById('endTokensLabel').innerHTML = earned>0 ? `+${earned} ${phIcon('ticket')} Jetons de Tour gagnés !` : '';
   renderRunSummary(summary);
 }
 // Capture l'état de la partie au moment de la défaite : dresseur et Pokémon qui ont eu raison de toi (ou, si
@@ -48,7 +48,7 @@ function buildRunSummary(tokensEarned){
     bosses: runStats.bosses, miniBosses: runStats.miniBosses, floorsCleared: runStats.floorsCleared, moneyEarned: runStats.moneyEarned
   };
 }
-const END_DIFFICULTY_LABEL = { facile:'😊 Facile', normal:'⚔️ Normal', difficile:'💀 Difficile' };
+const END_DIFFICULTY_LABEL = { facile:phIcon('smiley')+' Facile', normal:phIcon('sword')+' Normal', difficile:phIcon('skull')+' Difficile' };
 // Affiche le résumé de la run dans l'écran de défaite (#endSummary) : qui t'a battu, l'état final de ton
 // équipe, et les grandes lignes de la run (étages/Boss/Mini-Boss/argent/badges).
 function renderRunSummary(s){
@@ -61,7 +61,7 @@ function renderRunSummary(s){
       <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;${fainted?'opacity:.5;':''}">
         <div style="width:30px;height:30px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(c.name, c.unownForm, 'front', false, c.shiny)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:9px;color:var(--text-main);">${c.name}${c.shiny?shinyBadgeHTML():''}${fainted?' 💀':''}</div>
+          <div style="font-size:9px;color:var(--text-main);">${c.name}${c.shiny?shinyBadgeHTML():''}${fainted?' '+phIcon('skull'):''}</div>
           <div style="background:#0b0b10;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
         </div>
         <div style="font-size:8px;color:var(--text-dim);flex-shrink:0;">${c.hp}/${c.maxHp} PV</div>
@@ -80,7 +80,7 @@ function renderRunSummary(s){
       <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:3px;${fainted?'opacity:.5;':''}${f.active?'border-color:var(--accent);':''}">
         <div style="width:26px;height:26px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(f.name, f.unownForm)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:9px;color:var(--text-main);">${f.name}${fainted?' 💀':(f.active?' <span style="color:var(--accent-light);">· sur le terrain</span>':'')}</div>
+          <div style="font-size:9px;color:var(--text-main);">${f.name}${fainted?' '+phIcon('skull'):(f.active?' <span style="color:var(--accent-light);">· sur le terrain</span>':'')}</div>
           <div style="background:#0b0b10;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
         </div>
         <div style="font-size:8px;color:var(--text-dim);flex-shrink:0;">${f.hp}/${f.maxHp} PV</div>
@@ -104,8 +104,8 @@ function renderRunSummary(s){
       </div>`;
   }
 
-  const stats = [['🏆','Étages franchis',s.floorsCleared], ['👑','Boss vaincus',s.bosses], ['⭐','Mini-Boss vaincus',s.miniBosses], ['💰','Argent gagné',s.moneyEarned]];
-  if(s.newBadges>0) stats.push(['🎖️','Nouveaux badges',s.newBadges]);
+  const stats = [[phIcon('trophy'),'Étages franchis',s.floorsCleared], [phIcon('crown'),'Boss vaincus',s.bosses], [phIcon('star'),'Mini-Boss vaincus',s.miniBosses], [phIcon('coins'),'Argent gagné',s.moneyEarned]];
+  if(s.newBadges>0) stats.push([phIcon('medal'),'Nouveaux badges',s.newBadges]);
   const statsHTML = stats.map(([icon,label,val])=>`
     <div style="text-align:center;flex:1;min-width:60px;">
       <div style="font-size:15px;">${icon}</div>
@@ -115,7 +115,7 @@ function renderRunSummary(s){
 
   wrap.innerHTML = `
     <div style="max-width:460px;margin:0 auto;">
-      <div style="text-align:center;font-size:9px;color:var(--text-dim);margin-bottom:14px;">${END_DIFFICULTY_LABEL[s.difficulty]||''} · 💰 ${s.money} au final</div>
+      <div style="text-align:center;font-size:9px;color:var(--text-dim);margin-bottom:14px;">${END_DIFFICULTY_LABEL[s.difficulty]||''} · ${phIcon('coins')} ${s.money} au final</div>
       ${finisherHTML}
       <div style="display:flex;flex-wrap:wrap;justify-content:space-around;background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:10px 4px;margin-bottom:14px;gap:6px;">
         ${statsHTML}
@@ -153,10 +153,10 @@ function slotSummaryHTML(slot){
   if(!info){
     return `<div style="font-size:9px;color:var(--text-dim);">Emplacement vide</div>`;
   }
-  const diffLabel = info.difficulty==='facile' ? '😊 Facile' : (info.difficulty==='difficile' ? '💀 Difficile' : '⚔️ Normal');
+  const diffLabel = info.difficulty==='facile' ? phIcon('smiley')+' Facile' : (info.difficulty==='difficile' ? phIcon('skull')+' Difficile' : phIcon('sword')+' Normal');
   let dateLabel = '';
   try { if(info.savedAt) dateLabel = new Date(info.savedAt).toLocaleDateString('fr-FR'); } catch(e){}
-  const battleLabel = info.battleInProgress ? ' · ⚔️ Combat en pause' : '';
+  const battleLabel = info.battleInProgress ? ` · ${phIcon('sword')} Combat en pause` : '';
   return `<div style="font-size:9px;color:var(--text-main);">Étage ${info.floor} · ${diffLabel} · ${info.teamCount} Pokémon${dateLabel?' · '+dateLabel:''}${battleLabel}</div>`;
 }
 // Fenêtre de choix d'emplacement de sauvegarde (5 slots), en mode 'load' (charger) ou 'new' (nouvelle partie/écraser, avec confirmation si occupé).
@@ -175,12 +175,12 @@ function openSlotModal(mode){
           ${slotSummaryHTML(i)}
         </div>
         <button class="btn secondary slotActionBtn" data-slot="${i}" ${(mode==='load'&&!occupied)?'disabled':''} style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:9px;white-space:nowrap;">${actionLabel}</button>
-        ${occupied ? `<button class="btn secondary slotDeleteBtn" data-slot="${i}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 8px;font-size:12px;" title="Supprimer">🗑️</button>` : ''}
+        ${occupied ? `<button class="btn secondary slotDeleteBtn" data-slot="${i}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 8px;font-size:12px;" title="Supprimer">${phIcon('trash-simple')}</button>` : ''}
       </div>`;
   }
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:420px;position:relative;">
-      <button class="patchnotes-close" id="slotCloseBtn">✕</button>
+      <button class="patchnotes-close" id="slotCloseBtn">${phIcon('x')}</button>
       <h2>◆ ${mode==='load' ? 'CHARGER UNE PARTIE' : 'CHOISIS UN EMPLACEMENT'} ◆</h2>
       <div id="slotMsg" style="font-size:9px;color:var(--accent);text-align:center;margin-bottom:10px;min-height:12px;"></div>
       ${rows}
@@ -219,7 +219,7 @@ function openSlotModal(mode){
           });
         };
         if(info && btn.dataset.confirming!=='1'){
-          document.getElementById('slotMsg').textContent = `⚠️ Reclique sur "Écraser" pour confirmer (étage ${info.floor} sera perdu).`;
+          document.getElementById('slotMsg').innerHTML = `${phIcon('warning')} Reclique sur "Écraser" pour confirmer (étage ${info.floor} sera perdu).`;
           btn.dataset.confirming = '1';
           btn.textContent = 'Confirmer ?';
         } else {
@@ -245,12 +245,12 @@ function openPlayMenu(){
   const canLoad = hasSave();
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:320px;text-align:center;position:relative;">
-      <button class="patchnotes-close" id="playMenuCloseBtn">✕</button>
+      <button class="patchnotes-close" id="playMenuCloseBtn">${phIcon('x')}</button>
       <h2>◆ JOUER ◆</h2>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <button class="btn" id="playMenuNewBtn">▶ Nouvelle partie</button>
-        <button class="btn secondary" id="playMenuLoadBtn" ${canLoad?'':'disabled'}>💾 Charger une partie</button>
-        <button class="btn secondary" id="playMenuBoostsBtn">🎫 Boosts</button>
+        <button class="btn secondary" id="playMenuLoadBtn" ${canLoad?'':'disabled'}>${phIcon('floppy-disk')} Charger une partie</button>
+        <button class="btn secondary" id="playMenuBoostsBtn">${phIcon('ticket')} Boosts</button>
       </div>
     </div>`;
   document.body.appendChild(overlay);
@@ -276,8 +276,8 @@ document.getElementById('builderHomeBtn').onclick = ()=> showScreen('screenMenu'
 // Met à jour les éléments du menu principal qui dépendent de l'état global (badges de Jetons de
 // Tour et de Bonbons d'Affinité — tous deux permanents entre toutes les parties).
 function refreshMenuUI(){
-  document.getElementById('menuTokensBadge').textContent = `🎫 ${towerTokens} Jetons de Tour`;
-  document.getElementById('menuCandyBadge').textContent = `🍬 ${affinityCandy} Bonbons d'Affinité`;
+  document.getElementById('menuTokensBadge').innerHTML = `${phIcon('ticket')} ${towerTokens} Jetons de Tour`;
+  document.getElementById('menuCandyBadge').innerHTML = `${phIcon('cookie')} ${affinityCandy} Bonbons d'Affinité`;
 }
 // Ligne d'un mode de difficulté dans la fenêtre "Meilleurs étages" (meilleur étage + badges de Maître de Type obtenus).
 function scoreDiffRowHTML(label, floor, diffKey){
@@ -289,7 +289,7 @@ function scoreDiffRowHTML(label, floor, diffKey){
         <span>${label}</span><b style="color:var(--accent);">Étage ${floor}</b>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
-        <span style="font-size:9px;color:var(--text-dim);">🎖️ Badges (${owned.length}/${ALL_TYPES.length})</span>
+        <span style="font-size:9px;color:var(--text-dim);">${phIcon('medal')} Badges (${owned.length}/${ALL_TYPES.length})</span>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">${badgeIcons}</div>
     </div>`;
@@ -300,12 +300,12 @@ function openScoreModal(){
   overlay.className = 'patchnotes-overlay';
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:340px;text-align:center;position:relative;">
-      <button class="patchnotes-close" id="scoreCloseBtn">✕</button>
+      <button class="patchnotes-close" id="scoreCloseBtn">${phIcon('x')}</button>
       <h2>◆ MEILLEURS ÉTAGES ◆</h2>
       <div style="display:flex;flex-direction:column;gap:10px;font-size:11px;color:var(--text-main);">
-        ${scoreDiffRowHTML('😊 Facile', bestFloorFacile, 'facile')}
-        ${scoreDiffRowHTML('⚔️ Normal', bestFloorNormal, 'normal')}
-        ${scoreDiffRowHTML('💀 Difficile', bestFloorDifficile, 'difficile')}
+        ${scoreDiffRowHTML(phIcon('smiley')+' Facile', bestFloorFacile, 'facile')}
+        ${scoreDiffRowHTML(phIcon('sword')+' Normal', bestFloorNormal, 'normal')}
+        ${scoreDiffRowHTML(phIcon('skull')+' Difficile', bestFloorDifficile, 'difficile')}
       </div>
     </div>`;
   document.body.appendChild(overlay);
@@ -339,7 +339,7 @@ function openBattlerDetail(view){
   ).join('');
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:420px;position:relative;">
-      <button class="patchnotes-close" id="battlerDetailCloseBtn">✕</button>
+      <button class="patchnotes-close" id="battlerDetailCloseBtn">${phIcon('x')}</button>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         <div style="width:56px;height:56px;flex-shrink:0;">${getSpriteHTML(view.name, view.unownForm, 'front', false, view.shiny)}</div>
         <div>
@@ -410,7 +410,7 @@ function openTeamModal(){
       <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-card);border:1px solid var(--line);border-radius:3px;margin-bottom:8px;">
         <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:10px;color:var(--text-main);">${i===0?'👑 ':''}${sp.name}${m.shiny?shinyBadgeHTML():''} ${m.status?statusIconHTML(m.status,12):''}</div>
+          <div style="font-size:10px;color:var(--text-main);">${i===0?phIcon('crown')+' ':''}${sp.name}${m.shiny?shinyBadgeHTML():''} ${m.status?statusIconHTML(m.status,12):''}</div>
           <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
           <div style="font-size:8px;color:var(--text-dim);">${hp}/${maxHp} PV</div>
           <div id="teamHeldSel${i}" style="margin-top:4px;max-width:180px;"></div>
@@ -418,14 +418,14 @@ function openTeamModal(){
           <div id="teamTeraSel${i}" style="margin-top:2px;max-width:180px;"></div>
         </div>
         <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;">
-          <button class="btn secondary teamDetailBtn" data-idx="${i}" style="width:auto;min-height:0;padding:6px 8px;font-size:9px;white-space:nowrap;" title="Voir les détails">🔍 Détails</button>
+          <button class="btn secondary teamDetailBtn" data-idx="${i}" style="width:auto;min-height:0;padding:6px 8px;font-size:9px;white-space:nowrap;" title="Voir les détails">${phIcon('magnifying-glass')} Détails</button>
           <button class="btn secondary teamLeadBtn" data-idx="${i}" style="width:auto;min-height:0;padding:6px 8px;font-size:9px;white-space:nowrap;" ${i===0?'disabled':''}>${i===0?'Leader':'Nommer leader'}</button>
         </div>
       </div>`;
   });
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:440px;position:relative;">
-      <button class="patchnotes-close" id="teamCloseBtn">✕</button>
+      <button class="patchnotes-close" id="teamCloseBtn">${phIcon('x')}</button>
       <h2>◆ ÉQUIPE ◆</h2>
       ${rows}
     </div>`;
@@ -488,14 +488,14 @@ function openDifficultyChoice(onConfirm){
     <div class="patchnotes-modal" style="max-width:380px;text-align:center;">
       <h2>◆ CHOISIS TA DIFFICULTÉ ◆</h2>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
-        <button class="btn secondary" id="diffFacileBtn" style="padding:10px;font-size:10px;">😊 Facile</button>
-        <button class="btn secondary" id="diffNormalBtn" style="padding:10px;font-size:10px;">⚔️ Normal</button>
-        <button class="btn secondary" id="diffDifficileBtn" style="padding:10px;font-size:10px;">💀 Difficile</button>
+        <button class="btn secondary" id="diffFacileBtn" style="padding:10px;font-size:10px;">${phIcon('smiley')} Facile</button>
+        <button class="btn secondary" id="diffNormalBtn" style="padding:10px;font-size:10px;">${phIcon('sword')} Normal</button>
+        <button class="btn secondary" id="diffDifficileBtn" style="padding:10px;font-size:10px;">${phIcon('skull')} Difficile</button>
       </div>
       <div style="font-size:9px;color:var(--text-dim);line-height:1.6;text-align:left;margin-top:10px;">
-        <b>😊 Facile</b> — Draft uniquement des formes déjà entièrement évoluées, avec des builds prêts à l'emploi. PV restaurés après chaque combat.<br><br>
-        <b>⚔️ Normal</b> — Draft classique (tous stades), tu configures tes builds toi-même. PV restaurés après chaque combat.<br><br>
-        <b>💀 Difficile</b> — Draft classique, builds à configurer. PV et altérations d'état conservés d'un combat à l'autre.
+        <b>${phIcon('smiley')} Facile</b> — Draft uniquement des formes déjà entièrement évoluées, avec des builds prêts à l'emploi. PV restaurés après chaque combat.<br><br>
+        <b>${phIcon('sword')} Normal</b> — Draft classique (tous stades), tu configures tes builds toi-même. PV restaurés après chaque combat.<br><br>
+        <b>${phIcon('skull')} Difficile</b> — Draft classique, builds à configurer. PV et altérations d'état conservés d'un combat à l'autre.
       </div>
     </div>`;
   document.body.appendChild(overlay);

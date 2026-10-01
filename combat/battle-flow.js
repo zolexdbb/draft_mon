@@ -654,7 +654,7 @@ function applyMoveExtras(actor, move, defender, dmg){
   }
   if(move.payDay && battleState){
     const pl = locateActiveSlot(actor);
-    if(pl && pl.side==='player'){ battleState.payDayMoney = (battleState.payDayMoney||0) + 5*LEVEL; msg += ` Des pièces s'éparpillent (${5*LEVEL} 💰) !`; }
+    if(pl && pl.side==='player'){ battleState.payDayMoney = (battleState.payDayMoney||0) + 5*LEVEL; msg += ` Des pièces s'éparpillent (${5*LEVEL} ${phIcon('coins')}) !`; }
   }
   if(move.coreEnforcer && !actor.movedFirst && defender.hp>0 && defender.ability){
     defender.ability = null;
@@ -1995,7 +1995,7 @@ function showSwitchPrompt(aliveIdx, slot){
     detailBtn.className = 'move-btn';
     detailBtn.style.cssText = 'flex:0 0 auto;width:34px;font-size:14px;';
     detailBtn.title = 'Voir les détails';
-    detailBtn.textContent = '🔍';
+    detailBtn.innerHTML = phIcon('magnifying-glass');
     detailBtn.onclick = (e)=>{ e.stopPropagation(); openBattlerDetail(battlerDetailView(c)); };
     row.appendChild(btn);
     row.appendChild(detailBtn);

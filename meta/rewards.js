@@ -39,16 +39,16 @@ function tokensForRun(floorReached, diff){
 }
 
 const BOOSTS = [
-  { id:'startMoney1',   name:'Bourse de départ',     emoji:'💰', cost:15,  desc:"+50 argent au début de chaque partie.", effect:{startMoney:50} },
-  { id:'startMoney2',   name:'Grosse bourse',        emoji:'💰', cost:40,  desc:"+100 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:100}, requires:'startMoney1' },
-  { id:'startMoney3',   name:'Coffre au trésor',     emoji:'💰', cost:80,  desc:"+150 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:150}, requires:'startMoney2' },
-  { id:'startPotion',   name:'Trousse de secours',   emoji:'💊', cost:25,  desc:"Commence chaque partie avec une Potion dans le sac.", effect:{startItem:'potion'} },
-  { id:'startAntidote', name:'Pharmacie de poche',   emoji:'🧪', cost:30,  desc:"Commence chaque partie avec un Total Soin dans le sac (soigne toutes les altérations de statut).", effect:{startItem:'totalSoin'} },
-  { id:'startBerry',    name:'Panier de baies',      emoji:'🍑', cost:35,  desc:"Commence chaque partie avec une Baie Sitrus dans le sac.", effect:{startItem:'baieSitrus'} },
-  { id:'shopDiscount',  name:'Carte de fidélité',    emoji:'🛒', cost:50,  desc:"-10% sur tous les prix du Pokéshop.", effect:{shopDiscount:0.1} },
-  { id:'shopDiscount2', name:'Carte de fidélité Or', emoji:'🛒', cost:120, desc:"-20% sur tous les prix du Pokéshop (remplace la réduction précédente).", effect:{shopDiscount:0.2}, requires:'shopDiscount' },
-  { id:'freeReroll',    name:'Draft assisté',        emoji:'🔄', cost:45,  desc:"Un reroll gratuit des offres de draft, une fois par partie.", effect:{freeReroll:1} },
-  { id:'freeReroll2',   name:'Draft assisté+',       emoji:'🔄', cost:100, desc:"Un deuxième reroll gratuit des offres de draft, une fois par partie (cumulable).", effect:{freeReroll:1}, requires:'freeReroll' },
+  { id:'startMoney1',   name:'Bourse de départ',     emoji:phIcon('coins'), cost:15,  desc:"+50 argent au début de chaque partie.", effect:{startMoney:50} },
+  { id:'startMoney2',   name:'Grosse bourse',        emoji:phIcon('coins'), cost:40,  desc:"+100 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:100}, requires:'startMoney1' },
+  { id:'startMoney3',   name:'Coffre au trésor',     emoji:phIcon('coins'), cost:80,  desc:"+150 argent supplémentaires au début de chaque partie (cumulable).", effect:{startMoney:150}, requires:'startMoney2' },
+  { id:'startPotion',   name:'Trousse de secours',   emoji:phIcon('pill'), cost:25,  desc:"Commence chaque partie avec une Potion dans le sac.", effect:{startItem:'potion'} },
+  { id:'startAntidote', name:'Pharmacie de poche',   emoji:phIcon('test-tube'), cost:30,  desc:"Commence chaque partie avec un Total Soin dans le sac (soigne toutes les altérations de statut).", effect:{startItem:'totalSoin'} },
+  { id:'startBerry',    name:'Panier de baies',      emoji:phIcon('cherries'), cost:35,  desc:"Commence chaque partie avec une Baie Sitrus dans le sac.", effect:{startItem:'baieSitrus'} },
+  { id:'shopDiscount',  name:'Carte de fidélité',    emoji:phIcon('shopping-cart'), cost:50,  desc:"-10% sur tous les prix du Pokéshop.", effect:{shopDiscount:0.1} },
+  { id:'shopDiscount2', name:'Carte de fidélité Or', emoji:phIcon('shopping-cart'), cost:120, desc:"-20% sur tous les prix du Pokéshop (remplace la réduction précédente).", effect:{shopDiscount:0.2}, requires:'shopDiscount' },
+  { id:'freeReroll',    name:'Draft assisté',        emoji:phIcon('arrows-clockwise'), cost:45,  desc:"Un reroll gratuit des offres de draft, une fois par partie.", effect:{freeReroll:1} },
+  { id:'freeReroll2',   name:'Draft assisté+',       emoji:phIcon('arrows-clockwise'), cost:100, desc:"Un deuxième reroll gratuit des offres de draft, une fois par partie (cumulable).", effect:{freeReroll:1}, requires:'freeReroll' },
 ];
 
 function metaStartMoneyBonus(){
@@ -70,9 +70,9 @@ function openBoostsModal(){
   overlay.className = 'patchnotes-overlay';
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:440px;position:relative;">
-      <button class="patchnotes-close" id="boostsCloseBtn">✕</button>
+      <button class="patchnotes-close" id="boostsCloseBtn">${phIcon('x')}</button>
       <h2>◆ BOOSTS DE DÉPART ◆</h2>
-      <div id="boostsBalance" style="text-align:center;font-size:11px;color:var(--accent);margin-bottom:12px;">🎫 ${towerTokens} Jetons de Tour</div>
+      <div id="boostsBalance" style="text-align:center;font-size:11px;color:var(--accent);margin-bottom:12px;">${phIcon('ticket')} ${towerTokens} Jetons de Tour</div>
       <div style="font-size:9px;color:var(--text-dim);text-align:center;margin-bottom:12px;line-height:1.5;">Gagne des Jetons en atteignant de nouveaux étages (plus tu joues en difficile, plus tu en gagnes). Les boosts achetés sont acquis pour toujours, sur toutes tes parties.</div>
       <div id="boostsList" style="display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;"></div>
     </div>`;
@@ -98,7 +98,7 @@ function renderBoostsList(){
         <div style="font-size:11px;color:var(--text-main);"><b>${boost.name}</b></div>
         <div style="font-size:9px;color:var(--text-dim);line-height:1.4;">${boost.desc}${locked?`<br><i>Nécessite : ${BOOSTS.find(b=>b.id===boost.requires).name}</i>`:''}</div>
       </div>
-      <button class="btn secondary boostBuyBtn" data-id="${boost.id}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;" ${owned||locked?'disabled':''}>${owned?'✓ Acquis':`${boost.cost} 🎫`}</button>
+      <button class="btn secondary boostBuyBtn" data-id="${boost.id}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;" ${owned||locked?'disabled':''}>${owned?`${phIcon('check')} Acquis`:`${boost.cost} ${phIcon('ticket')}`}</button>
     `;
     list.appendChild(row);
   });
@@ -109,7 +109,7 @@ function renderBoostsList(){
       towerTokens -= boost.cost;
       purchasedBoosts.push(boost.id);
       saveMetaProgress();
-      document.getElementById('boostsBalance').textContent = `🎫 ${towerTokens} Jetons de Tour`;
+      document.getElementById('boostsBalance').innerHTML = `${phIcon('ticket')} ${towerTokens} Jetons de Tour`;
       renderBoostsList();
     };
   });

@@ -9,14 +9,14 @@
      manuel, sac (Potion), et les petites animations (shakeBox/lungeBox/flashScreen)
 ==== */
 // Repère visuel d'efficacité de type sur un bouton d'attaque (▲▲ hyper efficace ×4, ▲ super efficace
-// ×2, ▼ peu efficace, ▼▼ très peu efficace ×0.25, ✖ aucun effet) — rien si neutre, si la capacité
+// ×2, ▼ peu efficace, ▼▼ très peu efficace ×0.25, icône "interdit" aucun effet) — rien si neutre, si la capacité
 // n'inflige pas de dégâts, ou si aucune cible sans ambiguïté n'est fournie (voir effTarget dans
 // renderMoveGrid, désactivable dans les Paramètres).
 function moveEffectivenessBadgeHTML(move, defender){
   if(!defender || move.cat==='status' || !move.power) return '';
   const eff = getMult(move.type, defender.transformedTypes || defender.types);
   if(eff===1) return '';
-  if(eff===0) return ' <span class="eff-badge eff-none" title="Aucun effet">✖</span>';
+  if(eff===0) return ` <span class="eff-badge eff-none" title="Aucun effet">${phIcon('prohibit')}</span>`;
   if(eff>=4) return ` <span class="eff-badge eff-hyper" title="Hyper efficace (×${eff})">▲▲</span>`;
   if(eff>1) return ` <span class="eff-badge eff-super" title="Super efficace (×${eff})">▲</span>`;
   return ` <span class="eff-badge eff-weak" title="${eff<=0.25?'Très peu efficace':'Peu efficace'} (×${eff})">▼${eff<=0.25?'▼':''}</span>`;
@@ -47,14 +47,14 @@ function renderBench(containerId, roster, activeIdxs, hazards, pledge){
   });
   if(hazards){
     const chips = [];
-    if(hazards.rocks) chips.push({ icon:'🪨', label:HAZARD_LABEL.rocks });
-    if(hazards.spikes) chips.push({ icon:'▲'+hazards.spikes, label:`${HAZARD_LABEL.spikes} (${hazards.spikes}/3)` });
-    if(hazards.toxic) chips.push({ icon:'☠️'+hazards.toxic, label:`${HAZARD_LABEL.toxic} (${hazards.toxic}/2)` });
-    if(hazards.web) chips.push({ icon:'🕸️', label:HAZARD_LABEL.web });
+    if(hazards.rocks) chips.push({ icon:phIcon('mountains'), label:HAZARD_LABEL.rocks });
+    if(hazards.spikes) chips.push({ icon:phIcon('triangle')+hazards.spikes, label:`${HAZARD_LABEL.spikes} (${hazards.spikes}/3)` });
+    if(hazards.toxic) chips.push({ icon:phIcon('skull')+hazards.toxic, label:`${HAZARD_LABEL.toxic} (${hazards.toxic}/2)` });
+    if(hazards.web) chips.push({ icon:phIcon('asterisk'), label:HAZARD_LABEL.web });
     chips.forEach(ch=>{
       const chip = document.createElement('span');
       chip.className = 'hazard-chip';
-      chip.textContent = ch.icon;
+      chip.innerHTML = ch.icon;
       chip.title = ch.label;
       el.appendChild(chip);
     });
@@ -64,7 +64,7 @@ function renderBench(containerId, roster, activeIdxs, hazards, pledge){
       if(!(pledge[k]>0)) return;
       const chip = document.createElement('span');
       chip.className = 'hazard-chip';
-      chip.textContent = PLEDGE_LABEL[k].split(' ')[0];
+      chip.innerHTML = phIcon(PLEDGE_ICON[k]);
       chip.title = `${PLEDGE_LABEL[k]} (${pledge[k]} tour${pledge[k]>1?'s':''})`;
       el.appendChild(chip);
     });
@@ -202,10 +202,10 @@ function renderMoveGrid(){
   if(!canDeclareZMove(p, bs) || mechActive) bs.declaringZMove = false;
   // Dynamax
   if(p.dynamaxed){
-    mechGrid.appendChild(buildMechIndicator('🔴','Dynamax',`${p.dynamaxTurns} tour${p.dynamaxTurns>1?'s':''} restant${p.dynamaxTurns>1?'s':''}`));
+    mechGrid.appendChild(buildMechIndicator(phIcon('circle'),'Dynamax',`${p.dynamaxTurns} tour${p.dynamaxTurns>1?'s':''} restant${p.dynamaxTurns>1?'s':''}`));
   } else {
     const available = canDynamax(p, bs) && !bs.declaringZMove && !bs.declaringTera && !bs.declaringMega && !mechActive;
-    mechGrid.appendChild(buildMechButton('🔴','Dynamax', available, bs.declaringDynamax,
+    mechGrid.appendChild(buildMechButton(phIcon('circle'),'Dynamax', available, bs.declaringDynamax,
       bs.declaringDynamax ? 'Dynamax activé — clique pour annuler' : (available ? 'Toutes les capacités offensives deviennent Max pendant 3 tours' : (bs.dynamaxUsed ? 'Déjà utilisé ce combat' : 'Indisponible pour le moment')),
       ()=>{ bs.declaringDynamax = !bs.declaringDynamax; if(bs.declaringDynamax){ bs.declaringZMove = false; bs.declaringTera = false; bs.declaringMega = false; } renderMoveGrid(); }));
     if(!available) bs.declaringDynamax = false;
@@ -213,7 +213,7 @@ function renderMoveGrid(){
   // Méga-Évolution : se déclare en combat comme le Téracristal (plus une transformation acquise avant le
   // combat), dure jusqu'à la fin du combat même en cas de changement de Pokémon, une fois par combat.
   if(p.megaEvolved){
-    mechGrid.appendChild(buildMechIndicator('💎','Méga','Méga-Évolué — jusqu\'à la fin du combat'));
+    mechGrid.appendChild(buildMechIndicator(phIcon('diamond'),'Méga','Méga-Évolué — jusqu\'à la fin du combat'));
   } else {
     const available = canMegaEvolve(p, bs) && !bs.declaringZMove && !bs.declaringDynamax && !bs.declaringTera && !mechActive;
     let megaTip;
@@ -222,7 +222,7 @@ function renderMoveGrid(){
     else if(bs.megaUsed) megaTip = 'Déjà utilisée ce combat';
     else if(!p.megaFormData) megaTip = 'Nécessite la Méga-Gemme correspondante en objet tenu';
     else megaTip = 'Indisponible pour le moment';
-    mechGrid.appendChild(buildMechButton('💎','Méga', available, bs.declaringMega, megaTip,
+    mechGrid.appendChild(buildMechButton(phIcon('diamond'),'Méga', available, bs.declaringMega, megaTip,
       ()=>{ bs.declaringMega = !bs.declaringMega; if(bs.declaringMega){ bs.declaringZMove = false; bs.declaringDynamax = false; bs.declaringTera = false; } renderMoveGrid(); }));
     if(!available) bs.declaringMega = false;
   }
@@ -231,7 +231,7 @@ function renderMoveGrid(){
     mechGrid.appendChild(buildMechIndicator(typeIconHTML(p.teraType),'Téracristal',`Téracristallisé — Type Tera : ${p.teraType}`));
   } else {
     const available = canTerastallize(p, bs) && !bs.declaringZMove && !bs.declaringMega && !p.dynamaxed;
-    mechGrid.appendChild(buildMechButton('💠','Téracristal', available, bs.declaringTera,
+    mechGrid.appendChild(buildMechButton(phIcon('diamond'),'Téracristal', available, bs.declaringTera,
       bs.declaringTera ? 'Téracristallisation activée — clique pour annuler' : (available ? `Devient mono-type ${p.teraType} pour le reste du combat` : "Nécessite l'Orbe Tera en objet tenu"),
       ()=>{ bs.declaringTera = !bs.declaringTera; if(bs.declaringTera){ bs.declaringZMove = false; bs.declaringDynamax = false; bs.declaringMega = false; } renderMoveGrid(); }));
     if(!available) bs.declaringTera = false;
@@ -245,7 +245,7 @@ function renderMoveGrid(){
   else if(bs.zMoveUsed) zTip = 'Déjà utilisée ce combat';
   else if(!zCrystalHeldBy(p)) zTip = "Nécessite un Cristal Z en objet tenu, du même type qu'une de tes attaques offensives";
   else zTip = 'Indisponible : aucune attaque offensive du type du Cristal Z avec des PP restants';
-  mechGrid.appendChild(buildMechButton('⚡','Z', zAvailable || bs.declaringZMove, bs.declaringZMove, zTip,
+  mechGrid.appendChild(buildMechButton(phIcon('lightning'),'Z', zAvailable || bs.declaringZMove, bs.declaringZMove, zTip,
     ()=>{ bs.declaringZMove = !bs.declaringZMove; if(bs.declaringZMove){ bs.declaringDynamax = false; bs.declaringTera = false; bs.declaringMega = false; } renderMoveGrid(); }));
   const zEligible = bs.declaringZMove ? eligibleZMoveIndexes(p) : null;
   const dynamaxPreview = bs.declaringDynamax || p.dynamaxed;
@@ -267,12 +267,12 @@ function renderMoveGrid(){
     btn.disabled = bs.locked || isDisabled || isLockedOut || noPP || zBlocked;
     if(zReady){
       const zPreview = buildZMove(mv);
-      btn.innerHTML = `⚡ ${zPreview.name}${moveEffectivenessBadgeHTML(zPreview, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${zPreview.power} · via ${mv.name}</small>`;
+      btn.innerHTML = `${phIcon('lightning')} ${zPreview.name}${moveEffectivenessBadgeHTML(zPreview, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${zPreview.power} · via ${mv.name}</small>`;
     } else if(maxReady){
       const maxPreview = buildMaxMove(mv, p, null, null);
-      btn.innerHTML = `🔴 ${maxPreview.name}${moveEffectivenessBadgeHTML(maxPreview, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${maxPreview.power} · via ${mv.name}</small>`;
+      btn.innerHTML = `${phIcon('circle')} ${maxPreview.name}${moveEffectivenessBadgeHTML(maxPreview, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · Pwr ${maxPreview.power} · via ${mv.name}</small>`;
     } else {
-      btn.innerHTML = `${mv.name}${isDisabled?' 🚫':''}${isLockedOut?' 🔒':''}${moveEffectivenessBadgeHTML(mv, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?(p.encoreTurns>0?' · Encore':" · Bloqué par l'objet"):''}</small>`;
+      btn.innerHTML = `${mv.name}${isDisabled?' '+phIcon('prohibit'):''}${isLockedOut?' '+phIcon('lock-simple'):''}${moveEffectivenessBadgeHTML(mv, effTarget)} <small>${typeIconHTML(mv.type)} ${mv.type} · ${mv.cat==='phys'?'Phys':(mv.cat==='spec'?'Spéc':'Statut')} · ${mv.cat==='status'?'—':'Pwr '+mv.power} · PP ${ppCur!==null?ppCur:'?'}/${ppMax}${isDisabled?' · Entravé':''}${isLockedOut?(p.encoreTurns>0?' · Encore':" · Bloqué par l'objet"):''}</small>`;
     }
     btn.onclick = ()=> handleMoveChoice(idx);
     grid.appendChild(btn);
@@ -352,7 +352,7 @@ function openManualSwitch(){
     detailBtn.className = 'move-btn';
     detailBtn.style.cssText = 'flex:0 0 auto;width:34px;font-size:14px;';
     detailBtn.title = 'Voir les détails';
-    detailBtn.textContent = '🔍';
+    detailBtn.innerHTML = phIcon('magnifying-glass');
     detailBtn.onclick = (e)=>{ e.stopPropagation(); openBattlerDetail(battlerDetailView(c)); };
     row.appendChild(btn);
     row.appendChild(detailBtn);
@@ -434,7 +434,7 @@ function effLabel(eff){
 document.getElementById('manualSwitchBtn').onclick = openManualSwitch;
 document.getElementById('cancelSwitchBtn').onclick = closeManualSwitch;
 document.getElementById('bagBtn').onclick = openBag;
-// Le bouton ☰ révèle/masque "Changer de Pokémon" et "Sac" (repliés par défaut pour garder le
+// Le bouton menu (icône liste) révèle/masque "Changer de Pokémon" et "Sac" (repliés par défaut pour garder le
 // module d'actions compact, comme dans le canevas).
 document.getElementById('battleActionsToggleBtn').onclick = ()=>{
   document.getElementById('movesPanelActionsRevealed').classList.toggle('hidden');

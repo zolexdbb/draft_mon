@@ -200,7 +200,7 @@ function safariAction(action){
         refreshVillageMoney();
         safariRunStats.captures++;
         safariRunStats.candy += tier.candy;
-        safariOutcome = `✓ ${enc.sp.name} capturé ! Confié au Professeur contre ${tier.candy} 🍬 Bonbons d'Affinité.`;
+        safariOutcome = `${phIcon('check')} ${enc.sp.name} capturé ! Confié au Professeur contre ${tier.candy} ${phIcon('cookie')} Bonbons d'Affinité.`;
         safariEncounter = null; safariEffect = null;
         finish();
       } else {
@@ -227,12 +227,12 @@ function renderSafariPanel(){
   if(!safariActive){
     wrap.innerHTML = `
       <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:8px;">🌿</div>
+        <div style="font-size:32px;margin-bottom:8px;">${phIcon('leaf')}</div>
         <h2 style="margin:0 0 8px;">Maison Safari</h2>
         <div style="font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;">Le Professeur t'accueille : « J'étudie les Pokémon sauvages de cette zone. Capture-en pour moi avec ces Safari Balls, je te donnerai des Bonbons d'Affinité en échange — je ne peux malheureusement pas te laisser les garder, ils doivent rester ici pour mes recherches. Si tu préfères, je peux aussi t'en investir directement sur les lignées qui te tiennent à cœur. »</div>
         <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
           <button class="btn" id="safariEnterBtn">▶ Entrer avec 10 Safari Balls</button>
-          <button class="btn secondary" id="safariProfessorBtn">🔬 Voir le Professeur (${affinityCandy} 🍬)</button>
+          <button class="btn secondary" id="safariProfessorBtn">${phIcon('flask')} Voir le Professeur (${affinityCandy} ${phIcon('cookie')})</button>
         </div>
       </div>`;
     document.getElementById('safariEnterBtn').onclick = ()=>{
@@ -251,13 +251,13 @@ function renderSafariPanel(){
   if(!safariEncounter && safariBallsLeft<=0){
     wrap.innerHTML = `
       <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:8px;">🔬</div>
+        <div style="font-size:32px;margin-bottom:8px;">${phIcon('flask')}</div>
         <h2 style="margin:0 0 8px;">Safari terminé !</h2>
         ${safariOutcome ? `<div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">${safariOutcome}</div>` : ''}
         <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;">Le Professeur remercie chaleureusement les ${safariRunStats.captures} Pokémon confiés pour ses recherches.</div>
-        <div style="font-size:14px;color:var(--accent);margin-bottom:14px;">+${safariRunStats.candy} 🍬 Bonbons d'Affinité au total</div>
+        <div style="font-size:14px;color:var(--accent);margin-bottom:14px;">+${safariRunStats.candy} ${phIcon('cookie')} Bonbons d'Affinité au total</div>
         <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-          <button class="btn" id="safariProfessorBtn">🔬 Investir chez le Professeur</button>
+          <button class="btn" id="safariProfessorBtn">${phIcon('flask')} Investir chez le Professeur</button>
           <button class="btn secondary" id="safariCloseBtn">Fermer</button>
         </div>
       </div>`;
@@ -268,9 +268,9 @@ function renderSafariPanel(){
   if(!safariEncounter){
     wrap.innerHTML = `
       <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:8px;">🌿</div>
+        <div style="font-size:32px;margin-bottom:8px;">${phIcon('leaf')}</div>
         <div style="font-size:11px;color:var(--text-dim);margin-bottom:14px;">${safariOutcome||''}</div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;">🔴 Safari Balls restantes : <b style="color:var(--text-main);">${safariBallsLeft}</b></div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;">${phIcon('circle')} Safari Balls restantes : <b style="color:var(--text-main);">${safariBallsLeft}</b></div>
         <button class="btn" id="safariNextBtn">Chercher un autre Pokémon →</button>
         <button class="btn secondary" id="safariLeaveBtn" style="margin-top:8px;">Quitter le Safari</button>
       </div>`;
@@ -291,7 +291,7 @@ function renderSafariPanel(){
   wrap.innerHTML = `
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:10px;color:var(--text-dim);">
-        <span>🔴 Safari Balls : <b style="color:var(--text-main);">${safariBallsLeft}</b></span>
+        <span>${phIcon('circle')} Safari Balls : <b style="color:var(--text-main);">${safariBallsLeft}</b></span>
         <span class="rarity-badge ${rarityCss}">${tier.label}</span>
       </div>
       <div style="text-align:center;position:relative;">
@@ -300,14 +300,14 @@ function renderSafariPanel(){
         <div style="font-size:14px;font-weight:700;margin:6px 0 2px;">${enc.sp.name}</div>
         <div class="types-row" style="justify-content:center;">${enc.sp.types.map(t=>typeTagHTML(t)).join('')}</div>
       </div>
-      ${safariEffect ? `<div style="text-align:center;font-size:10px;color:var(--accent);margin:8px 0;">${safariEffect.type==='rock'?'🪨 Excité par le Caillou':"🍡 Calmé par l'Appât"} (encore ${safariEffect.turnsLeft} tour${safariEffect.turnsLeft>1?'s':''})</div>` : ''}
+      ${safariEffect ? `<div style="text-align:center;font-size:10px;color:var(--accent);margin:8px 0;">${safariEffect.type==='rock'?phIcon('mountains')+' Excité par le Caillou':phIcon('gift')+" Calmé par l'Appât"} (encore ${safariEffect.turnsLeft} tour${safariEffect.turnsLeft>1?'s':''})</div>` : ''}
       <div style="font-size:9px;color:var(--text-dim);text-align:center;margin:8px 0;">Capture ≈ ${catchPct}% · Fuite ≈ ${fleePct}%</div>
       ${safariOutcome ? `<div class="dex-rate" style="text-align:center;margin-bottom:8px;">${safariOutcome}</div>` : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;">
-        <button class="btn secondary" id="safariBallBtn" ${safariBallsLeft<=0?'disabled':''}>🔴 Safari Ball</button>
-        <button class="btn secondary" id="safariRockBtn">🪨 Caillou</button>
-        <button class="btn secondary" id="safariBaitBtn">🍡 Appât</button>
-        <button class="btn secondary" id="safariFleeBtn">🏃 Fuite</button>
+        <button class="btn secondary" id="safariBallBtn" ${safariBallsLeft<=0?'disabled':''}>${phIcon('circle')} Safari Ball</button>
+        <button class="btn secondary" id="safariRockBtn">${phIcon('mountains')} Caillou</button>
+        <button class="btn secondary" id="safariBaitBtn">${phIcon('gift')} Appât</button>
+        <button class="btn secondary" id="safariFleeBtn">${phIcon('person-simple-run')} Fuite</button>
       </div>
     </div>`;
   document.getElementById('safariBallBtn').onclick = ()=> safariAction('ball');
@@ -348,12 +348,12 @@ function professorRowHTML(line){
       </div>
       ${cost ? `
         <div class="stat-bar-track" style="height:5px;margin-top:4px;"><div class="stat-bar-fill" style="width:${Math.min(100,Math.round(progress/cost*100))}%;background:var(--accent);"></div></div>
-        <div style="font-size:8px;color:var(--text-dim);margin-top:2px;">${progress} / ${cost} 🍬</div>
-      ` : `<div style="font-size:8px;color:var(--good);margin-top:4px;">✓ Niveau maximum</div>`}
+        <div style="font-size:8px;color:var(--text-dim);margin-top:2px;">${progress} / ${cost} ${phIcon('cookie')}</div>
+      ` : `<div style="font-size:8px;color:var(--good);margin-top:4px;">${phIcon('check')} Niveau maximum</div>`}
     </div>
     ${cost ? `
       <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;">
-        <button class="btn secondary professorInvestBtn" data-line="${line.id}" data-amount="1" style="width:auto;min-height:0;padding:5px 8px;font-size:9px;" ${disabled?'disabled':''}>+1 🍬</button>
+        <button class="btn secondary professorInvestBtn" data-line="${line.id}" data-amount="1" style="width:auto;min-height:0;padding:5px 8px;font-size:9px;" ${disabled?'disabled':''}>+1 ${phIcon('cookie')}</button>
         <button class="btn secondary professorInvestBtn" data-line="${line.id}" data-amount="max" style="width:auto;min-height:0;padding:5px 8px;font-size:9px;" ${disabled?'disabled':''}>Max</button>
       </div>` : ''}
   </div>`;
@@ -365,7 +365,7 @@ function renderProfessorPanel(){
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:14px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <button class="btn secondary" id="professorBackBtn" style="width:auto;min-height:0;padding:6px 10px;font-size:10px;">← Retour</button>
-        <div id="professorBalance" style="font-size:12px;color:var(--accent);font-weight:700;">🍬 ${affinityCandy}</div>
+        <div id="professorBalance" style="font-size:12px;color:var(--accent);font-weight:700;">${phIcon('cookie')} ${affinityCandy}</div>
       </div>
       <div style="font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:10px;line-height:1.5;">« Investis tes Bonbons d'Affinité dans les lignées que tu apprécies : plus leur niveau monte, plus tu as de chances de les croiser au draft, au Ranch et parmi les recrues. »</div>
       <div style="display:flex;gap:6px;margin-bottom:10px;">
@@ -408,7 +408,7 @@ function renderProfessorList(){
       investAffinityCandy(lineId, amount);
       renderProfessorList();
       const balanceEl = document.getElementById('professorBalance');
-      if(balanceEl) balanceEl.textContent = `🍬 ${affinityCandy}`;
+      if(balanceEl) balanceEl.innerHTML = `${phIcon('cookie')} ${affinityCandy}`;
       refreshVillageMoney();
     };
   });

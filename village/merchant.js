@@ -3,21 +3,21 @@
    Méga-Gemmes, objets légendaires...), organisés en groupes affichés avec un titre. ==== */
 const MERCHANT_SPAWN_RATE = 0.08;
 const MERCHANT_GROUPS = [
-  { label: 'Giratina', tab: '👑 Giratina', keys: ['orbePlatine'] },
-  { label: 'Shaymin', tab: '🌸 Shaymin', keys: ['gracidee'] },
-  { label: 'Ogerpon', tab: '🎭 Ogerpon', keys: ['masqueSource','masqueBraise','masqueAngle'] },
-  { label: 'Motisma', tab: '🔌 Motisma', keys: ['appareilChauffe','appareilLavage','appareilFrigo','appareilVentilo','appareilTondeuse'] },
-  { label: 'Boréas / Fulguris / Démétéros / Amovénus', tab: '🌀 Forces de la Nature', keys: ['miroirSacre'] },
-  { label: 'Arceus', tab: '💠 Arceus', keys: ['plaqueFlamme','plaqueHydro','plaqueHerbe','plaqueVolt','plaqueCiel','plaqueToxicite','plaqueTerre','plaqueInsecte','plaquePoing','plaqueGlace','plaqueEsprit','plaqueFantome','plaqueRoc','plaqueDraco','plaqueFer','plaqueOmbre'] },
-  { label: 'Genesect (Techno-Buster)', tab: '🧬 Genesect', keys: ['moduleChoc','modulePyro','moduleCryo','moduleAqua'] },
-  { label: 'Méga Gemme', tab: '🔷 Méga Gemme', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite','absolite','flagadossite','camerouptite','dardargnite','branettite','mysdibulite','pharampite','altarite','tyranocivite','roucarnagite','elecsprintite','demolossite','nanmeouite','lockpinite','tenefixite','sharpedite','scarhinoite','pteraite','alakazamite','oniglalite','scarabruite','galekingite','gallamite','drattakite','ectoplasmite','charminite','blizzarite','steelixite'] },
-  { label: 'Cristaux Z', tab: '⚡ Cristaux Z', keys: ['zCrystalNormal','zCrystalCombat','zCrystalVol','zCrystalPoison','zCrystalSol','zCrystalRoche','zCrystalInsecte','zCrystalFantome','zCrystalAcier','zCrystalFeu','zCrystalEau','zCrystalPlante','zCrystalElectrik','zCrystalPsy','zCrystalGlace','zCrystalDragon','zCrystalTenebres','zCrystalFee'] },
-  { label: 'Necrozma', tab: '✨ Necrozma', keys: ['prismeCouchant','prismeAurore','ultranecrozium'] },
-  { label: 'Mémoires (Silvallié)', tab: '💾 Mémoires', keys: ['memoireCombat','memoireVol','memoirePoison','memoireSol','memoireRoche','memoireInsecte','memoireFantome','memoireAcier','memoireFeu','memoireEau','memoirePlante','memoireElectrik','memoirePsy','memoireGlace','memoireDragon','memoireTenebres','memoireFee'] },
-  { label: 'Légendaires de Galar', tab: '⚔️ Galar', keys: ['epeeRouillee','bouclierRouille','parcheminTenebres','parcheminAqua','renePartageGlace','renePartageSpectre'] },
-  { label: 'Gigamax', tab: '🔴 Gigamax', keys: ['facteurGigamax'] },
-  { label: 'Téracristallisation', tab: '💎 Tera', keys: ['orbeTera'] },
-  { label: 'Méga Gemme (Pokémon Légendes Z-A)', tab: '🆕 Méga Z-A', keys: ['dragoninite','victreebelite','clefablite','starminite','meganiumite','feraligite','skarmorite','froslassite','emboarite','excadrite','scolipite','scraftinite','eelektrossite','chandelurite','chesnaughtite','delphoxite','greninjite','pyroarite','floettite','barbaracite','dragalgite','hawluchanite','malamarite','zygardite','drampanite','falinksite'] }
+  { label: 'Giratina', tab: phIcon('crown')+' Giratina', keys: ['orbePlatine'] },
+  { label: 'Shaymin', tab: phIcon('flower')+' Shaymin', keys: ['gracidee'] },
+  { label: 'Ogerpon', tab: phIcon('mask-happy')+' Ogerpon', keys: ['masqueSource','masqueBraise','masqueAngle'] },
+  { label: 'Motisma', tab: phIcon('plug')+' Motisma', keys: ['appareilChauffe','appareilLavage','appareilFrigo','appareilVentilo','appareilTondeuse'] },
+  { label: 'Boréas / Fulguris / Démétéros / Amovénus', tab: phIcon('spiral')+' Forces de la Nature', keys: ['miroirSacre'] },
+  { label: 'Arceus', tab: phIcon('diamond')+' Arceus', keys: ['plaqueFlamme','plaqueHydro','plaqueHerbe','plaqueVolt','plaqueCiel','plaqueToxicite','plaqueTerre','plaqueInsecte','plaquePoing','plaqueGlace','plaqueEsprit','plaqueFantome','plaqueRoc','plaqueDraco','plaqueFer','plaqueOmbre'] },
+  { label: 'Genesect (Techno-Buster)', tab: phIcon('dna')+' Genesect', keys: ['moduleChoc','modulePyro','moduleCryo','moduleAqua'] },
+  { label: 'Méga Gemme', tab: phIcon('diamond')+' Méga Gemme', keys: ['venusaurite','charizarditeX','charizarditeY','blastoisite','kangaskhanite','gyaradosite','mewtwonitey','scizorite','gardevoirite','garchompite','lucarionite','metagrossite','absolite','flagadossite','camerouptite','dardargnite','branettite','mysdibulite','pharampite','altarite','tyranocivite','roucarnagite','elecsprintite','demolossite','nanmeouite','lockpinite','tenefixite','sharpedite','scarhinoite','pteraite','alakazamite','oniglalite','scarabruite','galekingite','gallamite','drattakite','ectoplasmite','charminite','blizzarite','steelixite'] },
+  { label: 'Cristaux Z', tab: phIcon('lightning')+' Cristaux Z', keys: ['zCrystalNormal','zCrystalCombat','zCrystalVol','zCrystalPoison','zCrystalSol','zCrystalRoche','zCrystalInsecte','zCrystalFantome','zCrystalAcier','zCrystalFeu','zCrystalEau','zCrystalPlante','zCrystalElectrik','zCrystalPsy','zCrystalGlace','zCrystalDragon','zCrystalTenebres','zCrystalFee'] },
+  { label: 'Necrozma', tab: phIcon('sparkle')+' Necrozma', keys: ['prismeCouchant','prismeAurore','ultranecrozium'] },
+  { label: 'Mémoires (Silvallié)', tab: phIcon('floppy-disk')+' Mémoires', keys: ['memoireCombat','memoireVol','memoirePoison','memoireSol','memoireRoche','memoireInsecte','memoireFantome','memoireAcier','memoireFeu','memoireEau','memoirePlante','memoireElectrik','memoirePsy','memoireGlace','memoireDragon','memoireTenebres','memoireFee'] },
+  { label: 'Légendaires de Galar', tab: phIcon('sword')+' Galar', keys: ['epeeRouillee','bouclierRouille','parcheminTenebres','parcheminAqua','renePartageGlace','renePartageSpectre'] },
+  { label: 'Gigamax', tab: phIcon('circle')+' Gigamax', keys: ['facteurGigamax'] },
+  { label: 'Téracristallisation', tab: phIcon('diamond')+' Tera', keys: ['orbeTera'] },
+  { label: 'Méga Gemme (Pokémon Légendes Z-A)', tab: phIcon('sparkle')+' Méga Z-A', keys: ['dragoninite','victreebelite','clefablite','starminite','meganiumite','feraligite','skarmorite','froslassite','emboarite','excadrite','scolipite','scraftinite','eelektrossite','chandelurite','chesnaughtite','delphoxite','greninjite','pyroarite','floettite','barbaracite','dragalgite','hawluchanite','malamarite','zygardite','drampanite','falinksite'] }
 ];
 // Affiche la boutique du Marchand Itinérant : un onglet par groupe d'objets spéciaux (comme le
 // Pokéshop), pour que le catalogue entier reste accessible sans scroll interminable.
@@ -37,7 +37,7 @@ function renderMerchantPanel(){
     const btn = document.createElement('button');
     btn.className = 'btn secondary' + (merchantCategory===idx ? ' diff-active' : '');
     btn.style.cssText = 'padding:6px 10px;font-size:9px;flex:1 1 auto;white-space:nowrap;';
-    btn.textContent = group.tab || group.label;
+    btn.innerHTML = group.tab || group.label;
     btn.onclick = ()=>{ merchantCategory = idx; renderMerchantPanel(); };
     tabs.appendChild(btn);
   });
@@ -53,7 +53,7 @@ function renderMerchantPanel(){
         <div style="font-size:11px;color:var(--text-main);"><b>${item.name}</b> <span style="color:var(--text-dim);">(possédé : ${owned})</span></div>
         <div style="font-size:9px;color:var(--text-dim);line-height:1.4;">${item.desc}</div>
       </div>
-      <button class="btn secondary merchantBuyBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;">${item.price} 💰</button>
+      <button class="btn secondary merchantBuyBtn" data-key="${key}" style="width:auto;flex-shrink:0;min-height:0;padding:6px 10px;font-size:10px;white-space:nowrap;">${item.price} ${phIcon('coins')}</button>
     `;
     list.appendChild(row);
   });
@@ -66,7 +66,7 @@ function renderMerchantPanel(){
       bag[key] = (bag[key]||0)+1;
       refreshVillageMoney();
       saveGame();
-      setVillageMsg(`✓ ${item.name} acheté !`);
+      setVillageMsg(`${phIcon('check')} ${item.name} acheté !`);
       renderMerchantPanel();
     };
   });

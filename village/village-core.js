@@ -5,10 +5,10 @@
 // Initialise l'écran du Campement à l'arrivée (après un Boss ou un Mini-Boss) : récompense, badge,
 // tirage du Marchand et du Safari (nouvelle visite à chaque apparition, voir village/safari.js).
 function renderVillage(reward, newBadgeType, rewardLabel, candyReward){
-  document.getElementById('villageReward').textContent = reward ? `+${reward} 💰${candyReward ? ` et +${candyReward} 🍬` : ''} gagnés ${rewardLabel || 'en battant le Boss'} !` : '';
+  document.getElementById('villageReward').innerHTML = reward ? `+${reward} ${phIcon('coins')}${candyReward ? ` et +${candyReward} ${phIcon('cookie')}` : ''} gagnés ${rewardLabel || 'en battant le Boss'} !` : '';
   const badgeEl = document.getElementById('villageBadge');
   if(badgeEl){
-    badgeEl.innerHTML = newBadgeType ? `🎖️ Nouveau Badge obtenu : ${TYPE_EMOJI[newBadgeType]} ${typeDisplayName(newBadgeType)} !` : '';
+    badgeEl.innerHTML = newBadgeType ? `${phIcon('medal')} Nouveau Badge obtenu : ${typeIconHTML(newBadgeType, 14)} ${typeDisplayName(newBadgeType)} !` : '';
   }
   document.getElementById('villageMoneyVal').textContent = money;
   document.getElementById('villageCandyVal').textContent = affinityCandy;
@@ -92,7 +92,7 @@ function renderVillageRanchPen(){
 }
 function setVillageMsg(text){
   let el = document.getElementById('villageMsg');
-  if(el) el.textContent = text;
+  if(el) el.innerHTML = text;
 }
 function refreshVillageMoney(){
   document.getElementById('villageMoneyVal').textContent = money;

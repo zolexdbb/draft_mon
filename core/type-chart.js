@@ -1,11 +1,17 @@
 /* ==== SOMMAIRE ====
-   Les 18 types Pokémon : emoji/couleur/icône SVG pour l'affichage, TYPE_CHART pour les calculs
+   Les 18 types Pokémon : couleur/icône SVG pour l'affichage, TYPE_CHART pour les calculs
    d'efficacité (utilisé par getMult() ici et par moveEffectiveness() dans combat/damage-calc.js).
 ==== */
-const TYPE_EMOJI = {
-  normal:'⭐',feu:'🔥',eau:'💧',plante:'🌿',electrik:'⚡',vol:'🪶',poison:'☠️',sol:'⛰️',
-  insecte:'🐛',combat:'🥊',glace:'🧊',psy:'🔮',fantome:'👻',roche:'🪨',dragon:'🐲',
-  acier:'⚙️',tenebres:'🌑',fee:'🧚'
+// Génère la balise d'une icône Phosphor (remplace les émojis partout dans l'interface) à partir de
+// son nom (ex. phIcon('sword')). Utilisé directement dans le HTML, et pour résoudre un repli stocké
+// dans un attribut data-* (un nom d'icône s'y insère sans risque, contrairement à du HTML imbriqué).
+function phIcon(name){ return `<i class="ph-bold ph-${name}"></i>`; }
+// Icône de repli par type (utilisée quand un sprite de dresseur Maître de Type échoue à charger, voir
+// combat/tower.js) — les badges de type eux-mêmes utilisent le système SVG ci-dessous (typeIconHTML).
+const TYPE_ICON_SLUG = {
+  normal:'star',feu:'flame',eau:'drop',plante:'leaf',electrik:'lightning',vol:'feather',poison:'skull',sol:'mountains',
+  insecte:'bug',combat:'boxing-glove',glace:'snowflake',psy:'eye',fantome:'ghost',roche:'mountains',dragon:'spiral',
+  acier:'gear',tenebres:'moon',fee:'flower'
 };
 const TYPE_COLOR = {
   normal:'#9199A1', feu:'#EE8130', eau:'#6390F0', plante:'#7AC74C', electrik:'#F7D02C',

@@ -44,27 +44,27 @@ function foeLevelFor(floor){
 }
 
 const TRAINER_ARCHETYPES = [
-  {title:'Randonneur',     emoji:'🥾', theme:null,       minFloor:1, dialogue:"J'adore explorer les chemins de campagne !"},
-  {title:'Nageuse',        emoji:'🏊', theme:'eau',      minFloor:1, dialogue:"L'eau est mon élément, tu vas te noyer !"},
-  {title:'Karatéka',       emoji:'🥋', theme:'combat',   minFloor:1, dialogue:"Mon entraînement est sans faille !"},
-  {title:'Cueilleuse',     emoji:'🧺', theme:'plante',   minFloor:1, dialogue:"Mes Pokémon plante sont en pleine floraison !"},
-  {title:'Cycliste',       emoji:'🚴', theme:null,       minFloor:1, dialogue:"La vitesse, c'est ma spécialité !"},
-  {title:'Scientifique',   emoji:'🔬', theme:null,       minFloor:2, dialogue:"J'ai étudié mes Pokémon à la loupe..."},
-  {title:'Pompier',        emoji:'🔥', theme:'feu',      minFloor:2, dialogue:"Mon équipe va tout réduire en cendres !"},
-  {title:'Géologue',       emoji:'⛏️',  theme:'roche',   minFloor:2, dialogue:"Mes Pokémon sont solides comme la roche !"},
-  {title:'Électricien',    emoji:'⚡', theme:'electrik', minFloor:2, dialogue:"Tiens bon face à mon voltage !"},
-  {title:'Chasseuse',      emoji:'🏹', theme:null,       minFloor:3, dialogue:"Je traque les dresseurs faibles !"},
-  {title:'Dresseuse Psy',  emoji:'🔮', theme:'psy',      minFloor:3, dialogue:"Je lis dans tes pensées… tu vas perdre."},
-  {title:'Noctambule',     emoji:'👻', theme:'fantome',  minFloor:3, dialogue:"L'obscurité est mon alliée !"},
-  {title:'Glaciologiste',  emoji:'🧊', theme:'glace',    minFloor:4, dialogue:"Le froid ralentit tes réflexes..."},
-  {title:'Empoisonneur',   emoji:'☠️', theme:'poison',   minFloor:4, dialogue:"Mon venin est lent... mais mortel."},
-  {title:'Vétéran',        emoji:'🎖️', theme:null,       minFloor:5, dialogue:"J'ai traversé cent tours de combat. Et toi ?"},
-  {title:'Élite',          emoji:'⭐', theme:null,       minFloor:6, dialogue:"Seuls les meilleurs arrivent jusqu'à moi."},
+  {title:'Randonneur',     emoji:'sneaker',           theme:null,       minFloor:1, dialogue:"J'adore explorer les chemins de campagne !"},
+  {title:'Nageuse',        emoji:'person-simple-swim', theme:'eau',      minFloor:1, dialogue:"L'eau est mon élément, tu vas te noyer !"},
+  {title:'Karatéka',       emoji:'boxing-glove',      theme:'combat',   minFloor:1, dialogue:"Mon entraînement est sans faille !"},
+  {title:'Cueilleuse',     emoji:'basket',            theme:'plante',   minFloor:1, dialogue:"Mes Pokémon plante sont en pleine floraison !"},
+  {title:'Cycliste',       emoji:'bicycle',           theme:null,       minFloor:1, dialogue:"La vitesse, c'est ma spécialité !"},
+  {title:'Scientifique',   emoji:'flask',             theme:null,       minFloor:2, dialogue:"J'ai étudié mes Pokémon à la loupe..."},
+  {title:'Pompier',        emoji:'flame',             theme:'feu',      minFloor:2, dialogue:"Mon équipe va tout réduire en cendres !"},
+  {title:'Géologue',       emoji:'shovel',            theme:'roche',   minFloor:2, dialogue:"Mes Pokémon sont solides comme la roche !"},
+  {title:'Électricien',    emoji:'lightning',         theme:'electrik', minFloor:2, dialogue:"Tiens bon face à mon voltage !"},
+  {title:'Chasseuse',      emoji:'target',            theme:null,       minFloor:3, dialogue:"Je traque les dresseurs faibles !"},
+  {title:'Dresseuse Psy',  emoji:'eye',               theme:'psy',      minFloor:3, dialogue:"Je lis dans tes pensées… tu vas perdre."},
+  {title:'Noctambule',     emoji:'ghost',             theme:'fantome',  minFloor:3, dialogue:"L'obscurité est mon alliée !"},
+  {title:'Glaciologiste',  emoji:'snowflake',         theme:'glace',    minFloor:4, dialogue:"Le froid ralentit tes réflexes..."},
+  {title:'Empoisonneur',   emoji:'skull',             theme:'poison',   minFloor:4, dialogue:"Mon venin est lent... mais mortel."},
+  {title:'Vétéran',        emoji:'medal',             theme:null,       minFloor:5, dialogue:"J'ai traversé cent tours de combat. Et toi ?"},
+  {title:'Élite',          emoji:'star',              theme:null,       minFloor:6, dialogue:"Seuls les meilleurs arrivent jusqu'à moi."},
 ];
 const TRAINER_FIRST_NAMES = ['Théo','Lucie','Marc','Sarah','Hugo','Emma','Léo','Chloé','Nathan','Lina','Maxime','Inès','Paul','Camille','Yanis','Manon','Romain','Jade','Kévin','Alicia'];
 
 /* ---- Maîtres de Type (boss) ---- */
-const ALL_TYPES = Object.keys(TYPE_EMOJI);
+const ALL_TYPES = Object.keys(TYPE_COLOR);
 const TYPE_DISPLAY_OVERRIDE = { fee:'Fée' };
 function typeDisplayName(type){ return TYPE_DISPLAY_OVERRIDE[type] || (type.charAt(0).toUpperCase()+type.slice(1)); }
 // Choisit le type du prochain Maître de Type boss, sans répéter un type déjà rencontré durant cette run (recommence un cycle une fois les 17 épuisés).
@@ -101,17 +101,17 @@ const TYPE_MASTER_SPRITE = {
   glace:'candice', psy:'sabrina', fantome:'phoebe', roche:'brock', dragon:'lance',
   acier:'steven', tenebres:'karen', fee:'jacinthe'
 };
-// Repli en emoji si le sprite du dresseur (Showdown) échoue à charger.
+// Repli en icône si le sprite du dresseur (Showdown) échoue à charger.
 function handleTrainerSpriteError(img){
   const span = document.createElement('span');
-  span.textContent = img.dataset.fallbackEmoji || '❓';
+  span.innerHTML = phIcon(img.dataset.fallbackEmoji || 'question');
   span.className = 'trainer-avatar-fallback';
   img.replaceWith(span);
 }
-// Avatar du dresseur : sprite dédié pour les Maîtres de Type (TYPE_MASTER_SPRITE), sinon son emoji d'archétype.
+// Avatar du dresseur : sprite dédié pour les Maîtres de Type (TYPE_MASTER_SPRITE), sinon l'icône de son archétype.
 function getTrainerAvatarHTML(trainer){
   const spriteName = trainer.masterType && TYPE_MASTER_SPRITE[trainer.masterType];
-  if(!spriteName) return trainer.emoji;
+  if(!spriteName) return phIcon(trainer.emoji);
   const url = `https://play.pokemonshowdown.com/sprites/trainers/${spriteName}.png`;
   return `<img src="${url}" alt="${trainer.name}" class="trainer-sprite-img" data-fallback-emoji="${trainer.emoji}" onerror="handleTrainerSpriteError(this)">`;
 }
@@ -134,14 +134,14 @@ function generateTrainer(floor){
     const type = pickBossType();
     const name = rand(TRAINER_FIRST_NAMES);
     return {
-      name: `👑 MAÎTRE ${typeDisplayName(type).toUpperCase()} ${name}`,
-      emoji: TYPE_EMOJI[type], theme: type, dialogue: TYPE_MASTER_DIALOGUE[type],
+      name: `${phIcon('crown')} MAÎTRE ${typeDisplayName(type).toUpperCase()} ${name}`,
+      emoji: TYPE_ICON_SLUG[type], theme: type, dialogue: TYPE_MASTER_DIALOGUE[type],
       boss: true, miniBoss: false, masterType: type
     };
   }
   const archetype = rand(trainerArchetypePool(floor));
   const name = rand(TRAINER_FIRST_NAMES);
-  const prefix = miniBoss ? '⭐ Mini-Boss ' : '';
+  const prefix = miniBoss ? `${phIcon('star')} Mini-Boss ` : '';
   return { name:`${prefix}${archetype.title} ${name}`, emoji:archetype.emoji, theme:archetype.theme, dialogue:archetype.dialogue, boss:false, miniBoss };
 }
 // Génère le duo de jumeaux d'un combat double : même archétype/thème, deux prénoms distincts.
@@ -152,8 +152,8 @@ function generateTwinTrainers(floor){
   while(n2===n1 && TRAINER_FIRST_NAMES.length>1) n2 = rand(TRAINER_FIRST_NAMES);
   const base = { emoji:archetype.emoji, theme:archetype.theme, dialogue:archetype.dialogue, boss:false, miniBoss:false };
   return [
-    { ...base, name:`👯 Jumeau ${archetype.title} ${n1}` },
-    { ...base, name:`👯 Jumelle ${archetype.title} ${n2}` }
+    { ...base, name:`${phIcon('users')} Jumeau ${archetype.title} ${n1}` },
+    { ...base, name:`${phIcon('users')} Jumelle ${archetype.title} ${n2}` }
   ];
 }
 
@@ -163,13 +163,13 @@ function renderTower(reward, candyReward){
   updateBestFloor(towerFloor);
   const towerTier = difficultyTier(towerFloor);
   const size = isBossFloor(towerFloor) ? 6 : (isMiniBossFloor(towerFloor) ? Math.min(6, 3+towerTier) : Math.min(6, 2+towerTier));
-  const badge = isBossFloor(towerFloor) ? ' · 👑 ÉTAGE BOSS !' : (isMiniBossFloor(towerFloor) ? ' · ⭐ Mini-Boss' : '');
-  document.getElementById('floorDesc').innerHTML = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor}${badge}<br>Meilleur étage : ${currentBestFloor()} · Mode : ${difficulty==='facile'?'😊 Facile':(difficulty==='difficile'?'💀 Difficile':'⚔️ Normal')}`;
+  const badge = isBossFloor(towerFloor) ? ` · ${phIcon('crown')} ÉTAGE BOSS !` : (isMiniBossFloor(towerFloor) ? ` · ${phIcon('star')} Mini-Boss` : '');
+  document.getElementById('floorDesc').innerHTML = `Équipe ennemie : ${size} Pokémon — niveau de menace ${towerFloor}${badge}<br>Meilleur étage : ${currentBestFloor()} · Mode : ${difficulty==='facile'?phIcon('smiley')+' Facile':(difficulty==='difficile'?phIcon('skull')+' Difficile':phIcon('sword')+' Normal')}`;
   document.getElementById('floorMoneyVal').textContent = money;
   document.getElementById('floorCandyVal').textContent = affinityCandy;
   const rewardEl = document.getElementById('floorReward');
   if(rewardEl){
-    rewardEl.textContent = reward ? `+${reward} 💰${candyReward ? ` et +${candyReward} 🍬` : ''} gagnés au combat précédent !` : '';
+    rewardEl.innerHTML = reward ? `+${reward} ${phIcon('coins')}${candyReward ? ` et +${candyReward} ${phIcon('cookie')}` : ''} gagnés au combat précédent !` : '';
   }
   if(window.DEV_HOOKS) window.DEV_HOOKS.renderTowerPanel();
   saveGame();

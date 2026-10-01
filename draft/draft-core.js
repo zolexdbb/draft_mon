@@ -214,7 +214,7 @@ function nextDraftRound(){
   const rerollWrap = document.getElementById('draftRerollWrap');
   if(rerollWrap){
     rerollWrap.innerHTML = rerollsLeft>0
-      ? `<button class="btn secondary" id="draftRerollBtn" style="padding:6px 12px;font-size:9px;">🔄 Reroll gratuit (${rerollsLeft} restant${rerollsLeft>1?'s':''})</button>`
+      ? `<button class="btn secondary" id="draftRerollBtn" style="padding:6px 12px;font-size:9px;">${phIcon('arrows-clockwise')} Reroll gratuit (${rerollsLeft} restant${rerollsLeft>1?'s':''})</button>`
       : '';
     const rb = document.getElementById('draftRerollBtn');
     if(rb) rb.onclick = ()=>{ rerollsLeft--; nextDraftRound(); };

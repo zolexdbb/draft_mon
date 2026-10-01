@@ -98,8 +98,8 @@ const GIGAMAX_SPRITE_IDS = {
 // conservée pour toujours s'il est choisi — jamais retirée après coup.
 const SHINY_CHANCE = 0.002;
 function rollShiny(){ return Math.random() < SHINY_CHANCE; }
-// Petit badge "✨" à placer à côté du nom d'un Pokémon chromatique, partout où son sprite est affiché.
-function shinyBadgeHTML(){ return `<span class="shiny-badge" title="Chromatique !">✨</span>`; }
+// Petite icône à placer à côté du nom d'un Pokémon chromatique, partout où son sprite est affiché.
+function shinyBadgeHTML(){ return `<span class="shiny-badge" title="Chromatique !">${phIcon('sparkle')}</span>`; }
 const SPRITE_MAX_ATTEMPTS = 8;
 const SPRITE_RETRY_DELAYS = [300, 600, 1200, 2000, 3000, 4000, 5000];
 // Ids PokeAPI dédiés (10000+) pour les formes sans numéro de Pokédex propre : Méga-Évolutions,

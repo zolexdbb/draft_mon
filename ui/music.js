@@ -196,13 +196,13 @@ function openMusicSettingsModal(){
   overlay.className = 'patchnotes-overlay';
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:340px;position:relative;">
-      <button class="patchnotes-close" id="musicSettingsCloseBtn">✕</button>
+      <button class="patchnotes-close" id="musicSettingsCloseBtn">${phIcon('x')}</button>
       <h2>◆ PARAMÈTRES ◆</h2>
       <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;">Volume de la musique</div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:14px;">🔈</span>
+        <span style="font-size:14px;">${phIcon('speaker-low')}</span>
         <input type="range" id="musicVolumeSlider" min="0" max="100" value="${Math.round(musicVolume*100)}" style="flex:1;">
-        <span style="font-size:14px;">🔊</span>
+        <span style="font-size:14px;">${phIcon('speaker-high')}</span>
       </div>
       <div style="font-size:10px;color:var(--text-dim);margin:16px 0 8px;">Combat</div>
       <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-main);cursor:pointer;margin-bottom:12px;">

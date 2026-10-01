@@ -6,7 +6,7 @@ function openBagModal(){
   overlay.className = 'patchnotes-overlay';
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:420px;position:relative;">
-      <button class="patchnotes-close" id="bagCloseBtn">✕</button>
+      <button class="patchnotes-close" id="bagCloseBtn">${phIcon('x')}</button>
       <h2>◆ SAC ◆</h2>
       <div class="dex-rate" id="bagMsg" style="text-align:center;margin-bottom:8px;color:var(--good);min-height:12px;"></div>
       <div id="bagItemList" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto;"></div>
@@ -73,7 +73,7 @@ function renderBagTargetList(key){
         bag[key] = Math.max(0, (bag[key]||0)-1);
         m.heldItem = key;
         saveGame();
-        document.getElementById('bagMsg').textContent = `✓ ${item.name} équipé sur ${sp.name} !`;
+        document.getElementById('bagMsg').innerHTML = `${phIcon('check')} ${item.name} équipé sur ${sp.name} !`;
         renderBagItemList();
         return;
       }
@@ -81,7 +81,7 @@ function renderBagTargetList(key){
       if(item.cureStatus){ m.status = null; m.sleepCounter = 0; }
       bag[key] = Math.max(0, (bag[key]||0)-1);
       saveGame();
-      document.getElementById('bagMsg').textContent = `✓ ${item.name} utilisé sur ${sp.name} !`;
+      document.getElementById('bagMsg').innerHTML = `${phIcon('check')} ${item.name} utilisé sur ${sp.name} !`;
       renderBagItemList();
     };
     list.appendChild(btn);

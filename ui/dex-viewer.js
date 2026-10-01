@@ -20,7 +20,7 @@ function rarityKey(line, stageIdx){
 // Regroupe les faiblesses/résistances/immunités d'un ou deux types contre les 18 types offensifs (fiche détail du Dex).
 function typeMatchupGroups(types){
   const groups = {4:[], 2:[], 0.5:[], 0.25:[], 0:[]};
-  Object.keys(TYPE_EMOJI).forEach(t=>{
+  Object.keys(TYPE_COLOR).forEach(t=>{
     const mult = getMult(t, types);
     if(groups[mult]) groups[mult].push(t); else if(mult===0) groups[0].push(t);
   });
@@ -38,7 +38,7 @@ function dexAffinityPipsHTML(lineId, size){
   const lvl = affinityLevel(lineId);
   const px = size || 10;
   const pips = Array.from({length:AFFINITY_MAX}).map((_,i)=>
-    `<span style="font-size:${px}px;color:${i<lvl?'var(--accent)':'var(--line-bright)'};">${i<lvl?'♥':'♡'}</span>`
+    `<span style="font-size:${px}px;color:${i<lvl?'var(--accent)':'var(--line-bright)'};">${phIcon('heart')}</span>`
   ).join('');
   return `<span title="Affinité ×${affinityMultiplier(lineId).toFixed(1)}" style="display:inline-flex;gap:1px;">${pips}</span>`;
 }
@@ -103,7 +103,7 @@ function renderDex(){
     });
   });
 
-  document.getElementById('dexCount').textContent = `${count} Pokémon affichés · 💖 ${boostedLines.size} lignée${boostedLines.size>1?'s':''} boostée${boostedLines.size>1?'s':''}`;
+  document.getElementById('dexCount').innerHTML = `${count} Pokémon affichés · ${phIcon('heart')} ${boostedLines.size} lignée${boostedLines.size>1?'s':''} boostée${boostedLines.size>1?'s':''}`;
 }
 
 document.getElementById('dexSearch').oninput = (e)=>{ dexFilters.search = e.target.value; renderDex(); };
@@ -160,7 +160,7 @@ function renderDexRarityFilter(){
 renderDexTypeFilter();
 renderDexTypeFilter2();
 renderDexRarityFilter();
-// Bouton "💖 Boostées" : bascule l'affichage entre toutes les lignées et seulement celles avec de l'affinité.
+// Bouton "Boostées" (icône cœur) : bascule l'affichage entre toutes les lignées et seulement celles avec de l'affinité.
 function refreshDexBoostedFilterBtn(){
   document.getElementById('dexBoostedFilter').classList.toggle('diff-active', dexFilters.boosted);
 }
@@ -244,9 +244,9 @@ function openDexDetail(line, stageIdx, branchIdx){
       <input type="text" id="dexMoveSearch" class="csel-search" placeholder="Rechercher une attaque...">
     </div>
     <div class="dex-move-list">
-      ${physMoves.length ? `<div class="csel-group-label">⚔️ Physiques</div>${physMoves.map(moveRowHTML).join('')}` : ''}
-      ${specMoves.length ? `<div class="csel-group-label">✨ Spéciales</div>${specMoves.map(moveRowHTML).join('')}` : ''}
-      ${statusMoves.length ? `<div class="csel-group-label">🌀 Statut</div>${statusMoves.map(moveRowHTML).join('')}` : ''}
+      ${physMoves.length ? `<div class="csel-group-label">${phIcon('sword')} Physiques</div>${physMoves.map(moveRowHTML).join('')}` : ''}
+      ${specMoves.length ? `<div class="csel-group-label">${phIcon('sparkle')} Spéciales</div>${specMoves.map(moveRowHTML).join('')}` : ''}
+      ${statusMoves.length ? `<div class="csel-group-label">${phIcon('spiral')} Statut</div>${statusMoves.map(moveRowHTML).join('')}` : ''}
     </div>`;
 
   // État de l'aperçu (forme + shiny), indépendant de ce qui est réellement affiché ailleurs (Dex/équipe) :
@@ -266,8 +266,8 @@ function openDexDetail(line, stageIdx, branchIdx){
     const btn = (key, label, icon) => `<button class="btn secondary dex-form-btn${viewForm===key?' active':''}" data-form="${key}" style="padding:5px 10px;font-size:9px;width:auto;">${icon} ${label}</button>`;
     return `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
       ${btn('base', sp.name, '◆')}
-      ${megaKeys.map(k=>btn(k, sp.forms[k].name, '💎')).join('')}
-      ${gigamaxSpriteId ? btn('gigamax', 'Gigamax', '🔴') : ''}
+      ${megaKeys.map(k=>btn(k, sp.forms[k].name, phIcon('diamond'))).join('')}
+      ${gigamaxSpriteId ? btn('gigamax', 'Gigamax', phIcon('circle')) : ''}
     </div>`;
   }
   // Section Affinité de la fiche : niveau (5 pastilles), multiplicateur, taux d'apparition avant/après
@@ -298,8 +298,8 @@ function openDexDetail(line, stageIdx, branchIdx){
         <div style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">Taux d'apparition : ${baseRate.toFixed(2)}% → <b style="color:var(--text-main);">${boostedRate.toFixed(2)}%</b></div>
         ${cost ? `
           <div class="stat-bar-track" style="height:8px;"><div class="stat-bar-fill" style="width:${barPct}%;background:var(--accent);"></div></div>
-          <div style="font-size:9px;color:var(--text-dim);margin-top:3px;">${progress} / ${cost} 🍬 pour le palier ${lvl+1}</div>
-        ` : `<div style="font-size:10px;color:var(--good);">✓ Niveau d'affinité maximum atteint !</div>`}
+          <div style="font-size:9px;color:var(--text-dim);margin-top:3px;">${progress} / ${cost} ${phIcon('cookie')} pour le palier ${lvl+1}</div>
+        ` : `<div style="font-size:10px;color:var(--good);">${phIcon('check')} Niveau d'affinité maximum atteint !</div>`}
       </div>`;
   }
   function topHTML(){
@@ -314,7 +314,7 @@ function openDexDetail(line, stageIdx, branchIdx){
         </div>
       </div>
       <div style="margin-bottom:14px;">
-        <button class="btn secondary dex-shiny-btn${viewShiny?' active':''}" id="dexShinyToggleBtn" style="padding:5px 10px;font-size:9px;width:auto;">✨ ${viewShiny?'Voir la forme normale':'Voir en chromatique'}</button>
+        <button class="btn secondary dex-shiny-btn${viewShiny?' active':''}" id="dexShinyToggleBtn" style="padding:5px 10px;font-size:9px;width:auto;">${phIcon('sparkle')} ${viewShiny?'Voir la forme normale':'Voir en chromatique'}</button>
         ${formToggleHTML()}
       </div>
       <div class="editor-section">
@@ -350,7 +350,7 @@ function openDexDetail(line, stageIdx, branchIdx){
 
   overlay.innerHTML = `
     <div class="patchnotes-modal" style="max-width:520px;position:relative;">
-      <button class="patchnotes-close" id="dexDetailCloseBtn">✕</button>
+      <button class="patchnotes-close" id="dexDetailCloseBtn">${phIcon('x')}</button>
       <div id="dexDetailTop"></div>
       ${chainEntries.length>1 ? `
       <div class="editor-section">

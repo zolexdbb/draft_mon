@@ -11,8 +11,7 @@
      de statut (voir la liste des flags juste au-dessus de la fonction)
    - L.498-fin : endOfTurnStatus — dégâts/soins de fin de tour (poison, brûlure, météo, Reste, Mue, Turbo...)
 ==== */
-const STATUS_LABEL = { poison:'☠️ Empoisonné', brulure:'🔥 Brûlé', paralysie:'⚡ Paralysé', sommeil:'💤 Endormi', confusion:'💫 Confus', gel:'🧊 Gelé' };
-const STATUS_ICON = { poison:'☠️', brulure:'🔥', paralysie:'⚡', sommeil:'💤', confusion:'💫', gel:'🧊' };
+const STATUS_LABEL = { poison:'Empoisonné', brulure:'Brûlé', paralysie:'Paralysé', sommeil:'Endormi', confusion:'Confus', gel:'Gelé' };
 const STATUS_COLOR = { poison:'#A33EA1', brulure:'#EE8130', paralysie:'#F7D02C', sommeil:'#9199A1', confusion:'#F95587', gel:'#96D9D6' };
 // Génère les points SVG d'une spirale (icône de confusion).
 function spiralPoints(turns, startR, endR, steps, cx, cy){
@@ -161,7 +160,7 @@ function pursuitBeforeSwitch(leaver){
    Pokémon qui ENTRE ensuite sur le terrain (changement, remplaçant après K.O., Hurlement, Change-Éclair...).
    Picots/Pics Toxik/Toile Gluante n'affectent que les Pokémon au sol. Tour Rapide / Toupie Mortelle
    nettoient le camp de leur lanceur. */
-const HAZARD_LABEL = { rocks:'🪨 Piège de Roc', spikes:'▲ Picots', toxic:'☠️ Pics Toxik', web:'🕸️ Toile Gluante' };
+const HAZARD_LABEL = { rocks:'Piège de Roc', spikes:'Picots', toxic:'Pics Toxik', web:'Toile Gluante' };
 function freshHazards(){
   return { player:{ rocks:false, spikes:0, toxic:0, web:false }, foe:{ rocks:false, spikes:0, toxic:0, web:false } };
 }
@@ -176,7 +175,8 @@ function hazardsOf(side){
    secondaires doublées pour le camp du lanceur), Mer de Feu (Feu+Herbe, 1/8 des PV perdus par tour hors
    Feu) ou Marécage (Herbe+Eau, Vitesse divisée par 4) sur le camp adverse. ---- */
 const PLEDGE_COMBOS = { 'fire+water':'rainbow', 'water+fire':'rainbow', 'fire+grass':'fire', 'grass+fire':'fire', 'grass+water':'swamp', 'water+grass':'swamp' };
-const PLEDGE_LABEL = { rainbow:'🌈 Arc-en-ciel', fire:'🔥 Mer de Feu', swamp:'🟤 Marécage' };
+const PLEDGE_LABEL = { rainbow:'Arc-en-ciel', fire:'Mer de Feu', swamp:'Marécage' };
+const PLEDGE_ICON = { rainbow:'rainbow', fire:'flame', swamp:'drop' };
 function freshPledgeFx(){
   return { player:{ rainbow:0, fire:0, swamp:0 }, foe:{ rainbow:0, fire:0, swamp:0 } };
 }
@@ -410,8 +410,8 @@ function healPercent(target, frac, logs){
   target.hp = Math.min(target.maxHp, target.hp + Math.round(target.maxHp*frac));
   logs.push(`${target.name} récupère ${target.hp-before} PV !`);
 }
-const WEATHER_LABEL = { pluie:'🌧️ Pluie', soleil:'☀️ Soleil intense', sable:'🌪️ Tempête de sable', grele:'🌨️ Grêle' };
-const TERRAIN_LABEL = { grassy:'🌱 Zone Herbue', electric:'⚡ Zone Électrique', misty:'✨ Zone Brumeuse', psychic:'🔮 Zone Psychique' };
+const WEATHER_LABEL = { pluie:'Pluie', soleil:'Soleil intense', sable:'Tempête de sable', grele:'Grêle' };
+const TERRAIN_LABEL = { grassy:'Zone Herbue', electric:'Zone Électrique', misty:'Zone Brumeuse', psychic:'Zone Psychique' };
 // Exécute tous les effets d'une capacité de statut (move.effect), un bloc if par flag possible :
 // selfBoost/foeBoost (stats), status, heal, weather/terrain, mist/lightScreen/reflect/safeguard
 // (écrans), haze/invertStages (annule/inverse les stats), disable/tauntBlock (entrave la cible),

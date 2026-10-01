@@ -12,7 +12,7 @@ const PATCH_NOTES = [
     title: 'v0.11 — Safari Update',
     categories: [
       {
-        icon: '🧬', label: 'Système d’Affinité',
+        icon: phIcon('dna'), label: 'Système d’Affinité',
         items: [
           "Chaque lignée a désormais un niveau d'Affinité (0 à 5, acquis pour toujours) qui augmente ses chances d'apparaître au draft, au Ranch et parmi les recrues de combat, jusqu'à ×2 au niveau maximum",
           "L'Affinité profite à toute la lignée, branches comprises (ex. faire monter Évoli boost les 8 Évolitions en même temps)",
@@ -20,14 +20,14 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '🍬', label: 'Bonbons d’Affinité',
+        icon: phIcon('cookie'), label: 'Bonbons d’Affinité',
         items: [
           "Nouvelle monnaie permanente (entre toutes les parties, comme les Jetons de Tour) : chaque combat gagné en rapporte 0 à 3 (davantage contre un Mini-Boss ou un Boss), affichée et mise en évidence sur l'écran d'étage et au Campement",
           "L'argent et les Bonbons sont maintenant présentés dans des pastilles colorées bien visibles plutôt que noyés dans le texte, pour bien montrer que ce sont des ressources importantes"
         ]
       },
       {
-        icon: '🌿', label: 'Maison Safari',
+        icon: phIcon('leaf'), label: 'Maison Safari',
         items: [
           "Nouveau bâtiment du Campement à apparition aléatoire (indépendante du Marchand Itinérant) : 10 Safari Balls offertes par visite pour capturer des Pokémon sauvages un par un",
           "4 actions à chaque rencontre : Safari Ball, Caillou (double la capture et la fuite pendant quelques tours), Appât (les divise), ou Fuite — le Pokémon peut aussi s'enfuir de lui-même à chaque tour",
@@ -35,14 +35,14 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '🔬', label: 'Le Professeur',
+        icon: phIcon('flask'), label: 'Le Professeur',
         items: [
           "Depuis la Maison Safari, investis tes Bonbons d'Affinité dans la lignée de ton choix parmi tout le Pokédex (recherche et filtre par rareté) pour la faire monter en niveau, un peu à la fois",
           "Le coût augmente avec la rareté de la lignée (Rare, Pseudo-légendaire, Légendaire) et avec le niveau déjà atteint"
         ]
       },
       {
-        icon: '📖', label: 'Pokédex',
+        icon: phIcon('book-open'), label: 'Pokédex',
         items: [
           "Chaque fiche affiche maintenant le niveau d'Affinité de la lignée, son multiplicateur, le taux d'apparition avant/après boost, et la progression vers le prochain niveau",
           "Nouveau filtre « Boostées » et compteur du nombre de lignées boostées dans le Pokédex"
@@ -55,7 +55,7 @@ const PATCH_NOTES = [
     title: 'v0.10 — Gen 9 Update : Paldea & Téracristallisation',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "111 nouveaux Pokémon ajoutés (région de Paldea, Pokédex complet 1 → 1017), dont les 3 starters, les 4 Pokémon du Fléau, le Trio Fidèle, Bafouinard (et ses 3 Masques), tous les Pokémon Paradoxe passés et futurs, la nouvelle lignée pseudo-légendaire Frigibax/Frigodragma/Baxcalibur, Miraidon et Koraidon, Terapagos et Pecharunt",
           "4 nouvelles lignées de Formes de Paldea, sélectionnables indépendamment de leurs versions Kanto au draft (Axoloto de Paldea, et les 3 races de Tauros de Paldea : Combative, Flamboyante, Aquatique)",
@@ -63,21 +63,21 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '⚔️', label: 'Capacités',
+        icon: phIcon('sword'), label: 'Capacités',
         items: [
           "36 nouvelles attaques de Génération 9 (Collision, Électro-Ruée, Lame Psy, Toupie Mortelle, Talon Marteau, Chaîne Maligne, Désastre, Négo-Tranchante, Bombe Nombre, Masse Titanesque, Pluie de Pépites...)",
           "Deux nouvelles attaques (Collision, Électro-Ruée) infligent 33% de dégâts supplémentaires si le coup est super efficace, comme dans les vrais jeux"
         ]
       },
       {
-        icon: '💠', label: 'Talents',
+        icon: phIcon('diamond'), label: 'Talents',
         items: [
           "36 nouveaux talents de Génération 9, dont plusieurs avec un vrai effet codé en combat : Protosynthèse et Quark Chargée (boostent la statistique la plus élevée du porteur sous Zénith / Zone Électrique), les 4 talents Fléau (réduisent une statistique de tous les autres Pokémon présents), Sel Purifiant (immunité totale aux altérations de statut, résiste au Spectre), Corps Cuit (immunité au Feu, booste la Défense), Cœur d'Or (immunité aux capacités de statut), et Chaîne Toxique (empoisonne gravement au contact)",
           "Les autres nouveaux talents (Opportuniste, Commandant, Zéro à Héros, Synchro Masque, Téraforme Zéro...) ont leur description dans le Pokédex mais restent sans effet mécanique codé pour l'instant"
         ]
       },
       {
-        icon: '💎', label: 'Téracristallisation',
+        icon: phIcon('diamond'), label: 'Téracristallisation',
         items: [
           "Nouvelle mécanique de combat, au même titre que la Méga-Évolution et le Dynamax : l'Orbe Tera, vendu par le Marchand Itinérant, permet à son porteur de se Téracristalliser une fois par combat",
           "Le Type Tera de chaque Pokémon se choisit dans la fenêtre Équipe (par défaut, son premier type) ; une fois activée en combat via le bouton dédié, la Téracristallisation dure jusqu'à la fin du combat (contrairement au Dynamax, limité à 3 tours)",
@@ -91,7 +91,7 @@ const PATCH_NOTES = [
         title: 'v0.10.1 — Méga-Évolutions de Pokémon Légendes Z-A',
         categories: [
           {
-            icon: '🔷', label: 'Méga-Évolutions',
+            icon: phIcon('diamond'), label: 'Méga-Évolutions',
             items: [
               "26 nouvelles Méga-Évolutions inédites, introduites dans Pokémon Légendes Z-A, ajoutées à des lignées déjà présentes dans le Pokédex : Méga-Dracolosse (Dragon/Vol), Méga-Empiflor (Plante/Poison), Méga-Mélodelfe (Fée/Vol), Méga-Staross (Eau/Psy), Méga-Méganium (Plante/Fée), Méga-Aligatueur (Eau/Dragon), Méga-Airmure, Méga-Momartik, Méga-Roitiflam, Méga-Minotaupe, Méga-Brutapode, Méga-Baggaïd, Méga-Ohmassacre, Méga-Lugulabre, Méga-Blindépique, Méga-Goupelin, Méga-Amphinobi, Méga-Némélios, Floette (Fleur Éternelle), Méga-Golgopathe (Roche/Combat), Méga-Kravarech, Méga-Brutalibré, Méga-Sepiatroce, Méga-Zygarde, Méga-Draïeul et Méga-Hexadron",
               "Chaque Méga-Évolution s'obtient via sa propre Méga-Gemme, vendue par le Marchand Itinérant (nouvel onglet dédié « Méga Z-A »), et s'équipe comme n'importe quel objet tenu dans la fenêtre Équipe",
@@ -105,7 +105,7 @@ const PATCH_NOTES = [
         title: 'v0.10.2 — Refonte visuelle : Combat, Campement & Accueil',
         categories: [
           {
-            icon: '⚔️', label: 'Écran de combat',
+            icon: phIcon('sword'), label: 'Écran de combat',
             items: [
               "L'écran de combat occupe désormais tout l'écran, sur téléphone comme sur ordinateur, et tient entièrement dans la fenêtre sans avoir à défiler",
               "Vraie arène de combat en arrière-plan : classique (violette) contre un dresseur normal, et aux couleurs du type du Maître de Type affronté (Eau = bleue, Feu = orange, Glace = bleu clair, Normal = neutre...) avec brume, sol dégradé et zone au sol sous chaque combattant",
@@ -115,7 +115,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🏕️', label: 'Campement',
+            icon: phIcon('tent'), label: 'Campement',
             items: [
               "Le Campement est entièrement refait en plein écran, comme une vraie scène : bâtiments dessinés (Centre Pokémon, Poké Mart, Ranch avec sa clôture et sa grange, échoppe du Marchand Itinérant) au lieu d'icônes",
               "Toute ton équipe en vie est installée autour du feu de camp, chaque Pokémon sur sa propre bûche (6 places), et les 3 Pokémon proposés par le Ranch sont visibles directement dans son enclos",
@@ -125,7 +125,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🏠', label: 'Accueil',
+            icon: phIcon('house'), label: 'Accueil',
             items: [
               "Le logo de tour à côté du titre est retiré et « Tour de Combat » passe sous « Draft Mon »",
               "Le texte d'accroche penché est plus grand, plus net, et n'est plus coupé par le haut de la page",
@@ -133,14 +133,14 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '📖', label: 'Pokédex : Pokémon manquants',
+            icon: phIcon('book-open'), label: 'Pokédex : Pokémon manquants',
             items: [
               "5 Pokémon qui manquaient au Pokédex sont ajoutés : Scalpereur (dernière évolution de Scalproie), Courrousinge (évolution de Colossinge), Farigiraf (évolution de Girafarig), Deusolourdo (évolution d'Insolourdo) et Ire-Foudre, un Pokémon Paradoxe légendaire",
               "Scalproie et Scalpereur apprennent Négo-Tranchante"
             ]
           },
           {
-            icon: '📱', label: 'Adaptation à tous les écrans',
+            icon: phIcon('device-mobile'), label: 'Adaptation à tous les écrans',
             items: [
               "Tous les écrans s'adaptent au téléphone (portrait et paysage), à la tablette et à l'ordinateur : tailles des Pokémon en combat ajustées à la hauteur disponible, combats en double et bannière des jumeaux compactés, Campement sans défilement en paysage",
               "Les fenêtres (sac, équipe, Ranch, notes de mise à jour...) ne dépassent plus de l'écran, et les grilles du Dex, du draft et de l'équipe passent sur deux colonnes sur les écrans moyens"
@@ -153,7 +153,7 @@ const PATCH_NOTES = [
         title: 'v0.10.3 — Corrections de combat, talents & attaques',
         categories: [
             {
-              icon: '🧬', label: 'Talents & attaques : vérification complète',
+              icon: phIcon('dna'), label: 'Talents & attaques : vérification complète',
               items: [
                 "Les talents de tous les Pokémon (1 084 stades, formes Méga comprises) ont été vérifiés un par un et corrigés d'après les données officielles : chaque stade d'évolution a maintenant ses propres talents (par exemple Chrysacier n'a plus les talents de Chenipan mais Mue, Papilusion a Œil Composé et Lentiteintée), avec le talent caché en dernière position",
                 "Les talents inventés sont retirés (par exemple « Cercle d'Énergie » pour Bulbizarre, « Dégobage » pour Carapuce ou « Transistor » pour Pichu) et les talents cités par des Pokémon mais jamais décrits dans le jeu ont maintenant leur description (Normalise, Frein, Heavy Metal, Rage Poison, Filature...)",
@@ -164,7 +164,7 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '⚔️', label: 'Attaques : chacune vérifiée',
+              icon: phIcon('sword'), label: 'Attaques : chacune vérifiée',
               items: [
                 "Les 834 attaques du jeu ont été testées une par une en combat et comparées aux données officielles : plus aucune n'a d'erreur ni d'effet manquant",
                 "Corrections de type (Morsure passe Ténèbres ; Charme, Doux Baiser et Rayon Lune passent Fée ; Nitro Crash passe Combat ; Salaison passe Roche ; Hommage Posthume passe Spectre) et de catégorie (Danse Fleurs, Relâche, Ball’Météo, Brouhaha et Tranch’Air deviennent spéciales, Plongée devient physique, Cauchemar devient une capacité de statut)",
@@ -176,7 +176,7 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '🆕', label: 'Nouvelles attaques & puissances officielles',
+              icon: phIcon('sparkle'), label: 'Nouvelles attaques & puissances officielles',
               items: [
                 "237 attaques qui manquaient au jeu sont ajoutées, avec leur nom, leur type, leur puissance, leur précision, leurs PP et leur description officiels : Boutefeu, Rapace, Vampi-Poing, Éco-Sphère, Telluriforce, Change Éclair, Pisto-Poing, Aqua-Jet, Ébullition, Plaie Croix, Mégafouet, Vampigraine, Atterrissage, Hurlement, Clonage, Distorsion, Vent Arrière, Gravité, Exuviation, Machination, Papillodanse, Anti-Brume, Zone Étrange, Zone Magique et bien d'autres",
                 "Elles sont données aux Pokémon qui peuvent officiellement les apprendre (par niveau, tutorat, reproduction ou CT) : près de 10 900 apprentissages ajoutés, la liste médiane passe à 66 attaques par lignée",
@@ -187,7 +187,7 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '🏷️', label: 'Noms officiels & mécaniques complétées',
+              icon: phIcon('tag-simple'), label: 'Noms officiels & mécaniques complétées',
               items: [
                 "Les 834 attaques portent maintenant leur nom français officiel (234 renommées : Balayage, Colère, Larcin, Hantise, Clepto-Mânes, Carapiège, Sheauriken, Kokiyarme, Pouvoir Antique, Champ Herbu...), et Implore et Ombre Portée sont ajoutées avec leurs apprentissages officiels",
                 "Hantise a sa vraie puissance (90) et traverse les protections",
@@ -199,7 +199,7 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '🧠', label: 'IA & équipes des étages avancés',
+              icon: phIcon('brain'), label: 'IA & équipes des étages avancés',
               items: [
                 "L'IA des dresseurs progresse avec les étages (4 niveaux : étages 1-4, 5-11, 12-24, 25+ ; les Mini-Boss et Boss montent d'un cran). Dès l'étage 5 elle estime les vrais dégâts de chaque capacité, repère les K.O., utilise les capacités prioritaires pour finir un Pokémon plus rapide et évite les capacités inutiles (immunités de type ou de talent comme Lévitation ou Absorbe-Eau)",
                 "Dès l'étage 12, elle joue les capacités de statut au bon moment : elle se soigne quand ce n'est pas vain, monte ses stats seulement quand tu ne peux pas la mettre à mal, pose Piège de Roc / Picots, endort ou paralyse (sans viser les types immunisés), utilise Vampigraine, Clonage, Écrans, Vent Arrière, Distorsion, la météo, Provoc ou Hurlement selon la situation",
@@ -213,7 +213,7 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '🪨', label: 'Corrections de combat',
+              icon: phIcon('mountains'), label: 'Corrections de combat',
               items: [
                 "Les pièges d'entrée fonctionnent enfin : Piège de Roc (dégâts selon la faiblesse au type Roche), Picots (jusqu'à 3 couches, de plus en plus douloureux), Pics Toxik (jusqu'à 2 couches, nouvelle capacité qui empoisonne) et Toile Gluante (baisse la Vitesse) sont posés sur le camp adverse et touchent chaque Pokémon qui entre ensuite en combat (changement, remplaçant après un K.O., Hurlement, Change-Éclair...)",
                 "Picots, Pics Toxik et Toile Gluante ne touchent pas les Pokémon Vol ni ceux avec Lévitation ; un Pokémon Poison au sol absorbe les Pics Toxik. Tour Rapide et Toupie Éclat éliminent les pièges du camp de leur lanceur. Les pièges posés s'affichent à côté des Poké Balls de chaque camp, et les dresseurs adverses savent maintenant les utiliser",
@@ -230,7 +230,7 @@ const PATCH_NOTES = [
         title: 'v0.10.4 — Chromatiques, Méga en combat & Infinimax',
         categories: [
             {
-              icon: '📖', label: 'Pokédex : Pokémon manquants & fiches détaillées',
+              icon: phIcon('book-open'), label: 'Pokédex : Pokémon manquants & fiches détaillées',
               items: [
                 "Nymphali, l'évolution Fée d'Évoli, était absente de la lignée ; ajoutée aux côtés des 7 autres Évolis",
                 "Métamorph et Tapatoès, totalement absents du jeu, sont ajoutés",
@@ -242,21 +242,21 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '🧬', label: 'Points d’Effort (EV)',
+              icon: phIcon('dna'), label: 'Points d’Effort (EV)',
               items: [
                 "La répartition des EV passe d'une base 252 à une base 32 par statistique (comme sur Pokémon Champion), pour être plus lisible : c'est un raccourci d'affichage, le bonus réel de statistique obtenu au maximum reste rigoureusement identique à avant",
                 "Un plafond global de 66 points d'EV au total s'ajoute au plafond de 32 par statistique, avec un total affiché dans l'éditeur d'équipe"
               ]
             },
             {
-              icon: '✨', label: 'Pokémon Chromatiques (Shiny)',
+              icon: phIcon('sparkle'), label: 'Pokémon Chromatiques (Shiny)',
               items: [
                 "Chaque Pokémon proposé en draft ou au Ranch a désormais 0,2 % de chance d'apparaître sous sa forme chromatique, tirée au moment même où il est proposé (donc visible avant de le choisir)",
-                "Un Pokémon chromatique choisi le reste pour toujours (sprite et pastille ✨ affichés partout : équipe, combat, Ranch, PC, sac) ; s'il n'est pas choisi, la chance est perdue"
+                `Un Pokémon chromatique choisi le reste pour toujours (sprite et pastille ${phIcon('sparkle')} affichés partout : équipe, combat, Ranch, PC, sac) ; s'il n'est pas choisi, la chance est perdue`
               ]
             },
             {
-              icon: '📖', label: 'Fiche Dex détaillée',
+              icon: phIcon('book-open'), label: 'Fiche Dex détaillée',
               items: [
                 "Corrigé : la fiche détaillée d'un Pokémon du Dex ne s'ouvrait plus au clic sur une carte",
                 "Le mode développeur ne demande plus la manipulation cachée (7 clics + code) : il s'active directement via un bouton dans le menu principal",
@@ -265,13 +265,13 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '🐲', label: 'Nouveau Pokémon',
+              icon: phIcon('spiral'), label: 'Nouveau Pokémon',
               items: [
                 "Éthernatos Infinimax ajouté comme forme alternative d'Éthernatos, avec un spawn en draft encore plus rare qu'un légendaire"
               ]
             },
             {
-              icon: '🔁', label: 'Métamorph : Morphing & talent Imposteur',
+              icon: phIcon('repeat'), label: 'Métamorph : Morphing & talent Imposteur',
               items: [
                 "Métamorph n'apprend plus que Morphing, sa seule capacité, au lieu d'un movepool complet, comme dans les vrais jeux",
                 "Morphing copie réellement l'adversaire ciblé : nom, apparence, types, talent, statistiques (hors PV) et ses 4 capacités (5 PP chacune), et ce jusqu'à ce que Métamorph change de camp",
@@ -279,29 +279,29 @@ const PATCH_NOTES = [
               ]
             },
             {
-              icon: '🔷', label: 'Refonte de la Méga-Évolution',
+              icon: phIcon('diamond'), label: 'Refonte de la Méga-Évolution',
               items: [
                 "La Méga-Évolution devient une mécanique de combat au même titre que le Dynamax et la Téracristallisation : le Pokémon doit tenir sa Méga-Gemme et se Méga-Évolue manuellement durant le combat via un bouton dédié, au lieu d'être automatique dès que l'objet est équipé",
                 "Une fois activée, la Méga-Évolution dure jusqu'à la fin du combat, même si le Pokémon change et revient ensuite ; il redevient normal une fois le combat terminé"
               ]
             },
             {
-              icon: '🎬', label: 'Animations d’activation',
+              icon: phIcon('film-reel'), label: 'Animations d’activation',
               items: [
                 "Le Dynamax, la Téracristallisation, la Méga-Évolution et les Capacités Z ont désormais chacun une animation dédiée au moment de leur activation (halo, anneaux d'énergie, éclats, particules), inspirée du style de Pokémon Showdown"
               ]
             },
             {
-              icon: '📱', label: 'Combat mobile & confort d’interface',
+              icon: phIcon('device-mobile'), label: 'Combat mobile & confort d’interface',
               items: [
                 "La puissance et les PP des attaques n'étaient plus coupés par des « ... » faute de place sur mobile : le détail passe à la ligne au lieu d'être tronqué, en portrait comme en paysage ; en paysage très compact, la colonne d'attaques devient défilable en dernier recours pour ne jamais rien cacher",
                 "Une barre de recherche apparaît dans les longs menus déroulants (Nature, Talent, choix d'une attaque...) dès qu'il y a plus de 8 options",
                 "L'écran de défaite affiche maintenant toute l'équipe du dresseur qui t'a vaincu (K.O./grisés comme la tienne, avec un repère sur ceux qui étaient encore sur le terrain), pas seulement ses Pokémon encore debout au moment du K.O.",
-                "Un bouton 🔍 Détails est ajouté sur chaque Pokémon des écrans de changement en combat (volontaire et après un K.O.) et de la fenêtre Équipe : stats réelles, talent, objet tenu, statut et les 4 attaques avec type/catégorie/puissance, sans devoir rouvrir l'éditeur d'équipe"
+                `Un bouton ${phIcon('magnifying-glass')} Détails est ajouté sur chaque Pokémon des écrans de changement en combat (volontaire et après un K.O.) et de la fenêtre Équipe : stats réelles, talent, objet tenu, statut et les 4 attaques avec type/catégorie/puissance, sans devoir rouvrir l'éditeur d'équipe`
               ]
             },
             {
-              icon: '🛠️', label: 'Corrections diverses',
+              icon: phIcon('wrench'), label: 'Corrections diverses',
               items: [
                 "Mortier Matcha ne boostait que l'Attaque du lanceur et n'avait aucun autre effet : il draine maintenant la moitié des dégâts infligés et peut brûler la cible, comme dans les vrais jeux",
                 "Le type affiché d'un Pokémon transformé (Téracristallisé, Méga-Évolué...) ne correspondait pas toujours à son type réel du moment dans certains écrans (pastille de type en combat, liste de changement, fenêtre du sac) ; corrigé partout",
@@ -317,7 +317,7 @@ const PATCH_NOTES = [
     title: 'v0.9 — Gen 8 Update : Galar & Dynamax/Gigamax',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "88 nouveaux Pokémon ajoutés (région de Galar, Pokédex complet 1 → 890), dont les 3 starters, Zacian et Zamazenta (avec leurs formes Épée Sacrée/Bouclier Royal via objet tenu) et Éthernatos",
           "14 nouvelles lignées de Formes de Galar, sélectionnables indépendamment de leurs versions Kanto/Johto au draft (Miaouss, Ponyta, Ramoloss, Canarticho, Smogogo, M. Mime, Artikodin, Électhor, Sulfura, Corayon, Zigzaton, Daruman, Tuniversion et Stunfisk de Galar)",
@@ -325,7 +325,7 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '⚔️', label: 'Capacités',
+        icon: phIcon('sword'), label: 'Capacités',
         items: [
           "89 nouvelles attaques de Génération 8 (Damoclès Corporel, Roue Libre, Ballon Pyro, Bras Articulé, Draco-Flèches, Frappes Déferlantes, Triple Axel, Poltergeist, Faisceau d'Acier...)",
           "Movepool enrichi pour de nombreuses lignées Gen 1-7 avec ces nouvelles attaques, selon leur type et leur thème",
@@ -333,14 +333,14 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '💠', label: 'Talents',
+        icon: phIcon('diamond'), label: 'Talents',
         items: [
           "29 nouveaux talents de Génération 8, dont plusieurs avec un vrai effet codé en combat : Libéro (change de type comme Protéen), Corps Fatal et Âme Vagabonde (déclenchés au contact), Armure Miroir (renvoie les baisses de statistiques), Écailles Glacées (réduit les dégâts spéciaux subis), Voile Pastel (immunité au poison), Punk Rock (renforce/résiste aux capacités sonores), Turbo Vapeur (Vitesse à fond si touché par le Feu ou l'Eau), Transistor et Mâchoire du Dragon (renforcent leur type), Esprit d'Acier (renforce l'Acier du porteur et de ses alliés), Hennissement Glacial/Sinistre (boost après un KO, comme Éclosion), Instinct Gorille (Attaque boostée mais bloqué sur la première capacité), Chute Cotonneuse et Crache-Sable (déclenchés en prenant des dégâts)",
           "Les autres nouveaux talents (Ramasse Ball, Mûrissement, Tête de Gel, Mimétisme...) ont leur description dans le Pokédex mais restent sans effet mécanique codé pour l'instant"
         ]
       },
       {
-        icon: '🔴', label: 'Dynamax & Gigamax',
+        icon: phIcon('circle'), label: 'Dynamax & Gigamax',
         items: [
           "Nouveau système de Dynamax : une fois par combat, un Pokémon peut Dynamaxer pendant 3 tours, ses PV actuels et max augmentant de 50%",
           "Pendant le Dynamax, chaque capacité offensive choisie devient une Capacité Max du même type, avec une puissance boostée selon la table de conversion officielle",
@@ -354,7 +354,7 @@ const PATCH_NOTES = [
         title: 'v0.9.1 — Légendes Arceus Update : Hisui',
         categories: [
           {
-            icon: '📖', label: 'Pokédex & Contenu',
+            icon: phIcon('book-open'), label: 'Pokédex & Contenu',
             items: [
               "12 nouvelles lignées de Formes de Hisui (région de Hisui), sélectionnables indépendamment de leurs versions Kanto/Johto/Unova au draft (Caninos, Voltorbe, Typhlosion, Qwilfish, Farfuret, Clamiral, Fragilady, Zorua, Gueriaigle, Colimucus, Séracrawl et Archéduc d'Hisui)",
               "7 nouvelles évolutions inédites : Cerbyllin (Cerfrousse), Hachécateur (nouvelle branche d'évolution d'Insécateur, aux côtés de Cizayox), Ursaking (Ursaring), Paragruel (Bargantua), Farfurex (Farfuret de Hisui) et Qwilpik (Qwilfish de Hisui)",
@@ -362,7 +362,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '⚔️', label: 'Capacités & Talents',
+            icon: phIcon('sword'), label: 'Capacités & Talents',
             items: [
               "Les nouvelles lignées apprennent les capacités propres à Légendes Arceus déjà présentes dans le Pokédex (Griffe Fatale, Bouclier Psy, Tempête Printanière, Triple Flèches, Tranchant Sans Fin, Hache de Pierre, Rafale des Cimes...)",
               "2 nouveaux talents avec un vrai effet codé en combat : Incisif (+50% de puissance pour les capacités tranchantes) et Querelleur (les capacités Normal/Combat touchent les Pokémon Spectre)",
@@ -378,7 +378,7 @@ const PATCH_NOTES = [
     title: 'v0.8 — Gen 7 Update : Alola & Capacités Z',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "88 nouveaux Pokémon ajoutés (région d'Alola, Pokédex complet 1 → 809), dont les 3 starters, les Gardiens des Îles (Tokorico, Tokopiyon, Tokotoro, Tokopisco), Cosmog/Cosmovum évoluant en Solgaleo ou Lunala, Necrozma et ses 3 fusions, Magearna, Marshadow, Zeraora, et Meltan/Melmetal",
           "Les 11 Ultra-Chimères ajoutées (Zéroïd, Mouscoto, Cancrelove, Câblifère, Bamboiselle, Katagami, Engloutyran, Vémini/Mandrillon, Ama-Ama, Pierroteknik), toutes dotées du talent Éclosion",
@@ -390,14 +390,14 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '⚔️', label: 'Capacités',
+        icon: phIcon('sword'), label: 'Capacités',
         items: [
           "47 nouvelles attaques de Génération 7 (Roc Éclair, Écran Aurore, Ruade Puissante, Laser Prismatique, Danse Révélation, Étranglement, Crocs Psy, Lame Solaire, Marteau Glace, Multi-Coups...)",
           "Movepool enrichi pour de nombreuses lignées Gen 1-6 avec ces nouvelles attaques, selon leur type et leur thème"
         ]
       },
       {
-        icon: '💠', label: 'Talents & Capacités Z',
+        icon: phIcon('diamond'), label: 'Talents & Capacités Z',
         items: [
           "~30 nouveaux talents de Génération 7, dont plusieurs avec un vrai effet codé en combat : Éclosion (boost après un KO), les 4 Terrains Surge des Gardiens des Îles, Fantaisie (annule le premier coup subi), Comateux (immunité totale au statut), Armure Prisme / Force Neurale (dégâts super efficaces réduits/augmentés), Banc de Poissons et Corps Blindé (changement de forme selon les PV), Écume (résistance Feu / immunité brûlure / dégâts Eau doublés)",
           "Nouveau système de Capacités Z : 18 Cristaux Z (un par type, ex. Pyrozélite, Aquazélite, Voltazélite...) en vente chez le Marchand Itinérant",
@@ -411,7 +411,7 @@ const PATCH_NOTES = [
     title: 'v0.7 — Gen 6 Update : Kalos & Méga-Évolution',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "72 nouveaux Pokémon ajoutés (région de Kalos, Pokédex complet 1 → 721)",
           "Nouveau type Fée, avec le retypage rétroactif officiel de 8 lignées existantes (Mélofée, Rondoudou, Marill, Grodoudou, Togépi, M. Mime, Tarsal/Kirlia/Gardevoir, Mysdibule)",
@@ -420,7 +420,7 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '⚔️', label: 'Capacités & Talents',
+        icon: phIcon('sword'), label: 'Capacités & Talents',
         items: [
           "48 nouvelles attaques de Génération 6 (Coup Lune, Éclat Insolite, Ronde Trompeuse, Bourrasque Fée, Poing Machine, Diamantron, Douille Électrique, Bang Sonique, Plaquage Volant, Ascension Draco...), avec leurs vraies mécaniques (multi-frappes, dégâts bi-type, pièges, terrains, altérations de stats inversées...)",
           "23 nouveaux talents de Génération 6 avec leurs effets réellement codés en combat (Protéen, Fourrure, Mâchouille, Aura Sombre/Féérique, Lien Parental, Poigne Magique, Bajoues, Sans Contact...)",
@@ -428,13 +428,13 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '💎', label: 'Méga-Évolution',
+        icon: phIcon('diamond'), label: 'Méga-Évolution',
         items: [
           "12 Méga-Évolutions ajoutées via de nouveaux objets tenus exclusifs (Florizarre, Dracaufeu X et Y, Tortank, Kangourex, Léviator, Mewtwo Y, Cizayox, Gardevoir, Carchacrok, Lucario, Métalosse), disponibles chez le Marchand Itinérant"
         ]
       },
       {
-        icon: '🎬', label: 'Combat',
+        icon: phIcon('film-reel'), label: 'Combat',
         items: [
           "Le sprite du Pokémon du joueur est désormais plus grand que celui de l'adversaire, pour renforcer l'impression d'être derrière son propre Pokémon",
           "Les Pokémon affichent maintenant une taille de sprite variable selon leur gabarit réel (les plus imposants comme Onix ou Wailord paraissent nettement plus grands que les plus petits comme Statitik ou Flabébé)"
@@ -447,20 +447,20 @@ const PATCH_NOTES = [
         title: 'v0.7.1 — Village vivant & Corrections',
         categories: [
           {
-            icon: '🏘️', label: 'Village',
+            icon: phIcon('house'), label: 'Village',
             items: [
               "Le Village devient une vraie carte interactive : bâtiments illustrés (Pokécentre, Pokéshop, Ranch, Équipe, Marchand) positionnés sur une scène animée avec ciel, nuages et végétation",
               "1 à 2 Pokémon de l'équipe se promènent désormais sur la carte, avec leur sprite animé"
             ]
           },
           {
-            icon: '👑', label: 'Dresseurs',
+            icon: phIcon('crown'), label: 'Dresseurs',
             items: [
               "Chaque Maître de Type affiche maintenant un vrai sprite de dresseur officiel associé à son type, au lieu d'un simple emoji"
             ]
           },
           {
-            icon: '🎵', label: 'Musique',
+            icon: phIcon('music-notes'), label: 'Musique',
             items: [
               "La musique se lance désormais de façon fiable dès la toute première interaction, quel que soit l'endroit cliqué",
               "Chaque ambiance (Menu, Village, Combat) peut désormais contenir plusieurs pistes jouées aléatoirement en playlist, sans jamais répéter deux fois de suite le même morceau",
@@ -468,7 +468,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🖥️', label: 'Interface',
+            icon: phIcon('desktop'), label: 'Interface',
             items: [
               "Les listes de sélection de type et de rareté du Pokédex affichent désormais des pastilles colorées au lieu de texte brut",
               "La sélection de nature affiche la statistique boostée en vert et celle réduite en rouge",
@@ -476,7 +476,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🐛', label: 'Corrections',
+            icon: phIcon('bug'), label: 'Corrections',
             items: [
               "Les équipes des Maîtres de Type n'étaient en réalité pas toujours 100% du bon type (un stade ou une forme différente de la lignée pouvait apparaître) : corrigé",
               "Bâillement endormait instantanément la cible au lieu d'agir avec un tour de délai comme dans les vrais jeux : corrigé"
@@ -491,7 +491,7 @@ const PATCH_NOTES = [
     title: 'v0.6 — Gen 5 Update : Unova',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "156 nouveaux Pokémon ajoutés (région d'Unova, Pokédex complet 1 → 649)",
           "19 nouveaux talents de Génération 5 ajoutés avec leurs vraies descriptions officielles (Victorieux, Contestation, Mode Zen, Illusion, Garde Magik, Défaitiste, Herbivore, Épine de Fer, Turbo Brasier, Téra-Voltage...)",
@@ -506,7 +506,7 @@ const PATCH_NOTES = [
         title: 'v0.6.1 — Formes alternatives & Marchand',
         categories: [
           {
-            icon: '🔮', label: 'Objets de forme',
+            icon: phIcon('eye'), label: 'Objets de forme',
             items: [
               "Nouveaux objets tenus exclusifs : Orbe Platiné (Giratina → Forme Originelle), Gracidée (Shaymin → Forme Ciel), Miroir Sacré (Boréas, Fulguris ou Démétéros → Forme Totémique) et 5 appareils pour Motisma (Chauffe, Lavage, Frigo, Ventilateur, Tondeuse)",
               "16 Plaques pour Arceus, chacune changeant son type selon la Plaque équipée",
@@ -514,26 +514,26 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🧙', label: 'Marchand Itinérant',
+            icon: phIcon('magic-wand'), label: 'Marchand Itinérant',
             items: [
               "Nouveau PNJ au Village : 20% de chance d'apparaître à chaque visite, il vend exclusivement les objets de forme"
             ]
           },
           {
-            icon: '🎬', label: 'Combat',
+            icon: phIcon('film-reel'), label: 'Combat',
             items: [
               "Les Pokémon en combat affichent désormais leur sprite animé (style Noir & Blanc) au lieu du sprite statique, avec repli automatique vers le sprite statique si l'animation n'est pas disponible"
             ]
           },
           {
-            icon: '🖥️', label: 'Interface',
+            icon: phIcon('desktop'), label: 'Interface',
             items: [
               "Le menu principal fusionne Nouvelle partie / Continuer / Boosts dans un seul bouton ▶ Jouer",
               "Textes agrandis sur l'écran d'accueil et les Notes de mise à jour pour une meilleure lisibilité"
             ]
           },
           {
-            icon: '🐛', label: 'Corrections',
+            icon: phIcon('bug'), label: 'Corrections',
             items: [
               "Dialga et Palkia ne possèdent plus Télépathe",
               "Giratina a maintenant Lévitation comme seul talent"
@@ -546,7 +546,7 @@ const PATCH_NOTES = [
         title: 'v0.6.2 — Combats de jumeaux',
         categories: [
           {
-            icon: '👯', label: 'Combat double',
+            icon: phIcon('users'), label: 'Combat double',
             items: [
               "Sur les étages normaux (ni Mini-Boss, ni Boss), petite chance (~12%) de tomber sur un duo de jumeaux et de devoir les affronter en vrai combat double : 2 Pokémon actifs simultanément de chaque côté",
               "Récompense en argent légèrement supérieure à un combat normal pour compenser la difficulté accrue"
@@ -561,7 +561,7 @@ const PATCH_NOTES = [
     title: 'v0.5 — Gen 4 Update : Sinnoh',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "107 nouveaux Pokémon ajoutés (région de Sinnoh, Pokédex complet 1 → 493)",
           "18 lignées existantes reçoivent leur évolution ou pré-évolution de Génération 4 (Magnézone, Lucario, Tangrowth, Yanmega, Mamoswine, Weavile, Honchkiss, Roserade, Porygon-Z, Bébés Happiny/Mime Jr./Bonsly/Munchlax/Mantyke/Chingling...)",
@@ -577,20 +577,20 @@ const PATCH_NOTES = [
         title: 'v0.5.1 — Progression & Rééquilibrage',
         categories: [
           {
-            icon: '🎫', label: 'Jetons de Tour',
+            icon: phIcon('ticket'), label: 'Jetons de Tour',
             items: [
               "Nouvelle monnaie méta gagnée à la défaite selon l'étage atteint (taux différent par difficulté, pour éviter le hard farm en Facile)",
               "Boutique de Boosts (accessible au menu) : déblocages permanents et globaux — Bourse de départ, Trousse de secours, Carte de fidélité, Draft assisté"
             ]
           },
           {
-            icon: '🏥', label: 'Centre Pokémon',
+            icon: phIcon('first-aid-kit'), label: 'Centre Pokémon',
             items: [
               "En mode Difficile, une halte de soin gratuite apparaît désormais après chaque Mini-Boss (en plus du Village après les Boss)"
             ]
           },
           {
-            icon: '🎲', label: 'Événements aléatoires',
+            icon: phIcon('dice-five'), label: 'Événements aléatoires',
             items: [
               "25% de chance d'un événement après un étage normal, avec un texte lié à l'étage atteint",
               "2 événements sûrs (Bourse oubliée, Source curative) et 6 événements risqués (Buisson suspect, Champignons étranges, Distributeur mystérieux, Passage instable, Marchand louche, Nid sauvage)",
@@ -598,7 +598,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '⚔️', label: 'Rééquilibrage des dresseurs',
+            icon: phIcon('sword'), label: 'Rééquilibrage des dresseurs',
             items: [
               "Chaque Boss est désormais un vrai Maître de Type (équipe 100% du même type, circuit sans répétition sur les 17 types par run)",
               "IA excellente pour les Boss : choisit toujours la meilleure attaque et le meilleur Pokémon de relève selon les types",
@@ -607,20 +607,20 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🚫', label: 'Anti-boucle',
+            icon: phIcon('prohibit'), label: 'Anti-boucle',
             items: [
               "Quitter vers le menu en plein combat met le combat en pause (même dresseur, mêmes PV) au lieu de l'abandonner : tout reprend exactement où on l'a laissé au retour",
               "Une défaite supprime désormais la sauvegarde en cours, impossible de recharger pour retenter le même combat en boucle"
             ]
           },
           {
-            icon: '🎖️', label: 'Badges',
+            icon: phIcon('medal'), label: 'Badges',
             items: [
               "Les badges utilisent maintenant les vraies icônes de type sur une pièce grise, au lieu d'émojis"
             ]
           },
           {
-            icon: '🐛', label: 'Corrections',
+            icon: phIcon('bug'), label: 'Corrections',
             items: [
               "9 noms français erronés du Pokédex corrigés (dont Tyranocif, Granbull, Cadoizo, Lovdisc, Terhal) et le numéro de Zarbi restauré",
               "203 capacités avaient une précision fausse (repli silencieux à 95%) : toutes corrigées à leur vraie valeur officielle",
@@ -640,7 +640,7 @@ const PATCH_NOTES = [
     title: 'v0.4 — Gen 3 Update : Hoenn',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "135 nouveaux Pokémon ajoutés (région de Hoenn, Pokédex complet 1 → 386)",
           "20 nouveaux talents de Génération 3 (Fermeté, Garde Mystik, Cran, Crachin, Sécheresse, Sable Volant, Marque Ombre, Ventouse, Air Lock, Peau Dure, Turbo, Déguisement...)",
@@ -649,7 +649,7 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '🎒', label: 'Objets & Village',
+        icon: phIcon('backpack'), label: 'Objets & Village',
         items: [
           "30 objets ajoutés avec sprites et effets officiels (Potions à paliers, anti-statuts, Baies, objets stratégiques comme Bandeau Choix, Orbe Vie, Veste de Combat...)",
           "Pokéshop réorganisé en 3 onglets par catégorie",
@@ -659,7 +659,7 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '🐛', label: 'Corrections',
+        icon: phIcon('bug'), label: 'Corrections',
         items: [
           "Immunités de type aux altérations de statut corrigées (Poison/Acier immunisés au poison, Feu à la brûlure, Glace au gel)",
           "Correction du seuil de déclenchement de la Baie Oran"
@@ -672,14 +672,14 @@ const PATCH_NOTES = [
         title: 'v0.4.1 — Combat & Interface Update',
         categories: [
           {
-            icon: '🎵', label: 'Musique',
+            icon: phIcon('music-notes'), label: 'Musique',
             items: [
               "Musiques d'ambiance différentes pour le Menu, le Village et les Combats",
-              "Bouton ⚙️ Paramètres avec réglage du volume"
+              `Bouton ${phIcon('gear')} Paramètres avec réglage du volume`
             ]
           },
           {
-            icon: '⚔️', label: 'Interface de combat',
+            icon: phIcon('sword'), label: 'Interface de combat',
             items: [
               "Suppression du cadre autour des combattants, sprite vu de dos pour ton Pokémon",
               "Pastilles de type compactes (icône seule) au lieu des badges texte",
@@ -690,7 +690,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🌀', label: 'Mécaniques de combat',
+            icon: phIcon('spiral'), label: 'Mécaniques de combat',
             items: [
               "Animations d'attaque selon le type (icône dédiée, projectile pour les Spéciales, impact pour les Physiques)",
               "Les capacités à charge (Lance-Soleil, Coud'Krâne, Coupe-Vent, Vol, Tunnel, Plongée) prennent réellement 2 tours, avec enchaînement automatique",
@@ -699,7 +699,7 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '🐛', label: 'Corrections',
+            icon: phIcon('bug'), label: 'Corrections',
             items: [
               "Correction de la fiabilité des sprites Pokémon et des icônes d'objets/baies/potions",
               "Le Ranch ne se retire plus à l'infini en changeant d'onglet",
@@ -715,7 +715,7 @@ const PATCH_NOTES = [
     title: 'v0.3 — Gen 2 Update : Johto',
     categories: [
       {
-        icon: '📖', label: 'Pokédex & Contenu',
+        icon: phIcon('book-open'), label: 'Pokédex & Contenu',
         items: [
           "100 Pokémon de la Génération 2 ajoutés (région de Johto complète, hors Zarbi)",
           "Évolutions ajoutées : Crobat, Steelix, Blissey, Kingdra, Scizor, Porygon2...",
@@ -723,7 +723,7 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '⚡', label: 'Types & Capacités',
+        icon: phIcon('lightning'), label: 'Types & Capacités',
         items: [
           "2 nouveaux types : Acier et Ténèbres, avec leurs efficacités",
           "Nouvelles capacités Acier/Ténèbres (Tête de Fer, Vibrobscur, Coup Bas...)"
@@ -736,7 +736,7 @@ const PATCH_NOTES = [
         title: 'v0.3.1 — Équilibrage Update',
         categories: [
           {
-            icon: '🎚️', label: 'Modes de difficulté',
+            icon: phIcon('sliders'), label: 'Modes de difficulté',
             items: [
               "Ajout de 3 modes de difficulté au lancement d'une partie",
               "Facile : draft de Pokémon déjà entièrement évolués, avec des builds prêts à l'emploi",
@@ -745,20 +745,20 @@ const PATCH_NOTES = [
             ]
           },
           {
-            icon: '📖', label: 'Contenu',
+            icon: phIcon('book-open'), label: 'Contenu',
             items: [
               "Nouvelles attaques ajoutées",
               "Movepool des Pokémon enrichi"
             ]
           },
           {
-            icon: '🐛', label: 'Corrections',
+            icon: phIcon('bug'), label: 'Corrections',
             items: [
               "Traduction des attaques, talents et natures corrigée"
             ]
           },
           {
-            icon: '💾', label: 'Sauvegarde',
+            icon: phIcon('floppy-disk'), label: 'Sauvegarde',
             items: [
               "Système de sauvegarde à 5 emplacements"
             ]
@@ -772,7 +772,7 @@ const PATCH_NOTES = [
     title: 'v0.2 — Village Update',
     categories: [
       {
-        icon: '⚔️', label: 'Tour de combat',
+        icon: phIcon('sword'), label: 'Tour de combat',
         items: [
           "PV persistants entre les combats",
           "Système d'argent - gains après chaque combat",
@@ -780,14 +780,14 @@ const PATCH_NOTES = [
         ]
       },
       {
-        icon: '🏘️', label: 'Village',
+        icon: phIcon('house'), label: 'Village',
         items: [
           "Village de repos débloqué après chaque Boss",
           "Pokécentre, Pokéshop, Ranch et PC au Village"
         ]
       },
       {
-        icon: '🎒', label: 'Objets & Équipe',
+        icon: phIcon('backpack'), label: 'Objets & Équipe',
         items: [
           "Sac utilisable en combat et entre les combats",
           "Objets tenus (Baie Oran, Reste, Ceinture Force...)",
@@ -802,14 +802,14 @@ const PATCH_NOTES = [
     title: 'v0.1 — Gen 1 Update : Kanto',
     categories: [
       {
-        icon: '🎯', label: 'Draft & Builder',
+        icon: phIcon('target'), label: 'Draft & Builder',
         items: [
           "Draft de 6 Pokémon Gen 1 (région de Kanto)",
           "Builder complet EV/IV/Nature/Talent/Attaques"
         ]
       },
       {
-        icon: '⚔️', label: 'Combat & Pokédex',
+        icon: phIcon('sword'), label: 'Combat & Pokédex',
         items: [
           "Tour de combat avec 17 archétypes de dresseurs",
           "Système de combat au tour par tour",
@@ -877,7 +877,7 @@ function openPatchNotes(){
   overlay.id = 'patchNotesOverlay';
   overlay.innerHTML = `
     <div class="patchnotes-modal">
-      <button class="patchnotes-close" id="patchNotesCloseBtn">✕</button>
+      <button class="patchnotes-close" id="patchNotesCloseBtn">${phIcon('x')}</button>
       <h2>◆ NOTES DE MISE À JOUR ◆</h2>
       ${renderPatchNotes()}
     </div>`;

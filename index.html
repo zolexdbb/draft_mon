@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Draft Mon — Tour de Combat</title>
 <link rel="icon" type="image/png" href="assets/image/logo/Draft_mon_logo.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,7 +16,7 @@
       <a class="header-icon-btn discord-btn" id="discordBtn" href="https://discord.gg/Z7jt9j4ch4" target="_blank" rel="noopener noreferrer" title="Rejoindre le Discord" aria-label="Rejoindre le Discord">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6605a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
       </a>
-      <button class="header-icon-btn music-settings-btn" id="musicSettingsBtn" title="Paramètres">⚙️</button>
+      <button class="header-icon-btn music-settings-btn" id="musicSettingsBtn" title="Paramètres"><i class="ph-bold ph-gear"></i></button>
     </div>
     <span class="site-logo">DRAFT MON</span>
     <span class="site-subtitle">◆ TOUR DE COMBAT ◆</span>
@@ -78,13 +79,13 @@
       <h1 class="menu-headline">Prêt à gravir la Tour ?</h1>
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:22px 0;">
         <button class="btn" id="menuPlayBtn">▶ Jouer</button>
-        <button class="btn secondary" id="scoreBtn">🏆 Score</button>
+        <button class="btn secondary" id="scoreBtn"><i class="ph-bold ph-trophy"></i> Score</button>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;">
-        <button class="btn secondary" id="menuDexBtn" style="font-size:13px;padding:10px 16px;">📖 Pokédex</button>
-        <button class="btn secondary" id="menuPatchNotesBtn" style="font-size:13px;padding:10px 16px;">📋 Notes de MàJ</button>
-        <div id="menuTokensBadge" class="menu-tokens-pill">🎫 0 Jetons de Tour</div>
-        <div id="menuCandyBadge" class="menu-tokens-pill">🍬 0 Bonbons d'Affinité</div>
+        <button class="btn secondary" id="menuDexBtn" style="font-size:13px;padding:10px 16px;"><i class="ph-bold ph-book-open"></i> Pokédex</button>
+        <button class="btn secondary" id="menuPatchNotesBtn" style="font-size:13px;padding:10px 16px;"><i class="ph-bold ph-clipboard-text"></i> Notes de MàJ</button>
+        <div id="menuTokensBadge" class="menu-tokens-pill"><i class="ph-bold ph-ticket"></i> 0 Jetons de Tour</div>
+        <div id="menuCandyBadge" class="menu-tokens-pill"><i class="ph-bold ph-cookie"></i> 0 Bonbons d'Affinité</div>
       </div>
       <div class="menu-howto-card">
         <div class="floor-label" style="font-size:11px;letter-spacing:3px;margin-bottom:10px;color:var(--accent-light);">▸ Comment jouer ◂</div>
@@ -102,6 +103,9 @@
           11. Chaque défaite rapporte des Jetons de Tour en fonction de ton avancée, à dépenser dans les Boosts de départ.
         </div>
       </div>
+      <div style="text-align:center;margin-top:18px;">
+        <a href="confidentialite.html" style="font-size:10px;color:var(--text-dim);">Confidentialité</a>
+      </div>
     </div>
   </div>
 
@@ -118,15 +122,15 @@
       <div id="dexTypeFilter" style="min-width:150px;"></div>
       <div id="dexTypeFilter2" style="min-width:150px;"></div>
       <div id="dexRarityFilter" style="min-width:150px;"></div>
-      <button class="btn secondary" id="dexBoostedFilter" style="padding:6px 12px;font-size:11px;">💖 Boostées</button>
-      <button class="btn secondary" id="dexResetFilter" style="padding:6px 12px;font-size:11px;">✕ Reset</button>
+      <button class="btn secondary" id="dexBoostedFilter" style="padding:6px 12px;font-size:11px;"><i class="ph-bold ph-heart"></i> Boostées</button>
+      <button class="btn secondary" id="dexResetFilter" style="padding:6px 12px;font-size:11px;"><i class="ph-bold ph-x"></i> Reset</button>
     </div>
     <div class="draft-cards" id="dexGrid"></div>
   </div>
 
   <div class="panel hidden" id="screenDraft">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <button class="btn secondary" id="draftHomeBtn" style="padding:6px 12px;font-size:12px;">🏠 Menu</button>
+      <button class="btn secondary" id="draftHomeBtn" style="padding:6px 12px;font-size:12px;"><i class="ph-bold ph-house"></i> Menu</button>
       <div class="draft-progress" id="draftProgress" style="margin:0;"></div>
       <div style="width:80px;"></div>
     </div>
@@ -138,7 +142,7 @@
 
   <div class="panel hidden" id="screenBuilder">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-      <button class="btn secondary" id="builderHomeBtn" style="padding:6px 12px;font-size:12px;">🏠 Menu</button>
+      <button class="btn secondary" id="builderHomeBtn" style="padding:6px 12px;font-size:12px;"><i class="ph-bold ph-house"></i> Menu</button>
       <div class="sub" style="margin:0;">Configure chaque Pokémon — puis valide ton équipe.</div>
       <div style="width:80px;"></div>
     </div>
@@ -155,14 +159,14 @@
       <div class="floor-num" id="floorNum">1</div>
       <div class="floor-label" id="floorDesc">Un dresseur t'attend...</div>
       <div class="currency-row" style="margin-top:10px;">
-        <span class="currency-pill cp-money"><span class="cp-icon">💰</span><span id="floorMoneyVal">0</span></span>
-        <span class="currency-pill cp-candy"><span class="cp-icon">🍬</span><span id="floorCandyVal">0</span></span>
+        <span class="currency-pill cp-money"><span class="cp-icon"><i class="ph-bold ph-coins"></i></span><span id="floorMoneyVal">0</span></span>
+        <span class="currency-pill cp-candy"><span class="cp-icon"><i class="ph-bold ph-cookie"></i></span><span id="floorCandyVal">0</span></span>
       </div>
       <div class="dex-rate" id="floorReward" style="margin-top:8px;color:var(--good);"></div>
       <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
         <button class="btn" id="fightBtn">Combattre</button>
-        <button class="btn secondary" id="towerBagBtn">🎒 Sac</button>
-        <button class="btn secondary" id="towerTeamBtn">👥 Équipe</button>
+        <button class="btn secondary" id="towerBagBtn"><i class="ph-bold ph-backpack"></i> Sac</button>
+        <button class="btn secondary" id="towerTeamBtn"><i class="ph-bold ph-users"></i> Équipe</button>
       </div>
     </div>
   </div>
@@ -170,19 +174,19 @@
   <div class="panel hidden" id="screenVillage">
     <div class="village-topbar">
       <div>
-        <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);">🏕️ CAMPEMENT</div>
+        <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);"><i class="ph-bold ph-tent"></i> CAMPEMENT</div>
         <div class="dex-rate" id="villageReward" style="color:var(--good);margin-top:4px;"></div>
         <div class="dex-rate" id="villageBadge" style="color:var(--accent);margin-top:2px;"></div>
       </div>
       <div class="village-topbar-right">
         <div class="currency-row" id="villageMoney">
-          <span class="currency-pill cp-money"><span class="cp-icon">💰</span><span id="villageMoneyVal">0</span></span>
-          <span class="currency-pill cp-candy"><span class="cp-icon">🍬</span><span id="villageCandyVal">0</span></span>
+          <span class="currency-pill cp-money"><span class="cp-icon"><i class="ph-bold ph-coins"></i></span><span id="villageMoneyVal">0</span></span>
+          <span class="currency-pill cp-candy"><span class="cp-icon"><i class="ph-bold ph-cookie"></i></span><span id="villageCandyVal">0</span></span>
         </div>
-        <button class="village-hamburger-btn" id="villageHamburgerBtn" aria-label="Menu">☰</button>
+        <button class="village-hamburger-btn" id="villageHamburgerBtn" aria-label="Menu"><i class="ph-bold ph-list"></i></button>
         <div class="village-hamburger-menu hidden" id="villageHamburgerMenu">
-          <button class="btn secondary" id="villageMenuTeamBtn">👥 Modifier l'équipe</button>
-          <button class="btn secondary" id="villageMenuBagBtn">🎒 Sac</button>
+          <button class="btn secondary" id="villageMenuTeamBtn"><i class="ph-bold ph-users"></i> Modifier l'équipe</button>
+          <button class="btn secondary" id="villageMenuBagBtn"><i class="ph-bold ph-backpack"></i> Sac</button>
         </div>
       </div>
     </div>
@@ -251,7 +255,7 @@
       <div class="village-team-ring" id="villageTeamRing" aria-hidden="true"></div>
       <div class="village-campfire" style="--vb-x:48%;--vb-y:90%;" aria-hidden="true">
         <span class="vc-glow"></span>
-        <span class="vc-flame">🔥</span>
+        <span class="vc-flame"><i class="ph-bold ph-flame"></i></span>
       </div>
 
       <!-- Ranch : enclos + petite grange, contient les 3 Pokémon sauvages proposés -->
@@ -295,14 +299,14 @@
         <span class="vbd-gate-post vbd-post-l"></span>
         <span class="vbd-gate-post vbd-post-r"></span>
         <span class="vbd-gate-beam"></span>
-        <span class="vbd-gate-sign">🌿</span>
+        <span class="vbd-gate-sign"><i class="ph-bold ph-leaf"></i></span>
         <span class="vb-label">Maison Safari</span>
       </button>
     </div>
 
     <div class="village-panel-overlay hidden" id="villagePanelOverlay">
       <div class="village-panel-card">
-        <button class="patchnotes-close" id="villagePanelCloseBtn">✕</button>
+        <button class="patchnotes-close" id="villagePanelCloseBtn"><i class="ph-bold ph-x"></i></button>
         <div id="villagePanelContent"></div>
       </div>
     </div>
@@ -315,10 +319,10 @@
 
   <div class="panel hidden" id="screenEvent">
     <div style="text-align:center;margin-bottom:16px;">
-      <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);" id="eventTitle">❓ ÉVÉNEMENT</div>
+      <div class="floor-label" style="letter-spacing:4px;font-size:12px;color:var(--accent);" id="eventTitle"><i class="ph-bold ph-question"></i> ÉVÉNEMENT</div>
     </div>
     <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:4px;padding:18px;text-align:center;max-width:440px;margin:0 auto 20px;">
-      <div style="font-size:24px;margin-bottom:8px;" id="eventEmoji">❓</div>
+      <div style="font-size:24px;margin-bottom:8px;" id="eventEmoji"><i class="ph-bold ph-question"></i></div>
       <div style="font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.6;" id="eventFlavor"></div>
       <div id="eventActions" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
       <div class="dex-rate" id="eventOutcome" style="margin-top:12px;color:var(--good);"></div>
@@ -334,7 +338,7 @@
     <div class="battle-arena-fog fog3" aria-hidden="true"></div>
     <div class="battle-arena-floor" aria-hidden="true"></div>
     <div class="battle-topbar">
-      <button class="btn secondary" id="battleHomeBtn" style="width:auto;flex-shrink:0;min-height:0;padding:10px 16px;font-size:12px;">☰ Menu</button>
+      <button class="btn secondary" id="battleHomeBtn" style="width:auto;flex-shrink:0;min-height:0;padding:10px 16px;font-size:12px;"><i class="ph-bold ph-list"></i> Menu</button>
       <div class="trainer-banner" id="trainerBanner"></div>
     </div>
     <div class="side-row battle-trackers">
@@ -347,13 +351,13 @@
       <div class="vsfield">
         <div class="combatant-row">
           <div class="combatant you" id="playerBox">
-            <div class="sprite" id="playerSprite">❔</div>
+            <div class="sprite" id="playerSprite"><i class="ph-bold ph-question"></i></div>
             <div class="name-row"><b id="playerName">—</b><span class="type-badges-row" id="playerType"></span></div>
             <div class="hpbar-track"><div class="hpbar-fill" id="playerHpFill"></div></div>
             <div class="hp-text" id="playerHpText">PV</div>
           </div>
           <div class="combatant you hidden" id="player2Box">
-            <div class="sprite" id="player2Sprite">❔</div>
+            <div class="sprite" id="player2Sprite"><i class="ph-bold ph-question"></i></div>
             <div class="name-row"><b id="player2Name">—</b><span class="type-badges-row" id="player2Type"></span></div>
             <div class="hpbar-track"><div class="hpbar-fill" id="player2HpFill"></div></div>
             <div class="hp-text" id="player2HpText">PV</div>
@@ -367,13 +371,13 @@
           <div class="name-row"><b id="foeName">—</b><span class="type-badges-row" id="foeType"></span></div>
           <div class="hpbar-track"><div class="hpbar-fill" id="foeHpFill"></div></div>
           <div class="hp-text" id="foeHpText">PV</div>
-          <div class="sprite" id="foeSprite">❔</div>
+          <div class="sprite" id="foeSprite"><i class="ph-bold ph-question"></i></div>
         </div>
         <div class="combatant foe hidden" id="foe2Box">
           <div class="name-row"><b id="foe2Name">—</b><span class="type-badges-row" id="foe2Type"></span></div>
           <div class="hpbar-track"><div class="hpbar-fill" id="foe2HpFill"></div></div>
           <div class="hp-text" id="foe2HpText">PV</div>
-          <div class="sprite" id="foe2Sprite">❔</div>
+          <div class="sprite" id="foe2Sprite"><i class="ph-bold ph-question"></i></div>
         </div>
       </div>
       <div class="battle-hud-bottom">
@@ -382,10 +386,10 @@
         <div class="mechanics-col" id="mechanicsGrid"></div>
         <div class="moves-panel">
           <div class="moves-panel-actions" id="movesPanelActions">
-            <button class="hud-icon-btn" id="battleActionsToggleBtn" aria-label="Autres actions">☰</button>
+            <button class="hud-icon-btn" id="battleActionsToggleBtn" aria-label="Autres actions"><i class="ph-bold ph-list"></i></button>
             <div class="moves-panel-actions-revealed hidden" id="movesPanelActionsRevealed">
-              <button class="btn secondary" id="manualSwitchBtn" style="width:auto;flex-shrink:0;min-height:0;padding:8px 12px;font-size:11px;">🔄 Changer de Pokémon</button>
-              <button class="btn secondary" id="bagBtn" style="width:auto;flex-shrink:0;min-height:0;padding:8px 12px;font-size:11px;">🎒 Sac</button>
+              <button class="btn secondary" id="manualSwitchBtn" style="width:auto;flex-shrink:0;min-height:0;padding:8px 12px;font-size:11px;"><i class="ph-bold ph-arrows-clockwise"></i> Changer de Pokémon</button>
+              <button class="btn secondary" id="bagBtn" style="width:auto;flex-shrink:0;min-height:0;padding:8px 12px;font-size:11px;"><i class="ph-bold ph-backpack"></i> Sac</button>
             </div>
             <button class="btn secondary hidden" id="cancelSwitchBtn" style="width:auto;flex-shrink:0;min-height:0;padding:8px 12px;font-size:11px;">Annuler</button>
           </div>
@@ -409,7 +413,7 @@
     <div id="endSummary" style="margin-top:6px;padding:0 16px;"></div>
     <div style="margin-top:20px;text-align:center;padding-bottom:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
       <button class="btn" id="restartBtn">Recommencer un draft</button>
-      <button class="btn secondary" id="endMenuBtn">🏠 Retour au menu</button>
+      <button class="btn secondary" id="endMenuBtn"><i class="ph-bold ph-house"></i> Retour au menu</button>
     </div>
   </div>
 </div>

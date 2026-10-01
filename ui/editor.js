@@ -46,7 +46,7 @@ function renderTeamGrid(){
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
           ${idx===0 ? '<span class="lead-badge">LEAD</span>' : ''}
-          <span class="status-chip ${configured?'':'unconfigured'}">${configured?'✓ Prêt':'À config'}</span>
+          <span class="status-chip ${configured?'':'unconfigured'}">${configured?phIcon('check')+' Prêt':'À config'}</span>
         </div>
       </div>
       <div class="team-card-footer">
@@ -312,7 +312,7 @@ function openEditor(idx){
       if(!catMoves.length) return;
       const sep = document.createElement('div');
       sep.className = 'csel-group-label';
-      const catLabel = cat==='phys'?'⚔️ Physiques':cat==='spec'?'✨ Spéciales':'🌀 Statut';
+      const catLabel = cat==='phys'?phIcon('sword')+' Physiques':cat==='spec'?phIcon('sparkle')+' Spéciales':phIcon('spiral')+' Statut';
       sep.style.cssText='padding:4px 10px 2px;font-size:8px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.04);';
       sep.textContent=catLabel;
       dropdown.appendChild(sep);

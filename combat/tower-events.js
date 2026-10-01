@@ -19,7 +19,7 @@ function eventLoseMoneyOrItem(amount){
   }
   const lost = Math.min(money, amount);
   money -= lost;
-  return lost>0 ? `Tu perds ${lost} 💰 dans la panique !` : "Heureusement, tu n'avais rien à perdre.";
+  return lost>0 ? `Tu perds ${lost} ${phIcon('coins')} dans la panique !` : "Heureusement, tu n'avais rien à perdre.";
 }
 const EVENT_STATUS_POOL = ['poison','brulure','paralysie','sommeil','gel'];
 // Autre pénalité possible d'un event risqué : en Difficile, inflige un vrai statut aléatoire ;
@@ -47,18 +47,18 @@ function eventAfflictRandomMember(){
 const TOWER_EVENTS = [
   // ---- Sûrs ----
   {
-    id:'forgottenPurse', title:'Bourse Oubliée', emoji:'💰', safe:true,
+    id:'forgottenPurse', title:'Bourse Oubliée', emoji:phIcon('coins'), safe:true,
     flavor: floor=>`En montant vers l'étage ${floor}, tu remarques une bourse abandonnée sur le sol.`,
     actions: [
       { label:'Ramasser', resolve: ()=>{
           const amount = 40+Math.floor(Math.random()*60);
           money += amount;
-          return `+${amount} 💰 trouvés !`;
+          return `+${amount} ${phIcon('coins')} trouvés !`;
       }}
     ]
   },
   {
-    id:'healSpring', title:'Source Curative', emoji:'💧', safe:true,
+    id:'healSpring', title:'Source Curative', emoji:phIcon('drop'), safe:true,
     flavor: floor=>`Sur le chemin de l'étage ${floor}, tu croises une source aux reflets étranges.`,
     actions: [
       { label:'Se reposer', resolve: ()=>{
@@ -72,7 +72,7 @@ const TOWER_EVENTS = [
   },
   // ---- Risqués ----
   {
-    id:'suspiciousBush', title:'Buisson Suspect', emoji:'🌿', safe:false,
+    id:'suspiciousBush', title:'Buisson Suspect', emoji:phIcon('leaf'), safe:false,
     flavor: floor=>`Un buisson s'agite bizarrement près du passage vers l'étage ${floor}...`,
     actions: [
       { label:'Fouiller (risqué)', resolve: ()=>{
@@ -90,7 +90,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'weirdMushrooms', title:'Champignons Étranges', emoji:'🍄', safe:false,
+    id:'weirdMushrooms', title:'Champignons Étranges', emoji:phIcon('plant'), safe:false,
     flavor: floor=>`Tu repères des champignons luisants près de l'entrée de l'étage ${floor}.`,
     actions: [
       { label:'Manger (risqué)', resolve: ()=>{
@@ -106,19 +106,19 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'mysteryVendor', title:'Distributeur Mystère', emoji:'🎰', safe:false,
+    id:'mysteryVendor', title:'Distributeur Mystère', emoji:phIcon('coins'), safe:false,
     flavor: floor=>`Une vieille machine clignote sur le palier de l'étage ${floor}, réclamant une mise.`,
     actions: [
-      { label:'Parier 50 💰 (risqué)', available:()=>money>=50, resolve: ()=>{
+      { label:`Parier 50 ${phIcon('coins')} (risqué)`, available:()=>money>=50, resolve: ()=>{
           money -= 50;
-          if(Math.random()<0.5){ money += 150; return "Jackpot ! La machine recrache 150 💰 !"; }
+          if(Math.random()<0.5){ money += 150; return `Jackpot ! La machine recrache 150 ${phIcon('coins')} !`; }
           return "Rien ne sort... tu as perdu ta mise.";
       }},
       { label:'Ignorer', resolve: ()=> "Tu préfères garder ton argent." }
     ]
   },
   {
-    id:'unstablePath', title:'Chemin Instable', emoji:'🕳️', safe:false,
+    id:'unstablePath', title:'Chemin Instable', emoji:phIcon('warning'), safe:false,
     flavor: floor=>`Le sol semble fragile sur un raccourci menant à l'étage ${floor}.`,
     actions: [
       { label:'Prendre le raccourci (risqué)', resolve: ()=>{
@@ -128,7 +128,7 @@ const TOWER_EVENTS = [
             const keys = Object.keys(ITEMS).filter(k=>ITEMS[k].category==='baie');
             const key = rand(keys);
             bag[key] = (bag[key]||0)+1;
-            return `Le raccourci était sûr : +${gain} 💰 et ${ITEMS[key].name} !`;
+            return `Le raccourci était sûr : +${gain} ${phIcon('coins')} et ${ITEMS[key].name} !`;
           }
           const msg = eventLoseMoneyOrItem(40);
           const afflict = eventAfflictRandomMember();
@@ -138,10 +138,10 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'shadyMerchant', title:'Silhouette Louche', emoji:'👤', safe:false,
+    id:'shadyMerchant', title:'Silhouette Louche', emoji:phIcon('user'), safe:false,
     flavor: floor=>`Une silhouette te propose un échange étrange avant l'étage ${floor}.`,
     actions: [
-      { label:'Échanger 80 💰 (risqué)', available:()=>money>=80, resolve: ()=>{
+      { label:`Échanger 80 ${phIcon('coins')} (risqué)`, available:()=>money>=80, resolve: ()=>{
           money -= 80;
           if(Math.random()<0.5){
             const keys = Object.keys(ITEMS).filter(k=>ITEMS[k].category==='strat');
@@ -158,7 +158,7 @@ const TOWER_EVENTS = [
     ]
   },
   {
-    id:'wildNest', title:'Repaire Sauvage', emoji:'🐾', safe:false,
+    id:'wildNest', title:'Repaire Sauvage', emoji:phIcon('paw-print'), safe:false,
     flavor: floor=>`Tu entends des grognements près de l'entrée de l'étage ${floor}.`,
     actions: [
       { label:"S'approcher (risqué)", resolve: ()=>{
@@ -213,10 +213,10 @@ function triggerTowerEventById(id){
 // Affiche l'écran d'event courant (texte, emoji, boutons d'action) et branche leur résolution.
 function renderTowerEvent(){
   const ev = currentTowerEvent;
-  document.getElementById('eventTitle').textContent = ev.safe ? '✨ ÉVÉNEMENT' : '⚠️ ÉVÉNEMENT RISQUÉ';
-  document.getElementById('eventEmoji').textContent = ev.emoji;
+  document.getElementById('eventTitle').innerHTML = ev.safe ? `${phIcon('sparkle')} ÉVÉNEMENT` : `${phIcon('warning')} ÉVÉNEMENT RISQUÉ`;
+  document.getElementById('eventEmoji').innerHTML = ev.emoji;
   document.getElementById('eventFlavor').textContent = ev.flavor(towerFloor);
-  document.getElementById('eventOutcome').textContent = '';
+  document.getElementById('eventOutcome').innerHTML = '';
   document.getElementById('eventContinueBtn').classList.add('hidden');
   const actionsWrap = document.getElementById('eventActions');
   actionsWrap.innerHTML = '';
@@ -224,10 +224,10 @@ function renderTowerEvent(){
     const btn = document.createElement('button');
     btn.className = 'btn secondary';
     btn.style.cssText = 'padding:8px 14px;font-size:10px;';
-    btn.textContent = action.label;
+    btn.innerHTML = action.label;
     btn.onclick = ()=>{
       const outcome = action.resolve();
-      document.getElementById('eventOutcome').textContent = outcome;
+      document.getElementById('eventOutcome').innerHTML = outcome;
       actionsWrap.querySelectorAll('button').forEach(b=> b.disabled = true);
       document.getElementById('eventContinueBtn').classList.remove('hidden');
       saveGame();

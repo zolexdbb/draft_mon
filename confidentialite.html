@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Confidentialité — Draft Mon</title>
+<link rel="icon" type="image/png" href="assets/image/logo/Draft_mon_logo.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .privacy-page{ max-width:720px; margin:0 auto; padding:32px 20px 60px; }
+  .privacy-page h1{ font-family:var(--font-display); font-size:22px; color:var(--accent-light); margin-bottom:4px; }
+  .privacy-page .privacy-updated{ font-size:11px; color:var(--text-dim); margin-bottom:28px; }
+  .privacy-page h2{ font-size:14px; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin:28px 0 10px; display:flex; align-items:center; gap:8px; }
+  .privacy-page p, .privacy-page li{ font-size:13px; line-height:1.7; color:var(--text-main); opacity:.9; }
+  .privacy-page ul{ margin:8px 0; padding-left:20px; }
+  .privacy-page li{ margin-bottom:6px; }
+  .privacy-page table{ width:100%; border-collapse:collapse; margin:10px 0; font-size:12px; }
+  .privacy-page th, .privacy-page td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); color:var(--text-main); }
+  .privacy-page th{ color:var(--text-dim); text-transform:uppercase; font-size:10px; letter-spacing:.5px; }
+  .privacy-back{ display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; }
+  .privacy-page code{ background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:3px; padding:1px 6px; font-family:var(--font-mono); font-size:11px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="site-header">
+    <div class="header-actions">
+      <a class="header-icon-btn discord-btn" href="https://discord.gg/Z7jt9j4ch4" target="_blank" rel="noopener noreferrer" title="Rejoindre le Discord" aria-label="Rejoindre le Discord">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6605a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+      </a>
+    </div>
+    <span class="site-logo">DRAFT MON</span>
+    <span class="site-subtitle">◆ TOUR DE COMBAT ◆</span>
+  </div>
+
+  <div class="privacy-page">
+    <a class="btn secondary privacy-back" href="index.html" style="width:auto;padding:8px 14px;font-size:11px;"><i class="ph-bold ph-arrow-left"></i> Retour au jeu</a>
+
+    <h1>Politique de confidentialité</h1>
+    <div class="privacy-updated">Dernière mise à jour : octobre 2026</div>
+
+    <p>Draft Mon est un jeu qui tourne entièrement dans ton navigateur. Il n'y a ni compte, ni serveur de jeu, ni base de données : cette page explique simplement ce qui est stocké sur ton propre appareil et quelles ressources externes sont chargées pour faire fonctionner le jeu.</p>
+
+    <h2><i class="ph-bold ph-floppy-disk"></i> Ce qui est stocké sur ton appareil</h2>
+    <p>Le jeu utilise le <code>localStorage</code> de ton navigateur (une mémoire locale propre à ce site, jamais envoyée à qui que ce soit) pour sauvegarder ta progression. Rien de tout cela ne quitte ton appareil :</p>
+    <table>
+      <tr><th>Donnée</th><th>Contenu</th></tr>
+      <tr><td>Sauvegardes de partie</td><td>Jusqu'à plusieurs emplacements : ton équipe, ton sac, ton argent, l'étage de la Tour en cours</td></tr>
+      <tr><td>Meilleurs étages &amp; Badges</td><td>Ta progression record par difficulté (Facile / Normal / Difficile)</td></tr>
+      <tr><td>Monnaies méta</td><td>Jetons de Tour, Boosts de départ achetés, Bonbons d'Affinité et niveaux d'Affinité par lignée</td></tr>
+      <tr><td>Réglages</td><td>Volume de la musique, affichage de l'efficacité des attaques, vitesse du jeu</td></tr>
+    </table>
+    <p>Tu peux effacer ces données à tout moment via les réglages de ton navigateur (données de site / cookies et données de site pour ce domaine), ou en supprimant une sauvegarde directement depuis l'écran "Charger une partie" du jeu. Les supprimer ne nous informe de rien : elles n'existent nulle part ailleurs.</p>
+
+    <h2><i class="ph-bold ph-globe"></i> Ressources chargées depuis l'extérieur</h2>
+    <p>Pour afficher les sprites, les icônes et les polices, ton navigateur contacte directement quelques services tiers (sans passer par un serveur à nous) :</p>
+    <ul>
+      <li><strong>raw.githubusercontent.com / cdn.jsdelivr.net</strong> — sprites des Pokémon et des objets (projet <a href="https://github.com/PokeAPI/sprites" target="_blank" rel="noopener noreferrer">PokeAPI</a>)</li>
+      <li><strong>play.pokemonshowdown.com</strong> — portraits des dresseurs Maîtres de Type</li>
+      <li><strong>fonts.googleapis.com</strong> — polices d'écriture (Google Fonts)</li>
+      <li><strong>unpkg.com</strong> — bibliothèque d'icônes (Phosphor Icons)</li>
+    </ul>
+    <p>Ces services peuvent recevoir les informations techniques standards de toute requête web (ton adresse IP, le fichier demandé) selon leurs propres politiques de confidentialité respectives. Le jeu ne leur transmet aucune information sur ta partie, ton pseudo ou ta progression — ce sont de simples fichiers (images, polices, icônes) chargés tels quels.</p>
+    <p>Le bouton Discord dans l'en-tête t'emmène, si tu cliques dessus, vers discord.com (régi par la politique de confidentialité de Discord) ; aucune information n'est partagée avant que tu ne cliques.</p>
+
+    <h2><i class="ph-bold ph-prohibit"></i> Ce que le jeu ne fait pas</h2>
+    <ul>
+      <li>Pas de compte ni d'inscription</li>
+      <li>Pas de cookies de suivi</li>
+      <li>Pas d'outil d'analyse d'audience ni de publicité</li>
+      <li>Pas de collecte ni de transmission de tes données de jeu vers un serveur</li>
+    </ul>
+
+    <h2><i class="ph-bold ph-chat-circle-text"></i> Contact</h2>
+    <p>Une question sur cette page ? Passe sur le <a href="https://discord.gg/Z7jt9j4ch4" target="_blank" rel="noopener noreferrer">Discord du jeu</a>.</p>
+  </div>
+</div>
+</body>
+</html>
