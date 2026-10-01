@@ -1073,7 +1073,7 @@ function runStep(actor, move, defender, actorIsPlayer, callback){
     return;
   }
   lungeBox(boxIdFor(actor));
-  playMoveFx(move, actorIsPlayer);
+  playMoveFx(move, boxIdFor(actor).replace('Box',''), boxIdFor(defender).replace('Box',''));
   if(move.isZMove) playZMoveFx(boxIdFor(actor).replace('Box',''), move.type);
   if(Math.random() > acc){
     let missMsg = '';

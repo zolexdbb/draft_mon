@@ -514,7 +514,12 @@ function applyStatusEffect(user, target, move, logs){
       const usedIdx = loc.side==='player' ? [bs.pActive, bs.pActive2] : [bs.fActive, bs.fActive2];
       const aliveIdx = roster.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
       if(aliveIdx.length>0){
-        const newIdx = rand(aliveIdx);
+        // Si le joueur a choisi son remplaçant avant l'attaque (voir handleMoveChoice dans
+        // combat/battle-ui.js), on l'utilise plutôt qu'un tirage aléatoire — tant qu'il est toujours
+        // valide (vivant, pas déjà sur le terrain) au moment où l'effet se déclenche réellement.
+        const newIdx = (user.pendingSelfSwitchIdx!=null && aliveIdx.includes(user.pendingSelfSwitchIdx))
+          ? user.pendingSelfSwitchIdx : rand(aliveIdx);
+        user.pendingSelfSwitchIdx = null;
         const pursuitMsg = pursuitBeforeSwitch(user);
         if(pursuitMsg) logs.push(pursuitMsg.trim());
         const savedStages = eff.batonPass ? {...user.stages} : null;

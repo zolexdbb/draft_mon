@@ -288,15 +288,62 @@ function handleMoveChoice(moveIdx){
   const p = bs.player[activeIdx];
   const move = moveIdx===-1 ? STRUGGLE_MOVE : p.moves[moveIdx];
   const foes = aliveFoeCombatants();
+  // Capacités qui font changer de Pokémon après coup (Demi-Tour, Change Éclair, Relais...) : demande
+  // le remplaçant AVANT l'attaque s'il y a un vrai choix à faire (voir pendingSelfSwitchIdx dans
+  // combat/status-effects.js, qui utilise ce choix plutôt qu'un tirage aléatoire).
+  if(move.effect && move.effect.selfSwitch){
+    const usedIdx = [bs.pActive, bs.pActive2].filter(x=>x!=null);
+    const switchCandidates = bs.player.map((c,i)=> (c.hp>0 && !usedIdx.includes(i)) ? i : -1).filter(i=>i>=0);
+    if(switchCandidates.length>1){
+      promptSelfSwitchThenAttack(moveIdx, move, switchCandidates, foes);
+      return;
+    }
+  }
   if(bs.isDouble && move.target!=='self' && foes.length>1){
-    promptTargetThenAttack(moveIdx, foes);
+    promptTargetThenAttack(moveIdx, move, foes);
     return;
   }
   playerAttack(moveIdx);
 }
 
-// Affiche l'écran de choix de cible (combat double, capacité offensive) avant de lancer l'attaque.
-function promptTargetThenAttack(moveIdx, foes){
+// Affiche l'écran de choix du remplaçant pour une capacité comme Demi-Tour/Change Éclair/Relais,
+// avant de lancer l'attaque (voir handleMoveChoice). Enchaîne ensuite sur le choix de cible si la
+// capacité touche un adversaire en combat double.
+function promptSelfSwitchThenAttack(moveIdx, move, switchCandidates, foes){
+  const bs = battleState;
+  document.getElementById('movesGrid').classList.add('hidden');
+  document.getElementById('mechanicsGrid').classList.add('hidden');
+  document.getElementById('movesHeader').classList.add('hidden');
+  document.getElementById('battleActionsToggleBtn').classList.add('hidden');
+  document.getElementById('movesPanelActionsRevealed').classList.add('hidden');
+  document.getElementById('cancelSwitchBtn').classList.remove('hidden');
+  const sw = document.getElementById('switchGrid');
+  sw.classList.remove('hidden');
+  sw.innerHTML = `<div class="dex-rate" style="text-align:center;margin-bottom:6px;">${move.name} — qui entre après l'attaque ?</div>`;
+  switchCandidates.forEach(i=>{
+    const c = bs.player[i];
+    const btn = document.createElement('button');
+    btn.className='move-btn';
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(c.name, c.unownForm, 'front', false, c.shiny)}</span>${c.name}${c.shiny?shinyBadgeHTML():''} <small>${c.hp} / ${c.maxHp} PV</small>`;
+    btn.onclick = ()=>{
+      const slot = bs.selectingSlot || 'A';
+      const activeIdx = playerSlotIdx(slot);
+      bs.player[activeIdx].pendingSelfSwitchIdx = i;
+      document.getElementById('cancelSwitchBtn').classList.add('hidden');
+      if(bs.isDouble && move.target!=='self' && foes.length>1){
+        promptTargetThenAttack(moveIdx, move, foes);
+      } else {
+        playerAttack(moveIdx);
+      }
+    };
+    sw.appendChild(btn);
+  });
+}
+
+// Affiche l'écran de choix de cible (combat double, capacité offensive) avant de lancer l'attaque —
+// avec le repère d'efficacité (voir moveEffectivenessBadgeHTML) propre à chaque cible possible,
+// puisqu'en double la cible n'est plus implicite comme avec un seul adversaire en vie.
+function promptTargetThenAttack(moveIdx, move, foes){
   const bs = battleState;
   document.getElementById('movesGrid').classList.add('hidden');
   document.getElementById('mechanicsGrid').classList.add('hidden');
@@ -311,7 +358,7 @@ function promptTargetThenAttack(moveIdx, foes){
     const targetIdx = bs.foe.indexOf(f);
     const btn = document.createElement('button');
     btn.className='move-btn';
-    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(f.name, f.unownForm)}</span>${f.name} <small>${f.hp} / ${f.maxHp} PV</small>`;
+    btn.innerHTML = `<span style="display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:6px;">${getSpriteHTML(f.name, f.unownForm)}</span>${f.name}${showMoveEffectiveness?moveEffectivenessBadgeHTML(move, f):''} <small>${f.hp} / ${f.maxHp} PV</small>`;
     btn.onclick = ()=>{
       document.getElementById('cancelSwitchBtn').classList.add('hidden');
       playerAttack(moveIdx, targetIdx);

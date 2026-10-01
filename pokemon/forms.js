@@ -133,6 +133,7 @@ const FORM_SPRITE_IDS = {
   'Tauros de Paldea (Race Combative)':10250, 'Tauros de Paldea (Race Flamboyante)':10251,
   'Tauros de Paldea (Race Aquatique)':10252, 'Axoloto de Paldea':10253,
   'Éthernatos Infinimax':10190,
+  'Necrozma (Crinière du Couchant)':10155, "Necrozma (Ailes de l'Aurore)":10156, 'Ultra-Necrozma':10157,
   // ---- Méga-Évolutions de Pokémon Légendes Z-A (v0.10.1) ----
   'Méga-Mélodelfe':10278, 'Méga-Empiflor':10279, 'Méga-Staross':10280, 'Méga-Dracolosse':10281,
   'Méga-Méganium':10282, 'Méga-Aligatueur':10283, 'Méga-Airmure':10284, 'Méga-Momartik':10285,

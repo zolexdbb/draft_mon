@@ -1,7 +1,8 @@
 /* ==== Animations visuelles jouées en combat. TYPE_COLOR, TYPE_ICON_PATH et svgIcon() viennent de
    core/type-chart.js. Repères :
    - playMoveFx() : icône de type qui file vers la cible + éclat d'impact, à chaque capacité (appelé
-     depuis combat/battle-flow.js)
+     depuis combat/battle-flow.js, avec les préfixes de sprite réels de l'attaquant/du défenseur —
+     voir boxIdFor — pour viser le bon combattant même en combat double, slot A ou B)
    - playDynamaxFx/playTeraFx/playZMoveFx/playMegaRevealFx : effet joué une fois à l'activation de
      chaque mécanique (Dynamax/Téracristal/Capacité Z/Méga), inspiré des animations de Pokémon
      Showdown — pulsation + particules autour du sprite plutôt qu'un vrai portage de leur moteur
@@ -138,11 +139,11 @@ function spawnBurst(field, x, y, color){
 }
 
 // Point d'entrée : joue l'animation d'une capacité (projectile pour une capacité spéciale, impact direct pour une physique) depuis l'attaquant vers le défenseur.
-function playMoveFx(move, actorIsPlayer){
+function playMoveFx(move, attackerPrefix, defenderPrefix){
   if(!move || (move.cat!=='phys' && move.cat!=='spec')) return;
   const field = document.querySelector('.vsfield');
-  const attackerSprite = document.getElementById(actorIsPlayer ? 'playerSprite' : 'foeSprite');
-  const defenderSprite = document.getElementById(actorIsPlayer ? 'foeSprite' : 'playerSprite');
+  const attackerSprite = document.getElementById(attackerPrefix+'Sprite');
+  const defenderSprite = document.getElementById(defenderPrefix+'Sprite');
   if(!field || !attackerSprite || !defenderSprite) return;
 
   const color = TYPE_COLOR[move.type] || '#e8e0f0';

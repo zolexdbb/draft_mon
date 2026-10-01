@@ -50,7 +50,7 @@ function rollSafariEncounter(){
   const line = rand(pool.length ? pool : LINES);
   const entries = [
     ...line.stages.map((sp,i)=>({sp, stage:i, branch:null, w:stageMultiplier(i)})),
-    ...(line.branches ? line.branches.map((sp,bi)=>({sp, stage:null, branch:bi, w:stageMultiplier(line.stages.length-1)})) : [])
+    ...(line.branches ? line.branches.filter(b=>b.draftable!==false).map((sp,bi)=>({sp, stage:null, branch:line.branches.indexOf(sp), w:stageMultiplier(line.stages.length-1)})) : [])
   ];
   const totalW = entries.reduce((a,e)=>a+e.w,0);
   let roll = Math.random()*totalW, chosen = entries[0];

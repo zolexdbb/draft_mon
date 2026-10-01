@@ -215,22 +215,25 @@ function rollFoeSpecies(line, floor, trainerTheme, isBoss){
   for(let s=1; s<=maxStage; s++){
     if(Math.random() < Math.min(0.9, 0.15 + floor*0.13)) stage = s;
   }
+  // Les branches draftable:false (ex. Éthernatos Infinimax) ne sont jamais tirées pour une équipe
+  // adverse, seulement accessibles par évolution volontaire du joueur depuis l'éditeur.
+  const eligibleBranches = line.branches ? line.branches.filter(b=>b.draftable!==false) : null;
   let branch = null;
-  if(line.branches && Math.random() < Math.min(0.85, 0.15 + floor*0.13)){
+  if(eligibleBranches && eligibleBranches.length && Math.random() < Math.min(0.85, 0.15 + floor*0.13)){
     if(trainerTheme){
-      const themeBranch = line.branches.findIndex(b => b.types.includes(trainerTheme));
-      branch = themeBranch >= 0 ? themeBranch : Math.floor(Math.random()*line.branches.length);
+      const themeBranch = eligibleBranches.find(b => b.types.includes(trainerTheme));
+      branch = line.branches.indexOf(themeBranch || eligibleBranches[Math.floor(Math.random()*eligibleBranches.length)]);
     } else {
-      branch = Math.floor(Math.random()*line.branches.length);
+      branch = line.branches.indexOf(eligibleBranches[Math.floor(Math.random()*eligibleBranches.length)]);
     }
   }
   if(isBoss && trainerTheme){
     const stageMatches = line.stages[stage].types.includes(trainerTheme);
     const branchMatches = branch!==null && line.branches[branch].types.includes(trainerTheme);
     if(!stageMatches && !branchMatches){
-      const matchingBranchIdx = line.branches ? line.branches.findIndex(b=>b.types.includes(trainerTheme)) : -1;
-      if(matchingBranchIdx>=0){
-        branch = matchingBranchIdx;
+      const matchingBranch = eligibleBranches ? eligibleBranches.find(b=>b.types.includes(trainerTheme)) : null;
+      if(matchingBranch){
+        branch = line.branches.indexOf(matchingBranch);
       } else {
         const matchingStageIdx = line.stages.reduce((best,s,i)=> s.types.includes(trainerTheme) ? i : best, -1);
         if(matchingStageIdx>=0){ stage = matchingStageIdx; branch = null; }

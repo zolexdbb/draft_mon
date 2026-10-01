@@ -123,16 +123,20 @@ const TOWER_EVENTS = [
     actions: [
       { label:'Prendre le raccourci (risqué)', resolve: ()=>{
           if(Math.random()<0.55){
+            const climb = 1+Math.floor(Math.random()*3);
+            towerFloor += climb;
             const gain = 30+Math.floor(Math.random()*50);
             money += gain;
             const keys = Object.keys(ITEMS).filter(k=>ITEMS[k].category==='baie');
             const key = rand(keys);
             bag[key] = (bag[key]||0)+1;
-            return `Le raccourci était sûr : +${gain} ${phIcon('coins')} et ${ITEMS[key].name} !`;
+            return `Le raccourci était sûr et t'a fait grimper ${climb} étage${climb>1?'s':''} d'un coup ! +${gain} ${phIcon('coins')} et ${ITEMS[key].name} !`;
           }
+          const fall = 1+Math.floor(Math.random()*2);
+          towerFloor = Math.max(1, towerFloor - fall);
           const msg = eventLoseMoneyOrItem(40);
           const afflict = eventAfflictRandomMember();
-          return `Le sol cède sous tes pas ! ${msg}${afflict?' '+afflict:''}`;
+          return `Le sol cède sous tes pas ! Tu dévales ${fall} étage${fall>1?'s':''} plus bas. ${msg}${afflict?' '+afflict:''}`;
       }},
       { label:'Chemin sûr', resolve: ()=> "Tu restes prudent et poursuis normalement." }
     ]
