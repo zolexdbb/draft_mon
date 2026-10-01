@@ -108,8 +108,8 @@ function openEditor(idx){
   };
   // Bouton d'évolution avec le sprite du stade/de la branche cible, pour voir à quoi ressemble le Pokémon avant d'évoluer.
   const evolveBtnHTML = (targetName, label, extraClass, extraAttrs) => `
-    <button class="btn secondary evolve-btn-sprite${extraClass?' '+extraClass:''}" ${extraAttrs||''} style="margin:3px;font-size:10px;display:inline-flex;align-items:center;gap:6px;">
-      <span style="width:26px;height:26px;flex-shrink:0;">${getSpriteHTML(targetName, null)}</span>
+    <button class="btn secondary evolve-btn-sprite${extraClass?' '+extraClass:''}" ${extraAttrs||''} style="margin:3px;font-size:10px;display:inline-flex;align-items:center;gap:8px;">
+      <span style="width:44px;height:44px;flex-shrink:0;">${getSpriteHTML(targetName, null)}</span>
       <span>${label}</span>
     </button>`;
   // Les branches draftable:false (ex. Éthernatos Infinimax) ne sont jamais proposées ici non plus :
