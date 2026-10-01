@@ -178,7 +178,7 @@ function buildPreviewHTML(member){
     return `<div style="display:flex;align-items:center;gap:6px;margin:3px 0;">${typeTagHTML(mv.type,{style:'font-size:8px;padding:2px 6px;flex-shrink:0;'})}<span style="font-size:9px;color:var(--text-main);">${mv.name}</span></div>`;
   }).join('');
   return `
-    <div style="background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:8px;margin:6px 0;text-align:left;">
+    <div style="background:#140F0A;border:1px solid var(--line);border-radius:3px;padding:8px;margin:6px 0;text-align:left;">
       ${itemHTML}
       <div style="font-size:8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Nature : <span style="color:var(--text-main);text-transform:none;letter-spacing:0;">${member.nature.name}</span>${natureNote}</div>
       <div style="font-size:8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Stats (répartition des EV)</div>
@@ -238,7 +238,7 @@ function nextDraftRound(){
     // n'apprend plus rien d'utile — buildPreviewHTML affiche à la place les stats finales avec leur
     // répartition d'EV. Normal/Difficile : pas encore de build, la grille de stats de base reste utile.
     const baseStatsGridHTML = isFacile ? '' : `
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:6px 0;background:#0b0b10;border:1px solid var(--line);border-radius:3px;padding:6px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin:6px 0;background:#140F0A;border:1px solid var(--line);border-radius:3px;padding:6px;">
         <div style="text-align:center;font-size:10px;color:var(--text-dim);">PV<br><b style="color:var(--text-main);font-size:13px;">${sp.base.hp}</b></div>
         <div style="text-align:center;font-size:10px;color:var(--text-dim);">Atq<br><b style="color:var(--text-main);font-size:13px;">${sp.base.atk}</b></div>
         <div style="text-align:center;font-size:10px;color:var(--text-dim);">Déf<br><b style="color:var(--text-main);font-size:13px;">${sp.base.def}</b></div>

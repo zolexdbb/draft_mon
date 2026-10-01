@@ -91,7 +91,7 @@ function renderBoostsList(){
     const owned = purchasedBoosts.includes(boost.id);
     const locked = boost.requires && !purchasedBoosts.includes(boost.requires);
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;' + (locked?'opacity:.5;':'');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#140F0A;border:1px solid var(--line);border-radius:3px;' + (locked?'opacity:.5;':'');
     row.innerHTML = `
       <div style="font-size:22px;">${boost.emoji}</div>
       <div style="flex:1;">

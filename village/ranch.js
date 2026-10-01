@@ -26,7 +26,7 @@ function renderRanchPanel(){
     const hasBranch = choice.branch!==undefined && choice.branch!==null;
     const sp = hasBranch ? line.branches[choice.branch] : line.stages[choice.stage];
     const card = document.createElement('div');
-    card.style.cssText = 'background:#0b0b10;border:1px solid var(--line);border-radius:4px;padding:10px;text-align:center;cursor:pointer;';
+    card.style.cssText = 'background:#140F0A;border:1px solid var(--line);border-radius:4px;padding:10px;text-align:center;cursor:pointer;';
     card.innerHTML = `
       <div style="width:60px;height:60px;margin:0 auto 6px;">${getSpriteHTML(sp.name, null, 'front', false, choice.shiny)}</div>
       <div style="font-size:10px;color:var(--text-main);margin-bottom:4px;">${sp.name}${choice.shiny?shinyBadgeHTML():''}</div>

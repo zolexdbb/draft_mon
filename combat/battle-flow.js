@@ -84,15 +84,14 @@ function resetBattleFields(c){
   c.freezeTurns = c.status==='gel' ? c.freezeTurns : 0;
   if(!c.teraActive) c.transformedTypes = null;
 }
-// Couleur "arène classique" (violet fantôme neutre) utilisée pour un dresseur normal, reprise
-// telle quelle du canevas de référence (rgba(155,120,200,...) partout dans Battle.dc.html).
-const CLASSIC_ARENA_RGB = '155,120,200';
+// Couleur "arène classique" (ambre chaud neutre) utilisée pour un dresseur normal.
+const CLASSIC_ARENA_RGB = '219,163,74';
 function hexToRgbString(hex){
   return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)).join(',');
 }
-// Thème l'arène de combat : violet classique pour un dresseur normal, ou couleur officielle du
+// Thème l'arène de combat : ambre classique pour un dresseur normal, ou couleur officielle du
 // type du Maître de Type affronté (pour donner plus de vie à la Tour) — utilisée telle quelle,
-// sans mélange, pour que ex. un Maître Normal donne une arène neutre/grise et non violette.
+// sans mélange, pour que ex. un Maître Normal donne une arène neutre/grise et non colorée.
 function applyArenaTheme(trainer){
   const el = document.getElementById('screenBattle');
   if(!el) return;

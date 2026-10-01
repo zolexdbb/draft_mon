@@ -28,7 +28,7 @@ function renderPokeshopPanel(){
     const owned = bag[key]||0;
     const price = Math.round(item.price * (1 - discount));
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;';
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px;background:#140F0A;border:1px solid var(--line);border-radius:3px;';
     row.innerHTML = `
       <div style="font-size:22px;">${itemIconHTML(key, 28)}</div>
       <div style="flex:1;">

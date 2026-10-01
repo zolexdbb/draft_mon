@@ -338,7 +338,7 @@ function professorRowHTML(line){
   const progress = affinityProgressFor(line.id);
   const lastStage = line.stages[line.stages.length-1];
   const disabled = affinityCandy<1 || !cost;
-  return `<div style="display:flex;align-items:center;gap:10px;padding:8px;background:#0b0b10;border:1px solid var(--line);border-radius:3px;">
+  return `<div style="display:flex;align-items:center;gap:10px;padding:8px;background:#140F0A;border:1px solid var(--line);border-radius:3px;">
     <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(lastStage.name, null)}</div>
     <div style="flex:1;min-width:0;">
       <div style="font-size:10px;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><b>${professorLineLabel(line)}</b></div>
@@ -369,7 +369,7 @@ function renderProfessorPanel(){
       </div>
       <div style="font-size:10px;color:var(--text-dim);text-align:center;margin-bottom:10px;line-height:1.5;">« Investis tes Bonbons d'Affinité dans les lignées que tu apprécies : plus leur niveau monte, plus tu as de chances de les croiser au draft, au Ranch et parmi les recrues. »</div>
       <div style="display:flex;gap:6px;margin-bottom:10px;">
-        <input type="text" id="professorSearch" placeholder="Rechercher une lignée..." value="${professorFilter.search}" style="flex:1;min-width:0;background:#0b0b10;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 10px;font-family:inherit;font-size:11px;">
+        <input type="text" id="professorSearch" placeholder="Rechercher une lignée..." value="${professorFilter.search}" style="flex:1;min-width:0;background:#140F0A;border:1px solid var(--line-bright);color:var(--text-main);border-radius:3px;padding:6px 10px;font-family:inherit;font-size:11px;">
         <div id="professorRarityFilter" style="width:150px;flex-shrink:0;"></div>
       </div>
       <div id="professorList" style="display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto;"></div>

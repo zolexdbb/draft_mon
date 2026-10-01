@@ -62,7 +62,7 @@ function renderRunSummary(s){
         <div style="width:30px;height:30px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(c.name, c.unownForm, 'front', false, c.shiny)}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:9px;color:var(--text-main);">${c.name}${c.shiny?shinyBadgeHTML():''}${fainted?' '+phIcon('skull'):''}</div>
-          <div style="background:#0b0b10;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
+          <div style="background:#140F0A;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
         </div>
         <div style="font-size:8px;color:var(--text-dim);flex-shrink:0;">${c.hp}/${c.maxHp} PV</div>
       </div>`;
@@ -81,7 +81,7 @@ function renderRunSummary(s){
         <div style="width:26px;height:26px;flex-shrink:0;${fainted?'filter:grayscale(1);':''}">${getSpriteHTML(f.name, f.unownForm)}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:9px;color:var(--text-main);">${f.name}${fainted?' '+phIcon('skull'):(f.active?' <span style="color:var(--accent-light);">· sur le terrain</span>':'')}</div>
-          <div style="background:#0b0b10;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
+          <div style="background:#140F0A;border-radius:3px;height:5px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
         </div>
         <div style="font-size:8px;color:var(--text-dim);flex-shrink:0;">${f.hp}/${f.maxHp} PV</div>
       </div>`;
@@ -345,7 +345,7 @@ function openBattlerDetail(view){
         <div>
           <h2 style="margin:0;">${view.name}${view.shiny?shinyBadgeHTML():''} ${view.status?statusIconHTML(view.status,14):''}</h2>
           <div class="types-row" style="margin:4px 0;">${view.types.map(t=>typeTagHTML(t)).join('')}</div>
-          <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;width:160px;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
+          <div style="background:#140F0A;border-radius:3px;height:6px;overflow:hidden;width:160px;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
           <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">${view.hp}/${view.maxHp} PV</div>
         </div>
       </div>
@@ -411,7 +411,7 @@ function openTeamModal(){
         <div style="width:36px;height:36px;flex-shrink:0;">${getSpriteHTML(sp.name, m.unownForm, 'front', false, m.shiny)}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:10px;color:var(--text-main);">${i===0?phIcon('crown')+' ':''}${sp.name}${m.shiny?shinyBadgeHTML():''} ${m.status?statusIconHTML(m.status,12):''}</div>
-          <div style="background:#0b0b10;border-radius:3px;height:6px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
+          <div style="background:#140F0A;border-radius:3px;height:6px;overflow:hidden;margin:3px 0;"><div style="width:${Math.round(frac*100)}%;height:100%;background:${hpBarColor(frac)};"></div></div>
           <div style="font-size:8px;color:var(--text-dim);">${hp}/${maxHp} PV</div>
           <div id="teamHeldSel${i}" style="margin-top:4px;max-width:180px;"></div>
           <div style="font-size:8px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-top:5px;">Téracristal</div>
