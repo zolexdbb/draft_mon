@@ -8,7 +8,6 @@
   --accent:#E8B23D;
   --accent-light:#F6D888;
   --accent2:#D9622B;
-  --purple:#6B4FA0;
   --cyan:#3FA9C9;
   --text-main:#ECE7DD;
   --text-dim:rgba(236,231,221,.55);
@@ -23,6 +22,9 @@
 }
 *{box-sizing:border-box;}
 html{ height:100%; }
+/* Icônes Phosphor (remplacent les émojis partout dans l'interface) : alignées sur le texte environnant,
+   héritent sa couleur par défaut. */
+[class^="ph-"], [class*=" ph-"]{ vertical-align:-0.125em; }
 body{
   margin:0; min-height:100vh; color:var(--text-main);
   font-family:var(--font-body);
@@ -140,7 +142,7 @@ body{
 .poke-card .evoline{ font-size:10px; color:var(--text-dim); margin-bottom:4px; }
 .types-row{ display:flex; justify-content:center; gap:4px; flex-wrap:wrap; margin-bottom:6px;}
 .type-tag{
-  display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px;
+  display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:6px;
   font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.9px;
   color:#fff; border:none; line-height:1.4;
 }
@@ -218,7 +220,7 @@ body{
    texte informatif ordinaire. ---- */
 .currency-row{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
 .currency-pill{
-  display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px;
+  display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:6px;
   font-family:var(--font-mono); font-size:13px; font-weight:800; border:1.5px solid;
   box-shadow:0 2px 10px rgba(0,0,0,.3); white-space:nowrap;
 }
@@ -1079,7 +1081,7 @@ select option{
 .village-b-merchant .vbd-stall-counter{ position:absolute; left:16px; bottom:0; width:78px; height:34px; background:#5B4636; border-radius:4px; }
 .village-b-merchant .vbd-stall-awning{
   position:absolute; left:-8px; bottom:32px; width:126px; height:50px; clip-path:polygon(50% 0%, 100% 100%, 0% 100%);
-  background:repeating-linear-gradient(45deg, #6B4FA0 0px, #6B4FA0 8px, #4A3868 8px, #4A3868 16px); opacity:.94;
+  background:repeating-linear-gradient(45deg, var(--accent2) 0px, var(--accent2) 8px, #4A2A18 8px, #4A2A18 16px); opacity:.94;
 }
 
 /* ---- Animations de la Maison Safari (jet de Ball/Caillou/Appât, capture, fuite) : jouées dans
@@ -1128,14 +1130,14 @@ select option{
 }
 .safari-fx-sparkle{ position:absolute; left:50%; top:38%; width:70px; height:70px; transform:translate(-50%,-50%); }
 .safari-fx-sparkle::before, .safari-fx-sparkle::after{
-  content:'✦'; position:absolute; color:#F6D888; font-size:20px; opacity:0;
+  content:'\e6a2'; font-family:'Phosphor-Bold'; position:absolute; color:#F6D888; font-size:20px; opacity:0;
   animation:safariSparkle .6s ease-out forwards;
 }
 .safari-fx-sparkle::before{ left:0; top:10px; }
 .safari-fx-sparkle::after{ right:0; bottom:10px; animation-delay:.1s; }
 @keyframes safariSparkle{ 0%{ transform:scale(0) rotate(0deg); opacity:0; } 40%{ opacity:1; } 100%{ transform:scale(1.6) rotate(90deg); opacity:0; } }
 .safari-fx-heart{ position:absolute; left:50%; bottom:38%; margin-left:-6px; font-size:13px; color:#ff6fa8; opacity:0; animation:safariHeartRise .7s ease-out forwards; }
-.safari-fx-heart::before{ content:'♥'; }
+.safari-fx-heart::before{ content:'\e2a8'; font-family:'Phosphor-Bold'; }
 .safari-fx-heart-0{ margin-left:-20px; } .safari-fx-heart-2{ margin-left:8px; }
 @keyframes safariHeartRise{ 0%{ transform:translateY(0) scale(.6); opacity:0; } 30%{ opacity:1; } 100%{ transform:translateY(-34px) scale(1); opacity:0; } }
 .safari-fx-dust{
